@@ -20,14 +20,26 @@ import {
   MdLogout,
   MdMenu,
 } from "react-icons/md";
+import Cookies from "js-cookie";
+import { useRouter } from "next/navigation";
 
 const drawerWidth = 240;
 const miniDrawerWidth = 60;
 
 const Sidebar = ({ open, setOpen }) => {
+  const router = useRouter();
   const iconSize = open ? 22 : 26;
   const handleDrawerToggle = () => {
     setOpen(!open);
+  };
+
+  const handleRoute = async () => {
+    document.body.style.overflow = "";
+    await localStorage.removeItem("REFRESH_TOKEN");
+    await localStorage.removeItem("ACCESS_TOKEN");
+    Cookies.remove("REFRESH_TOKEN");
+    Cookies.remove("ACCESS_TOKEN");
+    return router.push("/login");
   };
 
   return (
@@ -189,6 +201,8 @@ const Sidebar = ({ open, setOpen }) => {
                 },
                 margin: "8px 0",
               }}
+
+              onClick={()=>handleRoute()}
             >
               <ListItemIcon
                 sx={{
