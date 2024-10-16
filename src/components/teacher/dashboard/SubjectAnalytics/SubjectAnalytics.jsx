@@ -27,7 +27,6 @@ const SubjectAnalytics = () => {
     <Box
       sx={{
         width: "100%", // Use 100% width to fill parent
-        maxWidth: "600px", // Set a max width for the box
         p: 4,
         backdropFilter: "blur(10px)",
         backgroundColor: "rgba(255, 255, 255, 0.2)",

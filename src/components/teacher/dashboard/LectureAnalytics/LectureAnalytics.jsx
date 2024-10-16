@@ -75,7 +75,7 @@ const LectureAnalytics = () => {
   return (
     <Box
       sx={{
-        width: "600px",
+        width: "100%",
         p: 4,
         backdropFilter: "blur(10px)",
         backgroundColor: "rgba(255, 255, 255, 0.2)",

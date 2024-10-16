@@ -13,6 +13,7 @@ import GreetingCard from "@/components/teacher/dashboard/GreetingCard/GreetingCa
 import ProfileCard from "@/components/teacher/dashboard/ProfileCard/ProfileCard";
 import LectureDuration from "@/components/teacher/dashboard/LectureDuration/LectureDuration";
 import SubjectCompletion from "@/components/teacher/dashboard/SubjectCompletion/SubjectCompletion";
+import StudentQueries from "@/components/teacher/dashboard/StudentQueries/StudentQueries";
 
 const Page = () => {
   return (
@@ -20,14 +21,14 @@ const Page = () => {
       <Box sx={{}}>
         <GreetingCard/>         
       </Box>
-      <Box sx={{ marginTop: 3, display: "flex", gap: 2, }}>
+      <Box sx={{ marginTop: 3, display: "flex", gap: 2}}>
         <Box sx={{ flexBasis: '50%'}}>
           <ProfileCard />
         </Box>
-        <Box>
+        <Box sx={{ flexBasis: '25%'}}>
           <LectureDuration />
         </Box>
-        <Box>
+        <Box sx={{ flexBasis: '25%'}}>
           <SubjectCompletion />
         </Box>
       </Box>
@@ -66,9 +67,12 @@ const Page = () => {
         </Grid>
       </Grid>
 
-      <Grid container direction={"row"} mt={4} spacing={4}>
-        <Grid item xs={12} sm={8}>
-        <AnalyticsReports />
+      <Grid container direction={"row"} mt={4} spacing={2}>
+        <Grid item xs={12} sm={4}>
+          <StudentQueries />
+        </Grid>
+        <Grid item xs={12} sm={4}>       
+          <AnalyticsReports />
         </Grid>
         <Grid item xs={12} sm={4}>
           <ClassStatistics />

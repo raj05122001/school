@@ -6,11 +6,15 @@ function ProfileCard() {
   return (
     <Card sx={{ 
         maxWidth: "full", 
+        width:"100%",
+        height:"100%",
         position: 'relative', 
         display: 'flex', 
         alignItems: 'center', 
         p: 2,
-        background: 'linear-gradient(to top, #09203f 0%, #537895 100%)'
+        background: 'linear-gradient(to top, #09203f 0%, #537895 100%)',
+        boxShadow: "0 4px 30px rgba(0, 0, 0, 0.1)",
+        borderRadius: "16px",
         }}>
       {/* Edit Button */}
       <IconButton
@@ -38,7 +42,7 @@ function ProfileCard() {
             <Typography variant="body2" color={'white'}>
             Class: M.Tech
             </Typography>
-            ♦️
+            🔹
             <Typography variant="body2" color={'white'}>
             Department: Mathematics
             </Typography>
