@@ -9,35 +9,26 @@ import SubjectAnalytics from "@/components/teacher/dashboard/SubjectAnalytics/Su
 import StrugglingExcelling from "@/components/teacher/dashboard/StrugglingExcelling/StrugglingExcelling";
 import OverallClassPerformance from "@/components/teacher/dashboard/OverallClassPerformance/OverallClassPerformance";
 import ClassStatistics from "@/components/teacher/dashboard/ClassStatistics/ClassStatistics";
+import GreetingCard from "@/components/teacher/dashboard/GreetingCard/GreetingCard";
+import ProfileCard from "@/components/teacher/dashboard/ProfileCard/ProfileCard";
+import LectureDuration from "@/components/teacher/dashboard/LectureDuration/LectureDuration";
+import SubjectCompletion from "@/components/teacher/dashboard/SubjectCompletion/SubjectCompletion";
 
 const Page = () => {
   return (
     <Box sx={{ flexGrow: 1, m: 2, marginLeft: 4 }}>
-      <Box sx={{ display: "flex", justifyContent: "flex-end" }}>
-        <Box sx={{ display: "flex", gap: 2 }}>
-          <Button
-            variant="contained"
-            sx={{
-              backgroundColor: "#00adb5",
-              ":hover": {
-                backgroundColor: "#007a7f",
-              },
-            }}
-          >
-            Create Lecture
-          </Button>
-
-          <Button
-            variant="contained"
-            sx={{
-              backgroundColor: "#00adb5",
-              ":hover": {
-                backgroundColor: "#007a7f",
-              },
-            }}
-          >
-            Create Quiz
-          </Button>
+      <Box sx={{}}>
+        <GreetingCard/>         
+      </Box>
+      <Box sx={{ marginTop: 3, display: "flex", gap: 8, '& > *': { flexBasis: '25%'} }}>
+        <Box sx={{ flexBasis: '50%'}}>
+          <ProfileCard />
+        </Box>
+        <Box>
+          <LectureDuration />
+        </Box>
+        <Box>
+          <SubjectCompletion />
         </Box>
       </Box>
       <Grid container direction={"row"} mt={4} spacing={2}>
