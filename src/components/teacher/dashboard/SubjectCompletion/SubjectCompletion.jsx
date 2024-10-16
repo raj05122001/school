@@ -20,7 +20,11 @@ function SubjectCompletion() {
 
   return (
     <Card sx={{
-        background: 'linear-gradient(109.6deg, rgb(251, 250, 225) 11.2%, rgb(206, 240, 185) 47.5%, rgb(100, 163, 111) 100.2%)'
+        background: 'radial-gradient(592px at 48.2% 50%, rgba(255, 255, 249, 0.6) 0%, rgb(160, 199, 254) 74.6%)',
+        width:"100%",
+        height:"100%",
+        boxShadow: "0 4px 30px rgba(0, 0, 0, 0.1)",
+        borderRadius: "16px",
     }}>
       <CardContent sx={{
         display:"flex",
