@@ -43,7 +43,7 @@ const OverallClassPerformance = () => {
     >
       {/* Header */}
       <Box sx={{ display: "flex", justifyContent: "space-between", mb: 2 }}>
-        <Typography variant="h6" fontWeight="bold">
+        <Typography variant="h6" fontWeight="bold" whiteSpace="nowrap">
           Overall Class Performance
         </Typography>
         {/* <Button variant="text" sx={{ textTransform: "none" }}>
@@ -52,13 +52,13 @@ const OverallClassPerformance = () => {
       </Box>
 
       {/* Pie Chart and Legend */}
-      <Grid container spacing={2}>
+      {/* <Grid container spacing={2}>
         <Grid
           item
           xs={12}
           sm={6}
           sx={{ display: "flex", justifyContent: "center" }}
-        >
+        > */}
           {/* Pie Chart using Recharts */}
           <Box sx={{ width: "100%", height: 240 }}>
             <ResponsiveContainer width="100%" height="100%">
@@ -81,7 +81,7 @@ const OverallClassPerformance = () => {
               </PieChart>
             </ResponsiveContainer>
           </Box>
-        </Grid>
+        {/* </Grid>
 
         <Grid
           item
@@ -92,7 +92,7 @@ const OverallClassPerformance = () => {
             alignItems: "center",
             justifyContent: "center",
           }}
-        >
+        > */}
           {/* Custom Legend */}
           <Grid container spacing={2}>
             {data.map((entry) => (
@@ -121,8 +121,9 @@ const OverallClassPerformance = () => {
               </Grid>
             ))}
           </Grid>
-        </Grid>
-      </Grid>
+
+        {/* </Grid>
+      </Grid> */}
     </Box>
   );
 };

@@ -57,76 +57,90 @@ const AnalyticsReports = () => {
   ];
 
   return (
-    <Box sx={{ flexGrow: 1 }}>
       <Grid container spacing={3}>
         {/* Student Queries */}
         <Grid item xs={12} sm={6}>
-          <Paper elevation={4} sx={cardStyle}>
-            <CardContent>
-              <Typography
-                variant="h6"
-                component="div"
-                sx={{
-                  display: "flex",
-                  justifyContent: "center",
-                  alignItems: "center",
-                }}
-              >
-                <FaQuestionCircle style={{ marginRight: 8 }} />
-                Student Queries
-              </Typography>
-              <List>
-                {queries.map((query) => (
-                  <ListItem key={query.id}>
-                    <ListItemText
-                      primary={query.query}
-                      secondary={`Asked by: ${query.student}`}
-                    />
-                    <IconButton
-                      edge="end"
-                      aria-label="reply"
-                      sx={iconButtonStyle}
-                    >
-                      <FaQuestionCircle />
-                    </IconButton>
-                  </ListItem>
-                ))}
-              </List>
-            </CardContent>
-          </Paper>
+          <Box
+            sx={{
+              backdropFilter: "blur(10px)",
+              backgroundColor: "rgba(255, 255, 255, 0.2)",
+              boxShadow: "0 4px 30px rgba(0, 0, 0, 0.1)",
+              borderRadius: "16px",
+              width:"100%",
+              p: 2,
+              height:'100%'
+            }}
+          >
+            <Typography
+              variant="h6"
+              component="div"
+              sx={{
+                display: "flex",
+                justifyContent: "center",
+                alignItems: "center",
+              }}
+            >
+              <FaQuestionCircle style={{ marginRight: 8 }} />
+              Student Queries
+            </Typography>
+            <List>
+              {queries.map((query) => (
+                <ListItem key={query.id}>
+                  <ListItemText
+                    primary={query.query}
+                    secondary={`Asked by: ${query.student}`}
+                  />
+                  <IconButton
+                    edge="end"
+                    aria-label="reply"
+                    sx={iconButtonStyle}
+                  >
+                    <FaQuestionCircle />
+                  </IconButton>
+                </ListItem>
+              ))}
+            </List>
+          </Box>
         </Grid>
         {/* Announcements */}
         <Grid item xs={12} sm={6}>
-          <Paper elevation={4} sx={cardStyle}>
-            <CardContent>
-              <Typography
-                variant="h6"
-                component="div"
-                sx={{
-                  display: "flex",
-                  justifyContent: "center",
-                  alignItems: "center",
-                }}
-              >
-                <FaBullhorn style={{ marginRight: 8 }} />
-                Announcements
-              </Typography>
-              <TextField
-                variant="outlined"
-                fullWidth
-                placeholder="Enter your announcement here..."
-                multiline
-                rows={4}
-                sx={{ mt: 2, mb: 2 }}
-              />
-              <Button variant="contained" sx={buttonStyle}>
-                Post Announcement
-              </Button>
-            </CardContent>
-          </Paper>
+          <Box
+            sx={{
+              backdropFilter: "blur(10px)",
+              backgroundColor: "rgba(255, 255, 255, 0.2)",
+              boxShadow: "0 4px 30px rgba(0, 0, 0, 0.1)",
+              borderRadius: "16px",
+              width:"100%",
+              p: 2,
+              height:'100%'
+            }}
+          >
+            <Typography
+              variant="h6"
+              component="div"
+              sx={{
+                display: "flex",
+                justifyContent: "center",
+                alignItems: "center",
+              }}
+            >
+              <FaBullhorn style={{ marginRight: 8 }} />
+              Announcements
+            </Typography>
+            <TextField
+              variant="outlined"
+              fullWidth
+              placeholder="Enter your announcement here..."
+              multiline
+              rows={4}
+              sx={{ mt: 2, mb: 2 }}
+            />
+            <Button variant="contained" sx={buttonStyle}>
+              Post Announcement
+            </Button>
+          </Box>
         </Grid>
       </Grid>
-    </Box>
   );
 };
 
