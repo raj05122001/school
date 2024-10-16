@@ -59,6 +59,42 @@ const AnalyticsReports = () => {
   return (
     <Box sx={{ flexGrow: 1 }}>
       <Grid container spacing={3}>
+        {/* Student Queries */}
+        <Grid item xs={12} sm={6}>
+          <Paper elevation={4} sx={cardStyle}>
+            <CardContent>
+              <Typography
+                variant="h6"
+                component="div"
+                sx={{
+                  display: "flex",
+                  justifyContent: "center",
+                  alignItems: "center",
+                }}
+              >
+                <FaQuestionCircle style={{ marginRight: 8 }} />
+                Student Queries
+              </Typography>
+              <List>
+                {queries.map((query) => (
+                  <ListItem key={query.id}>
+                    <ListItemText
+                      primary={query.query}
+                      secondary={`Asked by: ${query.student}`}
+                    />
+                    <IconButton
+                      edge="end"
+                      aria-label="reply"
+                      sx={iconButtonStyle}
+                    >
+                      <FaQuestionCircle />
+                    </IconButton>
+                  </ListItem>
+                ))}
+              </List>
+            </CardContent>
+          </Paper>
+        </Grid>
         {/* Announcements */}
         <Grid item xs={12} sm={6}>
           <Paper elevation={4} sx={cardStyle}>
