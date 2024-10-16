@@ -37,7 +37,7 @@ const SubjectAnalytics = () => {
       }}
     >
       <Box sx={{ display: "flex", justifyContent: "space-between", mb: 2 }}>
-        <Typography variant="h6">Watch Time by Subject</Typography>
+        <Typography variant="h6" fontWeight="bold">Watch Time by Subject</Typography>
       </Box>
       <Box sx={{ width: "100%", height: "100%" }}>
         <ResponsiveContainer width="100%" height="100%">

@@ -84,7 +84,7 @@ const LectureAnalytics = () => {
       }}
     >
       <Box sx={{ display: "flex", justifyContent: "space-between", mb: 2 }}>
-        <Typography variant="h6">Video Uploaded, Views, and Comments</Typography>
+        <Typography variant="h6" fontWeight="bold">Video Uploaded, Views, and Comments</Typography>
         {/* <FormControl sx={{ minWidth: 120 }}>
           <InputLabel id="time-period-select-label">Time Period</InputLabel>
           <Select

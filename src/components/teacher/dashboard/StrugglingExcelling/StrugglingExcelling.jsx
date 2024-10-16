@@ -74,7 +74,7 @@ const StrugglingExcelling = () => {
         backgroundColor: "rgba(255, 255, 255, 0.2)",
         boxShadow: "0 4px 30px rgba(0, 0, 0, 0.1)",
         borderRadius: "16px",
-        maxHeight: 500,
+        maxHeight: 530,
       }}
     >
       {/* Header */}
@@ -89,20 +89,20 @@ const StrugglingExcelling = () => {
         <Typography variant="h6" fontWeight="bold">
           Struggling & Excelling
         </Typography>
-        <Button variant="text" sx={{ textTransform: "none" }}>
+        {/* <Button variant="text" sx={{ textTransform: "none" }}>
           View Details &gt;
-        </Button>
+        </Button> */}
       </Box>
 
       <Grid
         container
         direction={"row"}
-        mt={4}
+        // mt={4}
         spacing={2}
-        sx={{ overflowY: "auto", maxHeight: 430 }}
+        sx={{ overflowY: "auto", maxHeight: 480 }}
       >
         {/* Bottom 3 Struggling */}
-        <Grid item xs={12} sm={6}>
+        <Grid item xs={12} sm={12}>
           <Typography
             variant="subtitle1"
             fontWeight="bold"
@@ -134,7 +134,7 @@ const StrugglingExcelling = () => {
           </List>
         </Grid>
         {/* Top 3 Excelling */}
-        <Grid item xs={12} sm={6}>
+        <Grid item xs={12} sm={12}>
           <Typography
             variant="subtitle1"
             fontWeight="bold"

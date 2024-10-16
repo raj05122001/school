@@ -20,7 +20,7 @@ const Page = () => {
       <Box sx={{}}>
         <GreetingCard/>         
       </Box>
-      <Box sx={{ marginTop: 3, display: "flex", gap: 8, '& > *': { flexBasis: '25%'} }}>
+      <Box sx={{ marginTop: 3, display: "flex", gap: 2, }}>
         <Box sx={{ flexBasis: '50%'}}>
           <ProfileCard />
         </Box>
@@ -46,7 +46,7 @@ const Page = () => {
 
           {/* Second Row */}
           <Grid item xs={12}>
-            <AnalyticsReports />
+          <CalendarComponent />
           </Grid>
         </Grid>
         <Grid
@@ -54,24 +54,24 @@ const Page = () => {
           sm={2.8}
           ml={2}
           sx={{ display: "flex", flexDirection: "column", gap: 2 }}
-        ></Grid>
+        >
+      <Grid container mt={4} spacing={4}>
+        <Grid item xs={12} sm={12}>
+          <StrugglingExcelling />
+        </Grid>
+        <Grid item xs={12} sm={12}>
+          <OverallClassPerformance />
+        </Grid>
+      </Grid>
+        </Grid>
       </Grid>
 
       <Grid container direction={"row"} mt={4} spacing={4}>
         <Grid item xs={12} sm={8}>
-          <CalendarComponent />
+        <AnalyticsReports />
         </Grid>
         <Grid item xs={12} sm={4}>
           <ClassStatistics />
-        </Grid>
-      </Grid>
-
-      <Grid container direction={"row"} mt={4} spacing={4}>
-        <Grid item xs={12} sm={6}>
-          <StrugglingExcelling />
-        </Grid>
-        <Grid item xs={12} sm={6}>
-          <OverallClassPerformance />
         </Grid>
       </Grid>
 

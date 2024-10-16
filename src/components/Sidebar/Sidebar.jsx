@@ -56,16 +56,13 @@ const Sidebar = ({ open, setOpen }) => {
             display: "flex",
             flexDirection: "column",
             justifyContent: "space-between",
-            backgroundColor: "#F6F6F6", // Light gray
-            color: "black",
+            backgroundColor: "#1e1e2d",
+            color: "#fff",
             boxShadow: "2px 0 5px rgba(0,0,0,0.1)",
-            boxShadow: "none", // Removes the shadow
-            border: "none", // Removes the border
           },
         }}
       >
         <Box sx={{ padding: open ? "16px" : "8px" }}>
-          {/* Header Section */}
           <Box
             sx={{
               display: "flex",
@@ -77,7 +74,7 @@ const Sidebar = ({ open, setOpen }) => {
               <Typography
                 variant="h5"
                 sx={{
-                  color: "#2c2c3c",
+                  color: "#fff",
                   fontWeight: "bold",
                   letterSpacing: "0.5px",
                 }}
@@ -87,7 +84,7 @@ const Sidebar = ({ open, setOpen }) => {
                   variant="h5"
                   component="span"
                   sx={{
-                    color: "#00c853", // Green for arrow
+                    color: "#00c853",
                     ml: 0.2,
                     fontWeight: "bold",
                   }}
@@ -98,9 +95,9 @@ const Sidebar = ({ open, setOpen }) => {
             )}
             <IconButton
               onClick={handleDrawerToggle}
-              sx={{ color: "#00c853", ml: open ? 2 : 0 }}
+              sx={{ color: "#fff", ml: open ? 2 : 0 }}
             >
-              <MdMenu size={26} />
+              <MdMenu size={26}/>
             </IconButton>
           </Box>
 
@@ -129,22 +126,15 @@ const Sidebar = ({ open, setOpen }) => {
               </Typography>
             </Box>
           ) : (
-            <Box
-              sx={{
-                display: "flex",
-                justifyContent: "center",
-                alignItems: "center",
-                marginTop: 2,
-              }}
-            >
-              <Avatar
-                src="/path/to/avatar.jpg"
-                alt="User Name"
-                sx={{ width: 36, height: 36, mb: open ? 0 : 1 }}
-              />
+           <Box sx={{display:'flex',justifyContent:'center',alignItems:'center',marginTop:2}}>
+             <Avatar
+              src="/path/to/avatar.jpg"
+              alt="User Name"
+              sx={{ width: 36, height:  36, mb: open ? 0 : 1 }}
+            />
             </Box>
           )}
-          {/* Menu Items */}
+
           <List>
             {[
               { text: "Dashboard", icon: <MdDashboard size={iconSize} /> },
@@ -168,19 +158,17 @@ const Sidebar = ({ open, setOpen }) => {
                 <ListItem
                   button
                   sx={{
-                    padding: open ? "10px 16px" : "5px 10px",
+                    padding:open? "10px 16px" : "5px 10px",
                     borderRadius: "8px",
                     "&:hover": {
-                      backgroundColor: "#343446", // Green hover effect
-                      color: "#fff",
+                      backgroundColor: "#343446",
                     },
-                    color: "#2c2c3c",
                     margin: "8px 0",
                   }}
                 >
                   <ListItemIcon
                     sx={{
-                      color: open ? "#00c853" : "#00c853", // Icon color change on hover
+                      color: "#00c853",
                       minWidth: open ? "unset" : "20px",
                       justifyContent: "center",
                       alignItems: "center",
@@ -192,12 +180,7 @@ const Sidebar = ({ open, setOpen }) => {
                   {open && (
                     <ListItemText
                       primary={item.text}
-                      sx={{
-                        ml: 2,
-                        "&:hover": {
-                          color: "#fff",
-                        },
-                      }}
+                      sx={{ color: "#fff", ml: 2 }}
                     />
                   )}
                 </ListItem>
@@ -206,26 +189,24 @@ const Sidebar = ({ open, setOpen }) => {
           </List>
         </Box>
 
-        {/* Logout Button */}
         <Box sx={{ mb: 2 }}>
           <Tooltip title="Logout" placement="right" disableHoverListener={open}>
             <ListItem
               button
               sx={{
-                padding: open ? "10px 16px" : "5px 10px",
+                padding:open? "10px 16px" : "5px 10px",
                 borderRadius: "8px",
                 "&:hover": {
-                  backgroundColor: "#343446", // Red hover for logout
-                  color: "#fff",
+                  backgroundColor: "#343446",
                 },
-                color: "#2c2c3c",
                 margin: "8px 0",
               }}
-              onClick={handleRoute}
+
+              onClick={()=>handleRoute()}
             >
               <ListItemIcon
                 sx={{
-                  color: "#f44336", // Red for logout icon
+                  color: "#f44336",
                   minWidth: open ? "unset" : "40px",
                   justifyContent: "center",
                   alignItems: "center",
@@ -235,20 +216,16 @@ const Sidebar = ({ open, setOpen }) => {
                 <MdLogout size={iconSize} />
               </ListItemIcon>
               {open && (
-                <ListItemText
-                  primary="Logout"
-                  sx={{
-                    ml: 2,
-                    "&:hover": {
-                      color: "#fff",
-                    },
-                  }}
-                />
+                <ListItemText primary="Logout" sx={{ color: "#fff", ml: 2 }} />
               )}
             </ListItem>
           </Tooltip>
         </Box>
       </Drawer>
+
+      <Box component="main" sx={{ flexGrow: 1, p: 3 }}>
+        {/* Main content goes here */}
+      </Box>
     </Box>
   );
 };

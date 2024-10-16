@@ -94,7 +94,7 @@ const ClassStatistics = () => {
             Class Progress
           </Typography>
           <LinearProgress variant="determinate" value={progress} />
-          <Typography variant="body2" sx={{ marginTop: 1, color: "black" }}>
+          <Typography variant="body2"  fontWeight="bold" sx={{ marginTop: 1, color: "black" }}>
             {progress}% of the progress
           </Typography>
         </Box>
