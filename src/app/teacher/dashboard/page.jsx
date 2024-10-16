@@ -14,16 +14,43 @@ import CreateQuiz from "@/components/teacher/dashboard/CreateQuize/CreateQuize";
 
 const Page = () => {
   return (
-    <Box sx={{ flexGrow: 1, m: 2 ,marginLeft:4}}>
+    <Box sx={{ flexGrow: 1, m: 2, marginLeft: 4 }}>
       <Box sx={{ display: "flex", justifyContent: "flex-end" }}>
         <Box sx={{ display: "flex", gap: 2 }}>
-          <Button variant="contained">Create Lecture</Button>
-          <Button variant="contained">Create Quize</Button>
-          <CreateQuiz/>
+          <Button
+            variant="contained"
+            sx={{
+              backgroundColor: "#00adb5",
+              ":hover": {
+                backgroundColor: "#007a7f",
+              },
+            }}
+          >
+            Create Lecture
+          </Button>
+
+          <Button
+            variant="contained"
+            sx={{
+              backgroundColor: "#00adb5",
+              ":hover": {
+                backgroundColor: "#007a7f",
+              },
+            }}
+          >
+            Create Quize
+          </Button>
+          <CreateQuiz />
         </Box>
       </Box>
       <Grid container direction={"row"} mt={4} spacing={2}>
-        <Grid container xs={12} sm={9} direction={"row"}  sx={{ display: "flex", flexDirection: "row", gap: 2 }}>
+        <Grid
+          container
+          xs={12}
+          sm={9}
+          direction={"row"}
+          sx={{ display: "flex", flexDirection: "row", gap: 2 }}
+        >
           {/* First Row */}
           <Grid item xs={12}>
             <OverviewSection />
