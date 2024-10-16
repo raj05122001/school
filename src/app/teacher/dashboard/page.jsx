@@ -4,7 +4,11 @@ import { Box, Grid, Button } from "@mui/material";
 import OverviewSection from "@/components/teacher/dashboard/OverviewSection/OverviewSection";
 import AnalyticsReports from "@/components/teacher/dashboard/AnalyticsReports/AnalyticsReports";
 import CalendarComponent from "@/components/teacher/dashboard/CalendarComponent/CalendarComponent";
-import CreateQuiz from "@/components/teacher/dashboard/CreateQuize/CreateQuize";
+import LectureAnalytics from "@/components/teacher/dashboard/LectureAnalytics/LectureAnalytics";
+import SubjectAnalytics from "@/components/teacher/dashboard/SubjectAnalytics/SubjectAnalytics";
+import StrugglingExcelling from "@/components/teacher/dashboard/StrugglingExcelling/StrugglingExcelling";
+import OverallClassPerformance from "@/components/teacher/dashboard/OverallClassPerformance/OverallClassPerformance";
+import ClassStatistics from "@/components/teacher/dashboard/ClassStatistics/ClassStatistics";
 
 const Page = () => {
   return (
@@ -34,7 +38,6 @@ const Page = () => {
           >
             Create Quiz
           </Button>
-          <CreateQuiz />
         </Box>
       </Box>
       <Grid container direction={"row"} mt={4} spacing={2}>
@@ -52,9 +55,6 @@ const Page = () => {
 
           {/* Second Row */}
           <Grid item xs={12}>
-            <CalendarComponent />
-          </Grid>
-          <Grid item xs={12}>
             <AnalyticsReports />
           </Grid>
         </Grid>
@@ -63,7 +63,33 @@ const Page = () => {
           sm={2.8}
           ml={2}
           sx={{ display: "flex", flexDirection: "column", gap: 2 }}
-        >
+        ></Grid>
+      </Grid>
+
+      <Grid container direction={"row"} mt={4} spacing={4}>
+        <Grid item xs={12} sm={8}>
+          <CalendarComponent />
+        </Grid>
+        <Grid item xs={12} sm={4}>
+          <ClassStatistics />
+        </Grid>
+      </Grid>
+
+      <Grid container direction={"row"} mt={4} spacing={4}>
+        <Grid item xs={12} sm={6}>
+          <StrugglingExcelling />
+        </Grid>
+        <Grid item xs={12} sm={6}>
+          <OverallClassPerformance />
+        </Grid>
+      </Grid>
+
+      <Grid container direction={"row"} mt={4} spacing={2}>
+        <Grid item xs={12} sm={6} md={6}>
+          <LectureAnalytics />
+        </Grid>
+        <Grid item xs={12} sm={6} md={6}>
+          <SubjectAnalytics />
         </Grid>
       </Grid>
     </Box>

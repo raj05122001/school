@@ -9,7 +9,7 @@ import { Box } from "@mui/material";
 
 const Main = ({ children }) => {
   const pathname = usePathname();
-  const [open, setOpen] = useState(false);
+  const [open, setOpen] = useState(true);
 
   return (
     <>
