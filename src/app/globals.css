@@ -32,7 +32,7 @@ body {
 
 body {
   color: black;
-  background-color: #F6F6F6;
+  background-color: #f6f6f6;
 }
 
 /* For WebKit browsers (like Chrome, Safari) */
@@ -65,4 +65,78 @@ a {
   html {
     color-scheme: dark;
   }
+}
+
+/* Typography variant styles */
+.h1 {
+  font-size: 6rem; /* Default size for h1 */
+  font-weight: 300; /* Light */
+  line-height: 1.167;
+  letter-spacing: -0.01562em;
+}
+
+.h2 {
+  font-size: 3.75rem; /* Default size for h2 */
+  font-weight: 300; /* Light */
+  line-height: 1.2;
+  letter-spacing: -0.00833em;
+}
+
+.h3 {
+  font-size: 3rem; /* Default size for h3 */
+  font-weight: 400; /* Regular */
+  line-height: 1.167;
+  letter-spacing: 0em;
+}
+
+.h4 {
+  font-size: 2.125rem; /* Default size for h4 */
+  font-weight: 400; /* Regular */
+  line-height: 1.235;
+  letter-spacing: 0.00735em;
+}
+
+.h5 {
+  font-size: 1.5rem; /* Default size for h5 */
+  font-weight: 400; /* Regular */
+  line-height: 1.334;
+  letter-spacing: 0em;
+}
+
+.h6 {
+  font-size: 1.25rem; /* Default size for h6 */
+  font-weight: 500; /* Medium */
+  line-height: 1.6;
+  letter-spacing: 0.0075em;
+}
+
+.subtitle1 {
+  font-size: 1rem; /* Default size for subtitle1 */
+  line-height: 1.75;
+  letter-spacing: 0.00938em;
+}
+
+.blur_effect_card {
+  backdrop-filter: blur(10px);
+  background-color: rgba(255, 255, 255, 0.2);
+  box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+  border-radius: 16px;
+}
+
+.light-heading {
+  font-weight: bold;
+  color: black;
+}
+
+.dark-heading {
+  font-weight: bold;
+  color: white;
+}
+
+.light-text {
+  color: black;
+}
+
+.dark-text {
+  color: white;
 }

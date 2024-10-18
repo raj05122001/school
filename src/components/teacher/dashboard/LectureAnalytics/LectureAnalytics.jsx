@@ -17,6 +17,8 @@ import {
   Legend,
   ResponsiveContainer,
 } from "recharts";
+import { FaVideo, FaEye, FaCommentDots } from "react-icons/fa"; // Import icons
+import { useThemeContext } from "@/hooks/ThemeContext";
 
 const data = [
   {
@@ -64,6 +66,7 @@ const data = [
 ];
 
 const LectureAnalytics = () => {
+  const { isDarkMode } = useThemeContext();
   const [timePeriod, setTimePeriod] = useState("week");
 
   // Handle the time period change
@@ -77,29 +80,22 @@ const LectureAnalytics = () => {
       sx={{
         width: "100%",
         p: 4,
-        backdropFilter: "blur(10px)",
-        backgroundColor: "rgba(255, 255, 255, 0.2)",
-        boxShadow: "0 4px 30px rgba(0, 0, 0, 0.1)",
-        borderRadius: "16px",
+        maxHeight: "420px",
+        height: "100%",
+        color: isDarkMode ? "#fff" : "#000",
       }}
+      className="blur_effect_card"
     >
       <Box sx={{ display: "flex", justifyContent: "space-between", mb: 2 }}>
-        <Typography variant="h6" fontWeight="bold">Video Uploaded, Views, and Comments</Typography>
-        {/* <FormControl sx={{ minWidth: 120 }}>
-          <InputLabel id="time-period-select-label">Time Period</InputLabel>
-          <Select
-            labelId="time-period-select-label"
-            id="time-period-select"
-            value={timePeriod}
-            label="Time Period"
-            onChange={handleTimePeriodChange}
-          >
-            <MenuItem value="week">Week</MenuItem>
-            <MenuItem value="month">Month</MenuItem>
-            <MenuItem value="year">Year</MenuItem>
-          </Select>
-        </FormControl> */}
+        <Typography
+          className={`${isDarkMode ? "dark-heading" : "light-heading"} h6`}
+          sx={{ fontSize: "18px", fontWeight: "bold" }}
+        >
+          <FaVideo style={{ marginRight: 8 }} />
+          Video Uploaded, Views, and Comments
+        </Typography>
       </Box>
+
       <Box sx={{ width: "100%", height: 300 }}>
         <ResponsiveContainer width="100%" height="100%">
           <BarChart
@@ -110,15 +106,33 @@ const LectureAnalytics = () => {
               left: 20,
               bottom: 5,
             }}
+            barSize={40} // Adjust bar size for better visibility
           >
-            <CartesianGrid strokeDasharray="3 3" />
-            <XAxis dataKey="name" />
-            <YAxis />
-            <Tooltip />
-            <Legend />
-            <Bar dataKey="comments" fill="#8884d8" background={{ fill: "#eee" }} />
+            <CartesianGrid strokeDasharray="3 3" stroke={isDarkMode ? "#555" : "#ccc"} />
+            <XAxis dataKey="name" stroke={isDarkMode ? "#FFF" : "#000"} />
+            <YAxis stroke={isDarkMode ? "#FFF" : "#000"} />
+            <Tooltip
+              contentStyle={{
+                backgroundColor: isDarkMode ? "#444" : "#fff",
+                borderColor: isDarkMode ? "#555" : "#ddd",
+                color: isDarkMode ? "#fff" : "#000",
+              }}
+            />
+            <Legend
+              wrapperStyle={{
+                color: isDarkMode ? "#FFF" : "#000",
+              }}
+              iconType="square"
+            />
+
+            {/* Adding icons to bars */}
+            <Bar
+              dataKey="comments"
+              fill="#8884d8"
+              background={{ fill: "#eee" }}
+            />
             <Bar dataKey="view" fill="#82ca9d" />
-            <Bar dataKey="upload" fill="#ffc658" />
+            <Bar dataKey="upload" fill="#ffc658"/>
           </BarChart>
         </ResponsiveContainer>
       </Box>

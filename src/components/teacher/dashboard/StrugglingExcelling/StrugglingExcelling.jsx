@@ -12,6 +12,7 @@ import {
   Grid,
 } from "@mui/material";
 import { FaExclamationCircle, FaStar } from "react-icons/fa";
+import { useThemeContext } from "@/hooks/ThemeContext";
 
 // Sample data
 const students = {
@@ -64,18 +65,17 @@ const students = {
 };
 
 const StrugglingExcelling = () => {
+  const { isDarkMode, primaryColor, secondaryColor } = useThemeContext();
+
   return (
     <Box
       sx={{
         // maxWidth: 400,
-        width:"100%",
+        width: "100%",
         p: 2,
-        backdropFilter: "blur(10px)",
-        backgroundColor: "rgba(255, 255, 255, 0.2)",
-        boxShadow: "0 4px 30px rgba(0, 0, 0, 0.1)",
-        borderRadius: "16px",
         maxHeight: 530,
       }}
+      className="blur_effect_card"
     >
       {/* Header */}
       <Box
@@ -86,7 +86,9 @@ const StrugglingExcelling = () => {
           mb: 2,
         }}
       >
-        <Typography variant="h6" fontWeight="bold">
+        <Typography
+          className={`${isDarkMode ? "dark-heading" : "light-heading"} h6`}
+        >
           Struggling & Excelling
         </Typography>
         {/* <Button variant="text" sx={{ textTransform: "none" }}>
@@ -104,7 +106,9 @@ const StrugglingExcelling = () => {
         {/* Bottom 3 Struggling */}
         <Grid item xs={12} sm={12}>
           <Typography
-            variant="subtitle1"
+            className={`${
+              isDarkMode ? "dark-heading" : "light-heading"
+            } subtitle1`}
             fontWeight="bold"
             sx={{ display: "flex", alignItems: "center" }}
           >
@@ -124,6 +128,12 @@ const StrugglingExcelling = () => {
                   <ListItemText
                     primary={student.name}
                     secondary={student.subjects}
+                    primaryTypographyProps={{
+                      sx: { color: primaryColor }, // Custom styles for primary text
+                    }}
+                    secondaryTypographyProps={{
+                      sx: { color: secondaryColor }, // Custom styles for secondary text
+                    }}
                   />
                 </Box>
                 <Button variant="outlined" sx={{ textTransform: "none" }}>
@@ -136,7 +146,9 @@ const StrugglingExcelling = () => {
         {/* Top 3 Excelling */}
         <Grid item xs={12} sm={12}>
           <Typography
-            variant="subtitle1"
+            className={`${
+              isDarkMode ? "dark-heading" : "light-heading"
+            } subtitle1`}
             fontWeight="bold"
             sx={{ display: "flex", alignItems: "center" }}
           >
@@ -156,6 +168,12 @@ const StrugglingExcelling = () => {
                   <ListItemText
                     primary={student.name}
                     secondary={student.subjects}
+                    primaryTypographyProps={{
+                      sx: { color: primaryColor }, // Custom styles for primary text
+                    }}
+                    secondaryTypographyProps={{
+                      sx: { color: secondaryColor }, // Custom styles for secondary text
+                    }}
                   />
                 </Box>
                 <Button variant="outlined" sx={{ textTransform: "none" }}>
