@@ -75,10 +75,10 @@ const Footer = () => {
             variant="h6"
             sx={{ fontWeight: "bold", marginBottom: "10px" }}
           >
-            Let's Discuss What's Next
+            Let&apos;s Discuss What&apos;s Next
           </Typography>
           <Typography variant="body2" sx={{ marginBottom: "10px" }}>
-            Have a project or a question? We'd love to hear from you.
+            Have a project or a question? We&apos;d love to hear from you.
           </Typography>
           <a
             href="https://www.intellai.ai/contact"

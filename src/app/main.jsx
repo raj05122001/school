@@ -31,7 +31,7 @@ const Main = ({ children }) => {
   }, []);
 
   return (
-    <>
+    <Suspense>
       <Toaster position="bottom-center" reverseOrder={false} />
       {pathname === "/login" ||
       pathname === "/forget-password" ||
@@ -52,7 +52,7 @@ const Main = ({ children }) => {
               <Sidebar open={open} setOpen={setOpen} />
             </Box>
             <Box sx={{ display: "flex", flexDirection: "column" }}>
-              <Suspense>{children}</Suspense>
+              {children}
               <Box sx={{ mt: "auto" }}>
                 <Footer />
               </Box>
@@ -60,7 +60,7 @@ const Main = ({ children }) => {
           </Box>
         </ThemeProvider>
       )}
-    </>
+    </Suspense>
   );
 };
 

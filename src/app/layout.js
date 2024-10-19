@@ -17,7 +17,7 @@ export default function RootLayout({ children }) {
         className={inter.className}
         style={{ height: "100%", width: "100%" }}
       >
-        <Main children={children} />
+        <Main>{children}</Main>
       </body>
     </html>
   );

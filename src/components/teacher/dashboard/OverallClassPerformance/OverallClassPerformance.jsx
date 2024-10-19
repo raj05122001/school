@@ -5,10 +5,10 @@ import { useThemeContext } from "@/hooks/ThemeContext";
 
 // Data for the pie chart
 const data = [
-  { name: "Advanced", value: 50, color: "#00b894" },
-  { name: "Intermediate", value: 30, color: "#ff7675" },
-  { name: "Proficient", value: 20, color: "#0984e3" },
-  { name: "Basic", value: 10, color: "#fdcb6e" },
+  { name: "Advanced", value: 45, color: "#00b894" },
+  { name: "Intermediate", value: 24, color: "#ff7675" },
+  { name: "Proficient", value: 18, color: "#0984e3" },
+  { name: "Basic", value: 13, color: "#fdcb6e" },
 ];
 
 // Function to render the label showing percentage
@@ -63,20 +63,8 @@ const OverallClassPerformance = () => {
         >
           Overall Class Performance
         </Typography>
-        {/* <Button variant="text" sx={{ textTransform: "none" }}>
-          View Details &gt;
-        </Button> */}
       </Box>
 
-      {/* Pie Chart and Legend */}
-      {/* <Grid container spacing={2}>
-        <Grid
-          item
-          xs={12}
-          sm={6}
-          sx={{ display: "flex", justifyContent: "center" }}
-        > */}
-      {/* Pie Chart using Recharts */}
       <Box sx={{ width: "100%", height: 240 }}>
         <ResponsiveContainer width="100%" height="100%">
           <PieChart>
@@ -98,19 +86,7 @@ const OverallClassPerformance = () => {
           </PieChart>
         </ResponsiveContainer>
       </Box>
-      {/* </Grid>
 
-        <Grid
-          item
-          xs={12}
-          sm={6}
-          sx={{
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "center",
-          }}
-        > */}
-      {/* Custom Legend */}
       <Grid container spacing={2}>
         {data.map((entry) => (
           <Grid
@@ -141,8 +117,6 @@ const OverallClassPerformance = () => {
         ))}
       </Grid>
 
-      {/* </Grid>
-      </Grid> */}
     </Box>
   );
 };

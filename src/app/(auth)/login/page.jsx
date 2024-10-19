@@ -65,8 +65,8 @@ const LoginPage = () => {
         const { access, refresh, username, message } = response.data;
         localStorage.setItem("REFRESH_TOKEN", refresh);
         localStorage.setItem("ACCESS_TOKEN", access);
-        Cookies.set("ACCESS_TOKEN", access); // Store access token in cookies
-        Cookies.set("REFRESH_TOKEN", refresh); // Store refresh token in cookies
+        Cookies.set("ACCESS_TOKEN", access, { expires: 7 }); // Store access token in cookies
+        Cookies.set("REFRESH_TOKEN", refresh, { expires: 7 }); // Store refresh token in cookies
 
         // Display success message
         setSuccess(message || "Logged in successfully!");
@@ -280,7 +280,7 @@ const LoginPage = () => {
             <Grid container justifyContent="center">
               <Grid item>
                 <Typography variant="body2">
-                  Don't have an account?{" "}
+                  Don&apos;t have an account?{" "}
                   <Link
                     onClick={() => router.push("/registration")}
                     sx={{ color: "#1976d2", cursor: "pointer" }}

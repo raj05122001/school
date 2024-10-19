@@ -9,9 +9,9 @@ import { useThemeContext } from "@/hooks/ThemeContext";
 const CalendarComponent = () => {
   const { isDarkMode, primaryColor, secondaryColor } = useThemeContext();
   const [events, setEvents] = useState([
-    { title: "Team Meeting", start: "2024-09-10T10:00:00", end: "2024-09-10T12:00:00" },
-    { title: "Project Deadline", start: "2024-09-15", allDay: true },
-    { title: "Conference", start: "2024-09-20T09:00:00", end: "2024-09-20T17:00:00" },
+    { title: "Team Meeting", start: "2024-10-15T10:00:00", end: "2024-10-15T12:00:00" },
+    { title: "Project Deadline", start: "2024-10-25", allDay: true },
+    { title: "Conference", start: "2024-10-20T09:00:00", end: "2024-10-20T17:00:00" },
   ]);
 
   const handleDateClick = (info) => {

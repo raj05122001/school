@@ -52,7 +52,7 @@ function GreetingCard() {
         </Box>
         <Box sx={{ display: "flex", gap: 3, alignItems: "flex-start" }}>
           <DarkMode />
-          <IconButton color="inherit" >
+          <IconButton color="inherit">
             <Badge badgeContent={4} color="error">
               <FaBell size={24} color="#ffffff" />
             </Badge>
@@ -69,11 +69,14 @@ function GreetingCard() {
           <Button
             variant="contained"
             sx={{
-              backgroundColor: "#FFD700",
+              backgroundColor: "#FFD700", // Gold
+              transition: "all 150ms ease-in-out",
+              color: "#003366", // Dark blue for text
+
               ":hover": {
-                backgroundColor: "#DAA520",
+                backgroundColor: "#FFC107", // Slightly darker gold on hover
+                boxShadow: "0 0 10px 0 #FFC107 inset, 0 0 10px 4px #FFC107", // Matching hover color with gold shade
               },
-              color: "#003366",
             }}
           >
             Create Lecture
@@ -81,13 +84,16 @@ function GreetingCard() {
 
           <Button
             variant="contained"
+          
             sx={{
               backgroundColor: "#90EE90",
               ":hover": {
                 backgroundColor: "#3CB371",
+                boxShadow: "0 0 10px 0 #3CB371 inset, 0 0 10px 4px #3CB371", 
               },
               color: "#006400",
             }}
+            className="btn"
           >
             Create Quiz
           </Button>
