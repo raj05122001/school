@@ -1,8 +1,6 @@
 import React from "react";
 import {
   ComposedChart,
-  Line,
-  Area,
   Bar,
   XAxis,
   YAxis,
@@ -12,7 +10,12 @@ import {
   ResponsiveContainer,
 } from "recharts";
 import { Box, Typography } from "@mui/material";
+import { useThemeContext } from "@/hooks/ThemeContext";
+import { FiBarChart2 } from "react-icons/fi"; // Bar chart icon from react-icons
+import { MdDarkMode, MdLightMode } from "react-icons/md"; // Icons for dark and light mode
+import { light } from "@mui/material/styles/createPalette";
 
+// Sample data
 const data = [
   { subject: "English", time: 40 },
   { subject: "Maths", time: 36 },
@@ -23,20 +26,34 @@ const data = [
 ];
 
 const SubjectAnalytics = () => {
+  const { isDarkMode } = useThemeContext();
+
   return (
     <Box
       sx={{
-        width: "100%", // Use 100% width to fill parent
+        width: "100%",
         p: 4,
-        backdropFilter: "blur(10px)",
-        backgroundColor: "rgba(255, 255, 255, 0.2)",
-        boxShadow: "0 4px 30px rgba(0, 0, 0, 0.1)",
-        borderRadius: "16px",
-        height: "400px", // Set a fixed height for the chart container
+        maxHeight: "420px",
+        height: "100%",
       }}
+      className="blur_effect_card"
     >
-      <Box sx={{ display: "flex", justifyContent: "space-between", mb: 2 }}>
-        <Typography variant="h6" fontWeight="bold">Watch Time by Subject</Typography>
+      <Box sx={{ display: "flex", justifyContent: "space-between", mb: 2, alignItems: "center" }}>
+        <Typography
+          sx={{
+            display: "flex",
+            alignItems: "center",
+          }}
+          className={`${isDarkMode ? "dark-heading" : "light-heading"} h6`}
+        >
+          <FiBarChart2 size={22} style={{ marginRight: "8px" }} />
+          Watch Time by Subject
+        </Typography>
+        {isDarkMode ? (
+          <MdDarkMode style={{ fontSize: "24px", color: "#f0f0f0" }} />
+        ) : (
+          <MdLightMode style={{ fontSize: "24px", color: "#2b2b2b" }} />
+        )}
       </Box>
       <Box sx={{ width: "100%", height: "100%" }}>
         <ResponsiveContainer width="100%" height="100%">
@@ -50,13 +67,22 @@ const SubjectAnalytics = () => {
               left: 20,
             }}
           >
-            <CartesianGrid stroke="#f5f5f5" />
-            <XAxis type="number" />
-            <YAxis dataKey="subject" type="category" scale="band" />
-            <Tooltip />
-            <Legend />
-            <Bar dataKey="time" fill="#413ea0" />
-            {/* Optional: You can add more types of charts here, like Line or Area */}
+            <CartesianGrid stroke={isDarkMode ? "#444444" : "#e0e0e0"} />
+            <XAxis type="number" stroke={isDarkMode ? "#f0f0f0" : "#2b2b2b"} />
+            <YAxis
+              dataKey="subject"
+              type="category"
+              scale="band"
+              stroke={isDarkMode ? "#f0f0f0" : "#2b2b2b"}
+            />
+            <Tooltip
+              contentStyle={{
+                backgroundColor: isDarkMode ? "#444444" : "#fff",
+                color: isDarkMode ? "#f0f0f0" : "#2b2b2b",
+              }}
+            />
+            <Legend wrapperStyle={{ color: isDarkMode ? "#f0f0f0" : "#2b2b2b" }} />
+            <Bar dataKey="time" fill={isDarkMode ? "#82ca9d" : "#413ea0"} />
           </ComposedChart>
         </ResponsiveContainer>
       </Box>

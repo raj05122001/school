@@ -22,11 +22,13 @@ import {
 } from "react-icons/md";
 import Cookies from "js-cookie";
 import { useRouter } from "next/navigation";
+import { useThemeContext } from "@/hooks/ThemeContext";
 
 const drawerWidth = 240;
 const miniDrawerWidth = 60;
 
 const Sidebar = ({ open, setOpen }) => {
+  const { isDarkMode, primaryColor, secondaryColor } = useThemeContext();
   const router = useRouter();
   const iconSize = open ? 22 : 26;
   const handleDrawerToggle = () => {
@@ -56,7 +58,7 @@ const Sidebar = ({ open, setOpen }) => {
             display: "flex",
             flexDirection: "column",
             justifyContent: "space-between",
-            backgroundColor: "#1e1e2d",
+            backgroundColor: isDarkMode ? "black" : "#1e1e2d",
             color: "#fff",
             boxShadow: "2px 0 5px rgba(0,0,0,0.1)",
           },
@@ -97,7 +99,7 @@ const Sidebar = ({ open, setOpen }) => {
               onClick={handleDrawerToggle}
               sx={{ color: "#fff", ml: open ? 2 : 0 }}
             >
-              <MdMenu size={26}/>
+              <MdMenu size={26} />
             </IconButton>
           </Box>
 
@@ -126,12 +128,19 @@ const Sidebar = ({ open, setOpen }) => {
               </Typography>
             </Box>
           ) : (
-           <Box sx={{display:'flex',justifyContent:'center',alignItems:'center',marginTop:2}}>
-             <Avatar
-              src="/path/to/avatar.jpg"
-              alt="User Name"
-              sx={{ width: 36, height:  36, mb: open ? 0 : 1 }}
-            />
+            <Box
+              sx={{
+                display: "flex",
+                justifyContent: "center",
+                alignItems: "center",
+                marginTop: 2,
+              }}
+            >
+              <Avatar
+                src="/path/to/avatar.jpg"
+                alt="User Name"
+                sx={{ width: 36, height: 36, mb: open ? 0 : 1 }}
+              />
             </Box>
           )}
 
@@ -158,7 +167,7 @@ const Sidebar = ({ open, setOpen }) => {
                 <ListItem
                   button
                   sx={{
-                    padding:open? "10px 16px" : "5px 10px",
+                    padding: open ? "10px 16px" : "5px 10px",
                     borderRadius: "8px",
                     "&:hover": {
                       backgroundColor: "#343446",
@@ -194,15 +203,14 @@ const Sidebar = ({ open, setOpen }) => {
             <ListItem
               button
               sx={{
-                padding:open? "10px 16px" : "5px 10px",
+                padding: open ? "10px 16px" : "5px 10px",
                 borderRadius: "8px",
                 "&:hover": {
                   backgroundColor: "#343446",
                 },
                 margin: "8px 0",
               }}
-
-              onClick={()=>handleRoute()}
+              onClick={() => handleRoute()}
             >
               <ListItemIcon
                 sx={{

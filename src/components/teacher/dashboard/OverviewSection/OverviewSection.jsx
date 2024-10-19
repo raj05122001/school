@@ -17,6 +17,7 @@ import {
 } from "react-icons/fa";
 import { keyframes } from "@mui/system";
 import LectureCard from "@/commonComponents/LectureCard/LectureCard";
+import { useThemeContext } from "@/hooks/ThemeContext";
 
 const fadeIn = keyframes`
   from {
@@ -47,6 +48,8 @@ const iconStyle = {
 };
 
 const OverviewSection = () => {
+  const { isDarkMode } = useThemeContext();
+
   const lectures = [
     {
       id: 1,
@@ -122,14 +125,21 @@ const OverviewSection = () => {
   ];
 
   return (
-    <Box sx={{ flexGrow: 1, p: 2, backgroundColor: "#f4f6f8" }}>
+    <Box sx={{ flexGrow: 1, p: 2 }}>
       <Grid container spacing={3}>
         {/* Upcoming Lectures */}
         <Grid item xs={12}>
-          <Typography variant="h4" sx={{ mb: 2 }}>
-            <FaChalkboardTeacher style={{ marginRight: 8, ...iconStyle }} />
-            Upcomming Lectures
-          </Typography>
+          <Box sx={{ display: "flex", alignItems: "center", gap: 1, mb: 2 }}>
+            <FaChalkboardTeacher size={26} style={{ ...iconStyle }} />
+            <Typography
+              className={`${
+                isDarkMode ? "dark-heading" : "light-heading"
+              } h4`}
+              sx={{fontWeight:'bold'}}
+            >
+              Upcomming Lectures
+            </Typography>
+          </Box>
           <Grid container spacing={3}>
             {lectures.map((lecture) => (
               <Grid item xs={12} sm={6} md={6} key={lecture.id}>

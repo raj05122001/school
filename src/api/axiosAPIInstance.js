@@ -25,7 +25,7 @@ export const refreshAccessToken = async () => {
 
     const response = await refreshPromise;
     const newAccessToken = response.data.access;
-    Cookies.set('VIDYAAI_ACCESS_TOKEN', newAccessToken);
+    Cookies.set('VIDYAAI_ACCESS_TOKEN', newAccessToken,{expires:7});
     isRefreshing = false;
     localStorage.setItem(
         "VIDYAAI_ACCESS_TOKEN",

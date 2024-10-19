@@ -4,13 +4,14 @@
   "private": true,
   "scripts": {
     "dev": "next dev",
-    "start": "next start -p 80",
+    "start": "next start -p 3000",
     "docker": "next start",
     "build": "next build",
     "lint": "next lint",
     "dev-https": "node server.js"
   },
   "dependencies": {
+    "@date-io/dayjs": "^3.0.0",
     "@emotion/react": "^11.13.3",
     "@emotion/styled": "^11.13.0",
     "@fullcalendar/core": "^6.1.15",
@@ -20,6 +21,9 @@
     "@fullcalendar/timegrid": "^6.1.15",
     "@mui/material": "^5.16.7",
     "@mui/system": "^6.0.2",
+    "@mui/x-date-pickers": "^7.20.0",
+    "@mui/x-date-pickers-pro": "^7.20.0",
+    "moment": "^2.30.1",
     "axios": "^1.7.5",
     "dayjs": "^1.11.13",
     "js-cookie": "^3.0.5",
