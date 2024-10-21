@@ -19,10 +19,19 @@ import {
   MdSchedule,
   MdLogout,
   MdMenu,
+  MdPerson,
+  MdVideoLibrary,
+  MdHelp,
+  MdTask,
+  MdAssignment,
 } from "react-icons/md";
+import { PiExam } from "react-icons/pi";
+import { FaChalkboardTeacher } from "react-icons/fa";
+import { AiOutlinePlus } from "react-icons/ai";
 import Cookies from "js-cookie";
 import { useRouter } from "next/navigation";
 import { useThemeContext } from "@/hooks/ThemeContext";
+import { decodeToken } from "react-jwt";
 
 const drawerWidth = 240;
 const miniDrawerWidth = 60;
@@ -37,8 +46,6 @@ const Sidebar = ({ open, setOpen }) => {
 
   const handleRoute = async () => {
     document.body.style.overflow = "";
-    await localStorage.removeItem("REFRESH_TOKEN");
-    await localStorage.removeItem("ACCESS_TOKEN");
     Cookies.remove("REFRESH_TOKEN");
     Cookies.remove("ACCESS_TOKEN");
     return router.push("/login");
@@ -145,56 +152,53 @@ const Sidebar = ({ open, setOpen }) => {
           )}
 
           <List>
-            {[
-              { text: "Dashboard", icon: <MdDashboard size={iconSize} /> },
-              { text: "Create Lecture", icon: <MdCreate size={iconSize} /> },
-              { text: "Lecture Listing", icon: <MdList size={iconSize} /> },
-              {
-                text: "Lecture Tracking",
-                icon: <MdTrackChanges size={iconSize} />,
-              },
-              {
-                text: "Lecture Schedule",
-                icon: <MdSchedule size={iconSize} />,
-              },
-            ].map((item, index) => (
-              <Tooltip
-                title={item.text}
-                key={index}
-                placement="right"
-                disableHoverListener={open}
-              >
-                <ListItem
-                  button
-                  sx={{
-                    padding: open ? "10px 16px" : "5px 10px",
-                    borderRadius: "8px",
-                    "&:hover": {
-                      backgroundColor: "#343446",
-                    },
-                    margin: "8px 0",
-                  }}
+            {sidebarLinks.overview
+              .filter((val) => val.show.includes("TEACHER"))
+              .map((item, index) => (
+                <Tooltip
+                  title={item.text}
+                  key={index}
+                  placement="right"
+                  disableHoverListener={open}
                 >
-                  <ListItemIcon
+                  <ListItem
+                    button
                     sx={{
-                      color: "#00c853",
-                      minWidth: open ? "unset" : "20px",
-                      justifyContent: "center",
-                      alignItems: "center",
-                      display: "flex",
+                      padding: open ? "10px 16px" : "5px 10px",
+                      borderRadius: "8px",
+                      "&:hover": {
+                        backgroundColor: "#343446",
+                      },
+                      margin: "8px 0",
+                    }}
+                    onClick={()=>{
+                      if (item.text === "Create Lecture") {
+                        // setOpenCreateMeetingDrawer(true);
+                      } else {
+                        router.push(item.href);
+                      }
                     }}
                   >
-                    {item.icon}
-                  </ListItemIcon>
-                  {open && (
-                    <ListItemText
-                      primary={item.text}
-                      sx={{ color: "#fff", ml: 2 }}
-                    />
-                  )}
-                </ListItem>
-              </Tooltip>
-            ))}
+                    <ListItemIcon
+                      sx={{
+                        color: "#00c853",
+                        minWidth: open ? "unset" : "20px",
+                        justifyContent: "center",
+                        alignItems: "center",
+                        display: "flex",
+                      }}
+                    >
+                      {item.icon}
+                    </ListItemIcon>
+                    {open && (
+                      <ListItemText
+                        primary={item.text}
+                        sx={{ color: "#fff", ml: 2 }}
+                      />
+                    )}
+                  </ListItem>
+                </Tooltip>
+              ))}
           </List>
         </Box>
 
@@ -239,3 +243,80 @@ const Sidebar = ({ open, setOpen }) => {
 };
 
 export default Sidebar;
+
+export const sidebarLinks = {
+  overview: [
+    {
+      text: "Admin Directory",
+      href: "/administration",
+      icon: <MdPerson size={22} />,
+      show: "ADMIN",
+    },
+    {
+      text: "Admin Dashboard",
+      href: "/admin-dashboard",
+      icon: <MdDashboard size={22} />,
+      show: "ADMIN",
+    },
+    {
+      text: "Dashboard",
+      href: "/student/dashboard",
+      icon: <MdDashboard size={22} />,
+      show: "STUDENT",
+    },
+    {
+      text: "Dashboard",
+      href: "/teacher/dashboard",
+      icon: <FaChalkboardTeacher size={22} />,
+      show: "TEACHER",
+    },
+    {
+      text: "Create Lecture",
+      href: "",
+      icon: <AiOutlinePlus size={22} />,
+      show: "TEACHER",
+    },
+    {
+      text: "Lecture Listings",
+      href: "/admin/lecture-listings",
+      icon: <MdVideoLibrary size={22} />,
+      show: "ADMIN",
+    },
+    {
+      text: "Lecture Listings",
+      href: "/teacher/lecture-listings",
+      icon: <MdVideoLibrary size={22} />,
+      show: "TEACHER",
+    },
+    {
+      text: "Lecture Listings",
+      href: "/student/lecture-listings",
+      icon: <MdVideoLibrary size={22} />,
+      show: "STUDENT",
+    },
+    {
+      text: "Lecture Tracking",
+      href: "/lecture-tracking",
+      icon: <MdTask size={22} />,
+      show: "ADMIN TEACHER",
+    },
+    {
+      text: "Lecture Schedule",
+      href: "/lecture-schedule",
+      icon: <MdSchedule size={22} />,
+      show: "ADMIN TEACHER STUDENT",
+    },
+    // {
+    //   text: "Test Series",
+    //   href: "/quizcomponent",
+    //   icon: <MdAssignment size={22} />,
+    //   show: "STUDENT TEACHER",
+    // },
+    // {
+    //   text: "Create Quiz",
+    //   href: "/teacher/quiz",
+    //   icon: <PiExam size={22} />,
+    //   show: "STUDENT TEACHER",
+    // },
+  ],
+};
