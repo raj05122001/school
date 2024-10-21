@@ -31,9 +31,6 @@ const textAnimation = {
   },
 };
 
-const window = global?.window || {};
-const localStorage = window.localStorage || {};
-
 const LoginPage = () => {
   const router = useRouter();
   const searchParams = useSearchParams();
@@ -63,8 +60,6 @@ const LoginPage = () => {
       if (response.status === 200) {
         console.log("response.data", response.data);
         const { access, refresh, username, message } = response.data;
-        localStorage.setItem("REFRESH_TOKEN", refresh);
-        localStorage.setItem("ACCESS_TOKEN", access);
         Cookies.set("ACCESS_TOKEN", access, { expires: 7 }); // Store access token in cookies
         Cookies.set("REFRESH_TOKEN", refresh, { expires: 7 }); // Store refresh token in cookies
 
