@@ -188,4 +188,35 @@ export default class apiServices {
       });
   };
 
+  public getMyLectures = async (
+    status = "UPCOMMING",
+    type = "",
+    search = "",
+    page = 1,
+    size = 10,
+    getMyLectures
+  ) => {
+    return await this.axiosInstance
+      .get(
+        `/api/v1/dashboard/teacher/lectures/?status=${status}&type=${type}&search=${search}&page=${page}&size=${size}${
+          getMyLectures ? `&date=${getMyLectures}` : ""
+        }`
+      )
+      .then((Response) => Response)
+      .catch((error) => console.error(error));
+  };
+
+  public getUpcommingMeetingByDate = (year, month) => {
+    return this.axiosInstance
+      .get(`/api/v1/teacher/upcomming_lectures/?date=${year}-${month}`)
+      .then((response) => {
+        return response;
+      })
+      .catch((error) => {
+        const errorText = error.response.data.errors
+          ? error.response.data.errors.username[0]
+          : error.response.data.message;
+        toast.error(errorText);
+      });
+  };
   }

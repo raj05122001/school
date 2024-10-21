@@ -73,7 +73,7 @@ const StrugglingExcelling = () => {
         // maxWidth: 400,
         width: "100%",
         p: 2,
-        maxHeight: 530,
+        maxHeight: 510,
       }}
       className="blur_effect_card"
     >

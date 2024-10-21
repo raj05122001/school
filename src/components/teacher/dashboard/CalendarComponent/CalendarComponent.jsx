@@ -1,37 +1,94 @@
-import React, { useState } from "react";
-import FullCalendar from "@fullcalendar/react"; // must go before plugins
-import dayGridPlugin from "@fullcalendar/daygrid"; // for month/week/day formats
-import timeGridPlugin from "@fullcalendar/timegrid"; // for day and week views
-import interactionPlugin from "@fullcalendar/interaction"; // for draggable and resizable events
-import "./CalendarComponent.css"; // importing the custom styles
+import React, { useEffect, useState } from "react";
+import FullCalendar from "@fullcalendar/react"; 
+import dayGridPlugin from "@fullcalendar/daygrid"; 
+import timeGridPlugin from "@fullcalendar/timegrid"; 
+import interactionPlugin from "@fullcalendar/interaction"; 
+import "./CalendarComponent.css";
 import { useThemeContext } from "@/hooks/ThemeContext";
+import { getUpcommingMeetingByDate } from "@/api/apiHelper";
+import LecturePopover from "./LecturePopover";
+import { formatTime, LectureTyps } from "@/helper/Helper";
+import { Skeleton } from "@mui/material";
+
+// Helper to get current month and year
+const getCurrentMonthYear = () => {
+  const today = new Date();
+  const month = today.getMonth() + 1; // Months are 0-indexed in JS
+  const year = today.getFullYear();
+  return [month.toString(), year.toString()];
+};
 
 const CalendarComponent = () => {
-  const { isDarkMode, primaryColor, secondaryColor } = useThemeContext();
-  const [events, setEvents] = useState([
-    { title: "Team Meeting", start: "2024-10-15T10:00:00", end: "2024-10-15T12:00:00" },
-    { title: "Project Deadline", start: "2024-10-25", allDay: true },
-    { title: "Conference", start: "2024-10-20T09:00:00", end: "2024-10-20T17:00:00" },
-  ]);
+  const { isDarkMode, primaryColor } = useThemeContext();
 
-  const handleDateClick = (info) => {
-    alert("Date clicked: " + info.dateStr);
+  // Default the current month to the current month and year
+  const [currentMonth, setCurrentMonth] = useState(getCurrentMonthYear());
+  const [calendarData, setCalendarData] = useState([]);
+  const [isLoading, setIsLoading] = useState(true);
+
+  // Fetch calendar data when currentMonth changes
+  useEffect(() => {
+    fetchData();
+  }, [currentMonth]);
+
+  const fetchData = async () => {
+    setIsLoading(true);
+    try {
+      const response = await getUpcommingMeetingByDate(
+        currentMonth[1],
+        currentMonth[0]
+      );
+      const dataCalendar = response?.data?.data?.data || [];
+
+      const formattedData = dataCalendar.map((obj) => ({
+        ...obj,
+        id: obj.id,
+        title: obj.title || "Untitled Event",
+        date: obj.schedule_date,
+        start: obj.schedule_date, 
+        type: obj.type,
+        start_time: obj.start_time,
+        organizer: obj.organizer?.name,
+      }));
+
+      setCalendarData(formattedData);
+    } catch (error) {
+      console.error("Error fetching calendar data:", error);
+    } finally {
+      setIsLoading(false);
+    }
   };
 
-  const handleEventClick = (info) => {
-    alert("Event: " + info.event.title);
+  const monthStringToNumber = (monthString) => {
+    const months = [
+      "January", "February", "March", "April", "May", "June", 
+      "July", "August", "September", "October", "November", "December"
+    ];
+    return months.indexOf(monthString) + 1;
+  };
+
+  const eventContent = (info) => {
+    const { schedule_time, end_time, type } = info.event.extendedProps;
+    const formattedStartTime = formatTime(schedule_time);
+    return (
+      <LecturePopover
+        data={info}
+        isOrganizer={true}
+      />
+    );
   };
 
   return (
     <div
       className="blur_effect_card"
       style={{
-        color: isDarkMode ? primaryColor : "#333", // text color based on theme
+        color: isDarkMode ? primaryColor : "#333",
         padding: "20px",
-        maxHeight:"585px",
-        overflowY:'auto'
+        maxHeight: "585px",
+        overflowY: "auto",
       }}
     >
+      {isLoading && <CalendarSkeleton />}
       <FullCalendar
         plugins={[dayGridPlugin, timeGridPlugin, interactionPlugin]}
         initialView="dayGridMonth"
@@ -40,31 +97,13 @@ const CalendarComponent = () => {
           center: "title",
           right: "dayGridMonth,timeGridWeek,timeGridDay",
         }}
-        events={events}
-        dateClick={handleDateClick} // handle date click
-        eventClick={handleEventClick} // handle event click
-        editable={true} // enable dragging and resizing
-        selectable={true} // allow selecting range
-        selectMirror={true}
-        dayMaxEvents={true} // limit events per day
-        eventColor={isDarkMode ? "#00adb5" : "#007bff"} // custom event color based on theme
-        eventTextColor="#fff" // setting event text color
-        // height="500px" // auto height to fit screen
-        eventDisplay="block" // block display for better spacing
-        themeSystem="standard" // to apply custom theming
-        // Adjusting day and grid colors based on dark/light mode
-        dayHeaderClassNames={() => (isDarkMode ? "fc-day-header-dark" : "fc-day-header-light")}
-        contentHeight="auto"
-        views={{
-          dayGrid: {
-            dayHeaderClassNames: "custom-day-header", // Add custom header class for further customization
-          },
-        }}
-        viewDidMount={(view) => {
-          if (view.type === "timeGridWeek") {
-            view.el.style.maxHeight = "600px"; // Set max height for week view
-            view.el.style.overflowY = "auto"; // Enable scrolling
-          }
+        events={calendarData}
+        eventContent={eventContent}
+        datesSet={(dateInfo) => {
+          const viewTitle = dateInfo.view.getCurrentData().viewTitle;
+          const [month, year] = viewTitle.split(" ");
+          const monthNumber = monthStringToNumber(month);
+          setCurrentMonth([monthNumber.toString(), year]);
         }}
       />
     </div>
@@ -72,3 +111,17 @@ const CalendarComponent = () => {
 };
 
 export default CalendarComponent;
+
+
+export const CalendarSkeleton = () => (
+  <div>
+    <Skeleton width={100} height={30} className="mb-4" />
+    <div className="grid grid-cols-7 gap-2">
+      {Array(5)
+        .fill()
+        .map((_, i) => (
+          <Skeleton key={i} height={100} className="rounded" />
+        ))}
+    </div>
+  </div>
+);

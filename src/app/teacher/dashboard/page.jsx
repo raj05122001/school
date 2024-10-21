@@ -40,7 +40,7 @@ const Page = () => {
       <Grid container direction="row" spacing={2} mt={2}>
         <Grid item xs={12} md={9}>
           <OverviewSection />
-          <Box mt={2}>
+          <Box mt={4}>
             <CalendarComponent />
           </Box>
         </Grid>

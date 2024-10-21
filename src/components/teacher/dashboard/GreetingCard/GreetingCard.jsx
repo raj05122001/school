@@ -1,4 +1,4 @@
-import React, {useState} from "react";
+import React, { useState } from "react";
 import {
   Box,
   Typography,
@@ -11,8 +11,12 @@ import {
 import { FaBell } from "react-icons/fa";
 import DarkMode from "@/components/DarkMode/DarkMode";
 import LectureCreate from "../../LectureCreate/LectureCreate";
+import { decodeToken } from "react-jwt";
+import Cookies from "js-cookie";
+import { capitalizeWords } from "@/helper/Helper";
 
 function GreetingCard() {
+  const userDetails = decodeToken(Cookies.get("ACCESS_TOKEN"));
   const getGreeting = () => {
     const hours = new Date().getHours();
     if (hours < 12) return "Good Morning";
@@ -52,7 +56,7 @@ function GreetingCard() {
       <Box sx={{ display: "flex", justifyContent: "space-between" }}>
         <Box>
           <Typography variant="h4" sx={{ textAlign: "left", color: "white" }}>
-            {getGreeting()} Ravi Kumar
+            {getGreeting()} {capitalizeWords(userDetails?.full_name)}
           </Typography>
           <Typography
             variant="subtitle1"
@@ -69,7 +73,7 @@ function GreetingCard() {
             </Badge>
           </IconButton>
           <Avatar
-            alt="Ravi Kumar"
+            alt={userDetails?.full_name || ""}
             src="/sampleprofile.jpg" // Sample profile image
             sx={{ width: 40, height: 40 }}
           />
@@ -96,22 +100,21 @@ function GreetingCard() {
 
           <Button
             variant="contained"
-          
             sx={{
               backgroundColor: "#90EE90",
               ":hover": {
                 backgroundColor: "#3CB371",
-                boxShadow: "0 0 10px 0 #3CB371 inset, 0 0 10px 4px #3CB371", 
+                boxShadow: "0 0 10px 0 #3CB371 inset, 0 0 10px 4px #3CB371",
               },
               color: "#006400",
             }}
-            className="btn"
+            
           >
             Create Quiz
           </Button>
         </Box>
       </Box>
-      <LectureCreate open={openDialog} handleClose={handleCloseDialog} />
+      {/* <LectureCreate open={openDialog} handleClose={handleCloseDialog} /> */}
     </Paper>
   );
 }

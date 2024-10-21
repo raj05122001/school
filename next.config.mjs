@@ -1,4 +1,10 @@
 /** @type {import('next').NextConfig} */
-const nextConfig = {};
+const nextConfig = {
+  images: {
+    domains: [
+      "vidyaai-backend.ultimeet.io",
+    ],
+  },
+};
 
 export default nextConfig;

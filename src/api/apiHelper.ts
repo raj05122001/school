@@ -70,3 +70,27 @@ export const deleteUpcommingLecture = async (lectureId) => {
   const apiInstance = new apiServices(axiosAPIInstance);
   return await apiInstance.deleteUpcommingLecture(lectureId);
 };
+
+export const getMyLectures = async (
+  status,
+  type = "",
+  search = "",
+  page = 1,
+  size = 10,
+  getMyLectures
+) => {
+  const apiInstance = new apiServices(axiosAPIInstance);
+  return await apiInstance.getMyLectures(
+    status,
+    type,
+    search,
+    page,
+    size,
+    getMyLectures
+  );
+};
+
+export const getUpcommingMeetingByDate = async (year, month) => {
+  const apiInstance = new apiServices(axiosAPIInstance);
+  return await apiInstance.getUpcommingMeetingByDate(year, month);
+};
