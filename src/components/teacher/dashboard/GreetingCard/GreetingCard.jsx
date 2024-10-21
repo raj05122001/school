@@ -1,4 +1,4 @@
-import React from "react";
+import React, {useState} from "react";
 import {
   Box,
   Typography,
@@ -10,6 +10,7 @@ import {
 } from "@mui/material";
 import { FaBell } from "react-icons/fa";
 import DarkMode from "@/components/DarkMode/DarkMode";
+import LectureCreate from "../../LectureCreate/LectureCreate";
 
 function GreetingCard() {
   const getGreeting = () => {
@@ -17,6 +18,16 @@ function GreetingCard() {
     if (hours < 12) return "Good Morning";
     if (hours >= 12 && hours < 17) return "Good Afternoon";
     return "Good Evening";
+  };
+
+  const [openDialog, setOpenDialog] = useState(false);
+
+  const handleOpenDialog = () => {
+    setOpenDialog(true);
+  };
+
+  const handleCloseDialog = () => {
+    setOpenDialog(false);
   };
 
   return (
@@ -78,6 +89,7 @@ function GreetingCard() {
                 boxShadow: "0 0 10px 0 #FFC107 inset, 0 0 10px 4px #FFC107", // Matching hover color with gold shade
               },
             }}
+            onClick={handleOpenDialog}
           >
             Create Lecture
           </Button>
@@ -99,6 +111,7 @@ function GreetingCard() {
           </Button>
         </Box>
       </Box>
+      <LectureCreate open={openDialog} handleClose={handleCloseDialog} />
     </Paper>
   );
 }

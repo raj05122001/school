@@ -5,3 +5,68 @@ export const loginApi = async (formData) => {
   const apiInstance = new apiServices(axiosAPIInstance);
   return await apiInstance.loginApi(formData);
 };
+
+export const createLecture = async (formData) => {
+  const apiInstance = new apiServices(axiosAPIInstance);
+  return await apiInstance.createLecture(formData);
+};
+
+export const updateLecture = async (lectureId, formData) => {
+  const apiInstance = new apiServices(axiosAPIInstance);
+  return await apiInstance.updateLecture(lectureId, formData);
+};
+
+export const getClassDropdown = async () => {
+  const apiInstance = new apiServices(axiosAPIInstance);
+  return await apiInstance.getClassDropdown();
+};
+
+export const getSubjectByClass = async (className, search) => {
+  const apiInstance = new apiServices(axiosAPIInstance);
+  return await apiInstance.getSubjectByClass(className, search);
+};
+
+export const getChapterBySubject = async (subject, search) => {
+  const apiInstance = new apiServices(axiosAPIInstance);
+  return await apiInstance.getChapterBySubject(subject, search);
+};
+
+export const getTopicsByChapter = async (chapter, search) => {
+  const apiInstance = new apiServices(axiosAPIInstance);
+  return await apiInstance.getTopicsByChapter(chapter, search);
+};
+
+export const createNewChapter = async (formData) => {
+  const apiInstance = new apiServices(axiosAPIInstance);
+  return await apiInstance.createNewChapter(formData);
+};
+
+export const createNewTopics = async (formData) => {
+  const apiInstance = new apiServices(axiosAPIInstance);
+  return await apiInstance.createNewTopics(formData);
+};
+
+export const getTeacherDetails = async (teacherId) => {
+  const apiInstance = new apiServices(axiosAPIInstance);
+  return await apiInstance.getTeacherDetails(teacherId);
+};
+
+export const createNewClass = async (formData) => {
+  const apiInstance = new apiServices(axiosAPIInstance);
+  return await apiInstance.createNewClass(formData);
+};
+
+export const createNewSubject = async (formData) => {
+  const apiInstance = new apiServices(axiosAPIInstance);
+  return await apiInstance.createNewSubject(formData);
+};
+
+export const updateSubject = async (class_id, formData) => {
+  const apiInstance = new apiServices(axiosAPIInstance);
+  return await apiInstance.updateSubject(class_id, formData);
+};
+
+export const deleteUpcommingLecture = async (lectureId) => {
+  const apiInstance = new apiServices(axiosAPIInstance);
+  return await apiInstance.deleteUpcommingLecture(lectureId);
+};
