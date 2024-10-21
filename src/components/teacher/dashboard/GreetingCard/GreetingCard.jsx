@@ -10,10 +10,10 @@ import {
 } from "@mui/material";
 import { FaBell } from "react-icons/fa";
 import DarkMode from "@/components/DarkMode/DarkMode";
-import LectureCreate from "../../LectureCreate/LectureCreate";
 import { decodeToken } from "react-jwt";
 import Cookies from "js-cookie";
 import { capitalizeWords } from "@/helper/Helper";
+import CreatingLecture from "../../LectureCreate/CreatingLecture";
 
 function GreetingCard() {
   const userDetails = decodeToken(Cookies.get("ACCESS_TOKEN"));
@@ -114,7 +114,7 @@ function GreetingCard() {
           </Button>
         </Box>
       </Box>
-      {/* <LectureCreate open={openDialog} handleClose={handleCloseDialog} /> */}
+      <CreatingLecture open={openDialog} handleClose={handleCloseDialog} />
     </Paper>
   );
 }
