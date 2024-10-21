@@ -71,16 +71,27 @@ import { LectureTyps } from "@/helper/Helper";
 const platforms = ["Zoom", "Google Meet", "Microsoft Teams"];
 
 const userDetails = decodeToken(Cookies.get("ACCESS_TOKEN"));
-console.log("User Details is", userDetails)
+console.log("User Details is", userDetails);
 const userID = userDetails.user_id;
 console.log("user ID", userID);
 
-const CreatingLecture = ({ open, handleClose }) => {
+const CreatingLecture = ({ open, handleClose, lecture, isEditMode }) => {
   const [lectureClass, setLectureClass] = useState("");
   const [lectureSubject, setLectureSubject] = useState("");
   const [lectureChapter, setLectureChapter] = useState("");
   const [lectureTopics, setLectureTopics] = useState("");
   const [lectureDescription, setLectureDescription] = useState("");
+
+  console.log("Lecture is", lecture);
+  console.log("Class is", lecture?.lecture_class?.name);
+  console.log("Subject Name", lecture?.chapter?.subject?.name);
+  console.log("Chapter Name", lecture?.chapter?.chapter);
+  console.log("Topics Name", lecture?.topics);
+  console.log("Description Name", lecture?.description);
+  console.log("Lecture Type", lecture?.type);
+  console.log("Schedule Date", lecture?.schedule_date);
+  console.log("Schedule Time", lecture?.schedule_date);
+  console.log("Edit Mode", isEditMode);
 
   // Default the lecture type to "subject"
   const [lectureType, setLectureType] = useState("subject");
@@ -100,8 +111,8 @@ const CreatingLecture = ({ open, handleClose }) => {
   const [selectedSubject, setSelectedSubject] = useState([]);
   const [chapterOptions, setChapterOptions] = useState([]);
   const [topicOptions, setTopicOptions] = useState([]);
-  const [chapterID, setChapterID] = useState(null)
-  const [classID, setClassID] = useState(null)
+  const [chapterID, setChapterID] = useState(null);
+  const [classID, setClassID] = useState(null);
   const [teacherDetails, setTeacherDetails] = useState({});
 
   const { isDarkMode, primaryColor, secondaryColor } = useThemeContext();
@@ -222,25 +233,48 @@ const CreatingLecture = ({ open, handleClose }) => {
     }
   }, [lectureChapter]);
 
+  // Populate form fields when edit mode is true
+  useEffect(() => {
+    if (isEditMode && lecture) {
+      setLectureClass(lecture?.lecture_class?.name || "");
+      setLectureSubject(lecture?.chapter?.subject?.name || "");
+      setLectureChapter(lecture?.chapter?.chapter || "");
+      setLectureTopics(lecture?.topics || "");
+      setLectureDescription(lecture?.description || "");
+      setLectureType(lecture?.type || "subject");
+      setLectureDate(dayjs(lecture?.schedule_date) || dayjs());
+      setLectureStartTime(dayjs(lecture?.schedule_date) || dayjs());
+    }
+  }, [isEditMode, lecture]);
+
+  const encodeURI = (value) => {
+    return encodeURIComponent(value);
+  };
+  
   const handleSubmit = async (e) => {
     e.preventDefault();
 
     // Create a new FormData object to send to the API
     const formData = new FormData();
+      // Encoding the values to avoid special characters mismatch
+  const encodedClass = encodeURI(selectedClass?.id);
+  const encodedSubject = encodeURI(lectureSubject);
+  const encodedChapter = encodeURI(chapterID);
+  const encodedTopics = encodeURI(lectureTopics);
+  const encodedDescription = encodeURI(lectureDescription || "");
 
     // Append the form data
-    formData.append("lecture_class", selectedClass?.id);
-    console.log("Class ID", selectedClass?.id)
-    formData.append("subject", lectureSubject);
-    formData.append("chapter", chapterID);
-    formData.append("topics", lectureTopics);
-    formData.append("title", lectureTopics);
+    formData.append("lecture_class", encodedClass);
+    formData.append("subject", encodedSubject);
+    formData.append("chapter", encodedChapter);
+    formData.append("topics", encodedTopics);
+    formData.append("title", encodedTopics);
     formData.append("organizer", userDetails.teacher_id); // Assuming organizer is the logged-in user
-    console.log("Submitted User ID", userDetails.teacher_id)
+    console.log("Submitted User ID", userDetails.teacher_id);
     formData.append("schedule_date", lectureDate.format("YYYY-MM-DD")); // Format date
     formData.append("schedule_time", lectureStartTime.format("HH:mm")); // Format time
     formData.append("type", lectureType);
-    formData.append("description", lectureDescription || ""); // Append description if provided
+    formData.append("description", encodedDescription); // Append description if provided
     if (file) {
       formData.append("file", file); // Append file if uploaded
     }
@@ -312,9 +346,9 @@ const CreatingLecture = ({ open, handleClose }) => {
                 options={classOptions}
                 getOptionLabel={(option) => option.name} // Display the department name in dropdown
                 onChange={(event, newValue) => {
-                    setSelectedClass(newValue)
-                    setClassID(newValue.id)
-                    }}
+                  setSelectedClass(newValue);
+                  setClassID(newValue.id);
+                }}
                 renderInput={(params) => (
                   <TextField
                     {...params}
@@ -366,7 +400,7 @@ const CreatingLecture = ({ open, handleClose }) => {
                 onChange={(event, newValue) => {
                   if (newValue) {
                     setLectureChapter(newValue.name); // Set the chapter name
-                    setChapterID(newValue.id)
+                    setChapterID(newValue.id);
                   }
                 }}
                 renderInput={(params) => (
@@ -411,7 +445,7 @@ const CreatingLecture = ({ open, handleClose }) => {
                 >
                   {lecture_type.map((value) => (
                     <MenuItem key={value.key} value={value.key}>
-                      <Box sx={{display:"flex"}}>
+                      <Box sx={{ display: "flex" }}>
                         <ListItemIcon>
                           <Image src={value.image} width={24} height={24} />
                         </ListItemIcon>
@@ -494,7 +528,7 @@ const CreatingLecture = ({ open, handleClose }) => {
           color="primary"
           onClick={handleSubmit}
         >
-          Create Lecture
+          {isEditMode ? "Update Lecture" : "Create Lecture"}
         </Button>
       </DialogActions>
     </Dialog>
