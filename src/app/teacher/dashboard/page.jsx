@@ -16,6 +16,7 @@ import SubjectCompletion from "@/components/teacher/dashboard/SubjectCompletion/
 import StudentQueries from "@/components/teacher/dashboard/StudentQueries/StudentQueries";
 
 const Page = () => {
+  
   return (
     <Box sx={{ flexGrow: 1, m: 2 }}>
       {/* Greeting Card */}
