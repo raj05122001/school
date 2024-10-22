@@ -13,9 +13,9 @@ import {
 } from "@mui/material"; // MUI imports
 import Image from "next/image";
 
-const LectureTypeDropDown = ({ handleSelectType }) => {
+const LectureTypeDropDown = ({ handleSelectType,lectureType }) => {
   const [filterShow, setFilterShow] = useState(false);
-  const [selectedType, setSelectedType] = useState(""); // Initial value set correctly
+  const [selectedType, setSelectedType] = useState(lectureType); // Initial value set correctly
   const [anchorEl, setAnchorEl] = useState(null); // For managing popover
   const popupRef = useRef(null);
 

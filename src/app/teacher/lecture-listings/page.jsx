@@ -1,6 +1,7 @@
 "use client";
-import { Box, Grid, Pagination } from "@mui/material";
-import React, { useEffect, useState } from "react";
+import { Box, Grid, Pagination, Typography } from "@mui/material";
+import { FaChalkboardTeacher } from "react-icons/fa"; // Add Material-UI icon
+import React, { useEffect, useMemo, useState } from "react";
 import ListingCard from "@/commonComponents/ListingCard/ListingCard";
 import Filters from "@/components/teacher/lecture-listings/Filters/Filters";
 import { getTeacherAllLecture } from "@/api/apiHelper";
@@ -35,16 +36,27 @@ const page = () => {
     return encodeURIComponent(value);
   };
 
+  const filters = useMemo(
+    () => (
+      <Filters
+        classValue={classValue}
+        subject={subject}
+        searchQuery={searchQuery}
+        month={month}
+        lectureType={lectureType}
+      />
+    ),
+    [classValue, subject, searchQuery, month, lectureType]
+  );
+
   const fetchData = async () => {
     setIsLoading(true);
     try {
       const apiResponse = await getTeacherAllLecture(
         userDetails?.teacher_id,
         encodeURI(searchQuery),
-        // getDate,
-        "",
-        // selectedType,
-        "",
+        month,
+        lectureType,
         activePage,
         9,
         encodeURI(subject),
@@ -71,7 +83,7 @@ const page = () => {
     backgroundColor: "#1a1a1a",
     paginationItemColor: "#ffffff",
     paginationBg: "#333333",
-    paginationSelectedBg: "#005bb5", // Example blue for selected item
+    paginationSelectedBg: "#005bb5",
     paginationSelectedColor: "#ffffff",
   };
 
@@ -79,27 +91,79 @@ const page = () => {
     backgroundColor: "#ffffff",
     paginationItemColor: "#000000",
     paginationBg: "#f0f0f0",
-    paginationSelectedBg: "#005bb5", // Example blue for selected item
+    paginationSelectedBg: "#005bb5",
     paginationSelectedColor: "#ffffff",
   };
 
   return (
     <Box sx={{ width: "100%", height: "100%" }}>
-      <Filters />
-      <Grid container>
-        {isLoading
-          ? Array.from({ length: 9 }, (_, ind) => (
-              <Grid item xs={12} sm={4} key={ind} spacing={2}>
-                <LectureListingCardSkeleton />
-              </Grid>
-            ))
-          : lectureList?.data?.map((value, index) => (
-              <Grid item xs={12} sm={4} key={index}>
-                <ListingCard data={value} />
-              </Grid>
-            ))}
+      {filters}
+      <Grid container spacing={2}>
+        {isLoading ? (
+          Array.from({ length: 9 }, (_, ind) => (
+            <Grid item xs={12} sm={4} key={ind} spacing={2}>
+              <LectureListingCardSkeleton />
+            </Grid>
+          ))
+        ) : lectureList?.data?.length > 0 ? (
+          lectureList?.data?.map((value, index) => (
+            <Grid item xs={12} sm={4} key={index}>
+              <ListingCard data={value} />
+            </Grid>
+          ))
+        ) : (
+          // Display message if no lectures found
+          <Grid
+            item
+            xs={12}
+            sx={{
+              display: "flex",
+              flexDirection: "column",
+              alignItems: "center",
+              justifyContent: "center",
+              height: "100%", // Adjust height as needed
+            }}
+          >
+            {/* Adding the icon */}
+            <FaChalkboardTeacher
+              size={30}
+              sx={{
+                fontSize: 80,
+                color: isDarkMode
+                  ? darkModeStyles.paginationItemColor
+                  : lightModeStyles.paginationItemColor,
+              }}
+            />
+            {/* Adding a message */}
+            <Typography
+              variant="h5"
+              align="center"
+              sx={{
+                marginTop: 2,
+                color: isDarkMode
+                  ? darkModeStyles.paginationItemColor
+                  : lightModeStyles.paginationItemColor,
+                fontWeight: "bold", // Make the text bold
+              }}
+            >
+              No lectures available at the moment
+            </Typography>
+            <Typography
+              variant="body1"
+              align="center"
+              sx={{
+                marginTop: 1,
+                color: isDarkMode
+                  ? darkModeStyles.paginationItemColor
+                  : lightModeStyles.paginationItemColor,
+              }}
+            >
+              Please check back later or modify your search filters.
+            </Typography>
+          </Grid>
+        )}
       </Grid>
-      {lectureList?.data?.length > 1 ? (
+      {lectureList?.data?.length > 0 && lectureList?.total > 1 ? (
         <Box
           sx={{
             display: "flex",

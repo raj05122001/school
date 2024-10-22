@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import {
   Autocomplete,
   Box,
@@ -23,17 +23,23 @@ import { decodeToken } from "react-jwt";
 import Cookies from "js-cookie";
 import { useThemeContext } from "@/hooks/ThemeContext";
 
-const Filters = () => {
+const Filters = ({
+  classValue = "",
+  subject = "",
+  searchQuery = "",
+  month = null,
+  lectureType = "",
+}) => {
   const { isDarkMode, primaryColor, secondaryColor } = useThemeContext();
   const userDetails = decodeToken(Cookies.get("ACCESS_TOKEN"));
   const router = useRouter();
   const [classList, setClassList] = useState([]);
   const [subjectList, setSubjectList] = useState([]);
-  const [selectedClass, setSelectedClass] = useState("");
-  const [selectedSubject, setSelectedSubject] = useState("");
-  const [globalSearch, setGlobalSearch] = useState("");
-  const [selectedMonth, setSelectedMonth] = useState(dayjs());
-  const [selectedLectureType, setSelectedLectureType] = useState("");
+  const [selectedClass, setSelectedClass] = useState(classValue);
+  const [selectedSubject, setSelectedSubject] = useState(subject);
+  const [globalSearch, setGlobalSearch] = useState(searchQuery);
+  const [selectedMonth, setSelectedMonth] = useState(dayjs(month));
+  const [selectedLectureType, setSelectedLectureType] = useState(lectureType);
 
   const decodeURI = (value) => {
     return decodeURIComponent(value);
@@ -135,14 +141,14 @@ const Filters = () => {
       lectureType: selectedLectureType || "",
     });
   };
-
+  console.log("month", month);
   const handleSelectType = (type) => {
     setSelectedLectureType(type);
     updateURL({
       class: encodeURI(selectedClass) || "",
       subject: encodeURI(selectedSubject) || "",
       globalSearch: encodeURI(globalSearch) || "",
-      month: selectedMonth ? selectedMonth.format("YYYY-MM") : "",
+      month: month ? month : "",
       lectureType: type || "",
     });
   };
@@ -165,6 +171,16 @@ const Filters = () => {
   };
 
   const currentStyles = isDarkMode ? darkModeStyles : lightModeStyles;
+
+  const lectureTypeDropDown = useMemo(
+    () => (
+      <LectureTypeDropDown
+        handleSelectType={handleSelectType}
+        lectureType={lectureType}
+      />
+    ),
+    [lectureType, month]
+  );
 
   return (
     <LocalizationProvider dateAdapter={AdapterDayjs}>
@@ -223,7 +239,7 @@ const Filters = () => {
 
           {/* Right side: Dark Mode, Notifications, Profile */}
           <Box sx={{ display: "flex", alignItems: "center", gap: 3 }}>
-            <LectureTypeDropDown handleSelectType={handleSelectType} />
+            {lectureTypeDropDown}
             <DarkMode />
             <IconButton color="inherit">
               <Badge badgeContent={4} color="error">
@@ -251,7 +267,7 @@ const Filters = () => {
               renderInput={(params) => (
                 <TextField
                   {...params}
-                  placeholder="Search class"
+                  placeholder="Search Class"
                   variant="outlined"
                   InputProps={{
                     ...params.InputProps,
@@ -298,7 +314,7 @@ const Filters = () => {
               renderInput={(params) => (
                 <TextField
                   {...params}
-                  placeholder="Search subject"
+                  placeholder="Search Subject"
                   variant="outlined"
                   InputProps={{
                     ...params.InputProps,
@@ -375,8 +391,9 @@ const Filters = () => {
           <Grid item xs={12} sm={6} md={3}>
             <DatePicker
               views={["month"]}
-              label="Select Month"
+              placeholder="Select Month"
               value={selectedMonth}
+              slotProps={{ field: { clearable: true } }}
               onChange={handleDateChange}
               sx={{
                 boxShadow: currentStyles.boxShadow,
