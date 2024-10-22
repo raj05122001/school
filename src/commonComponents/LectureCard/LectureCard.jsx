@@ -108,7 +108,6 @@ const LectureCard = ({ lecture }) => {
         >
           {lecture?.chapter?.subject?.name}
         </Typography>
-        <FaEdit/>
         <Box display="flex" alignItems="center" mb={1}>
           <FaCalendarAlt style={iconStyle} />
           <Typography variant="body2" sx={{ color: textStyle.color }}>

@@ -24,55 +24,24 @@ import dayjs from "dayjs"; // Import dayjs for date handling
 import { MdOutlineClass } from "react-icons/md";
 import Image from "next/image";
 import { lecture_type } from "@/helper/Helper";
-import {
-  FaChalkboardTeacher,
-  FaBookOpen,
-  FaQuestion,
-  FaTools,
-  FaClipboard,
-} from "react-icons/fa";
 
 import {
   getClassDropdown,
   getSubjectByClass,
   getChapterBySubject,
   getTopicsByChapter,
-  getTeacherDetails,
   createLecture,
+  updateLecture,
 } from "@/api/apiHelper";
 import { decodeToken } from "react-jwt";
 import Cookies from "js-cookie";
 import { useThemeContext } from "@/hooks/ThemeContext";
-import { LectureTyps } from "@/helper/Helper";
-
-// const lectureTypes = [
-//   {
-//     name: "Subject Lecture",
-//     type: "subject",
-//     icon: <FaChalkboardTeacher />,
-//     key: "subject",
-//   },
-//   {
-//     name: "Case Study Lecture",
-//     type: "case",
-//     icon: <FaBookOpen />,
-//     key: "case",
-//   },
-//   { name: "Q/A Session", type: "qa", icon: <FaQuestion />, key: "qa" },
-//   {
-//     name: "Workshop Lecture",
-//     type: "workshop",
-//     icon: <FaTools />,
-//     key: "workshop",
-//   },
-//   { name: "Quiz Session", type: "quiz", icon: <FaClipboard />, key: "quiz" },
-// ];
 
 const platforms = ["Zoom", "Google Meet", "Microsoft Teams"];
 
 const userDetails = decodeToken(Cookies.get("ACCESS_TOKEN"));
 console.log("User Details is", userDetails);
-const userID = userDetails.user_id;
+const userID = userDetails?.user_id;
 console.log("user ID", userID);
 
 const CreatingLecture = ({ open, handleClose, lecture, isEditMode }) => {
@@ -81,17 +50,6 @@ const CreatingLecture = ({ open, handleClose, lecture, isEditMode }) => {
   const [lectureChapter, setLectureChapter] = useState("");
   const [lectureTopics, setLectureTopics] = useState("");
   const [lectureDescription, setLectureDescription] = useState("");
-
-  console.log("Lecture is", lecture);
-  console.log("Class is", lecture?.lecture_class?.name);
-  console.log("Subject Name", lecture?.chapter?.subject?.name);
-  console.log("Chapter Name", lecture?.chapter?.chapter);
-  console.log("Topics Name", lecture?.topics);
-  console.log("Description Name", lecture?.description);
-  console.log("Lecture Type", lecture?.type);
-  console.log("Schedule Date", lecture?.schedule_date);
-  console.log("Schedule Time", lecture?.schedule_date);
-  console.log("Edit Mode", isEditMode);
 
   // Default the lecture type to "subject"
   const [lectureType, setLectureType] = useState("subject");
@@ -113,9 +71,54 @@ const CreatingLecture = ({ open, handleClose, lecture, isEditMode }) => {
   const [topicOptions, setTopicOptions] = useState([]);
   const [chapterID, setChapterID] = useState(null);
   const [classID, setClassID] = useState(null);
-  const [teacherDetails, setTeacherDetails] = useState({});
 
   const { isDarkMode, primaryColor, secondaryColor } = useThemeContext();
+
+  const encodeURI = (value) => {
+    return encodeURIComponent(value);
+  };
+
+  console.log("Lecture is", lecture);
+
+  useEffect(() => {
+    if (isEditMode && lecture) {
+      // Find the class object from the classOptions that matches the lecture class name
+      const classObj = classOptions.find(
+        (option) =>
+          option.name.toLowerCase() ===
+          lecture?.lecture_class?.name?.toLowerCase()
+      );
+
+      // Find the subject object from the subjectOptions that matches the lecture subject name
+      const subjectObj = subjectOptions.find(
+        (option) =>
+          option.name.toLowerCase() ===
+          lecture?.chapter?.subject?.name?.toLowerCase()
+      );
+
+      const chapterObj = chapterOptions.find(
+        (option) => option.name === lecture?.chapter?.chapter
+      );
+
+      setSelectedClass(classObj || null); // Set the selected class object
+      setLectureClass(lecture?.lecture_class?.name || "");
+
+      setLectureSubject(lecture?.chapter?.subject?.name || "");
+      setSelectedSubject(subjectObj || null); // Set the selected subject object
+
+      setLectureChapter(lecture?.chapter?.chapter || "");
+      setChapterID(chapterObj ? chapterObj.id : lecture?.chapter?.id || null);
+      setLectureTopics(lecture?.topics || "");
+      setLectureDescription(lecture?.description || "");
+      setLectureType(lecture?.type || "subject");
+      setLectureDate(dayjs(lecture?.schedule_date) || dayjs());
+      // Combine schedule_date and schedule_time to set the start time
+    const scheduleTime = lecture?.schedule_time;
+    const formattedTime = `${lecture.schedule_date}T${scheduleTime}`; // ISO 8601 format
+    setLectureStartTime(dayjs(formattedTime)); // Set the start time
+
+    }
+  }, [isEditMode, lecture, classOptions, subjectOptions]);
 
   // Fetch the class options from the API and extract the class names
   useEffect(() => {
@@ -123,10 +126,12 @@ const CreatingLecture = ({ open, handleClose, lecture, isEditMode }) => {
       try {
         const response = await getClassDropdown();
 
+        console.log("Response is", response);
+
         // Map through the data and extract the department name for each class
-        const classNames = response.data.map((item) => ({
-          id: item.id,
-          name: item.department.name,
+        const classNames = response?.data?.map((item) => ({
+          id: item?.id,
+          name: item?.name,
         }));
 
         setClassOptions(classNames); // Set the mapped class names in state
@@ -146,18 +151,18 @@ const CreatingLecture = ({ open, handleClose, lecture, isEditMode }) => {
 
           // Check if the response is valid and contains data
           if (
-            response.data &&
-            response.data.data &&
-            Array.isArray(response.data.data)
+            response?.data &&
+            response?.data.data &&
+            Array.isArray(response?.data?.data)
           ) {
             // Filter out subjects that have empty or null names
-            const validSubjects = response.data.data.filter(
-              (subject) => subject.name && subject.name.trim() !== ""
+            const validSubjects = response?.data?.data.filter(
+              (subject) => subject?.name && subject?.name.trim() !== ""
             );
 
-            const subjects = validSubjects.map((subject) => ({
-              id: subject.id,
-              name: subject.name,
+            const subjects = validSubjects?.map((subject) => ({
+              id: subject?.id,
+              name: subject?.name,
             }));
 
             setSubjectOptions(subjects); // Set the filtered subjects
@@ -181,10 +186,10 @@ const CreatingLecture = ({ open, handleClose, lecture, isEditMode }) => {
           const response = await getChapterBySubject(lectureSubject, "");
 
           // Check if response contains the data array
-          if (response.data.data && Array.isArray(response.data.data)) {
+          if (response?.data?.data && Array.isArray(response?.data?.data)) {
             // Filter out subjects that have empty or null names
-            const validChapters = response.data.data.filter(
-              (chapter) => chapter.chapter && chapter.chapter.trim() !== ""
+            const validChapters = response?.data?.data?.filter(
+              (chapter) => chapter?.chapter && chapter?.chapter?.trim() !== ""
             );
             const chapters = validChapters.map((chapter) => ({
               id: chapter.id,
@@ -210,14 +215,14 @@ const CreatingLecture = ({ open, handleClose, lecture, isEditMode }) => {
         try {
           const response = await getTopicsByChapter(lectureChapter, "");
           // Check if response contains the data array
-          if (response.data.data && Array.isArray(response.data.data)) {
+          if (response?.data?.data && Array.isArray(response?.data?.data)) {
             // Filter out subjects that have empty or null names
-            const validTopics = response.data.data.filter(
-              (topic) => topic.topics && topic.topics.trim() !== ""
+            const validTopics = response?.data?.data?.filter(
+              (topic) => topic?.topics && topic?.topics?.trim() !== ""
             );
-            const topics = validTopics.map((topic) => ({
-              id: topic.id,
-              name: topic.topics, // Use the "chapter" field for names
+            const topics = validTopics?.map((topic) => ({
+              id: topic?.id,
+              name: topic?.topics, // Use the "chapter" field for names
             }));
             setTopicOptions(topics); // Set the fetched topics data
             console.log("topics are", topics);
@@ -233,62 +238,48 @@ const CreatingLecture = ({ open, handleClose, lecture, isEditMode }) => {
     }
   }, [lectureChapter]);
 
-  // Populate form fields when edit mode is true
-  useEffect(() => {
-    if (isEditMode && lecture) {
-      setLectureClass(lecture?.lecture_class?.name || "");
-      setLectureSubject(lecture?.chapter?.subject?.name || "");
-      setLectureChapter(lecture?.chapter?.chapter || "");
-      setLectureTopics(lecture?.topics || "");
-      setLectureDescription(lecture?.description || "");
-      setLectureType(lecture?.type || "subject");
-      setLectureDate(dayjs(lecture?.schedule_date) || dayjs());
-      setLectureStartTime(dayjs(lecture?.schedule_date) || dayjs());
-    }
-  }, [isEditMode, lecture]);
-
-  const encodeURI = (value) => {
-    return encodeURIComponent(value);
-  };
-  
   const handleSubmit = async (e) => {
     e.preventDefault();
-
     // Create a new FormData object to send to the API
     const formData = new FormData();
-      // Encoding the values to avoid special characters mismatch
-  const encodedClass = encodeURI(selectedClass?.id);
-  const encodedSubject = encodeURI(lectureSubject);
-  const encodedChapter = encodeURI(chapterID);
-  const encodedTopics = encodeURI(lectureTopics);
-  const encodedDescription = encodeURI(lectureDescription || "");
 
     // Append the form data
-    formData.append("lecture_class", encodedClass);
-    formData.append("subject", encodedSubject);
-    formData.append("chapter", encodedChapter);
-    formData.append("topics", encodedTopics);
-    formData.append("title", encodedTopics);
+    formData.append("lecture_class", selectedClass?.id);
+    formData.append("subject", lectureSubject);
+    formData.append("chapter", chapterID);
+    formData.append("topics", lectureTopics);
+    formData.append("title", lectureTopics);
     formData.append("organizer", userDetails.teacher_id); // Assuming organizer is the logged-in user
     console.log("Submitted User ID", userDetails.teacher_id);
     formData.append("schedule_date", lectureDate.format("YYYY-MM-DD")); // Format date
     formData.append("schedule_time", lectureStartTime.format("HH:mm")); // Format time
     formData.append("type", lectureType);
-    formData.append("description", encodedDescription); // Append description if provided
+    formData.append("description", lectureDescription || ""); // Append description if provided
     if (file) {
       formData.append("file", file); // Append file if uploaded
     }
 
     try {
-      // Call the createLecture API
-      const response = await createLecture(formData);
+      if (isEditMode && lecture?.id) {
+        // Call the updateLecture API when isEditMode is true
+        const response = await updateLecture(lecture.id, formData);
 
-      if (response.data.success) {
-        console.log("Lecture created successfully");
-        // You can add additional actions after a successful response, e.g., closing the form
-        handleClose();
+        if (response.data.success) {
+          console.log("Lecture updated successfully");
+          handleClose(); // Close the dialog after a successful update
+        } else {
+          console.error("Failed to update lecture:", response.data.message);
+        }
       } else {
-        console.error("Failed to create lecture:", response.data.message);
+        // Call the createLecture API when not in edit mode
+        const response = await createLecture(formData);
+
+        if (response.data.success) {
+          console.log("Lecture created successfully");
+          handleClose(); // Close the dialog after a successful creation
+        } else {
+          console.error("Failed to create lecture:", response.data.message);
+        }
       }
     } catch (error) {
       console.error("Error creating lecture:", error);
