@@ -338,7 +338,7 @@ const CreatingLecture = ({ open, handleClose, lecture, isEditMode }) => {
                 getOptionLabel={(option) => option.name} // Display the department name in dropdown
                 onChange={(event, newValue) => {
                   setSelectedClass(newValue);
-                  setClassID(newValue.id);
+                  setClassID(newValue?.id);
                 }}
                 renderInput={(params) => (
                   <TextField
@@ -359,7 +359,7 @@ const CreatingLecture = ({ open, handleClose, lecture, isEditMode }) => {
                 getOptionLabel={(option) => option.name} // Display subject names
                 onChange={(event, newValue) => {
                   if (newValue) {
-                    setLectureSubject(newValue.name);
+                    setLectureSubject(newValue?.name);
                   }
                 }} // Set selected subject name
                 renderInput={(params) => (
@@ -372,7 +372,7 @@ const CreatingLecture = ({ open, handleClose, lecture, isEditMode }) => {
                 )}
                 value={
                   subjectOptions.find(
-                    (option) => option.name === lectureSubject
+                    (option) => option?.name === lectureSubject
                   ) || null
                 } // Find selected subject by name
               />
@@ -385,13 +385,13 @@ const CreatingLecture = ({ open, handleClose, lecture, isEditMode }) => {
                 getOptionLabel={(option) => option.name} // Display chapter names
                 value={
                   chapterOptions.find(
-                    (option) => option.name === lectureChapter
+                    (option) => option?.name === lectureChapter
                   ) || null
                 } // Set the selected chapter
                 onChange={(event, newValue) => {
                   if (newValue) {
-                    setLectureChapter(newValue.name); // Set the chapter name
-                    setChapterID(newValue.id);
+                    setLectureChapter(newValue?.name); // Set the chapter name
+                    setChapterID(newValue?.id);
                   }
                 }}
                 renderInput={(params) => (
@@ -435,12 +435,12 @@ const CreatingLecture = ({ open, handleClose, lecture, isEditMode }) => {
                   label="Lecture Type"
                 >
                   {lecture_type.map((value) => (
-                    <MenuItem key={value.key} value={value.key}>
+                    <MenuItem key={value?.key} value={value?.key}>
                       <Box sx={{ display: "flex" }}>
                         <ListItemIcon>
                           <Image src={value.image} width={24} height={24} />
                         </ListItemIcon>
-                        <ListItemText>{value.name}</ListItemText>
+                        <ListItemText>{value?.name}</ListItemText>
                       </Box>
                     </MenuItem>
                   ))}
