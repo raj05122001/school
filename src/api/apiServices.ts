@@ -1,7 +1,7 @@
 import axiosAPIInstanceAuth from "./axiosAPIInstanceAuth";
 import { async } from "regenerator-runtime";
-import { toast } from "react-toastify";
 import Constants from "@/constants/Constants";
+import toast from "react-hot-toast";
 
 export default class apiServices {
   private axiosInstance;
@@ -12,16 +12,15 @@ export default class apiServices {
     this.authAxiosInstance = axiosAPIInstanceAuth;
   }
 
-
   public loginApi = async (formData) => {
     return await this.authAxiosInstance
-      .post(`/api/v1/account/login/`,formData)
+      .post(`/api/v1/account/login/`, formData)
       .then((response) => {
         return response;
       })
-      .catch((error)=>{
-        throw(error)
-      })
+      .catch((error) => {
+        throw error;
+      });
   };
 
   public createLecture = (formData) => {
@@ -30,29 +29,23 @@ export default class apiServices {
       .post(`/api/v1/lecture/`, formData)
       .then((response) => {
         if (!response.data.success) {
-          toast.update(toastInstance, {
-            render: response.data.message,
-            type: "warning",
-            isLoading: false,
-            autoClose: Constants.toastTimer,
+          toast.dismiss(toastInstance); // Dismiss the loading toast
+          toast.error(response.data.message, {
+            duration: Constants.toastTimer,
           });
           return response;
         }
-        toast.update(toastInstance, {
-          render: "Lecture is created",
-          type: "success",
-          isLoading: false,
-          autoClose: Constants.toastTimer,
+        toast.dismiss(toastInstance); // Dismiss the loading toast
+        toast.success("Lecture is created", {
+          duration: Constants.toastTimer,
         });
         return response;
       })
       .catch((error) => {
-        const errorText = error.response.data.message;
-        toast.update(toastInstance, {
-          render: errorText,
-          type: "error",
-          isLoading: false,
-          autoClose: Constants.toastTimer,
+        toast.dismiss(toastInstance); // Dismiss the loading toast
+        const errorText = error.response?.data?.message || "An error occurred";
+        toast.error(errorText, {
+          duration: Constants.toastTimer,
         });
         console.error(error);
         throw error;
@@ -65,29 +58,23 @@ export default class apiServices {
       .patch(`/api/v1/lecture/${lectureId}/`, formData)
       .then((response) => {
         if (!response.data.success) {
-          toast.update(toastInstance, {
-            render: response.data.message,
-            type: "warning",
-            isLoading: false,
-            autoClose: Constants.toastTimer,
+          toast.dismiss(toastInstance); // Dismiss the loading toast
+          toast.error(response.data.message, {
+            duration: Constants.toastTimer,
           });
           return response;
         }
-        toast.update(toastInstance, {
-          render: "Lecture is created",
-          type: "success",
-          isLoading: false,
-          autoClose: Constants.toastTimer,
+        toast.dismiss(toastInstance); // Dismiss the loading toast
+        toast.success("Lecture is updated", {
+          duration: Constants.toastTimer,
         });
         return response;
       })
       .catch((error) => {
-        const errorText = error.response.data.message;
-        toast.update(toastInstance, {
-          render: errorText,
-          type: "error",
-          isLoading: false,
-          autoClose: Constants.toastTimer,
+        toast.dismiss(toastInstance); // Dismiss the loading toast
+        const errorText = error.response?.data?.message || "An error occurred";
+        toast.error(errorText, {
+          duration: Constants.toastTimer,
         });
         console.error(error);
         throw error;
@@ -169,20 +156,17 @@ export default class apiServices {
     return this.axiosInstance
       .delete(`/api/v1/lecture/${lectureId}/`)
       .then((response) => {
-        toast.update(toastInstance, {
-          render: "Lecture Successfully Delete",
-          type: "success",
-          isLoading: false,
-          autoClose: Constants.toastTimer,
+        toast.dismiss(toastInstance); // Dismiss the loading toast
+        toast.success("Lecture Successfully Deleted", {
+          duration: Constants.toastTimer,
         });
         return response;
       })
       .catch((error) => {
-        toast.update(toastInstance, {
-          render: error?.response?.data?.message,
-          type: "error",
-          isLoading: false,
-          autoClose: Constants.toastTimer,
+        toast.dismiss(toastInstance); // Dismiss the loading toast
+        const errorText = error?.response?.data?.message || "An error occurred";
+        toast.error(errorText, {
+          duration: Constants.toastTimer,
         });
         console.error("this is error", error);
       });
@@ -235,7 +219,7 @@ export default class apiServices {
     page = 1,
     pageSize = 9,
     subjectList = "",
-    classList=""
+    classList = ""
   ) => {
     return await this.axiosInstance
       .get(
@@ -243,10 +227,11 @@ export default class apiServices {
           search ? search : ""
         }&page=${page}&size=${pageSize}&date=${date ? date : ""}&type=${
           type ? type : ""
-        }${subjectList ? `&subject=${subjectList}` : ""}${classList? `&class=${classList}`:""}`
+        }${subjectList ? `&subject=${subjectList}` : ""}${
+          classList ? `&class=${classList}` : ""
+        }`
       )
       .then((Response) => Response)
       .catch((error) => console.error(error));
   };
-
-  }
+}
