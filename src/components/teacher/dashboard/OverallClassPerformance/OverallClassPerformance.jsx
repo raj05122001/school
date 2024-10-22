@@ -193,7 +193,8 @@ const OverallClassPerformance = () => {
       {/* Header */}
       <Box sx={{ display: "flex", justifyContent: "space-between", mb: 2 }}>
         <Typography
-          className={`${isDarkMode ? "dark-heading" : "light-heading"} h6`}
+          variant="h6"
+          className={`${isDarkMode ? "dark-heading" : "light-heading"}`}
           whiteSpace="nowrap"
         >
           Overall Class Performance

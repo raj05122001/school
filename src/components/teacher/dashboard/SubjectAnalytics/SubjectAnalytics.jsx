@@ -38,13 +38,21 @@ const SubjectAnalytics = () => {
       }}
       className="blur_effect_card"
     >
-      <Box sx={{ display: "flex", justifyContent: "space-between", mb: 2, alignItems: "center" }}>
+      <Box
+        sx={{
+          display: "flex",
+          justifyContent: "space-between",
+          mb: 2,
+          alignItems: "center",
+        }}
+      >
         <Typography
           sx={{
             display: "flex",
             alignItems: "center",
           }}
-          className={`${isDarkMode ? "dark-heading" : "light-heading"} h6`}
+          variant="h6"
+          className={`${isDarkMode ? "dark-heading" : "light-heading"}`}
         >
           <FiBarChart2 size={22} style={{ marginRight: "8px" }} />
           Watch Time by Subject
@@ -81,7 +89,9 @@ const SubjectAnalytics = () => {
                 color: isDarkMode ? "#f0f0f0" : "#2b2b2b",
               }}
             />
-            <Legend wrapperStyle={{ color: isDarkMode ? "#f0f0f0" : "#2b2b2b" }} />
+            <Legend
+              wrapperStyle={{ color: isDarkMode ? "#f0f0f0" : "#2b2b2b" }}
+            />
             <Bar dataKey="time" fill={isDarkMode ? "#82ca9d" : "#413ea0"} />
           </ComposedChart>
         </ResponsiveContainer>

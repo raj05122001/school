@@ -94,3 +94,31 @@ export const getUpcommingMeetingByDate = async (year, month) => {
   const apiInstance = new apiServices(axiosAPIInstance);
   return await apiInstance.getUpcommingMeetingByDate(year, month);
 };
+
+export const getClassByCourse = async (course, search) => {
+  const apiInstance = new apiServices(axiosAPIInstance);
+  return await apiInstance.getClassByCourse(course, search);
+};
+
+export const getTeacherAllLecture = async (
+  userId,
+  search,
+  date,
+  type,
+  page,
+  pageSize,
+  subjectList = "",
+  classList=""
+) => {
+  const apiInstance = new apiServices(axiosAPIInstance);
+  return await apiInstance.getTeacherAllLecture(
+    userId,
+    search,
+    date,
+    type,
+    page,
+    pageSize,
+    subjectList,
+    classList
+  );
+};

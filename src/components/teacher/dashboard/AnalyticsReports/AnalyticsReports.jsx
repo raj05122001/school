@@ -29,7 +29,7 @@ const buttonStyle = {
 const AnalyticsReports = () => {
   const { isDarkMode } = useThemeContext();
   const [anchorEl, setAnchorEl] = useState(null);
-  
+
   const handleUploadClick = (event) => {
     setAnchorEl(event.currentTarget);
   };
@@ -50,13 +50,13 @@ const AnalyticsReports = () => {
         width: "100%",
         p: 2,
         height: "100%",
-        backgroundColor: isDarkMode ? "#1E1E1E" : "#FFF",
         color: isDarkMode ? "#FFF" : "#000",
       }}
       className="blur_effect_card"
     >
       <Typography
-        className={`${isDarkMode ? "dark-heading" : "light-heading"} h6`}
+        variant="h6"
+        className={`${isDarkMode ? "dark-heading" : "light-heading"}`}
         component="div"
         sx={{
           display: "flex",
@@ -67,7 +67,7 @@ const AnalyticsReports = () => {
         <FaBullhorn style={{ marginRight: 8 }} />
         Announcements
       </Typography>
-      
+
       {/* TextField with Upload Button */}
       <Box sx={{ position: "relative", mt: 2, mb: 2 }}>
         <TextField
@@ -101,7 +101,7 @@ const AnalyticsReports = () => {
             ),
           }}
         />
-        
+
         {/* Upload Menu */}
         <Menu
           anchorEl={anchorEl}

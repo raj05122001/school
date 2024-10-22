@@ -219,4 +219,34 @@ export default class apiServices {
         toast.error(errorText);
       });
   };
+
+  public getClassByCourse = async (course, search = "") => {
+    return await this.authAxiosInstance
+      .get(`/api/v1/dropdown/class/?course=${course}&search=${search}`)
+      .then((Response) => Response)
+      .catch((error) => console.error(error));
+  };
+
+  public getTeacherAllLecture = async (
+    userId,
+    search = "",
+    date = "",
+    type = "",
+    page = 1,
+    pageSize = 9,
+    subjectList = "",
+    classList=""
+  ) => {
+    return await this.axiosInstance
+      .get(
+        `/api/v1/teacher/lectures/?search=${
+          search ? search : ""
+        }&page=${page}&size=${pageSize}&date=${date ? date : ""}&type=${
+          type ? type : ""
+        }${subjectList ? `&subject=${subjectList}` : ""}${classList? `&class=${classList}`:""}`
+      )
+      .then((Response) => Response)
+      .catch((error) => console.error(error));
+  };
+
   }
