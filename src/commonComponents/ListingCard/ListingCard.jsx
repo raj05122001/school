@@ -1,103 +1,136 @@
 import React, { useRef, useState } from "react";
-import { Box, Card, CardContent, Typography, CardMedia } from "@mui/material";
+import {
+  Box,
+  Card,
+  CardContent,
+  Typography,
+  CardMedia,
+  Grid,
+} from "@mui/material";
+import { useThemeContext } from "@/hooks/ThemeContext";
+import { MdOutlineDateRange } from "react-icons/md";
+import LectureType from "../LectureType/LectureType";
 
-const ListingCard = ({ ind }) => {
-  const lectureDetails = {
-    "Lecture Class": "10th Grade",
-    "Lecture Subject": "Mathematics",
-    "Lecture Chapter": "Chapter 5: Algebra",
-    "Lecture Name": "Solving Quadratic Equations",
-    "Lecture Description":
-      "In this lecture, we will learn how to solve quadratic equations using various methods.",
-    "Lecture Date": "15th October 2024",
-    "Lecture Type": "Video Lecture",
-  };
-
-  // Create a reference for the video element
+const ListingCard = ({ data }) => {
+  const { isDarkMode, primaryColor, secondaryColor } = useThemeContext();
   const videoRef = useRef(null);
 
-  // State to track hover state
   const [isHovered, setIsHovered] = useState(false);
 
-  // Handle hover to play video
   const handleMouseEnter = () => {
     setIsHovered(true);
     videoRef.current.play();
   };
 
-  // Handle leaving hover to pause video
   const handleMouseLeave = () => {
     setIsHovered(false);
     videoRef.current.pause();
   };
 
   return (
-    <Box p={2} sx={{width:'100%',height:'100%'}}>
+    <Box p={2} sx={{ width: "100%", height: "100%" }}>
       <Card
+        className="blur_effect_card"
         sx={{
           display: "flex",
           flexDirection: "column",
-          boxShadow: "0px 4px 20px rgba(0, 0, 0, 0.1)", // Softer shadow for depth
-          transition: "transform 0.4s ease, box-shadow 0.4s ease", // Smooth hover animation
-          borderRadius: "16px", // Rounded corners
-          background: "linear-gradient(145deg, #f8f9fa, #e9ecef)", // Subtle gradient
+          backdropFilter: "blur(10px)",
+          backgroundColor: "rgba(255, 255, 255, 0.2)",
+          boxShadow: "0 4px 30px rgba(0, 0, 0, 0.1)",
+          borderRadius: "16px",
           "&:hover": {
-            transform: "scale(1.05)", // Slightly increase the size on hover
-            boxShadow: "0px 8px 30px rgba(0, 0, 0, 0.15)", // Increase shadow on hover
+            transform: "scale(1.02)",
+            boxShadow: isDarkMode
+              ? "0px 8px 30px rgba(255, 255, 255, 0.1)" // Dark mode hover shadow
+              : "0px 8px 30px rgba(0, 0, 0, 0.15)", // Light mode hover shadow
           },
-          height:'100%'
+          height: "100%",
         }}
-        onMouseEnter={handleMouseEnter} // Trigger video play on hover
-        onMouseLeave={handleMouseLeave} // Trigger video pause when hover stops
+        onMouseEnter={handleMouseEnter}
+        onMouseLeave={handleMouseLeave}
       >
-        {/* Video Section */}
         <CardMedia
           component="video"
           preload="auto"
-          ref={videoRef} // Reference to the video element
-          src={`https://d3515ggloh2j4b.cloudfront.net/videos/${570 + (ind*2)}.mp4`}
-          controls={isHovered} // Show controls only when hovered
+          ref={videoRef}
+          src={`https://d3515ggloh2j4b.cloudfront.net/videos/${data?.id}.mp4`}
+          controls={isHovered}
           sx={{
             width: "100%",
             height: "auto",
-            maxHeight:220,
-            borderRadius: "16px 16px 0 0", // Rounded corners for the top part
+            maxHeight: 230,
+            borderRadius: "16px 16px 0 0",
+            backdropFilter: "blur(10px)",
+            backgroundColor: "black",
           }}
         />
 
-        {/* Lecture Details Section */}
         <CardContent
           sx={{
             display: "flex",
             flexDirection: "column",
-            justifyContent: "center",
-            p: 3,
+            // justifyContent: "center",
+            // p: 3,
+            paddingX: 2,
             textAlign: "left",
-            height:'100%'
+            height: "100%",
+            color: isDarkMode ? "#f1f1f1" : "#000", // Text color based on theme
+            backdropFilter: "blur(10px)",
+            backgroundColor: "rgba(255, 255, 255, 0.2)",
           }}
         >
-          <Typography variant="h6" gutterBottom sx={{ fontWeight: "bold" }}>
-            {lectureDetails["Lecture Name"]}
+          <Typography
+            variant="h6"
+            gutterBottom
+            sx={{ fontWeight: "bold", color: primaryColor }}
+          >
+            {data?.title}
           </Typography>
-          <Typography variant="body1" gutterBottom sx={{ color: "#555" }}>
-            <strong>Class:</strong> {lectureDetails["Lecture Class"]}
+          <Typography
+            variant="body1"
+            gutterBottom
+            sx={{ color: isDarkMode ? primaryColor : "#555" }}
+          >
+            <strong>Class:</strong> {data?.lecture_class?.name}
           </Typography>
-          <Typography variant="body1" gutterBottom sx={{ color: "#555" }}>
-            <strong>Subject:</strong> {lectureDetails["Lecture Subject"]}
+          <Typography
+            variant="body1"
+            gutterBottom
+            sx={{ color: isDarkMode ? primaryColor : "#555" }}
+          >
+            <strong>Subject:</strong> {data?.chapter?.subject?.name}
           </Typography>
-          <Typography variant="body1" gutterBottom sx={{ color: "#555" }}>
-            <strong>Chapter:</strong> {lectureDetails["Lecture Chapter"]}
+          <Typography
+            variant="body1"
+            gutterBottom
+            sx={{ color: isDarkMode ? primaryColor : "#555" }}
+          >
+            <strong>Chapter:</strong> {data?.chapter?.chapter}
           </Typography>
-          <Typography variant="body1" gutterBottom sx={{ color: "#555" }}>
-            <strong>Description:</strong>{" "}
-            {lectureDetails["Lecture Description"]}
+          <Typography
+            variant="body1"
+            gutterBottom
+            sx={{ color: isDarkMode ? primaryColor : "#555" }}
+          >
+            <strong>Description:</strong> {data?.description}
           </Typography>
-          <Typography variant="body1" gutterBottom sx={{ color: "#555" }}>
-            <strong>Date:</strong> {lectureDetails["Lecture Date"]}
-          </Typography>
-          <Typography variant="body1" sx={{ color: "#555" }}>
-            <strong>Type:</strong> {lectureDetails["Lecture Type"]}
-          </Typography>
+          <Grid container mt={"auto"} pt={2}>
+            <Grid item xs={12} sm={8}>
+              <Box sx={{ display: "flex", gap: 1 }}>
+                <MdOutlineDateRange size={22} />
+                <Typography
+                  variant="body1"
+                  gutterBottom
+                  sx={{ color: isDarkMode ? primaryColor : "#555" }}
+                >
+                  {data?.schedule_date}
+                </Typography>
+              </Box>
+            </Grid>
+            <Grid item xs={12} sm={4}>
+              <LectureType lectureType={data?.type} />
+            </Grid>
+          </Grid>
         </CardContent>
       </Card>
     </Box>
