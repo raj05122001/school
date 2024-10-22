@@ -71,7 +71,7 @@ const Filters = ({
       class: encodeURI(newValue) || "",
       subject: encodeURI(selectedSubject) || "",
       globalSearch: encodeURI(globalSearch) || "",
-      month: selectedMonth ? selectedMonth.format("YYYY-MM") : "",
+      month: month ? month : "",
       lectureType: selectedLectureType || "",
     });
   };
@@ -82,7 +82,7 @@ const Filters = ({
       class: "",
       subject: encodeURI(selectedSubject) || "",
       globalSearch: encodeURI(globalSearch) || "",
-      month: selectedMonth ? selectedMonth.format("YYYY-MM") : "",
+      month: month ? month : "",
       lectureType: selectedLectureType || "",
     });
   };
@@ -93,7 +93,7 @@ const Filters = ({
       class: encodeURI(selectedClass) || "",
       subject: encodeURI(newValue) || "",
       globalSearch: encodeURI(globalSearch) || "",
-      month: selectedMonth ? selectedMonth.format("YYYY-MM") : "",
+      month: month ? month : "",
       lectureType: selectedLectureType || "",
     });
   };
@@ -104,7 +104,7 @@ const Filters = ({
       class: encodeURI(selectedClass) || "",
       subject: "",
       globalSearch: encodeURI(globalSearch) || "",
-      month: selectedMonth ? selectedMonth.format("YYYY-MM") : "",
+      month: month ? month : "",
       lectureType: selectedLectureType || "",
     });
   };
@@ -115,7 +115,7 @@ const Filters = ({
       class: encodeURI(selectedClass) || "",
       subject: encodeURI(selectedSubject) || "",
       globalSearch: encodeURI(event.target.value) || "",
-      month: selectedMonth ? selectedMonth.format("YYYY-MM") : "",
+      month: month ? month : "",
       lectureType: selectedLectureType || "",
     });
   };
@@ -126,7 +126,7 @@ const Filters = ({
       class: encodeURI(selectedClass) || "",
       subject: encodeURI(selectedSubject) || "",
       globalSearch: "",
-      month: selectedMonth ? selectedMonth.format("YYYY-MM") : "",
+      month: month ? month : "",
       lectureType: selectedLectureType || "",
     });
   };

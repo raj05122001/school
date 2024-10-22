@@ -48,7 +48,8 @@ function StudentQueries() {
       className="blur_effect_card"
     >
       <Typography
-        className={`${isDarkMode ? "dark-heading" : "light-heading"} h6`}
+        variant="h6"
+        className={`${isDarkMode ? "dark-heading" : "light-heading"}`}
         component="div"
         sx={{
           display: "flex",

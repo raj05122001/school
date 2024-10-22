@@ -86,12 +86,13 @@ const LectureAnalytics = () => {
       }}
       className="blur_effect_card"
     >
-      <Box sx={{ display: "flex", justifyContent: "space-between", mb: 2 }}>
+      <Box sx={{ display: "flex", mb: 2, alignItems: "center", gap: 1 }}>
+        <FaVideo size={22} />
         <Typography
-          className={`${isDarkMode ? "dark-heading" : "light-heading"} h6`}
-          sx={{ fontSize: "18px", fontWeight: "bold" }}
+          variant="h6"
+          className={`${isDarkMode ? "dark-heading" : "light-heading"}`}
+          sx={{ fontWeight: "bold" }}
         >
-          <FaVideo style={{ marginRight: 8 }} />
           Video Uploaded, Views, and Comments
         </Typography>
       </Box>
@@ -108,7 +109,10 @@ const LectureAnalytics = () => {
             }}
             barSize={40} // Adjust bar size for better visibility
           >
-            <CartesianGrid strokeDasharray="3 3" stroke={isDarkMode ? "#555" : "#ccc"} />
+            <CartesianGrid
+              strokeDasharray="3 3"
+              stroke={isDarkMode ? "#555" : "#ccc"}
+            />
             <XAxis dataKey="name" stroke={isDarkMode ? "#FFF" : "#000"} />
             <YAxis stroke={isDarkMode ? "#FFF" : "#000"} />
             <Tooltip
@@ -132,7 +136,7 @@ const LectureAnalytics = () => {
               background={{ fill: "#eee" }}
             />
             <Bar dataKey="view" fill="#82ca9d" />
-            <Bar dataKey="upload" fill="#ffc658"/>
+            <Bar dataKey="upload" fill="#ffc658" />
           </BarChart>
         </ResponsiveContainer>
       </Box>

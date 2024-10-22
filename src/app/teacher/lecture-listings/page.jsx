@@ -1,6 +1,6 @@
 "use client";
 import { Box, Grid, Pagination, Typography } from "@mui/material";
-import { FaChalkboardTeacher } from "react-icons/fa"; // Add Material-UI icon
+import { FaChalkboardTeacher } from "react-icons/fa";
 import React, { useEffect, useMemo, useState } from "react";
 import ListingCard from "@/commonComponents/ListingCard/ListingCard";
 import Filters from "@/components/teacher/lecture-listings/Filters/Filters";
@@ -11,7 +11,7 @@ import { useSearchParams, useRouter, usePathname } from "next/navigation";
 import { useThemeContext } from "@/hooks/ThemeContext";
 import LectureListingCardSkeleton from "@/commonComponents/Skeleton/LectureListingCardSkeleton/LectureListingCardSkeleton";
 
-const page = () => {
+const Page = () => {
   const { isDarkMode, primaryColor, secondaryColor } = useThemeContext();
   const userDetails = decodeToken(Cookies.get("ACCESS_TOKEN"));
   const searchParams = useSearchParams();
@@ -78,7 +78,6 @@ const page = () => {
     router.push(`${pathname}?${newSearchParams.toString()}`);
   };
 
-  // Define light and dark mode styles
   const darkModeStyles = {
     backgroundColor: "#1a1a1a",
     paginationItemColor: "#ffffff",
@@ -112,7 +111,6 @@ const page = () => {
             </Grid>
           ))
         ) : (
-          // Display message if no lectures found
           <Grid
             item
             xs={12}
@@ -121,10 +119,9 @@ const page = () => {
               flexDirection: "column",
               alignItems: "center",
               justifyContent: "center",
-              height: "100%", // Adjust height as needed
+              height: "100%",
             }}
           >
-            {/* Adding the icon */}
             <FaChalkboardTeacher
               size={30}
               sx={{
@@ -134,7 +131,6 @@ const page = () => {
                   : lightModeStyles.paginationItemColor,
               }}
             />
-            {/* Adding a message */}
             <Typography
               variant="h5"
               align="center"
@@ -143,7 +139,7 @@ const page = () => {
                 color: isDarkMode
                   ? darkModeStyles.paginationItemColor
                   : lightModeStyles.paginationItemColor,
-                fontWeight: "bold", // Make the text bold
+                fontWeight: "bold",
               }}
             >
               No lectures available at the moment
@@ -203,4 +199,4 @@ const page = () => {
   );
 };
 
-export default page;
+export default Page;

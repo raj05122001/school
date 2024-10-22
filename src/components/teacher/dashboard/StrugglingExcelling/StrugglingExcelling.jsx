@@ -70,7 +70,6 @@ const StrugglingExcelling = () => {
   return (
     <Box
       sx={{
-        // maxWidth: 400,
         width: "100%",
         p: 2,
         maxHeight: 510,
@@ -87,7 +86,8 @@ const StrugglingExcelling = () => {
         }}
       >
         <Typography
-          className={`${isDarkMode ? "dark-heading" : "light-heading"} h6`}
+          variant="h6"
+          className={`${isDarkMode ? "dark-heading" : "light-heading"}`}
         >
           Struggling & Excelling
         </Typography>

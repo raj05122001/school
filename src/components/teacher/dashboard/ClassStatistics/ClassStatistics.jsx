@@ -21,20 +21,27 @@ const ClassStatistics = () => {
     <Box
       sx={{
         padding: "20px",
-        width:'100%',
-        height:'100%',
-        backgroundColor: cardBgColor,
+        width: "100%",
+        height: "100%",
         borderRadius: 4,
-        boxShadow: "0px 4px 12px rgba(0, 0, 0, 0.1)",
       }}
       className="blur_effect_card"
     >
       {/* Header */}
       <Box sx={{ display: "flex", justifyContent: "space-between", mb: 2 }}>
-        <Box sx={{ color: textColor, fontWeight: "bold", display: "flex" ,alignItems:'center',gap:1}}>
+        <Box
+          sx={{
+            color: textColor,
+            fontWeight: "bold",
+            display: "flex",
+            alignItems: "center",
+            gap: 1,
+          }}
+        >
           <SiGoogleclassroom size={22} />
           <Typography
-            className={`${isDarkMode ? "dark-heading" : "light-heading"} h6`}
+            variant="h6"
+            className={`${isDarkMode ? "dark-heading" : "light-heading"}`}
           >
             Class Statistics
           </Typography>
