@@ -40,7 +40,7 @@ export const CheckNetwork = () => {
           {onlineStatus ? (
             <>
               <FiWifi size={20} /> {/* Online icon */}
-              <span>Back online. You're connected to the internet.</span>
+              <span>Back online. You&apos;re connected to the internet.</span>
             </>
           ) : (
             <>
