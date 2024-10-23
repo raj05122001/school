@@ -163,51 +163,6 @@ const LectureRecorder = ({ open, closeDrawer, recordingData }) => {
     mediaRecorderRef.current.start(30000);
     audioRecorderRef.current.start();
   };
-  //   return new Promise((resolve, reject) => {
-  //     const params = {
-  //       Bucket: "vidya-ai-video",
-  //       Key: `videos/${lectureRcordingData.id}.mp4`,
-  //       Body: chunk,
-  //       ContentType: "video/mp4",
-  //       BucketEndpoint: `https://vidya-ai-video.s3-accelerate.amazonaws.com`,
-  //     };
-
-  //     const options = {
-  //       partSize: 10 * 1024 * 1024, // 10 MB
-  //       queueSize: 4, // 4 parallel uploads
-  //     };
-
-  //     let startTime = Date.now();
-  //     let uploadedBytes = 0;
-
-  //     s3.upload(params, options)
-  //       .on("httpUploadProgress", (evt) => {
-  //         const currentTime = Date.now();
-  //         const elapsedTime = (currentTime - startTime) / 1000; // time in seconds
-  //         uploadedBytes = evt.loaded;
-  //         const totalBytes = evt.total;
-
-  //         const uploadSpeed = uploadedBytes / elapsedTime; // bytes per second
-  //         const remainingBytes = totalBytes - uploadedBytes;
-  //         const timeRemaining = remainingBytes / uploadSpeed; // time in seconds
-
-  //         const progress = Math.round((uploadedBytes / totalBytes) * 100);
-
-  //         setUploadProgress(progress);
-  //         setUploadSpeed((uploadSpeed / 1024 / 1024).toFixed(2)); // Speed in MB/s
-  //         setTimeRemaining(Math.round(timeRemaining)); // Time in seconds
-  //       })
-  //       .send((err, data) => {
-  //         if (err) {
-  //           console.error("Error uploading file:", err);
-  //           reject(err);
-  //         } else {
-  //           console.log("File uploaded successfully:", data);
-  //           resolve(data);
-  //         }
-  //       });
-  //   });
-  // };
 
   const uploadVideoToS3 = async (chunk, index) => {
     return new Promise(async (resolve, reject) => {
@@ -223,11 +178,6 @@ const LectureRecorder = ({ open, closeDrawer, recordingData }) => {
           partSize: 10 * 1024 * 1024, // 10 MB
           queueSize: 4, // 4 parallel uploads
         };
-
-        // const s3 = new S3Client({
-        //   region: "us-east-1", // Adjust this if needed
-        //   endpoint: "https://vidya-ai-video.s3-accelerate.amazonaws.com", // S3 Accelerate
-        // });
 
         // Start time for calculating speed and remaining time
         let startTime = Date.now();
@@ -726,188 +676,213 @@ const LectureRecorder = ({ open, closeDrawer, recordingData }) => {
       </Box>
 
       {/* video recoder */}
-      {!videoAttachment.length > 0 &&
-        !lectureStoped.stopRecording &&
-        !lectureStoped.isProccess && (
-          <Box
-            sx={{
-              display: "flex",
-              justifyContent: "center",
-              alignItems: "center",
-              width: "100%",
-              height: "99%",
-              backgroundColor: "#000",
-            }}
-          >
-            <video
-              ref={videoRef}
-              autoPlay
-              muted
-              style={{
-                transform: "scaleX(-1)",
-                height: "100%",
-                objectFit: "cover",
-              }}
-            ></video>
-            {!startRecordingBtn &&
-              !videoChunks.length > 0 &&
-              !recordedVideo &&
-              !lectureStoped.isProccess && (
-                <Box
-                  onClick={() => startVideoRecording()}
-                  sx={{
-                    display: "flex",
-                    alignItems: "center",
-                    justifyContent: "center",
-                    gap: 1,
-                    px: 2,
-                    py: 1,
-                    bgcolor: "red",
-                    color: "white",
-                    borderRadius: "50px",
-                    cursor: "pointer",
-                    mt: 2,
-                    position: "absolute",
-                    top: "50%",
-                    left: "50%",
-                    transform: "translate(-50%, -50%)",
+      {!lectureStoped.isProccess && (
+        <Box
+          sx={{
+            height: "90%",
+            position: "relative",
+            display: "flex",
+            justifyContent: "center",
+          }}
+        >
+          {!videoAttachment.length > 0 &&
+            !lectureStoped.stopRecording &&
+            !lectureStoped.isProccess && (
+              <Box
+                sx={{
+                  display: "flex",
+                  justifyContent: "center",
+                  alignItems: "center",
+                  width: "100%",
+                  height: "100%",
+                  backgroundColor: "#000",
+                }}
+              >
+                <video
+                  ref={videoRef}
+                  autoPlay
+                  muted
+                  style={{
+                    transform: "scaleX(-1)",
+                    height: "100%",
+                    objectFit: "cover",
                   }}
-                >
-                  <Box
-                    sx={{
-                      width: 20,
-                      height: 20,
-                      bgcolor: "black",
-                      borderRadius: "50%",
-                      border: "6px solid red",
-                    }}
-                  />
-                  <Typography variant="body2" color="black">
-                    Start Recording
-                  </Typography>
-                </Box>
-              )}
-          </Box>
-        )}
+                ></video>
+                {!startRecordingBtn &&
+                  !videoChunks.length > 0 &&
+                  !recordedVideo &&
+                  !lectureStoped.isProccess && (
+                    <Box
+                      onClick={() => startVideoRecording()}
+                      sx={{
+                        display: "flex",
+                        alignItems: "center",
+                        justifyContent: "center",
+                        gap: 1,
+                        px: 2,
+                        py: 1,
+                        bgcolor: "red",
+                        color: "white",
+                        borderRadius: "50px",
+                        cursor: "pointer",
+                        mt: 2,
+                        position: "absolute",
+                        top: "50%",
+                        left: "50%",
+                        transform: "translate(-50%, -50%)",
+                      }}
+                    >
+                      <Box
+                        sx={{
+                          width: 20,
+                          height: 20,
+                          bgcolor: "black",
+                          borderRadius: "50%",
+                          border: "6px solid red",
+                        }}
+                      />
+                      <Typography variant="body2" color="black">
+                        Start Recording
+                      </Typography>
+                    </Box>
+                  )}
+              </Box>
+            )}
 
-      {((lectureStoped.stopRecording && videoChunks.length > 0) ||
-        videoAttachment.length > 0) &&
-        !lectureStoped.isProccess &&
-        (recordedVideo ? (
-          <Box
-            component="video"
-            src={recordedVideo}
-            controls
-            sx={{
-              boxShadow: 1,
-              mt: 2,
-              maxHeight: "87%",
-              width: "100%",
-            }}
-          />
-        ) : (
-          <CircularProgress size={48} sx={{ mt: 3 }} />
-        ))}
+          {((lectureStoped.stopRecording && videoChunks.length > 0) ||
+            videoAttachment.length > 0) &&
+            !lectureStoped.isProccess &&
+            (recordedVideo ? (
+              <video
+                src={recordedVideo}
+                controls
+                style={{
+                  height: "100%",
 
-      <RecorderErrorMessage
-        lectureStoped={lectureStoped}
-        error={error}
-        recordingData={recordingData}
-        uploadedChunk={uploadProgress}
-        uploadSpeed={uploadSpeed}
-        timeRemaining={timeRemaining}
-      />
+                  // width: "100%",
+                }}
+              />
+            ) : (
+              <CircularProgress size={48} sx={{ mt: 3 }} />
+            ))}
+        </Box>
+      )}
 
-      <Grid container spacing={2}>
-        <Grid item xs={12} sm={4}>
-          <BottomTabs
-            startRecordingBtn={startRecordingBtn}
-            videoChunks={videoChunks}
-            videoAttachment={videoAttachment}
-            setVideoAttachment={setVideoAttachment}
-            onRemoveVideoFile={onRemoveVideoFile}
-            setIsNoiseCancellation={setIsNoiseCancellation}
-            isNoiseCancellation={isNoiseCancellation}
-            attachments={attachments}
-            setAttachments={setAttachments}
-            removeVideoChunk={removeVideoChunk}
+      {(lectureStoped.isProccess ||
+        lectureStoped?.isError ||
+        lectureStoped?.submit) && (
+        <Box
+          width="100%"
+          height="100%"
+          sx={{
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
+          }}
+        >
+          <RecorderErrorMessage
             lectureStoped={lectureStoped}
-            removeCameraAccess={removeCameraAccess}
+            error={error}
             recordingData={recordingData}
-            audioAttachment={audioAttachment}
-            setAudioAttachment={setAudioAttachment}
-            selectedOption={selectedOption}
-            setSelectedOption={setSelectedOption}
-            audioChunks={audioChunk}
+            uploadedChunk={uploadProgress}
+            uploadSpeed={uploadSpeed}
+            timeRemaining={timeRemaining}
           />
-        </Grid>
+        </Box>
+      )}
 
-        <Grid item xs={12} sm={4}>
-          <RecorderController
-            startRecordingBtn={startRecordingBtn}
-            timer={timer}
-            handleVideoPlayPause={handleVideoPlayPause}
-            isPaused={isPaused}
-            stopRecording={stopRecording}
-          />
-        </Grid>
+      {!lectureStoped.isProccess && (
+        <Grid container spacing={2} sx={{ height: "10%" }}>
+          <Grid item xs={12} sm={4}>
+            <BottomTabs
+              startRecordingBtn={startRecordingBtn}
+              videoChunks={videoChunks}
+              videoAttachment={videoAttachment}
+              setVideoAttachment={setVideoAttachment}
+              onRemoveVideoFile={onRemoveVideoFile}
+              setIsNoiseCancellation={setIsNoiseCancellation}
+              isNoiseCancellation={isNoiseCancellation}
+              attachments={attachments}
+              setAttachments={setAttachments}
+              removeVideoChunk={removeVideoChunk}
+              lectureStoped={lectureStoped}
+              removeCameraAccess={removeCameraAccess}
+              recordingData={recordingData}
+              audioAttachment={audioAttachment}
+              setAudioAttachment={setAudioAttachment}
+              selectedOption={selectedOption}
+              setSelectedOption={setSelectedOption}
+              audioChunks={audioChunk}
+            />
+          </Grid>
 
-        <Grid item xs={12} sm={4}>
-          <Box
-            sx={{
-              display: "flex",
-              my: 2,
-              alignItems: "center",
-              justifyContent: "flex-end",
-              gap: 2,
-            }}
-          >
-            <Button
-              onClick={onCloseDrawer}
-              variant="outlined"
-              color="error"
+          <Grid item xs={12} sm={4}>
+            <RecorderController
+              startRecordingBtn={startRecordingBtn}
+              timer={timer}
+              handleVideoPlayPause={handleVideoPlayPause}
+              isPaused={isPaused}
+              stopRecording={stopRecording}
+            />
+          </Grid>
+
+          <Grid item xs={12} sm={4}>
+            <Box
               sx={{
-                px: 4,
-                py: 1,
-                borderRadius: 1,
-                textTransform: "none",
-                boxShadow: 1,
-                transition: "transform 0.2s ease-out",
-                "&:hover": {
-                  transform: "scale(1.05)",
-                },
+                display: "flex",
+                my: 2,
+                alignItems: "center",
+                justifyContent: "flex-end",
+                gap: 2,
               }}
             >
-              Cancel
-            </Button>
-
-            <Box sx={{ display: "flex", justifyContent: "flex-end" }}>
               <Button
-                onClick={submitLecture}
-                variant="contained"
-                color={uploadedChunk < chunkCount ? "grey" : "primary"}
-                disabled={uploadedChunk < chunkCount}
+                onClick={onCloseDrawer}
+                variant="outlined"
+                color="error"
                 sx={{
                   px: 4,
                   py: 1,
-                  fontWeight: "bold",
                   borderRadius: 1,
                   textTransform: "none",
+                  boxShadow: 1,
+                  transition: "transform 0.2s ease-out",
+                  "&:hover": {
+                    transform: "scale(1.05)",
+                  },
                 }}
               >
-                {uploadedChunk < chunkCount ? (
-                  <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
-                    <CircularProgress size={20} sx={{ color: "white" }} />
-                    <span>Processing...</span>
-                  </Box>
-                ) : (
-                  "Submit Lecture"
-                )}
+                Cancel
               </Button>
+
+              <Box sx={{ display: "flex", justifyContent: "flex-end" }}>
+                <Button
+                  onClick={submitLecture}
+                  variant="contained"
+                  color={uploadedChunk < chunkCount ? "grey" : "primary"}
+                  disabled={uploadedChunk < chunkCount}
+                  sx={{
+                    px: 4,
+                    py: 1,
+                    fontWeight: "bold",
+                    borderRadius: 1,
+                    textTransform: "none",
+                  }}
+                >
+                  {uploadedChunk < chunkCount ? (
+                    <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
+                      <CircularProgress size={20} sx={{ color: "white" }} />
+                      <span>Processing...</span>
+                    </Box>
+                  ) : (
+                    "Submit Lecture"
+                  )}
+                </Button>
+              </Box>
             </Box>
-          </Box>
+          </Grid>
         </Grid>
-      </Grid>
+      )}
     </Drawer>
   );
 };

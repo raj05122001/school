@@ -28,8 +28,7 @@ const RecorderErrorMessage = ({
         !lectureStoped?.isError && (
           <Box
             sx={{
-              height: "80%",
-              mt: 10,
+              height: "100%",
               display: "flex",
               flexDirection: "column",
               alignItems: "center",
@@ -125,8 +124,7 @@ const RecorderErrorMessage = ({
         !lectureStoped?.isError && (
           <Box
             sx={{
-              height: "80%",
-              mt: 10,
+              height: "100%",
               display: "flex",
               flexDirection: "column",
               alignItems: "center",

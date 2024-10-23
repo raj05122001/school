@@ -1,6 +1,7 @@
 import React from "react";
 import Image from "next/image";
 import { Avatar } from "@mui/material";
+import { BASE_URL_MEET } from "@/constants/apiconfig";
 
 const UserImage = ({ profilePic, name, width = 32, height = 32 }) => {
   return (
