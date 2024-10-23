@@ -38,11 +38,8 @@ const LecturePopover = ({ data, isOrganizer }) => {
   };
 
   const handlePopoverEnter = () => {
-    console.log("handlePopoverEnter function is called");
     setIsPopoverOpen(true);
   };
-
-  console.log("isPopoverOpen", isPopoverOpen);
 
   const handlePopoverLeave = () => {
     setIsPopoverOpen(false);

@@ -32,12 +32,14 @@ import Cookies from "js-cookie";
 import { useRouter } from "next/navigation";
 import { useThemeContext } from "@/hooks/ThemeContext";
 import { decodeToken } from "react-jwt";
+import UserImage from "@/commonComponents/UserImage/UserImage";
 
 const drawerWidth = 240;
 const miniDrawerWidth = 60;
 
 const Sidebar = ({ open, setOpen }) => {
   const { isDarkMode, primaryColor, secondaryColor } = useThemeContext();
+  const userDetails = decodeToken(Cookies.get("ACCESS_TOKEN"));
   const router = useRouter();
   const iconSize = open ? 22 : 26;
   const handleDrawerToggle = () => {
@@ -125,13 +127,16 @@ const Sidebar = ({ open, setOpen }) => {
                 transition: "padding 0.3s",
               }}
             >
-              <Avatar
-                src="/path/to/avatar.jpg"
-                alt="User Name"
-                sx={{ width: 48, height: 48, mb: open ? 0 : 1 }}
-              />
+              <Box sx={{ width: 48, height: 48, mb: open ? 0 : 1 }}>
+                <UserImage
+                  profilePic={userDetails?.profile_pic}
+                  name={userDetails?.full_name}
+                  width={48}
+                  height={48}
+                />
+              </Box>
               <Typography variant="body1" sx={{ ml: 2, color: "#fff" }}>
-                User Name
+                {userDetails?.full_name}
               </Typography>
             </Box>
           ) : (
@@ -143,10 +148,11 @@ const Sidebar = ({ open, setOpen }) => {
                 marginTop: 2,
               }}
             >
-              <Avatar
-                src="/path/to/avatar.jpg"
-                alt="User Name"
-                sx={{ width: 36, height: 36, mb: open ? 0 : 1 }}
+              <UserImage
+                profilePic={userDetails?.profile_pic}
+                name={userDetails?.full_name}
+                width={36}
+                height={36}
               />
             </Box>
           )}
@@ -171,7 +177,7 @@ const Sidebar = ({ open, setOpen }) => {
                       },
                       margin: "8px 0",
                     }}
-                    onClick={()=>{
+                    onClick={() => {
                       if (item.text === "Create Lecture") {
                         // setOpenCreateMeetingDrawer(true);
                       } else {
