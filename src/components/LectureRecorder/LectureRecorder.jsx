@@ -793,7 +793,7 @@ const LectureRecorder = ({ open, closeDrawer, recordingData }) => {
 
       {!lectureStoped.isProccess && (
         <Grid container spacing={2} sx={{ height: "10%" }}>
-          <Grid item xs={12} sm={4}>
+          <Grid item xs={12} sm={4} sx={{display:'flex',alignItems:'center'}}>
             <BottomTabs
               startRecordingBtn={startRecordingBtn}
               videoChunks={videoChunks}
@@ -816,7 +816,7 @@ const LectureRecorder = ({ open, closeDrawer, recordingData }) => {
             />
           </Grid>
 
-          <Grid item xs={12} sm={4}>
+          <Grid item xs={12} sm={4} sx={{display:'flex',alignItems:'center'}}>
             <RecorderController
               startRecordingBtn={startRecordingBtn}
               timer={timer}
@@ -826,7 +826,7 @@ const LectureRecorder = ({ open, closeDrawer, recordingData }) => {
             />
           </Grid>
 
-          <Grid item xs={12} sm={4}>
+          <Grid item xs={12} sm={4} >
             <Box
               sx={{
                 display: "flex",
