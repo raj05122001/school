@@ -122,3 +122,13 @@ export const getTeacherAllLecture = async (
     classList
   );
 };
+
+export const downloadExcelFile = async () => {
+  const apiInstance = new apiServices(axiosAPIInstance);
+  return await apiInstance.downloadExcelFile();
+};
+
+export const uploadExcelFile = async (formData) => {
+  const apiInstance = new apiServices(axiosAPIInstance);
+  return await apiInstance.uploadExcelFile(formData);
+};
