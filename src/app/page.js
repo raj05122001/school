@@ -1,54 +1,102 @@
 "use client";
-import { useState } from 'react';
+import { Box, Typography, Button } from "@mui/material";
+import { useState } from "react";
+import { FaVideo } from "react-icons/fa";
+import FFmpeg from '@ffmpeg/ffmpeg';  // Use default import instead of named import
 
-export default function VideoUpload() {
-  const [video, setVideo] = useState(null);
-  const [message, setMessage] = useState('');
-  const [downloadLink, setDownloadLink] = useState('');
-  const [videoSize, setVideoSize] = useState('');
+// Main component
+export default function Home() {
+  const [isUploading, setIsUploading] = useState(false);
+  const [progress, setProgress] = useState(0);
+  const [fileSize, setFileSize] = useState(null); // For showing file size
+  const [downloadUrl, setDownloadUrl] = useState(null); // For download option
 
-  const handleFileChange = (e) => {
-    setVideo(e.target.files[0]);
-  };
+  const ffmpeg = FFmpeg.createFFmpeg({ log: true }); // Access createFFmpeg from the default import
 
-  const handleUpload = async () => {
-    if (!video) {
-      setMessage('Please select a video to upload.');
-      return;
+  async function compressVideoLossless(file) {
+    if (!ffmpeg.isLoaded()) {
+      await ffmpeg.load();
+    }
+    ffmpeg.FS('writeFile', 'input.mp4', await FFmpeg.fetchFile(file)); // Use FFmpeg.fetchFile
+
+    // Compress the video (lossless compression with libx264)
+    await ffmpeg.run('-i', 'input.mp4', '-vcodec', 'libx264', '-crf', '23', 'output.mp4');
+
+    const data = ffmpeg.FS('readFile', 'output.mp4');
+    const compressedBlob = new Blob([data.buffer], { type: 'video/mp4' });
+    return compressedBlob;
+  }
+
+  const handleFileUpload = async (e) => {
+    setIsUploading(true);
+    const file = e.target.files[0];
+
+    // Compress the video before uploading
+    const compressedVideo = await compressVideoLossless(file);
+
+    // Calculate and set the compressed video size
+    setFileSize((compressedVideo.size / (1024 * 1024)).toFixed(2)); // Convert to MB
+
+    // Provide a download link for the compressed video
+    const url = URL.createObjectURL(compressedVideo);
+    setDownloadUrl(url);
+
+    // Optionally, split the compressed video into chunks (e.g., for large file upload)
+    const chunkSize = 10 * 1024 * 1024; // 10 MB
+    const totalChunks = Math.ceil(compressedVideo.size / chunkSize);
+
+    for (let i = 0; i < totalChunks; i++) {
+      const start = i * chunkSize;
+      const end = Math.min(compressedVideo.size, start + chunkSize);
+      const chunk = compressedVideo.slice(start, end);
+
+      await uploadChunkToS3(chunk, i);  // You need to implement this function
+      setProgress(((i + 1) / totalChunks) * 100);  // Update progress
     }
 
-    const formData = new FormData();
-    formData.append('video', video);
-
-    const res = await fetch('/api/compress-video', {
-      method: 'POST',
-      body: formData,
-    });
-
-    const result = await res.json();
-
-    if (res.ok) {
-      setMessage('Video compressed successfully!');
-      setDownloadLink(result.output);
-      setVideoSize(result.size);  // Display the video size
-    } else {
-      setMessage(`Error: ${result.error}`);
-    }
+    setIsUploading(false);
   };
 
   return (
-    <div>
-      <input type="file" onChange={handleFileChange} />
-      <button onClick={handleUpload}>Upload and Compress Video</button>
-      {message && <p>{message}</p>}
-      
-      {/* Display download link if available */}
-      {downloadLink && (
-        <div>
-          <p>Download compressed video: <a href={downloadLink} download>Download Video</a></p>
-          <p>Compressed Video Size: {videoSize} MB</p>
-        </div>
+    <Box>
+      <input
+        type="file"
+        accept="video/*,.mkv"
+        multiple={false}
+        style={{ display: "none" }}
+        id="videoattachment"
+        onChange={handleFileUpload}
+      />
+      <label htmlFor="videoattachment" style={{ cursor: "pointer" }}>
+        <Typography
+          variant="body2"
+          color="primary"
+          sx={{ display: "flex", alignItems: "center" }}
+        >
+          <FaVideo size={22} style={{ marginRight: 8 }} />
+          {isUploading ? `Uploading... ${progress.toFixed(2)}%` : "Add Video File"}
+        </Typography>
+      </label>
+
+      {/* Display the file size after video compression */}
+      {fileSize && (
+        <Typography variant="body2" color="textSecondary" sx={{ mt: 2 }}>
+          Compressed Video Size: {fileSize} MB
+        </Typography>
       )}
-    </div>
+
+      {/* Provide download link after video compression */}
+      {downloadUrl && (
+        <Button 
+          variant="contained" 
+          color="primary" 
+          sx={{ mt: 2 }}
+          href={downloadUrl} 
+          download="compressed_video.mp4"
+        >
+          Download Compressed Video
+        </Button>
+      )}
+    </Box>
   );
 }
