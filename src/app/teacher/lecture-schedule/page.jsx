@@ -8,7 +8,6 @@ import { RiCalendarScheduleLine } from "react-icons/ri";
 import { downloadExcelFile, uploadExcelFile } from "@/api/apiHelper";
 import { MdAdd, MdDownloadForOffline, MdUpload } from "react-icons/md";
 import CreateLectureSchedule from "@/components/LectureSchedule/CreateLectureSchedule";
-import LectureScheduleList from "@/components/LectureSchedule/LectureScheduleList";
 import LectureScheduleTable from "@/components/LectureSchedule/LectureScheduleTable";
 import DarkMode from "@/components/DarkMode/DarkMode";
 
@@ -54,7 +53,8 @@ const LectureManager = () => {
       direction="column"
       justifyItems={"center"}
       spacing={3}
-      height="100vh"
+      height="100%"
+      minHeight="100vh"
       padding={2}
       sx={{
         background: isDarkMode
@@ -148,45 +148,45 @@ const LectureManager = () => {
         {/* Tabs for switching between views */}
         <Box
           sx={{
-            borderBottom: 1,
-            borderColor: "divider",
             marginTop: 4,
             display: "flex",
-            justifyContent: "center",
+            justifyContent: "flex-start",
           }}
         >
           <Tabs
             value={tabValue}
             onChange={handleTabChange}
-            aria-label="lecture views"
             sx={{
               ".MuiTabs-flexContainer": {
-        borderBottom: "none",
-        gap: 2, // Add some spacing between the tabs
-        background: isDarkMode
-          ? "linear-gradient(177.9deg, rgb(58, 62, 88) 3.6%, rgb(119, 127, 148) 105.8%)"
-          : "linear-gradient(180.3deg, rgb(221, 221, 221) 5.5%, rgb(110, 136, 161) 90.2%);",
-        padding: 2,
-        borderRadius:"12px",
-        width:"600px",
-        justifyContent:"center",
-        alignItems:"center"
-      },
-      ".MuiTab-root": {
-        backgroundColor: "#e0dcdd", // Default background for unselected tabs
-        color: "black", // Text color for unselected tabs
-        border: "1px solid transparent", // Invisible border for unselected tabs
-        borderRadius: "16px", // Fully rounded corners
-        padding: "8px 16px", // Add padding inside tabs
-        minHeight: "auto", // Adjust tab height if necessary
-        "&.Mui-selected": {
-          backgroundColor: "#FAF9F6", // White background for selected tab
-        color: "black", // Text color for selected tab
-        borderBottom: "none", // No border on the bottom
-        borderRadius: "16px", // Fully rounded corners for selected tab
-        boxShadow: "0px 4px 12px rgba(0, 0, 0, 0.2)", // Add shadow effect
-        },
-      },
+                gap: 2,
+                background: isDarkMode
+                  ? "linear-gradient(177.9deg, rgb(58, 62, 88) 3.6%, rgb(119, 127, 148) 105.8%)"
+                  : "linear-gradient(180.3deg, rgb(221, 221, 221) 5.5%, rgb(110, 136, 161) 90.2%)",
+                padding: 1,
+                borderRadius: "12px",
+                justifyContent: "center",
+              },
+              ".MuiTab-root": {
+                // backgroundColor: "#f0f0f0",
+                color: "#333",
+                padding: "10px 20px",
+                // height:10,
+                minHeight: 0,
+                "&.MuiTabs-indicator": {
+                  display: "none",
+                },
+                "&:hover": {
+                  backgroundColor: "#e0e0e0",
+                  boxShadow: "0px 2px 8px rgba(0, 0, 0, 0.1)",
+                  borderRadius: "10px",
+                },
+                "&.Mui-selected": {
+                  backgroundColor: "#fff",
+                  color: "#000",
+                  boxShadow: "0px 6px 15px rgba(0, 0, 0, 0.2)",
+                  borderRadius: "10px",
+                },
+              },
             }}
           >
             <Tab label="Calendar View" />
@@ -196,7 +196,7 @@ const LectureManager = () => {
 
         {/* Content based on selected tab */}
         <Grid marginTop={2} height={"100%"}>
-          {tabValue === 0 && <CalendarComponent />}
+          {tabValue === 0 && <CalendarComponent maxHeight={"100%"} />}
           {tabValue === 1 && <LectureScheduleTable />}
         </Grid>
       </Grid>

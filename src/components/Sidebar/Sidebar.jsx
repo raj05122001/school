@@ -308,9 +308,9 @@ export const sidebarLinks = {
     },
     {
       text: "Lecture Schedule",
-      href: "/lecture-schedule",
+      href: "/teacher/lecture-schedule",
       icon: <MdSchedule size={22} />,
-      show: "ADMIN TEACHER STUDENT",
+      show: "TEACHER",
     },
     // {
     //   text: "Test Series",

@@ -9,69 +9,13 @@ import {
   Paper,
   Box,
   Typography,
+  Skeleton,
+  Pagination
 } from "@mui/material";
 import { useThemeContext } from "@/hooks/ThemeContext";
 import { getMyLectures } from "@/api/apiHelper";
 import { AiOutlineExclamationCircle } from "react-icons/ai";
-
-// Sample lecture data
-const sampleLectures = [
-  {
-    title: "Introduction to AI",
-    date: "2024-10-23",
-    class: "10th Grade",
-    subject: "Computer Science",
-    chapter: "Basics of AI",
-    topics: "History, Applications",
-    academicYear: "2024-2025",
-    startingTime: "10:00 AM",
-    allottedHr: 2,
-  },
-  {
-    title: "Data Structures",
-    date: "2024-10-24",
-    class: "12th Grade",
-    subject: "Mathematics",
-    chapter: "Trees and Graphs",
-    topics: "Binary Trees, Graph Traversals",
-    academicYear: "2024-2025",
-    startingTime: "1:00 PM",
-    allottedHr: 1.5,
-  },
-  {
-    title: "Modern Physics",
-    date: "2024-10-25",
-    class: "11th Grade",
-    subject: "Physics",
-    chapter: "Quantum Mechanics",
-    topics: "Photoelectric Effect, Wave-Particle Duality",
-    academicYear: "2024-2025",
-    startingTime: "9:00 AM",
-    allottedHr: 2,
-  },
-  {
-    title: "Organic Chemistry",
-    date: "2024-10-26",
-    class: "12th Grade",
-    subject: "Chemistry",
-    chapter: "Hydrocarbons",
-    topics: "Alkanes, Alkenes, Alkynes",
-    academicYear: "2024-2025",
-    startingTime: "11:00 AM",
-    allottedHr: 1,
-  },
-  {
-    title: "Introduction to Programming",
-    date: "2024-10-27",
-    class: "10th Grade",
-    subject: "Computer Science",
-    chapter: "Basics of Programming",
-    topics: "Variables, Control Structures",
-    academicYear: "2024-2025",
-    startingTime: "2:00 PM",
-    allottedHr: 1.5,
-  },
-];
+import { useSearchParams, useRouter } from "next/navigation";
 
 const TABLE_HEAD = [
   "Title",
@@ -86,23 +30,28 @@ const TABLE_HEAD = [
 ];
 
 const LectureScheduleTable = () => {
+  const searchParams = useSearchParams();
+  const router = useRouter();
   const { isDarkMode, primaryColor } = useThemeContext();
   const [lectureData, setLectureData] = useState([]);
+  const [loading, setLoading] = useState(true); // Loading state
+  const activePage = parseInt(searchParams.get("activePage")) || 1;
 
   const fetchLectureData = async () => {
     try {
+      setLoading(true); // Start loading
       const response = await getMyLectures("UPCOMMING");
       setLectureData(response?.data?.data?.lecture_data);
     } catch (error) {
       console.error(error);
+    } finally {
+      setLoading(false); // End loading
     }
   };
-
+console.log("lectureData",lectureData)
   useEffect(() => {
     fetchLectureData();
   }, []);
-
-  console.log("Lecture Data incoming", lectureData);
 
   const formatTime = (time) => {
     const [hours, minutes] = time.split(":");
@@ -111,9 +60,30 @@ const LectureScheduleTable = () => {
     return `${adjustedHours}:${minutes} ${period}`;
   };
 
+  const handleChange = (event, value) => {
+    router.push(`/teacher/lecture-schedule?activePage=${value}`);
+  };
+
+  const darkModeStyles = {
+    backgroundColor: "#1a1a1a",
+    paginationItemColor: "#ffffff",
+    paginationBg: "#333333",
+    paginationSelectedBg: "#005bb5",
+    paginationSelectedColor: "#ffffff",
+  };
+
+  const lightModeStyles = {
+    backgroundColor: "#ffffff",
+    paginationItemColor: "#000000",
+    paginationBg: "#f0f0f0",
+    paginationSelectedBg: "#005bb5",
+    paginationSelectedColor: "#ffffff",
+  };
+
   return (
     <Box sx={{ p: 2 }}>
-      {lectureData?.data?.length > 0 ? (
+      {/* Show skeleton loader when loading */}
+      {loading ? (
         <TableContainer component={Paper} className="blur_effect_card">
           <Table>
             <TableHead>
@@ -122,13 +92,12 @@ const LectureScheduleTable = () => {
                   background: isDarkMode
                     ? "radial-gradient(circle at 10% 20%, rgb(90, 92, 106) 0%, rgb(32, 45, 58) 81.3%)"
                     : "linear-gradient(178.6deg, rgb(20, 36, 50) 11.8%, rgb(124, 143, 161) 83.8%)",
-                  
                 }}
               >
-                {TABLE_HEAD.map((head) => (
+                {TABLE_HEAD.map((head, index) => (
                   <TableCell
-                    key={head}
-                    sx={{color:isDarkMode ? "white":"black"}}
+                    key={index}
+                    sx={{ color: isDarkMode ? "white" : "black" }}
                     className="px-6 py-3 text-left text-base font-medium uppercase tracking-wider"
                   >
                     {head}
@@ -137,7 +106,49 @@ const LectureScheduleTable = () => {
               </TableRow>
             </TableHead>
             <TableBody>
-            {lectureData?.data?.map((lecture, index) => (
+              {[...Array(5)].map((_, index) => (
+                <TableRow key={index}>
+                  {TABLE_HEAD.map((_, idx) => (
+                    <TableCell key={idx}>
+                      <Skeleton
+                        variant="text"
+                        width="100%"
+                        height={30}
+                        sx={{
+                          backgroundColor: isDarkMode ? "#616161" : "#f0f0f0",
+                        }}
+                      />
+                    </TableCell>
+                  ))}
+                </TableRow>
+              ))}
+            </TableBody>
+          </Table>
+        </TableContainer>
+      ) : lectureData?.data?.length > 0 ? (
+        <TableContainer component={Paper} className="blur_effect_card">
+          <Table>
+            <TableHead>
+              <TableRow
+                sx={{
+                  background: isDarkMode
+                    ? "radial-gradient(circle at 10% 20%, rgb(90, 92, 106) 0%, rgb(32, 45, 58) 81.3%)"
+                    : "linear-gradient(178.6deg, rgb(20, 36, 50) 11.8%, rgb(124, 143, 161) 83.8%)",
+                }}
+              >
+                {TABLE_HEAD.map((head) => (
+                  <TableCell
+                    key={head}
+                    sx={{ color: isDarkMode ? "white" : "black" }}
+                    className="px-6 py-3 text-left text-base font-medium uppercase tracking-wider"
+                  >
+                    {head}
+                  </TableCell>
+                ))}
+              </TableRow>
+            </TableHead>
+            <TableBody>
+              {lectureData?.data?.map((lecture, index) => (
                 <TableRow key={index}>
                   <TableCell sx={{ color: isDarkMode ? "white" : "black" }}>
                     {lecture?.title}
@@ -161,7 +172,9 @@ const LectureScheduleTable = () => {
                     {lecture?.academic_year}
                   </TableCell>
                   <TableCell sx={{ color: isDarkMode ? "white" : "black" }}>
-                    {lecture?.schedule_time ? formatTime(lecture?.schedule_time) : "-"}
+                    {lecture?.schedule_time
+                      ? formatTime(lecture?.schedule_time)
+                      : "-"}
                   </TableCell>
                   <TableCell sx={{ color: isDarkMode ? "white" : "black" }}>
                     {lecture?.duration ?? "-"}
@@ -186,6 +199,43 @@ const LectureScheduleTable = () => {
             No lecture found
           </Typography>
         </Box>
+      )}
+
+      {lectureData?.data?.length > 0 && lectureData?.total > 1 ? (
+        <Box
+          sx={{
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
+            padding: 2,
+          }}
+        >
+          <Pagination
+            page={activePage}
+            onChange={handleChange}
+            count={lectureData?.total}
+            variant="outlined"
+            color="primary"
+            size="large"
+            sx={{
+              "& .MuiPaginationItem-root": {
+                color: isDarkMode
+                  ? darkModeStyles.paginationItemColor
+                  : lightModeStyles.paginationItemColor,
+              },
+              "& .Mui-selected": {
+                backgroundColor: isDarkMode
+                  ? darkModeStyles.paginationSelectedBg
+                  : lightModeStyles.paginationSelectedBg,
+                color: isDarkMode
+                  ? darkModeStyles.paginationSelectedColor
+                  : lightModeStyles.paginationSelectedColor,
+              },
+            }}
+          />
+        </Box>
+      ) : (
+        ""
       )}
     </Box>
   );
