@@ -1,8 +1,17 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   images: {
-    domains: [
-      "vidyaai-backend.ultimeet.io",
+    remotePatterns: [
+      {
+        protocol: 'https',
+        hostname: 'vidyaai-backend.ultimeet.io',
+        pathname: '**',
+      },
+      {
+        protocol: 'https',
+        hostname: 'res.cloudinary.com',
+        pathname: '**',
+      },
     ],
   },
   env: {

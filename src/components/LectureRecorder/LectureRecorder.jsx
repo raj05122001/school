@@ -19,8 +19,15 @@ import BottomTabs from "./BottomTabs/BottomTabs";
 import { AwsSdk } from "@/hooks/AwsSdk";
 import axios from "axios";
 import RecorderController from "./RecorderController/RecorderController";
-import { PutObjectCommand,ListObjectsV2Command, DeleteObjectsCommand } from "@aws-sdk/client-s3";
+import {
+  PutObjectCommand,
+  ListObjectsV2Command,
+  DeleteObjectsCommand,
+  S3Client,
+} from "@aws-sdk/client-s3";
 import { Upload } from "@aws-sdk/lib-storage";
+import RecorderErrorMessage from "./RecorderErrorMessage/RecorderErrorMessage";
+import { handleErrorResponse } from "@/helper/Helper";
 
 const LectureRecorder = ({ open, closeDrawer, recordingData }) => {
   const videoRef = useRef(null);
@@ -156,6 +163,51 @@ const LectureRecorder = ({ open, closeDrawer, recordingData }) => {
     mediaRecorderRef.current.start(30000);
     audioRecorderRef.current.start();
   };
+  //   return new Promise((resolve, reject) => {
+  //     const params = {
+  //       Bucket: "vidya-ai-video",
+  //       Key: `videos/${lectureRcordingData.id}.mp4`,
+  //       Body: chunk,
+  //       ContentType: "video/mp4",
+  //       BucketEndpoint: `https://vidya-ai-video.s3-accelerate.amazonaws.com`,
+  //     };
+
+  //     const options = {
+  //       partSize: 10 * 1024 * 1024, // 10 MB
+  //       queueSize: 4, // 4 parallel uploads
+  //     };
+
+  //     let startTime = Date.now();
+  //     let uploadedBytes = 0;
+
+  //     s3.upload(params, options)
+  //       .on("httpUploadProgress", (evt) => {
+  //         const currentTime = Date.now();
+  //         const elapsedTime = (currentTime - startTime) / 1000; // time in seconds
+  //         uploadedBytes = evt.loaded;
+  //         const totalBytes = evt.total;
+
+  //         const uploadSpeed = uploadedBytes / elapsedTime; // bytes per second
+  //         const remainingBytes = totalBytes - uploadedBytes;
+  //         const timeRemaining = remainingBytes / uploadSpeed; // time in seconds
+
+  //         const progress = Math.round((uploadedBytes / totalBytes) * 100);
+
+  //         setUploadProgress(progress);
+  //         setUploadSpeed((uploadSpeed / 1024 / 1024).toFixed(2)); // Speed in MB/s
+  //         setTimeRemaining(Math.round(timeRemaining)); // Time in seconds
+  //       })
+  //       .send((err, data) => {
+  //         if (err) {
+  //           console.error("Error uploading file:", err);
+  //           reject(err);
+  //         } else {
+  //           console.log("File uploaded successfully:", data);
+  //           resolve(data);
+  //         }
+  //       });
+  //   });
+  // };
 
   const uploadVideoToS3 = async (chunk, index) => {
     return new Promise(async (resolve, reject) => {
@@ -166,21 +218,21 @@ const LectureRecorder = ({ open, closeDrawer, recordingData }) => {
           Body: chunk,
           ContentType: "video/mp4",
         };
-  
+
         const options = {
           partSize: 10 * 1024 * 1024, // 10 MB
           queueSize: 4, // 4 parallel uploads
         };
-  
-        const s3 = new S3Client({
-          region: "us-east-1", // Adjust this if needed
-          endpoint: "https://vidya-ai-video.s3-accelerate.amazonaws.com", // S3 Accelerate
-        });
-  
+
+        // const s3 = new S3Client({
+        //   region: "us-east-1", // Adjust this if needed
+        //   endpoint: "https://vidya-ai-video.s3-accelerate.amazonaws.com", // S3 Accelerate
+        // });
+
         // Start time for calculating speed and remaining time
         let startTime = Date.now();
         let uploadedBytes = 0;
-  
+
         // Use `Upload` from `@aws-sdk/lib-storage`
         const upload = new Upload({
           client: s3,
@@ -193,20 +245,22 @@ const LectureRecorder = ({ open, closeDrawer, recordingData }) => {
             const elapsedTime = (currentTime - startTime) / 1000; // seconds
             uploadedBytes = progress.loaded;
             const totalBytes = progress.total;
-  
+
             const uploadSpeed = uploadedBytes / elapsedTime; // bytes per second
             const remainingBytes = totalBytes - uploadedBytes;
             const timeRemaining = remainingBytes / uploadSpeed; // seconds remaining
-  
-            const progressPercentage = Math.round((uploadedBytes / totalBytes) * 100);
-  
+
+            const progressPercentage = Math.round(
+              (uploadedBytes / totalBytes) * 100
+            );
+
             // Update UI with progress, speed, and time remaining
             setUploadProgress(progressPercentage);
             setUploadSpeed((uploadSpeed / 1024 / 1024).toFixed(2)); // Speed in MB/s
             setTimeRemaining(Math.round(timeRemaining)); // Time in seconds
           },
         });
-  
+
         const result = await upload.done();
         console.log("File uploaded successfully:", result);
         resolve(result);
@@ -285,7 +339,7 @@ const LectureRecorder = ({ open, closeDrawer, recordingData }) => {
             "video_url",
             `https://vidya-ai-video.s3.amazonaws.com/videos/${recordingData.id}.mp4`
           );
-          formData.append("video_src", OTHERS);
+          formData.append("video_src", "OTHERS");
           await uploadVideoToS3(videoAttachment[0]);
           await uploadS3Video(recordingData.id, formData);
           // await extractingAudio(recordingData.id);
@@ -329,7 +383,7 @@ const LectureRecorder = ({ open, closeDrawer, recordingData }) => {
     }
   };
 
-  const uploadChunkToS3 = async (chunk, index) => {  
+  const uploadChunkToS3 = async (chunk, index) => {
     try {
       const params = {
         Bucket: "vidya-ai-video",
@@ -337,17 +391,17 @@ const LectureRecorder = ({ open, closeDrawer, recordingData }) => {
         Body: chunk,
         ContentType: "video/mp4",
       };
-  
+
       // Create the upload command and send it
       const command = new PutObjectCommand(params);
       await s3.send(command);
-      
+
       setUploadedChunk((prev) => prev + 1); // Update the state after successful upload
     } catch (err) {
       console.error("Error uploading chunk:", err);
-        setTimeout(() => uploadChunkToS3(chunk, index), 5000); 
+      setTimeout(() => uploadChunkToS3(chunk, index), 5000);
     }
-  };  
+  };
 
   const handleVideoDataAvailable = async (event) => {
     if (event.data.size > 0) {
@@ -366,25 +420,26 @@ const LectureRecorder = ({ open, closeDrawer, recordingData }) => {
         Bucket: "vidya-ai-video",
         Prefix: `videoChunks/lecture_${recordingData.id}`,
       };
-  
+
       // Use ListObjectsV2Command to list objects
       const listedObjects = await s3.send(new ListObjectsV2Command(listParams));
-  
-      if (!listedObjects.Contents || listedObjects.Contents.length === 0) return; // Folder is empty
-  
+
+      if (!listedObjects.Contents || listedObjects.Contents.length === 0)
+        return; // Folder is empty
+
       // Create a list of objects to delete
       const deleteParams = {
         Bucket: "vidya-ai-video",
         Delete: { Objects: [] },
       };
-  
+
       listedObjects.Contents.forEach(({ Key }) => {
         deleteParams.Delete.Objects.push({ Key });
       });
-  
+
       // Use DeleteObjectsCommand to delete the objects
       await s3.send(new DeleteObjectsCommand(deleteParams));
-  
+
       // If there are more objects to delete, recursively delete
       if (listedObjects.IsTruncated) {
         await deleteS3Folder();
@@ -753,6 +808,15 @@ const LectureRecorder = ({ open, closeDrawer, recordingData }) => {
         ) : (
           <CircularProgress size={48} sx={{ mt: 3 }} />
         ))}
+
+      <RecorderErrorMessage
+        lectureStoped={lectureStoped}
+        error={error}
+        recordingData={recordingData}
+        uploadedChunk={uploadProgress}
+        uploadSpeed={uploadSpeed}
+        timeRemaining={timeRemaining}
+      />
 
       <Grid container spacing={2}>
         <Grid item xs={12} sm={4}>
