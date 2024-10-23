@@ -1,5 +1,5 @@
 "use client";
-import React, { useState } from "react";
+import React, { useState ,useContext} from "react";
 import { Box, Paper, Typography, Avatar } from "@mui/material";
 import {
   FaCalendarAlt,
@@ -9,6 +9,7 @@ import {
   FaEdit,
 } from "react-icons/fa";
 import { useThemeContext } from "@/hooks/ThemeContext";
+import { AppContextProvider } from "@/app/main";
 
 const day = [
   "Sunday",
@@ -23,6 +24,11 @@ import CreatingLecture from "@/components/teacher/LectureCreate/CreatingLecture"
 
 const LectureCard = ({ lecture }) => {
   const { isDarkMode, primaryColor, secondaryColor } = useThemeContext();
+  const {
+    openRecordingDrawer,
+    setRecordingData,
+    setOpenRecordingDrawer,
+  } = useContext(AppContextProvider);
 
   const lectureCardStyle = {
     position: "relative",
@@ -38,8 +44,8 @@ const LectureCard = ({ lecture }) => {
       transform: "translateY(-5px)",
       backgroundColor: isDarkMode ? "#424242" : "#f5f5f5",
     },
-    height:'100%',
-    width:"100%"
+    height: "100%",
+    width: "100%",
   };
 
   const dateSectionStyle = {
@@ -84,9 +90,12 @@ const LectureCard = ({ lecture }) => {
     setSelectedLecture(null);
   };
 
-  console.log("Selected Lecture", selectedLecture)
+  const handleOpenRecorder=()=>{
+    setRecordingData(lecture)
+    setOpenRecordingDrawer(true)
+  }
   return (
-    <Paper sx={lectureCardStyle}>
+    <Paper sx={lectureCardStyle} onClick={()=>handleOpenRecorder()}>
       <Box sx={dateSectionStyle}>
         <Typography
           variant="h4"
@@ -143,13 +152,16 @@ const LectureCard = ({ lecture }) => {
       </Box>
       {/* Edit button on the top-right corner */}
       <Box sx={{ position: "absolute", top: "8px", right: "8px" }}>
-        <FaEdit style={{ color: isDarkMode ? primaryColor : "#00796b" }} onClick={() => handleEditClick(lecture)}/>
+        <FaEdit
+          style={{ color: isDarkMode ? primaryColor : "#00796b" }}
+          onClick={() => handleEditClick(lecture)}
+        />
         <CreatingLecture
-        open={isDialogOpen}
-        handleClose={handleCloseDialog}
-        lecture={selectedLecture} // Pass the selected lecture details
-        isEditMode={editMode} // Indicate whether it's edit mode
-      />
+          open={isDialogOpen}
+          handleClose={handleCloseDialog}
+          lecture={selectedLecture} // Pass the selected lecture details
+          isEditMode={editMode} // Indicate whether it's edit mode
+        />
       </Box>
     </Paper>
   );

@@ -40,9 +40,6 @@ import { useThemeContext } from "@/hooks/ThemeContext";
 const platforms = ["Zoom", "Google Meet", "Microsoft Teams"];
 
 const userDetails = decodeToken(Cookies.get("ACCESS_TOKEN"));
-console.log("User Details is", userDetails);
-const userID = userDetails?.user_id;
-console.log("user ID", userID);
 
 const CreatingLecture = ({ open, handleClose, lecture, isEditMode }) => {
   const [lectureClass, setLectureClass] = useState("");
@@ -77,8 +74,6 @@ const CreatingLecture = ({ open, handleClose, lecture, isEditMode }) => {
   const encodeURI = (value) => {
     return encodeURIComponent(value);
   };
-
-  console.log("Lecture is", lecture);
 
   useEffect(() => {
     if (isEditMode && lecture) {
@@ -125,8 +120,6 @@ const CreatingLecture = ({ open, handleClose, lecture, isEditMode }) => {
     const fetchClassOptions = async () => {
       try {
         const response = await getClassDropdown();
-
-        console.log("Response is", response);
 
         // Map through the data and extract the department name for each class
         const classNames = response?.data?.map((item) => ({
@@ -224,8 +217,7 @@ const CreatingLecture = ({ open, handleClose, lecture, isEditMode }) => {
               id: topic?.id,
               name: topic?.topics, // Use the "chapter" field for names
             }));
-            setTopicOptions(topics); // Set the fetched topics data
-            console.log("topics are", topics);
+            setTopicOptions(topics);
           } else {
             console.error("Invalid chapter data format");
           }
@@ -249,8 +241,7 @@ const CreatingLecture = ({ open, handleClose, lecture, isEditMode }) => {
     formData.append("chapter", chapterID);
     formData.append("topics", lectureTopics);
     formData.append("title", lectureTopics);
-    formData.append("organizer", userDetails.teacher_id); // Assuming organizer is the logged-in user
-    console.log("Submitted User ID", userDetails.teacher_id);
+    formData.append("organizer", userDetails.teacher_id); 
     formData.append("schedule_date", lectureDate.format("YYYY-MM-DD")); // Format date
     formData.append("schedule_time", lectureStartTime.format("HH:mm")); // Format time
     formData.append("type", lectureType);
@@ -265,7 +256,6 @@ const CreatingLecture = ({ open, handleClose, lecture, isEditMode }) => {
         const response = await updateLecture(lecture.id, formData);
 
         if (response.data.success) {
-          console.log("Lecture updated successfully");
           handleClose(); // Close the dialog after a successful update
         } else {
           console.error("Failed to update lecture:", response.data.message);
@@ -275,7 +265,6 @@ const CreatingLecture = ({ open, handleClose, lecture, isEditMode }) => {
         const response = await createLecture(formData);
 
         if (response.data.success) {
-          console.log("Lecture created successfully");
           handleClose(); // Close the dialog after a successful creation
         } else {
           console.error("Failed to create lecture:", response.data.message);

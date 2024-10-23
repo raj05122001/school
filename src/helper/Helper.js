@@ -128,3 +128,121 @@ export const lecture_type = [
     style: { color: "#DE0000", op: 10 },
   },
 ];
+
+export const handleErrorResponse = (error) => {
+
+  const statusCode = error.response ? error.response.status : null;
+  const errorMessage = error?.response?.data?.message;
+
+  switch (statusCode) {
+    case 400:
+      console.error('400 Bad Request :: ', error);
+      return {
+        audioProcess: {
+          status: 'Bad Request',
+          errorMessage:
+          error?.response?.data?.errors &&
+          typeof error.response.data.errors === "object"
+            ? Object.values(error?.response?.data?.errors)
+            : errorMessage,
+        }
+      };
+    case 403:
+      console.error('403 Forbidden :: ', error);
+      return {
+        audioProcess: {
+          status: 'Forbidden',
+          errorMessage: errorMessage
+        }
+      };
+    case 404:
+      console.error('404 Not found :: ', error);
+      return {
+        audioProcess: {
+          status: 'Not found ',
+          errorMessage: errorMessage
+        }
+      };
+    case 422:
+      console.error('422 Unprocessable Content  :: ', error);
+      return {
+        audioProcess: {
+          status: 'Unprocessable Content',
+          errorMessage: errorMessage
+        }
+      };
+    case 500:
+      console.error('500 Internal Server Error :: ', error);
+      return {
+        audioProcess: {
+          status: 'Internal Server Error',
+          errorMessage: errorMessage
+        }
+      }
+
+    case 501:
+      console.error('501 Not Implemented :: ', error);
+      return {
+        audioProcess: {
+          status: 'Not Implemented',
+          errorMessage: errorMessage
+        }
+      }
+
+    case 502:
+      console.error('502 Bad gateway :: ', error);
+      return {
+        audioProcess: {
+          status: 'Bad gateway',
+          errorMessage: errorMessage
+        }
+      }
+
+    case 503:
+      console.error('503 Service Unavailable :: ', error);
+      return {
+        audioProcess: {
+          status: 'Service Unavailable',
+          errorMessage: errorMessage
+        }
+      }
+
+
+    case 504:
+      console.error('504 Gateway Timeout :: ', error);
+      return {
+        audioProcess: {
+          status: 'Gateway Timeout ',
+          errorMessage: errorMessage
+        }
+      }
+
+    case 505:
+      console.error('505 HTTP Version Not Supported :: ', error);
+      return {
+        audioProcess: {
+          status: 'HTTP Version Not Supported ',
+          errorMessage: errorMessage
+        }
+      }
+
+    default:
+      if (error.code === 'ERR_NETWORK') {
+        console.error('Network Error :: ', error);
+        return {
+          audioProcess: {
+            status: 'Network Error',
+            errorMessage: 'Could not save and upload your Lecture due to internet connectivity issue. PLEASE DO NOT CLOSE YOUR BROWSER. We will retry uploading the Lecture when connection is restored.'
+          }
+        }
+      } else {
+        console.error('Unhandled Error :: ', error);
+        return {
+          audioProcess: {
+            status: 'Unhandled Error',
+            errorMessage: ''
+          }
+        }
+      }
+  }
+};

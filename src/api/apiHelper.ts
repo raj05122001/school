@@ -131,4 +131,19 @@ export const downloadExcelFile = async () => {
 export const uploadExcelFile = async (formData) => {
   const apiInstance = new apiServices(axiosAPIInstance);
   return await apiInstance.uploadExcelFile(formData);
+}
+
+export const updateLectureAttachment = async (lectureId, formData) => {
+  const apiInstance = new apiServices(axiosAPIInstance);
+  return await apiInstance.updateLectureAttachment(lectureId, formData);
+};
+
+export const uploadAudioFile = async (lectureId, formData) => {
+  const apiInstance = new apiServices(axiosAPIInstance);
+  return await apiInstance.uploadAudioFile(lectureId, formData);
+};
+
+export const uploadS3Video = async (lectureId, formData) => {
+  const apiInstance = new apiServices(axiosAPIInstance);
+  return await apiInstance.uploadS3Video(lectureId, formData);
 };

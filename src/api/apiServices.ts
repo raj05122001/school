@@ -270,4 +270,30 @@ export default class apiServices {
         throw error;
       });
   };
+  public updateLectureAttachment = (lectureId, formData) => {
+    const headers = { "Content-Type": "multipart/form-data" };
+    return this.axiosInstance
+      .post(`/api/v1/lecture/${lectureId}/attachment/`, formData, { headers })
+      .then((response) => {
+        return response;
+      })
+      .catch((error) => {
+        toast.error("Job Title not loaded, please contact to admin.");
+        console.error(error);
+      });
+  };
+
+  public uploadAudioFile = (lectureId, formData) => {
+    return this.axiosInstance
+      .patch(`/api/v1/lecture/${lectureId}/audio_media/`, formData)
+      .then((response) => {
+        return response;
+      })
+  };
+
+  public uploadS3Video = async (lectureId, formData) => {
+    return await this.axiosInstance
+      .patch(`/api/v1/lecture/${lectureId}/upload_media/`, formData)
+      .then((Response) => Response);
+  };
 }
