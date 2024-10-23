@@ -1,8 +1,6 @@
-import Image from "next/image";
-import styles from "./page.module.css";
-
+"use client";
+import { Box, Typography } from "@mui/material";
+// Main component
 export default function Home() {
-  return (
-<></>
-  );
+  return <></>;
 }
