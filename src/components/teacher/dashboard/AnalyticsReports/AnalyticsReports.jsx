@@ -40,7 +40,6 @@ const AnalyticsReports = () => {
 
   const handleFileSelect = (fileType) => {
     // Logic to handle the file selection (e.g., open file dialog)
-    console.log(`Selected file type: ${fileType}`);
     handleClose();
   };
 

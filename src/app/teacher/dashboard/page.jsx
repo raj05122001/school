@@ -44,7 +44,6 @@ const Page = () => {
             <CalendarComponent />
           </Box>
         </Grid>
-        
         <Grid item xs={12} md={3} mt={9}>
           <Grid container direction="column" spacing={2}>
             <Grid item xs={12}>
