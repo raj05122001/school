@@ -3,7 +3,6 @@ import path from 'path';
 import fs from 'fs';
 import formidable from 'formidable';
 
-// Disable body parsing by Next.js to handle file upload
 export const config = {
   api: {
     bodyParser: false,
@@ -16,33 +15,46 @@ export default function handler(req, res) {
 
     form.parse(req, (err, fields, files) => {
       if (err) {
+        console.error('Error parsing the form:', err);
         return res.status(500).json({ error: `Error parsing the form: ${err.message}` });
       }
 
-      const videoFile = files.video.filepath;  // Path of the uploaded video file
+      // Ensure the file is uploaded correctly
+      console.log('Parsed files:', files);
 
-      // Define output path for the compressed video
+      const videoFile = files.video.filepath;  // Check if this path exists
+      console.log('Video file path:', videoFile);
+
       const outputPath = path.resolve(process.cwd(), 'public/compressed-video.mp4');
+      console.log('Output path:', outputPath);
 
-      // Use FFmpeg to compress the video
-      ffmpeg(videoFile)
-        .outputOptions('-vf', 'scale=1280:720')  // Scale video resolution
-        .outputOptions('-b:v', '1M')  // Target bitrate to reduce size
-        .save(outputPath)
-        .on('end', () => {
-          const stats = fs.statSync(outputPath);
-          const fileSizeInBytes = stats.size;  // Get file size
-          const fileSizeInMB = (fileSizeInBytes / (1024 * 1024)).toFixed(2);  // Convert to MB
-          
-          res.status(200).json({
-            message: 'Video compression complete',
-            output: `/compressed-video.mp4`,  // Accessible from the public folder
-            size: fileSizeInMB  // Return the size in MB
+      // Ensure FFmpeg is installed and available
+      try {
+        ffmpeg(videoFile)
+          .outputOptions('-vf', 'scale=1280:720')  // Scale video resolution
+          .outputOptions('-b:v', '1M')  // Target bitrate to reduce size
+          .save(outputPath)
+          .on('end', () => {
+            console.log('Video compression complete');
+
+            const stats = fs.statSync(outputPath);
+            const fileSizeInBytes = stats.size;
+            const fileSizeInMB = (fileSizeInBytes / (1024 * 1024)).toFixed(2);
+
+            res.status(200).json({
+              message: 'Video compression complete',
+              output: `/compressed-video.mp4`,
+              size: fileSizeInMB,
+            });
+          })
+          .on('error', (ffmpegErr) => {
+            console.error('FFmpeg error:', ffmpegErr);
+            res.status(500).json({ error: `Error compressing video: ${ffmpegErr.message}` });
           });
-        })
-        .on('error', (err) => {
-          res.status(500).json({ error: `Error compressing video: ${err.message}` });
-        });
+      } catch (e) {
+        console.error('Error during FFmpeg processing:', e);
+        res.status(500).json({ error: 'Error during FFmpeg processing' });
+      }
     });
   } else {
     res.status(405).json({ message: 'Only POST requests allowed' });
