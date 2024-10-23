@@ -1,5 +1,12 @@
 import React, { useContext, useEffect, useState } from "react";
-import { Drawer, Typography, IconButton, Tooltip, Button ,Box} from "@mui/material";
+import {
+  Drawer,
+  Typography,
+  IconButton,
+  Tooltip,
+  Button,
+  Box,
+} from "@mui/material";
 import {
   IoDocumentAttach,
   IoCloseSharp,
@@ -84,99 +91,103 @@ function AttachmentDrawer({ attachments, setAttachments }) {
         anchor="right"
         open={openRight}
         onClose={closeDrawerRight}
-        sx={{ p: 4, bgcolor: "grey.100" }}
+        sx={{ bgcolor: "grey.100", width: 0 }}
       >
-        <Box
-          sx={{
-            marginBottom: "24px",
-            display: "flex",
-            justifyContent: "space-between",
-            alignItems: "center",
-          }}
-        >
-          <Typography variant="h5" color="text.primary">
-            Add Attachments Files
-          </Typography>
-          <IconButton onClick={closeDrawerRight}>
-            <IoCloseSharp style={{ width: "20px", height: "20px" }} />
-          </IconButton>
-        </Box>
-
-        <Box sx={{ display: "flex", flexDirection: "column", gap: "16px" }}>
-          <input
-            id="attachment"
-            style={{ display: "none" }}
-            type="file"
-            disabled={attachments?.length === 5}
-            multiple
-            onChange={handleFileSelect}
-          />
-          <label
-            htmlFor="attachment"
-            style={{
+        <Box sx={{ p: 2 }}>
+          <Box
+            sx={{
+              marginBottom: "24px",
               display: "flex",
+              justifyContent: "space-between",
               alignItems: "center",
-              justifyContent: "center",
-              padding: "8px",
-              backgroundColor: "#1E88E5",
-              color: "white",
-              borderRadius: "4px",
-              cursor: attachments?.length < 5 ? "pointer" : "not-allowed",
-              opacity: attachments?.length === 5 ? 0.5 : 1,
-            }}
-            onClick={() => {
-              if (attachments?.length === 5) {
-                setAttachmentFileError("You can upload a maximum of 5 files.");
-              } else {
-                setAttachmentFileError("");
-              }
             }}
           >
-            <IoAddCircleOutline style={{ marginRight: "8px" }} size={20} />
-            Add Files
-          </label>
+            <Typography variant="h5" color="text.primary">
+              Add Attachments Files
+            </Typography>
+            <IconButton onClick={closeDrawerRight}>
+              <IoCloseSharp style={{ width: "20px", height: "20px" }} />
+            </IconButton>
+          </Box>
 
-          {attachments?.length > 0 && (
-            <Box
-              sx={{
-                marginTop: "16px",
+          <Box sx={{ display: "flex", flexDirection: "column", gap: "16px" }}>
+            <input
+              id="attachment"
+              style={{ display: "none" }}
+              type="file"
+              disabled={attachments?.length === 5}
+              multiple
+              onChange={handleFileSelect}
+            />
+            <label
+              htmlFor="attachment"
+              style={{
                 display: "flex",
-                flexDirection: "column",
-                gap: "8px",
+                alignItems: "center",
+                justifyContent: "center",
+                padding: "8px",
+                backgroundColor: "#1E88E5",
+                color: "white",
+                borderRadius: "4px",
+                cursor: attachments?.length < 5 ? "pointer" : "not-allowed",
+                opacity: attachments?.length === 5 ? 0.5 : 1,
+              }}
+              onClick={() => {
+                if (attachments?.length === 5) {
+                  setAttachmentFileError(
+                    "You can upload a maximum of 5 files."
+                  );
+                } else {
+                  setAttachmentFileError("");
+                }
               }}
             >
-              {attachments.map((file, index) => (
-                <Box
-                  key={index}
-                  sx={{
-                    display: "flex",
-                    justifyContent: "space-between",
-                    alignItems: "center",
-                    backgroundColor: "white",
-                    borderRadius: "8px",
-                    boxShadow: "0 1px 4px rgba(0, 0, 0, 0.1)",
-                    padding: "16px",
-                    gap: "8px",
-                  }}
-                >
-                  <Typography variant="body2" color="text.secondary">
-                    {file.name}
-                  </Typography>
-                  <IoIosCloseCircle
-                    size={30}
-                    onClick={() => removeAttachment(index)}
-                    style={{ color: "red", cursor: "pointer" }}
-                  />
-                </Box>
-              ))}
-            </Box>
-          )}
+              <IoAddCircleOutline style={{ marginRight: "8px" }} size={20} />
+              Add Files
+            </label>
 
-          {attachmentFileError && (
-            <span style={{ color: "red", fontSize: "12px" }}>
-              {attachmentFileError}
-            </span>
-          )}
+            {attachments?.length > 0 && (
+              <Box
+                sx={{
+                  marginTop: "16px",
+                  display: "flex",
+                  flexDirection: "column",
+                  gap: "8px",
+                }}
+              >
+                {attachments.map((file, index) => (
+                  <Box
+                    key={index}
+                    sx={{
+                      display: "flex",
+                      justifyContent: "space-between",
+                      alignItems: "center",
+                      backgroundColor: "white",
+                      borderRadius: "8px",
+                      boxShadow: "0 1px 4px rgba(0, 0, 0, 0.1)",
+                      padding: "16px",
+                      gap: "8px",
+                    }}
+                  >
+                    <Typography variant="body2" color="text.secondary">
+                      {file.name}
+                    </Typography>
+                    <IoIosCloseCircle
+                      size={30}
+                      onClick={() => removeAttachment(index)}
+                      style={{ color: "red", cursor: "pointer" }}
+                    />
+                  </Box>
+                ))}
+              </Box>
+            )}
+
+            {attachmentFileError && (
+              <span style={{ color: "red", fontSize: "12px" }}>
+                {attachmentFileError}
+              </span>
+            )}
+          </Box>
         </Box>
       </Drawer>
     </React.Fragment>
