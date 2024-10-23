@@ -141,7 +141,7 @@ const Filters = ({
       lectureType: selectedLectureType || "",
     });
   };
-  console.log("month", month);
+
   const handleSelectType = (type) => {
     setSelectedLectureType(type);
     updateURL({

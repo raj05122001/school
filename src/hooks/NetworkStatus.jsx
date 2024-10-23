@@ -7,7 +7,7 @@ export const useOnlineStatus = () => {
 
   useEffect(() => {
    const interval = setInterval(() => {
-     axios(`/logo.svg?time=${Number(new Date())}`)
+     axios(`/total-student.jpg?time=${Number(new Date())}`)
      .then(response => {
       setOnlineStatus(true)
      })

@@ -1,95 +1,73 @@
-import Image from "next/image";
-import styles from "./page.module.css";
+// "use client";
+// import { Box, Typography } from "@mui/material";
+// import { useState } from "react";
+// import { FaVideo } from "react-icons/fa";
+// import FFmpeg from '@ffmpeg/ffmpeg';  // Use default import instead of named import
 
-export default function Home() {
-  return (
-    <main className={styles.main}>
-      <div className={styles.description}>
-        <p>
-          Get started by editing&nbsp;
-          <code className={styles.code}>src/app/page.js</code>
-        </p>
-        <div>
-          <a
-            href="https://vercel.com?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            By{" "}
-            <Image
-              src="/vercel.svg"
-              alt="Vercel Logo"
-              className={styles.vercelLogo}
-              width={100}
-              height={24}
-              priority
-            />
-          </a>
-        </div>
-      </div>
+// // Main component
+// export default function Home() {
+//   const [isUploading, setIsUploading] = useState(false);
+//   const [progress, setProgress] = useState(0);
 
-      <div className={styles.center}>
-        <Image
-          className={styles.logo}
-          src="/next.svg"
-          alt="Next.js Logo"
-          width={180}
-          height={37}
-          priority
-        />
-      </div>
+//   const ffmpeg = FFmpeg.createFFmpeg({ log: true }); // Access createFFmpeg from the default import
 
-      <div className={styles.grid}>
-        <a
-          href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          className={styles.card}
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2>
-            Docs <span>-&gt;</span>
-          </h2>
-          <p>Find in-depth information about Next.js features and API.</p>
-        </a>
+//   async function compressVideoLossless(file) {
+//     if (!ffmpeg.isLoaded()) {
+//       await ffmpeg.load();
+//     }
+//     ffmpeg.FS('writeFile', 'input.mp4', await FFmpeg.fetchFile(file)); // Use FFmpeg.fetchFile
+     
+//     // Compress the video (lossless compression with libx264)
+//     await ffmpeg.run('-i', 'input.mp4', '-vcodec', 'libx264', '-crf', '23', 'output.mp4');
+    
+//     const data = ffmpeg.FS('readFile', 'output.mp4');
+//     const compressedBlob = new Blob([data.buffer], { type: 'video/mp4' });
+//     return compressedBlob;
+//   }
 
-        <a
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          className={styles.card}
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2>
-            Learn <span>-&gt;</span>
-          </h2>
-          <p>Learn about Next.js in an interactive course with&nbsp;quizzes!</p>
-        </a>
+//   const handleFileUpload = async (e) => {
+//     setIsUploading(true);
+//     const file = e.target.files[0];
 
-        <a
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          className={styles.card}
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2>
-            Templates <span>-&gt;</span>
-          </h2>
-          <p>Explore starter templates for Next.js.</p>
-        </a>
+//     // Compress the video before uploading
+//     const compressedVideo = await compressVideoLossless(file);
 
-        <a
-          href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          className={styles.card}
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2>
-            Deploy <span>-&gt;</span>
-          </h2>
-          <p>
-            Instantly deploy your Next.js site to a shareable URL with Vercel.
-          </p>
-        </a>
-      </div>
-    </main>
-  );
-}
+//     // Split the compressed video into chunks (optional)
+//     const chunkSize = 10 * 1024 * 1024; // 10 MB
+//     const totalChunks = Math.ceil(compressedVideo.size / chunkSize);
+
+//     for (let i = 0; i < totalChunks; i++) {
+//       const start = i * chunkSize;
+//       const end = Math.min(compressedVideo.size, start + chunkSize);
+//       const chunk = compressedVideo.slice(start, end);
+
+//       await uploadChunkToS3(chunk, i);  // You need to implement this function
+//       setProgress(((i + 1) / totalChunks) * 100);  // Update progress
+//     }
+
+//     setIsUploading(false);
+//   };
+
+//   return (
+//     <Box>
+//       <input
+//         type="file"
+//         accept="video/*,.mkv"
+//         multiple={false}
+//         style={{ display: "none" }}
+//         id="videoattachment"
+//         onChange={handleFileUpload}
+//       />
+//       <label htmlFor="videoattachment" style={{ cursor: "pointer" }}>
+//         <Typography
+//           variant="body2"
+//           color="primary"
+//           sx={{ display: "flex", alignItems: "center" }}
+//         >
+//           <FaVideo size={22} style={{ marginRight: 8 }} />
+//           {isUploading ? `Uploading... ${progress.toFixed(2)}%` : "Add Video File"}
+//         </Typography>
+//       </label>
+//     </Box>
+//   );
+// }
