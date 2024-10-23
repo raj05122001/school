@@ -39,18 +39,18 @@ const Main = ({ children }) => {
     setOpenRecordingDrawer(false);
   };
 
-  useEffect(() => {
-    if (openRecordingDrawer) {
-      document.body.style.overflowY = "hidden";
-      document.body.style.position = "fixed";
-    } else {
-      document.body.style.overflowY = "scroll";
-      document.body.style.position = "";
-    }
-    return () => {
-      document.body.style.position = "";
-    };
-  }, [openRecordingDrawer]);
+  // useEffect(() => {
+  //   if (openRecordingDrawer) {
+  //     document.body.style.overflowY = "hidden";
+  //     document.body.style.position = "fixed";
+  //   } else {
+  //     document.body.style.overflowY = "scroll";
+  //     document.body.style.position = "";
+  //   }
+  //   return () => {
+  //     document.body.style.position = "";
+  //   };
+  // }, [openRecordingDrawer]);
 
   return (
     <Suspense>
