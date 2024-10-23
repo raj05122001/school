@@ -15,27 +15,25 @@ export default function handler(req, res) {
 
     form.parse(req, (err, fields, files) => {
       if (err) {
-        console.error('Error parsing the form:', err);
-        return res.status(500).json({ error: `Error parsing the form: ${err.message}` });
+        console.error('Form parse error:', err);  // Log error here
+        return res.status(500).json({ error: `Error parsing form data: ${err.message}` });
       }
 
-      // Ensure the file is uploaded correctly
-      console.log('Parsed files:', files);
+      console.log('Parsed files:', files);  // Debugging parsed files
 
-      const videoFile = files.video.filepath;  // Check if this path exists
-      console.log('Video file path:', videoFile);
+      const videoFile = files.video.filepath;
+      console.log('Video file path:', videoFile);  // Ensure file exists
 
       const outputPath = path.resolve(process.cwd(), 'public/compressed-video.mp4');
-      console.log('Output path:', outputPath);
+      console.log('Output path:', outputPath);  // Path for compressed video
 
-      // Ensure FFmpeg is installed and available
       try {
         ffmpeg(videoFile)
-          .outputOptions('-vf', 'scale=1280:720')  // Scale video resolution
-          .outputOptions('-b:v', '1M')  // Target bitrate to reduce size
+          .outputOptions('-vf', 'scale=1280:720')  // Resize video
+          .outputOptions('-b:v', '1M')  // Bitrate reduction
           .save(outputPath)
           .on('end', () => {
-            console.log('Video compression complete');
+            console.log('Video compression finished');
 
             const stats = fs.statSync(outputPath);
             const fileSizeInBytes = stats.size;
@@ -47,16 +45,16 @@ export default function handler(req, res) {
               size: fileSizeInMB,
             });
           })
-          .on('error', (ffmpegErr) => {
-            console.error('FFmpeg error:', ffmpegErr);
-            res.status(500).json({ error: `Error compressing video: ${ffmpegErr.message}` });
+          .on('error', (ffmpegError) => {
+            console.error('FFmpeg error:', ffmpegError);  // Log FFmpeg errors
+            res.status(500).json({ error: `FFmpeg error: ${ffmpegError.message}` });
           });
-      } catch (e) {
-        console.error('Error during FFmpeg processing:', e);
-        res.status(500).json({ error: 'Error during FFmpeg processing' });
+      } catch (err) {
+        console.error('Video processing error:', err);  // Catch general errors
+        res.status(500).json({ error: `Processing error: ${err.message}` });
       }
     });
   } else {
-    res.status(405).json({ message: 'Only POST requests allowed' });
+    res.status(405).json({ message: 'Only POST requests are allowed' });
   }
 }
