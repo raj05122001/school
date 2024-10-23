@@ -432,7 +432,7 @@ const LectureRecorder = ({ open, closeDrawer, recordingData }) => {
     try {
       setLectureStoped({
         isProccess: false,
-        isError: true,
+        isError: false,
         submit: false,
         stopRecording: true,
       });
