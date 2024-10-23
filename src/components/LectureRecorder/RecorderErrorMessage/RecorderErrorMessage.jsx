@@ -1,6 +1,6 @@
 import React from "react";
-import Image from "next/image";
 import { BiErrorCircle } from "react-icons/bi";
+import { MdCheckCircle } from "react-icons/md"; // Added icon for success
 import { CircularProgress, Box, Typography } from "@mui/material";
 
 const RecorderErrorMessage = ({
@@ -142,12 +142,8 @@ const RecorderErrorMessage = ({
                 py: 8,
               }}
             >
-              <Image
-                src="/upload_success.svg"
-                alt="upload success"
-                width={58}
-                height={58}
-                style={{ objectFit: "cover" }}
+              <MdCheckCircle
+                style={{ fontSize: "4rem", color: "#66FF00" }} // Success icon
               />
             </Box>
             <Typography
