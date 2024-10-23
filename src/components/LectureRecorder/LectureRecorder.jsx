@@ -634,14 +634,14 @@ const LectureRecorder = ({ open, closeDrawer, recordingData }) => {
     setVideoChunks([]);
     setAudioChunk([]);
     setStartRecordingBtn(false);
-    closeDrawerRight();
+    closeDrawer();
   };
 
   return (
     <Drawer
       anchor="right"
       open={open}
-      onClose={closeDrawer}
+      onClose={onCloseDrawer}
       variant="persistent"
       sx={{
         "& .MuiDrawer-paper": {
@@ -670,7 +670,7 @@ const LectureRecorder = ({ open, closeDrawer, recordingData }) => {
         <Typography variant="h5" sx={{ fontWeight: "bold" }}>
           {recordingData?.title}
         </Typography>
-        <Box onClick={closeDrawer} sx={{ cursor: "pointer", color: "#fff" }}>
+        <Box onClick={onCloseDrawer} sx={{ cursor: "pointer", color: "#fff" }}>
           <FaTimes size={24} />
         </Box>
       </Box>
