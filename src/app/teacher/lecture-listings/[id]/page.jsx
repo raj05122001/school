@@ -15,6 +15,7 @@ import { FaBell } from "react-icons/fa";
 import UserImage from "@/commonComponents/UserImage/UserImage";
 import { FaDownload } from "react-icons/fa6";
 import { useThemeContext } from "@/hooks/ThemeContext";
+import HeaderMOL from "@/components/MOL/Header/HeaderMOL";
 
 const LecturePage = ({ params }) => {
   const { id } = params;
@@ -49,84 +50,19 @@ const LecturePage = ({ params }) => {
       <Paper
         elevation={3}
         sx={{
-          padding: 3,
+          padding: 1,
           color: isDarkMode ? "#fff" : "#000",
+          // background: "linear-gradient(to right, rgb(255, 129, 119) 0%, rgb(255, 134, 122) 0%, rgb(255, 140, 127) 21%, rgb(249, 145, 133) 52%, rgb(207, 85, 108) 78%, rgb(177, 42, 91) 100%)",
+          backgroundImage: isDarkMode ? "url('/headerBGDark1.jpg')" : "url('/headerBG1.jpg')", // Add background image
+          backgroundSize: "cover", // Ensure the image covers the entire page
+          backgroundPosition: "center", // Center the image
+          maxWidth: "98%", // Set the maximum width for the component
+          margin: "0 auto", // Center the Paper component horizontally
+          marginTop:"8px",
         }}
         className="blur_effect_card"
       >
-        {/* Header Section */}
-        <Box
-          sx={{
-            display: "flex",
-            justifyContent: "space-between",
-            alignItems: "center",
-            mb: 4,
-            paddingBottom: 2,
-            borderBottom: `2px solid ${
-              isDarkMode ? theme.palette.grey[700] : theme.palette.grey[300]
-            }`,
-          }}
-        >
-          <Typography variant="h5" sx={{ fontWeight: "bold" }}>
-            {lectureData?.title || "Lecture Title"}
-          </Typography>
-
-          <Box sx={{ display: "flex", gap: 3, alignItems: "center" }}>
-            <Button
-              variant="outlined"
-              startIcon={<FaDownload size={22} />}
-              sx={{
-                color: isDarkMode ? "#fff" : "#000",
-                borderColor: isDarkMode ? "#fff" : theme.palette.primary.main,
-              }}
-            >
-              Download
-            </Button>
-
-            <DarkMode />
-
-            <IconButton color="inherit">
-              <Badge badgeContent={4} color="error">
-                <FaBell size={24} />
-              </Badge>
-            </IconButton>
-
-            <UserImage width={40} height={40} />
-          </Box>
-        </Box>
-
-        {/* Lecture Details */}
-        <Box>
-          <Typography variant="subtitle1" sx={{ mb: 1 }}>
-            <strong>Description:</strong> {lectureData?.description || "N/A"}
-          </Typography>
-          <Typography variant="subtitle1" sx={{ mb: 1 }}>
-            <strong>Department:</strong>{" "}
-            {lectureData?.lecture_class?.department?.name || "N/A"}
-          </Typography>
-          <Typography variant="subtitle1" sx={{ mb: 1 }}>
-            <strong>Class:</strong> {lectureData?.lecture_class?.name || "N/A"}
-          </Typography>
-          <Typography variant="subtitle1" sx={{ mb: 1 }}>
-            <strong>Subject:</strong>{" "}
-            {lectureData?.chapter?.subject?.name || "N/A"}
-          </Typography>
-          <Typography variant="subtitle1" sx={{ mb: 1 }}>
-            <strong>Chapter:</strong> {lectureData?.chapter?.chapter || "N/A"}
-          </Typography>
-
-          <Typography variant="subtitle1" sx={{ mb: 1 }}>
-            <strong>Duration:</strong> {lectureData?.duration || "N/A"}
-          </Typography>
-          <Typography variant="subtitle1" sx={{ mb: 1 }}>
-            <strong>Scheduled Date:</strong>{" "}
-            {lectureData?.schedule_date || "N/A"}
-          </Typography>
-          <Typography variant="subtitle1" sx={{ mb: 1 }}>
-            <strong>Scheduled Time:</strong>{" "}
-            {lectureData?.schedule_time || "N/A"}
-          </Typography>
-        </Box>
+        <HeaderMOL lectureData={lectureData} isDarkMode={isDarkMode} />
       </Paper>
     </Box>
   );
