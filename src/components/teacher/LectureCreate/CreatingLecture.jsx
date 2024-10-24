@@ -26,6 +26,7 @@ import dayjs from "dayjs"; // Import dayjs for date handling
 import { MdOutlineClass } from "react-icons/md";
 import Image from "next/image";
 import { lecture_type } from "@/helper/Helper";
+import { IoDocumentAttachOutline } from "react-icons/io5";
 
 import {
   getClassDropdown,
@@ -290,11 +291,14 @@ const CreatingLecture = ({
       fullWidth
       sx={{
         "& .MuiDialogContent-root": {
-          bgcolor: isDarkMode ? "#424242" : "white",
+          // bgcolor: isDarkMode ? "#424242" : "white",
           color: isDarkMode ? "white" : "black",
           background: isDarkMode
-            ? "linear-gradient(180.3deg, rgb(221, 221, 221) 5.5%, rgb(110, 136, 161) 90.2%);"
-            : "radial-gradient(592px at 48.2% 50%, rgba(255, 255, 249, 0.6) 0%, rgb(160, 199, 254) 74.6%);",
+            ? "linear-gradient(to top, #09203f 0%, #537895 100%)"
+            : "linear-gradient(109.6deg, rgb(223, 234, 247) 11.2%, rgb(244, 248, 252) 91.1%)",
+          // backgroundImage: "url('/create_lectureBG.jpg')", // Add background image
+          // backgroundSize: "cover", // Ensure the image covers the entire page
+          // backgroundPosition: "center", // Center the image
         },
         "& .MuiDialogTitle-root": {
           bgcolor: isDarkMode ? "#424242" : "white",
@@ -304,7 +308,7 @@ const CreatingLecture = ({
           alignItems: "center",
           background: isDarkMode
             ? "linear-gradient(to top, #09203f 0%, #537895 100%);"
-            : "linear-gradient(to top, #fff1eb 0%, #ace0f9 100%);",
+            : "linear-gradient(to top, #dfe9f3 0%, white 100%)",
         },
         "& .MuiPaper-root": {
           border: "2px solid #0096FF",
@@ -344,22 +348,23 @@ const CreatingLecture = ({
                     {...params}
                     label="Lecture Class"
                     variant="outlined"
+                    InputLabelProps={{
+                      style: { color: isDarkMode ? "#d7e4fc" : "" },
+                    }}
                     InputProps={{
                       ...params.InputProps,
                       type: "search",
-                      endAdornment: lectureTopics && (
-                        <InputAdornment position="end">
-                          <IconButton onClick={clearSubject}>
-                            <FaTimes />
-                          </IconButton>
-                        </InputAdornment>
-                      ),
+                      // endAdornment: lectureTopics && (
+                      //   <InputAdornment position="end">
+                      //     <IconButton onClick={clearSubject}>
+                      //       <FaTimes />
+                      //     </IconButton>
+                      //   </InputAdornment>
+                      // ),
                       sx: {
                         backdropFilter: "blur(10px)",
                         backgroundColor: "rgba(255, 255, 255, 0.5)",
-                        "& .MuiOutlinedInput-notchedOutline": {
-                          border: "none",
-                        },
+                        "& .MuiOutlinedInput-notchedOutline": {},
                       },
                     }}
                   />
@@ -385,22 +390,23 @@ const CreatingLecture = ({
                     {...params}
                     label="Lecture Subject"
                     variant="outlined"
+                    InputLabelProps={{
+                      style: { color: isDarkMode ? "#d7e4fc" : "" },
+                    }}
                     InputProps={{
                       ...params.InputProps,
                       type: "search",
-                      endAdornment: lectureTopics && (
-                        <InputAdornment position="end">
-                          <IconButton onClick={clearSubject}>
-                            <FaTimes />
-                          </IconButton>
-                        </InputAdornment>
-                      ),
+                      // endAdornment: lectureTopics && (
+                      //   <InputAdornment position="end">
+                      //     <IconButton onClick={clearSubject}>
+                      //       <FaTimes />
+                      //     </IconButton>
+                      //   </InputAdornment>
+                      // ),
                       sx: {
                         backdropFilter: "blur(10px)",
                         backgroundColor: "rgba(255, 255, 255, 0.5)",
-                        "& .MuiOutlinedInput-notchedOutline": {
-                          border: "none",
-                        },
+                        "& .MuiOutlinedInput-notchedOutline": {},
                       },
                     }}
                   />
@@ -436,22 +442,23 @@ const CreatingLecture = ({
                     {...params}
                     label="Lecture Chapter"
                     variant="outlined"
+                    InputLabelProps={{
+                      style: { color: isDarkMode ? "#d7e4fc" : "" },
+                    }}
                     InputProps={{
                       ...params.InputProps,
                       type: "search",
-                      endAdornment: lectureTopics && (
-                        <InputAdornment position="end">
-                          <IconButton onClick={clearSubject}>
-                            <FaTimes />
-                          </IconButton>
-                        </InputAdornment>
-                      ),
+                      // endAdornment: lectureTopics && (
+                      //   <InputAdornment position="end">
+                      //     <IconButton onClick={clearSubject}>
+                      //       <FaTimes />
+                      //     </IconButton>
+                      //   </InputAdornment>
+                      // ),
                       sx: {
                         backdropFilter: "blur(10px)",
                         backgroundColor: "rgba(255, 255, 255, 0.5)",
-                        "& .MuiOutlinedInput-notchedOutline": {
-                          border: "none",
-                        },
+                        "& .MuiOutlinedInput-notchedOutline": {},
                       },
                     }}
                   />
@@ -472,22 +479,23 @@ const CreatingLecture = ({
                     {...params}
                     label="Lecture Name (Topics)"
                     variant="outlined"
+                    InputLabelProps={{
+                      style: { color: isDarkMode ? "#d7e4fc" : "" },
+                    }}
                     InputProps={{
                       ...params.InputProps,
                       type: "search",
-                      endAdornment: lectureTopics && (
-                        <InputAdornment position="end">
-                          <IconButton onClick={clearSubject}>
-                            <FaTimes />
-                          </IconButton>
-                        </InputAdornment>
-                      ),
+                      // endAdornment: lectureTopics && (
+                      //   <InputAdornment position="end">
+                      //     <IconButton onClick={clearSubject}>
+                      //       <FaTimes />
+                      //     </IconButton>
+                      //   </InputAdornment>
+                      // ),
                       sx: {
                         backdropFilter: "blur(10px)",
                         backgroundColor: "rgba(255, 255, 255, 0.5)",
-                        "& .MuiOutlinedInput-notchedOutline": {
-                          border: "none",
-                        },
+                        "& .MuiOutlinedInput-notchedOutline": {},
                       },
                     }}
                   />
@@ -501,6 +509,9 @@ const CreatingLecture = ({
                 label="Lecture Description (Optional)"
                 value={lectureDescription}
                 onChange={(e) => setLectureDescription(e.target.value)}
+                InputLabelProps={{
+                  style: { color: isDarkMode ? "#d7e4fc" : "" },
+                }}
                 multiline
                 rows={3}
                 fullWidth
@@ -508,9 +519,7 @@ const CreatingLecture = ({
                   sx: {
                     backdropFilter: "blur(10px)",
                     backgroundColor: "rgba(255, 255, 255, 0.5)",
-                    "& .MuiOutlinedInput-notchedOutline": {
-                      border: "none",
-                    },
+                    "& .MuiOutlinedInput-notchedOutline": {},
                   },
                 }}
               />
@@ -519,19 +528,26 @@ const CreatingLecture = ({
             {/* Lecture Type */}
             <Grid item xs={4}>
               <FormControl fullWidth required>
-                <InputLabel id="lecture-type-label">Lecture Type</InputLabel>
+                <InputLabel
+                  id="lecture-type-label"
+                  sx={{ color: isDarkMode ? "#d7e4fc" : "" }}
+                >
+                  Lecture Type
+                </InputLabel>
                 <Select
                   labelId="lecture-type-label"
                   value={lectureType}
                   onChange={(e) => setLectureType(e.target.value)}
                   label="Lecture Type"
-                  InputProps={{
-                    sx: {
-                      backdropFilter: "blur(10px)",
-                      backgroundColor: "rgba(255, 255, 255, 0.2)",
-                      "& .MuiOutlinedInput-notchedOutline": {
-                        border: "none",
-                      },
+                  sx={{
+                    backdropFilter: "blur(10px)",
+                    backgroundColor: "rgba(255, 255, 255, 0.5)",
+                    color: isDarkMode ? "#d7e4fc" : "", // Option text color
+                    "&.Mui-focused .MuiOutlinedInput-notchedOutline": {
+                      borderColor: isDarkMode ? "#d7e4fc" : "", // Border color when focused
+                    },
+                    "& .MuiSvgIcon-root": {
+                      color: isDarkMode ? "#d7e4fc" : "", // Dropdown arrow color
                     },
                   }}
                 >
@@ -556,6 +572,23 @@ const CreatingLecture = ({
                   label="Lecture Date"
                   value={lectureDate}
                   onChange={(newDate) => setLectureDate(newDate)}
+                  sx={{
+                    backdropFilter: "blur(10px)",
+                    backgroundColor: "rgba(255, 255, 255, 0.5)",
+                    color: isDarkMode ? "#d7e4fc" : "", // Option text color
+                    "&.Mui-focused .MuiOutlinedInput-notchedOutline": {
+                      borderColor: isDarkMode ? "#d7e4fc" : "", // Border color when focused
+                    },
+                    "& .MuiSvgIcon-root": {
+                      color: isDarkMode ? "#d7e4fc" : "", // Dropdown arrow color
+                    },
+                    "& .MuiInputLabel-root": {
+                      color: isDarkMode ? "#d7e4fc" : "", // Label color
+                    },
+                    "& .MuiInputBase-input": {
+                      color: isDarkMode ? "#d7e4fc" : "", // Input text (date value) color
+                    },
+                  }}
                   renderInput={(params) => (
                     <TextField {...params} fullWidth required />
                   )}
@@ -569,6 +602,23 @@ const CreatingLecture = ({
                 <TimePicker
                   label="Lecture Start Time"
                   value={lectureStartTime}
+                  sx={{
+                    backdropFilter: "blur(10px)",
+                    backgroundColor: "rgba(255, 255, 255, 0.5)",
+                    color: isDarkMode ? "#d7e4fc" : "", // Option text color
+                    "&.Mui-focused .MuiOutlinedInput-notchedOutline": {
+                      borderColor: isDarkMode ? "#d7e4fc" : "", // Border color when focused
+                    },
+                    "& .MuiSvgIcon-root": {
+                      color: isDarkMode ? "#d7e4fc" : "", // Dropdown arrow color
+                    },
+                    "& .MuiInputLabel-root": {
+                      color: isDarkMode ? "#d7e4fc" : "", // Label color
+                    },
+                    "& .MuiInputBase-input": {
+                      color: isDarkMode ? "#d7e4fc" : "", // Input text (date value) color
+                    },
+                  }}
                   onChange={(newTime) => setLectureStartTime(newTime)}
                   renderInput={(params) => (
                     <TextField {...params} fullWidth required />
@@ -578,17 +628,35 @@ const CreatingLecture = ({
             </Grid>
 
             {/* Attach Lecture Material */}
-            <Grid item xs={12}>
-              <Button variant="outlined" component="label" fullWidth>
-                Attach Lecture Material
-                <input
-                  type="file"
-                  hidden
-                  onChange={(e) => setFile(e.target.files[0])}
-                />
-              </Button>
-              {file && <Typography variant="body2">{file.name}</Typography>}
-            </Grid>
+            
+              <Grid item xs={12} justifyContent={"center"} sx={{display:"flex", justifyItems:"center", alignItems:"center"}}>
+              <Grid item xs={4} >
+                  <Button
+                    variant="color"
+                    component="label"
+                    fullWidth
+                    sx={{
+                      color: isDarkMode ? "#d7e4fc" : "", // Text color inside the button
+                      border: "1px solid",
+                      borderColor: isDarkMode ? "#d7e4fc" : "",
+                    }}
+                  >
+                    <IoDocumentAttachOutline
+                      style={{ marginRight: 3, fontSize: "22px" }}
+                    />{" "}
+                    Attach Lecture Material
+                    <input
+                      type="file"
+                      hidden
+                      onChange={(e) => setFile(e.target.files[0])}
+                    />
+                  </Button>
+                  {file && <Typography variant="body2">{file.name}</Typography>}
+                </Grid>
+              </Grid>
+                
+              
+            
           </Grid>
         </form>
       </DialogContent>
@@ -596,7 +664,7 @@ const CreatingLecture = ({
         sx={{
           background: isDarkMode
             ? "linear-gradient(to top, #09203f 0%, #537895 100%);"
-            : "linear-gradient(to top, #fff1eb 0%, #ace0f9 100%);",
+            : "linear-gradient(to top, #dfe9f3 0%, white 100%)",
         }}
       >
         <Button onClick={handleClose} color="primary">
