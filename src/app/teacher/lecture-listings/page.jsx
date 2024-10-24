@@ -94,6 +94,10 @@ const Page = () => {
     paginationSelectedColor: "#ffffff",
   };
 
+  const handleChangeRoute=(id)=>{
+    router.push(`/teacher/lecture-listings/${id}`)
+  }
+
   return (
     <Box sx={{ width: "100%", height: "100%" }}>
       {filters}
@@ -107,7 +111,7 @@ const Page = () => {
         ) : lectureList?.data?.length > 0 ? (
           lectureList?.data?.map((value, index) => (
             <Grid item xs={12} sm={4} key={index}>
-              <ListingCard data={value} />
+              <ListingCard data={value} onClick={handleChangeRoute}/>
             </Grid>
           ))
         ) : (
