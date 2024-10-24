@@ -1,4 +1,4 @@
-import React from "react";
+import React,{useContext} from "react";
 import {
   Box,
   Drawer,
@@ -33,12 +33,14 @@ import { useRouter } from "next/navigation";
 import { useThemeContext } from "@/hooks/ThemeContext";
 import { decodeToken } from "react-jwt";
 import UserImage from "@/commonComponents/UserImage/UserImage";
+import { AppContextProvider } from "@/app/main";
 
 const drawerWidth = 240;
 const miniDrawerWidth = 60;
 
 const Sidebar = ({ open, setOpen }) => {
   const { isDarkMode, primaryColor, secondaryColor } = useThemeContext();
+  const { handleCreateLecture }=useContext(AppContextProvider)
   const userDetails = decodeToken(Cookies.get("ACCESS_TOKEN"));
   const router = useRouter();
   const iconSize = open ? 22 : 26;
@@ -179,7 +181,7 @@ const Sidebar = ({ open, setOpen }) => {
                     }}
                     onClick={() => {
                       if (item.text === "Create Lecture") {
-                        // setOpenCreateMeetingDrawer(true);
+                        handleCreateLecture("",false);
                       } else {
                         router.push(item.href);
                       }
