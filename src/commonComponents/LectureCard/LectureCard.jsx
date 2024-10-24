@@ -20,14 +20,14 @@ const day = [
   "Friday",
   "Saturday",
 ];
-import CreatingLecture from "@/components/teacher/LectureCreate/CreatingLecture";
 
 const LectureCard = ({ lecture }) => {
   const { isDarkMode, primaryColor, secondaryColor } = useThemeContext();
   const {
     openRecordingDrawer,
-    setRecordingData,
-    setOpenRecordingDrawer,
+    openCreateLecture,
+    handleCreateLecture,
+    handleLectureRecord
   } = useContext(AppContextProvider);
 
   const lectureCardStyle = {
@@ -74,28 +74,8 @@ const LectureCard = ({ lecture }) => {
     color: isDarkMode ? "#ffffff" : "#000000",
   };
 
-  const [isDialogOpen, setDialogOpen] = useState(false);
-  const [editMode, setEditMode] = useState(false);
-  const [selectedLecture, setSelectedLecture] = useState(null);
-
-  const handleEditClick = (lecture) => {
-    setSelectedLecture(lecture); // Pass the clicked lecture data
-    setEditMode(true); // Set to edit mode
-    setDialogOpen(true); // Open the dialog
-  };
-
-  const handleCloseDialog = () => {
-    setDialogOpen(false);
-    setEditMode(false);
-    setSelectedLecture(null);
-  };
-
-  const handleOpenRecorder=()=>{
-    setRecordingData(lecture)
-    setOpenRecordingDrawer(true)
-  }
   return (
-    <Paper sx={lectureCardStyle} onClick={()=>handleOpenRecorder()}>
+    <Paper sx={lectureCardStyle} onClick={()=>handleLectureRecord(lecture)}>
       <Box sx={dateSectionStyle}>
         <Typography
           variant="h4"
@@ -153,14 +133,11 @@ const LectureCard = ({ lecture }) => {
       {/* Edit button on the top-right corner */}
       <Box sx={{ position: "absolute", top: "8px", right: "8px" }}>
         <FaEdit
-          style={{ color: isDarkMode ? primaryColor : "#00796b" }}
-          onClick={() => handleEditClick(lecture)}
-        />
-        <CreatingLecture
-          open={isDialogOpen}
-          handleClose={handleCloseDialog}
-          lecture={selectedLecture} // Pass the selected lecture details
-          isEditMode={editMode} // Indicate whether it's edit mode
+          style={{ color: isDarkMode ? primaryColor : "#00796b",cursor:'pointer' }}
+          onClick={(e) => {
+            e.stopPropagation(); // Stop the click from bubbling up to the parent
+            handleCreateLecture(lecture, true);
+          }}      
         />
       </Box>
     </Paper>

@@ -16,6 +16,8 @@ import {
   DialogContent,
   DialogActions,
   TextField,
+  InputAdornment,
+  IconButton,
 } from "@mui/material";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
@@ -36,12 +38,18 @@ import {
 import { decodeToken } from "react-jwt";
 import Cookies from "js-cookie";
 import { useThemeContext } from "@/hooks/ThemeContext";
+import { FaTimes } from "react-icons/fa";
 
 const platforms = ["Zoom", "Google Meet", "Microsoft Teams"];
 
 const userDetails = decodeToken(Cookies.get("ACCESS_TOKEN"));
 
-const CreatingLecture = ({ open, handleClose, lecture, isEditMode }) => {
+const CreatingLecture = ({
+  open,
+  handleClose,
+  lecture,
+  isEditMode = false,
+}) => {
   const [lectureClass, setLectureClass] = useState("");
   const [lectureSubject, setLectureSubject] = useState("");
   const [lectureChapter, setLectureChapter] = useState("");
@@ -108,10 +116,9 @@ const CreatingLecture = ({ open, handleClose, lecture, isEditMode }) => {
       setLectureType(lecture?.type || "subject");
       setLectureDate(dayjs(lecture?.schedule_date) || dayjs());
       // Combine schedule_date and schedule_time to set the start time
-    const scheduleTime = lecture?.schedule_time;
-    const formattedTime = `${lecture.schedule_date}T${scheduleTime}`; // ISO 8601 format
-    setLectureStartTime(dayjs(formattedTime)); // Set the start time
-
+      const scheduleTime = lecture?.schedule_time;
+      const formattedTime = `${lecture.schedule_date}T${scheduleTime}`; // ISO 8601 format
+      setLectureStartTime(dayjs(formattedTime)); // Set the start time
     }
   }, [isEditMode, lecture, classOptions, subjectOptions]);
 
@@ -241,7 +248,7 @@ const CreatingLecture = ({ open, handleClose, lecture, isEditMode }) => {
     formData.append("chapter", chapterID);
     formData.append("topics", lectureTopics);
     formData.append("title", lectureTopics);
-    formData.append("organizer", userDetails.teacher_id); 
+    formData.append("organizer", userDetails.teacher_id);
     formData.append("schedule_date", lectureDate.format("YYYY-MM-DD")); // Format date
     formData.append("schedule_time", lectureStartTime.format("HH:mm")); // Format time
     formData.append("type", lectureType);
@@ -323,9 +330,12 @@ const CreatingLecture = ({ open, handleClose, lecture, isEditMode }) => {
             {/* Lecture Class */}
             <Grid item xs={6}>
               <Autocomplete
+                freeSolo
+                disableClearable
                 options={classOptions}
                 getOptionLabel={(option) => option.name} // Display the department name in dropdown
                 onChange={(event, newValue) => {
+                  console.log("newValue", newValue);
                   setSelectedClass(newValue);
                   setClassID(newValue?.id);
                 }}
@@ -334,7 +344,24 @@ const CreatingLecture = ({ open, handleClose, lecture, isEditMode }) => {
                     {...params}
                     label="Lecture Class"
                     variant="outlined"
-                    fullWidth
+                    InputProps={{
+                      ...params.InputProps,
+                      type: "search",
+                      endAdornment: lectureTopics && (
+                        <InputAdornment position="end">
+                          <IconButton onClick={clearSubject}>
+                            <FaTimes />
+                          </IconButton>
+                        </InputAdornment>
+                      ),
+                      sx: {
+                        backdropFilter: "blur(10px)",
+                        backgroundColor: "rgba(255, 255, 255, 0.5)",
+                        "& .MuiOutlinedInput-notchedOutline": {
+                          border: "none",
+                        },
+                      },
+                    }}
                   />
                 )}
                 value={selectedClass}
@@ -344,6 +371,8 @@ const CreatingLecture = ({ open, handleClose, lecture, isEditMode }) => {
             {/* Lecture Subject */}
             <Grid item xs={6}>
               <Autocomplete
+                freeSolo
+                disableClearable
                 options={subjectOptions} // Use the state that holds the subject options
                 getOptionLabel={(option) => option.name} // Display subject names
                 onChange={(event, newValue) => {
@@ -356,7 +385,24 @@ const CreatingLecture = ({ open, handleClose, lecture, isEditMode }) => {
                     {...params}
                     label="Lecture Subject"
                     variant="outlined"
-                    fullWidth
+                    InputProps={{
+                      ...params.InputProps,
+                      type: "search",
+                      endAdornment: lectureTopics && (
+                        <InputAdornment position="end">
+                          <IconButton onClick={clearSubject}>
+                            <FaTimes />
+                          </IconButton>
+                        </InputAdornment>
+                      ),
+                      sx: {
+                        backdropFilter: "blur(10px)",
+                        backgroundColor: "rgba(255, 255, 255, 0.5)",
+                        "& .MuiOutlinedInput-notchedOutline": {
+                          border: "none",
+                        },
+                      },
+                    }}
                   />
                 )}
                 value={
@@ -370,6 +416,8 @@ const CreatingLecture = ({ open, handleClose, lecture, isEditMode }) => {
             {/* Lecture Chapter */}
             <Grid item xs={6}>
               <Autocomplete
+                freeSolo
+                disableClearable
                 options={chapterOptions} // Use the updated chapter options array
                 getOptionLabel={(option) => option.name} // Display chapter names
                 value={
@@ -388,8 +436,24 @@ const CreatingLecture = ({ open, handleClose, lecture, isEditMode }) => {
                     {...params}
                     label="Lecture Chapter"
                     variant="outlined"
-                    fullWidth
-                    required
+                    InputProps={{
+                      ...params.InputProps,
+                      type: "search",
+                      endAdornment: lectureTopics && (
+                        <InputAdornment position="end">
+                          <IconButton onClick={clearSubject}>
+                            <FaTimes />
+                          </IconButton>
+                        </InputAdornment>
+                      ),
+                      sx: {
+                        backdropFilter: "blur(10px)",
+                        backgroundColor: "rgba(255, 255, 255, 0.5)",
+                        "& .MuiOutlinedInput-notchedOutline": {
+                          border: "none",
+                        },
+                      },
+                    }}
                   />
                 )}
               />
@@ -399,42 +463,36 @@ const CreatingLecture = ({ open, handleClose, lecture, isEditMode }) => {
             <Grid item xs={6}>
               <Autocomplete
                 freeSolo
+                disableClearable
                 options={topicOptions.map((option) => option.name)}
                 value={lectureTopics}
-                onInputChange={(e, newValue) => setLectureTopics(newValue)}
+                onChange={(e, newValue) => setLectureTopics(newValue)}
                 renderInput={(params) => (
                   <TextField
                     {...params}
-                    label="Lecture Topics"
-                    fullWidth
-                    required
+                    label="Lecture Name (Topics)"
+                    variant="outlined"
+                    InputProps={{
+                      ...params.InputProps,
+                      type: "search",
+                      endAdornment: lectureTopics && (
+                        <InputAdornment position="end">
+                          <IconButton onClick={clearSubject}>
+                            <FaTimes />
+                          </IconButton>
+                        </InputAdornment>
+                      ),
+                      sx: {
+                        backdropFilter: "blur(10px)",
+                        backgroundColor: "rgba(255, 255, 255, 0.5)",
+                        "& .MuiOutlinedInput-notchedOutline": {
+                          border: "none",
+                        },
+                      },
+                    }}
                   />
                 )}
               />
-            </Grid>
-
-            {/* Lecture Type */}
-            <Grid item xs={6}>
-              <FormControl fullWidth required>
-                <InputLabel id="lecture-type-label">Lecture Type</InputLabel>
-                <Select
-                  labelId="lecture-type-label"
-                  value={lectureType}
-                  onChange={(e) => setLectureType(e.target.value)}
-                  label="Lecture Type"
-                >
-                  {lecture_type.map((value) => (
-                    <MenuItem key={value?.key} value={value?.key}>
-                      <Box sx={{ display: "flex" }}>
-                        <ListItemIcon>
-                          <Image src={value.image} width={24} height={24} />
-                        </ListItemIcon>
-                        <ListItemText>{value?.name}</ListItemText>
-                      </Box>
-                    </MenuItem>
-                  ))}
-                </Select>
-              </FormControl>
             </Grid>
 
             {/* Lecture Description (Optional) */}
@@ -446,11 +504,53 @@ const CreatingLecture = ({ open, handleClose, lecture, isEditMode }) => {
                 multiline
                 rows={3}
                 fullWidth
+                InputProps={{
+                  sx: {
+                    backdropFilter: "blur(10px)",
+                    backgroundColor: "rgba(255, 255, 255, 0.5)",
+                    "& .MuiOutlinedInput-notchedOutline": {
+                      border: "none",
+                    },
+                  },
+                }}
               />
             </Grid>
 
+            {/* Lecture Type */}
+            <Grid item xs={4}>
+              <FormControl fullWidth required>
+                <InputLabel id="lecture-type-label">Lecture Type</InputLabel>
+                <Select
+                  labelId="lecture-type-label"
+                  value={lectureType}
+                  onChange={(e) => setLectureType(e.target.value)}
+                  label="Lecture Type"
+                  InputProps={{
+                    sx: {
+                      backdropFilter: "blur(10px)",
+                      backgroundColor: "rgba(255, 255, 255, 0.2)",
+                      "& .MuiOutlinedInput-notchedOutline": {
+                        border: "none",
+                      },
+                    },
+                  }}
+                >
+                  {lecture_type.map((value) => (
+                    <MenuItem key={value?.key} value={value?.key}>
+                      <Box
+                        sx={{ display: "flex", alignItems: "center", gap: 1 }}
+                      >
+                        <Image src={value.image} width={22} height={22} />
+                        <Typography>{value?.name}</Typography>
+                      </Box>
+                    </MenuItem>
+                  ))}
+                </Select>
+              </FormControl>
+            </Grid>
+
             {/* Lecture Date */}
-            <Grid item xs={6}>
+            <Grid item xs={4}>
               <LocalizationProvider dateAdapter={AdapterDayjs}>
                 <DatePicker
                   label="Lecture Date"
@@ -464,7 +564,7 @@ const CreatingLecture = ({ open, handleClose, lecture, isEditMode }) => {
             </Grid>
 
             {/* Lecture Start Time */}
-            <Grid item xs={6}>
+            <Grid item xs={4}>
               <LocalizationProvider dateAdapter={AdapterDayjs}>
                 <TimePicker
                   label="Lecture Start Time"

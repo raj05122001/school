@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useContext } from "react";
 import {
   Box,
   Typography,
@@ -13,25 +13,17 @@ import DarkMode from "@/components/DarkMode/DarkMode";
 import { decodeToken } from "react-jwt";
 import Cookies from "js-cookie";
 import { capitalizeWords } from "@/helper/Helper";
-import CreatingLecture from "../../LectureCreate/CreatingLecture";
+import { AppContextProvider } from "@/app/main";
 
 function GreetingCard() {
   const userDetails = decodeToken(Cookies.get("ACCESS_TOKEN"));
+  const { handleCreateLecture } = useContext(AppContextProvider);
+
   const getGreeting = () => {
     const hours = new Date().getHours();
     if (hours < 12) return "Good Morning";
     if (hours >= 12 && hours < 17) return "Good Afternoon";
     return "Good Evening";
-  };
-
-  const [openDialog, setOpenDialog] = useState(false);
-
-  const handleOpenDialog = () => {
-    setOpenDialog(true);
-  };
-
-  const handleCloseDialog = () => {
-    setOpenDialog(false);
   };
 
   return (
@@ -93,7 +85,7 @@ function GreetingCard() {
                 boxShadow: "0 0 10px 0 #FFC107 inset, 0 0 10px 4px #FFC107", // Matching hover color with gold shade
               },
             }}
-            onClick={handleOpenDialog}
+            onClick={() => handleCreateLecture("", false)}
           >
             Create Lecture
           </Button>
@@ -108,13 +100,11 @@ function GreetingCard() {
               },
               color: "#006400",
             }}
-            
           >
             Create Quiz
           </Button>
         </Box>
       </Box>
-      <CreatingLecture open={openDialog} handleClose={handleCloseDialog} />
     </Paper>
   );
 }

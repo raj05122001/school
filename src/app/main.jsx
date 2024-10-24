@@ -8,6 +8,7 @@ import Sidebar from "@/components/Sidebar/Sidebar";
 import { Box } from "@mui/material";
 import { ThemeProvider } from "@/hooks/ThemeContext";
 import LectureRecorder from "@/components/LectureRecorder/LectureRecorder";
+import CreatingLecture from "@/components/teacher/LectureCreate/CreatingLecture";
 
 export const AppContextProvider = createContext({});
 
@@ -16,6 +17,8 @@ const Main = ({ children }) => {
   const [open, setOpen] = useState(true);
   const [openRecordingDrawer, setOpenRecordingDrawer] = useState(false);
   const [recordingData, setRecordingData] = useState({});
+  const [openCreateLecture, setOpenCreateLecture] = useState(false);
+  const [isEditLecture, setIsEditLecture] = useState(false);
 
   const handleResize = () => {
     if (window.innerWidth < 980) {
@@ -39,18 +42,27 @@ const Main = ({ children }) => {
     setOpenRecordingDrawer(false);
   };
 
-  // useEffect(() => {
-  //   if (openRecordingDrawer) {
-  //     document.body.style.overflowY = "hidden";
-  //     document.body.style.position = "fixed";
-  //   } else {
-  //     document.body.style.overflowY = "scroll";
-  //     document.body.style.position = "";
-  //   }
-  //   return () => {
-  //     document.body.style.position = "";
-  //   };
-  // }, [openRecordingDrawer]);
+  const handleCloseCreateLecture = () => {
+    setOpenCreateLecture(false);
+    setRecordingData({});
+  };
+
+  const handleCreateLecture = (value = "", isEditMode = false) => {
+    if (isEditMode) {
+      setRecordingData(value);
+      setIsEditLecture(true);
+      setOpenCreateLecture(true);
+    } else {
+      setIsEditLecture(false);
+      setRecordingData({});
+      setOpenCreateLecture(true);
+    }
+  };
+
+  const handleLectureRecord = (value) => {
+    setRecordingData(value);
+    setOpenRecordingDrawer(true);
+  };
 
   return (
     <Suspense>
@@ -66,8 +78,9 @@ const Main = ({ children }) => {
           <AppContextProvider.Provider
             value={{
               openRecordingDrawer,
-              setRecordingData,
-              setOpenRecordingDrawer,
+              handleCreateLecture,
+              openCreateLecture,
+              handleLectureRecord,
             }}
           >
             <Box
@@ -85,6 +98,14 @@ const Main = ({ children }) => {
                   open={openRecordingDrawer}
                   closeDrawer={closeDrawer}
                   recordingData={recordingData}
+                />
+              )}
+              {openCreateLecture && (
+                <CreatingLecture
+                  open={openCreateLecture}
+                  handleClose={handleCloseCreateLecture}
+                  isEditMode={isEditLecture}
+                  lecture={recordingData}
                 />
               )}
               <Box sx={{ display: "flex", flexDirection: "column" }}>
