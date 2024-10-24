@@ -58,6 +58,7 @@ const LectureRecorder = ({ open, closeDrawer, recordingData }) => {
   const [uploadProgress, setUploadProgress] = useState(0);
   const [uploadSpeed, setUploadSpeed] = useState(0);
   const [timeRemaining, setTimeRemaining] = useState(0);
+  const [isStopsubmit, setIsStopsubmit] = useState(false);
 
   const [startAndEndTime, setStartAndEndTime] = useState({
     start_time: currentTimeLocal,
@@ -236,10 +237,6 @@ const LectureRecorder = ({ open, closeDrawer, recordingData }) => {
     if (!onlineStatus) {
       alert("Please check your network connection.");
       return;
-    }
-
-    if (!lectureStoped.stopRecording) {
-      await stopRecording();
     }
 
     if (attachments.length > 0) {
@@ -641,6 +638,17 @@ const LectureRecorder = ({ open, closeDrawer, recordingData }) => {
     closeDrawer();
   };
 
+  useEffect(() => {
+    if (
+      isStopsubmit &&
+      lectureStoped.stopRecording &&
+      audioChunk.length > 0 &&
+      videoChunks.length > 0
+    ) {
+      submitLecture();
+    }
+  }, [isStopsubmit, audioChunk, videoChunks]);
+
   return (
     <Drawer
       anchor="right"
@@ -871,7 +879,16 @@ const LectureRecorder = ({ open, closeDrawer, recordingData }) => {
 
               <Box sx={{ display: "flex", justifyContent: "flex-end" }}>
                 <Button
-                  onClick={submitLecture}
+                  onClick={() => {
+                    if (!lectureStoped.stopRecording) {
+                      setIsStopsubmit(true);
+                      stopRecording();
+                      console.log("call right function");
+                    } else {
+                      submitLecture();
+                      console.log("call wrong function");
+                    }
+                  }}
                   variant="contained"
                   color={uploadedChunk < chunkCount ? "grey" : "primary"}
                   disabled={uploadedChunk < chunkCount}
