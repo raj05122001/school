@@ -238,6 +238,10 @@ const LectureRecorder = ({ open, closeDrawer, recordingData }) => {
       return;
     }
 
+    if (!lectureStoped.stopRecording) {
+      await stopRecording();
+    }
+
     if (attachments.length > 0) {
       onSaveAttachments();
     }
@@ -246,7 +250,7 @@ const LectureRecorder = ({ open, closeDrawer, recordingData }) => {
       isProccess: true,
       isError: false,
       submit: false,
-      stopRecording: false,
+      stopRecording: true,
     });
 
     if (!videoAttachment.length > 0) {
@@ -265,7 +269,7 @@ const LectureRecorder = ({ open, closeDrawer, recordingData }) => {
           isProccess: true,
           isError: false,
           submit: true,
-          stopRecording: false,
+          stopRecording: true,
         });
       } catch (error) {
         console.error(error);
@@ -295,7 +299,7 @@ const LectureRecorder = ({ open, closeDrawer, recordingData }) => {
           // await extractingAudio(recordingData.id);
         } else if (selectedOption === "vidya") {
           const formData = new FormData();
-          formData.append("video_src", VIDYAAI);
+          formData.append("video_src", "VIDYAAI");
           formData.append(
             "audio",
             audioAttachment[0],
@@ -309,7 +313,7 @@ const LectureRecorder = ({ open, closeDrawer, recordingData }) => {
           isProccess: true,
           isError: false,
           submit: true,
-          stopRecording: false,
+          stopRecording: true,
         });
       } catch (error) {
         console.error(error);
@@ -793,7 +797,12 @@ const LectureRecorder = ({ open, closeDrawer, recordingData }) => {
 
       {!lectureStoped.isProccess && (
         <Grid container spacing={2} sx={{ height: "10%" }}>
-          <Grid item xs={12} sm={4} sx={{display:'flex',alignItems:'center'}}>
+          <Grid
+            item
+            xs={12}
+            sm={4}
+            sx={{ display: "flex", alignItems: "center" }}
+          >
             <BottomTabs
               startRecordingBtn={startRecordingBtn}
               videoChunks={videoChunks}
@@ -816,7 +825,12 @@ const LectureRecorder = ({ open, closeDrawer, recordingData }) => {
             />
           </Grid>
 
-          <Grid item xs={12} sm={4} sx={{display:'flex',alignItems:'center'}}>
+          <Grid
+            item
+            xs={12}
+            sm={4}
+            sx={{ display: "flex", alignItems: "center" }}
+          >
             <RecorderController
               startRecordingBtn={startRecordingBtn}
               timer={timer}
@@ -826,7 +840,7 @@ const LectureRecorder = ({ open, closeDrawer, recordingData }) => {
             />
           </Grid>
 
-          <Grid item xs={12} sm={4} >
+          <Grid item xs={12} sm={4}>
             <Box
               sx={{
                 display: "flex",
