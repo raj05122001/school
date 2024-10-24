@@ -137,3 +137,8 @@ export const uploadS3Video = async (lectureId, formData) => {
   const apiInstance = new apiServices(axiosAPIInstance);
   return await apiInstance.uploadS3Video(lectureId, formData);
 };
+
+export const getLectureById = async (lectureId) => {
+  const apiInstance = new apiServices(axiosAPIInstance);
+  return await apiInstance.getLectureById(lectureId);
+};

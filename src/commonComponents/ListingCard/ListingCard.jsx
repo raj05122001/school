@@ -11,7 +11,7 @@ import { useThemeContext } from "@/hooks/ThemeContext";
 import { MdOutlineDateRange } from "react-icons/md";
 import LectureType from "../LectureType/LectureType";
 
-const ListingCard = ({ data }) => {
+const ListingCard = ({ data ,onClick}) => {
   const { isDarkMode, primaryColor, secondaryColor } = useThemeContext();
   const videoRef = useRef(null);
 
@@ -28,7 +28,7 @@ const ListingCard = ({ data }) => {
   };
 
   return (
-    <Box p={2} sx={{ width: "100%", height: "100%" }}>
+    <Box p={2} sx={{ width: "100%", height: "100%" }} onClick={()=>onClick(data?.id)}>
       <Card
         className="blur_effect_card"
         sx={{
