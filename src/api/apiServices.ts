@@ -235,6 +235,41 @@ export default class apiServices {
       .catch((error) => console.error(error));
   };
 
+  public downloadExcelFile = async () => {
+    return await this.axiosInstance
+      .get(`/api/v1/dashboard/download_excel/`)
+      .then((Response) => Response)
+      .catch((error) => console.error(error));
+  };
+
+  public uploadExcelFile = (formData) => {
+    const toastInstance = toast.loading("Loading...");
+    return this.axiosInstance
+      .post(`/api/v1/dashboard/upload_excel/`, formData)
+      .then((response) => {
+        if (!response.data.success) {
+          toast.dismiss(toastInstance); // Dismiss the loading toast
+          toast.error(response.data.message, {
+            duration: Constants.toastTimer,
+          });
+          return response;
+        }
+        toast.dismiss(toastInstance); // Dismiss the loading toast
+        toast.success(response.data?.data?.message, {
+          duration: Constants.toastTimer,
+        });
+        return response;
+      })
+      .catch((error) => {
+        toast.dismiss(toastInstance); // Dismiss the loading toast
+        const errorText = error.response?.data?.message || "An error occurred";
+        toast.error(errorText, {
+          duration: Constants.toastTimer,
+        });
+        console.error(error);
+        throw error;
+      });
+  };
   public updateLectureAttachment = (lectureId, formData) => {
     const headers = { "Content-Type": "multipart/form-data" };
     return this.axiosInstance

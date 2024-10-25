@@ -58,6 +58,7 @@ const LectureRecorder = ({ open, closeDrawer, recordingData }) => {
   const [uploadProgress, setUploadProgress] = useState(0);
   const [uploadSpeed, setUploadSpeed] = useState(0);
   const [timeRemaining, setTimeRemaining] = useState(0);
+  const [isStopsubmit, setIsStopsubmit] = useState(false);
 
   const [startAndEndTime, setStartAndEndTime] = useState({
     start_time: currentTimeLocal,
@@ -228,6 +229,7 @@ const LectureRecorder = ({ open, closeDrawer, recordingData }) => {
   };
 
   const submitLecture = async () => {
+    setIsStopsubmit(false);
     if (!videoChunks.length && !videoAttachment.length > 0) {
       alert("Please record video or upload video attachment");
       return;
@@ -246,7 +248,7 @@ const LectureRecorder = ({ open, closeDrawer, recordingData }) => {
       isProccess: true,
       isError: false,
       submit: false,
-      stopRecording: false,
+      stopRecording: true,
     });
 
     if (!videoAttachment.length > 0) {
@@ -265,7 +267,7 @@ const LectureRecorder = ({ open, closeDrawer, recordingData }) => {
           isProccess: true,
           isError: false,
           submit: true,
-          stopRecording: false,
+          stopRecording: true,
         });
       } catch (error) {
         console.error(error);
@@ -295,7 +297,7 @@ const LectureRecorder = ({ open, closeDrawer, recordingData }) => {
           // await extractingAudio(recordingData.id);
         } else if (selectedOption === "vidya") {
           const formData = new FormData();
-          formData.append("video_src", VIDYAAI);
+          formData.append("video_src", "VIDYAAI");
           formData.append(
             "audio",
             audioAttachment[0],
@@ -309,7 +311,7 @@ const LectureRecorder = ({ open, closeDrawer, recordingData }) => {
           isProccess: true,
           isError: false,
           submit: true,
-          stopRecording: false,
+          stopRecording: true,
         });
       } catch (error) {
         console.error(error);
@@ -637,6 +639,17 @@ const LectureRecorder = ({ open, closeDrawer, recordingData }) => {
     closeDrawer();
   };
 
+  useEffect(() => {
+    if (
+      isStopsubmit &&
+      lectureStoped.stopRecording &&
+      audioChunk.length > 0 &&
+      videoChunks.length > 0
+    ) {
+      submitLecture();
+    }
+  }, [isStopsubmit, audioChunk, videoChunks]);
+
   return (
     <Drawer
       anchor="right"
@@ -793,7 +806,12 @@ const LectureRecorder = ({ open, closeDrawer, recordingData }) => {
 
       {!lectureStoped.isProccess && (
         <Grid container spacing={2} sx={{ height: "10%" }}>
-          <Grid item xs={12} sm={4} sx={{display:'flex',alignItems:'center'}}>
+          <Grid
+            item
+            xs={12}
+            sm={4}
+            sx={{ display: "flex", alignItems: "center" }}
+          >
             <BottomTabs
               startRecordingBtn={startRecordingBtn}
               videoChunks={videoChunks}
@@ -816,7 +834,12 @@ const LectureRecorder = ({ open, closeDrawer, recordingData }) => {
             />
           </Grid>
 
-          <Grid item xs={12} sm={4} sx={{display:'flex',alignItems:'center'}}>
+          <Grid
+            item
+            xs={12}
+            sm={4}
+            sx={{ display: "flex", alignItems: "center" }}
+          >
             <RecorderController
               startRecordingBtn={startRecordingBtn}
               timer={timer}
@@ -826,7 +849,7 @@ const LectureRecorder = ({ open, closeDrawer, recordingData }) => {
             />
           </Grid>
 
-          <Grid item xs={12} sm={4} >
+          <Grid item xs={12} sm={4}>
             <Box
               sx={{
                 display: "flex",
@@ -857,7 +880,14 @@ const LectureRecorder = ({ open, closeDrawer, recordingData }) => {
 
               <Box sx={{ display: "flex", justifyContent: "flex-end" }}>
                 <Button
-                  onClick={submitLecture}
+                  onClick={() => {
+                    if (!lectureStoped.stopRecording && !videoAttachment.length > 0) {
+                      setIsStopsubmit(true);
+                      stopRecording();
+                    } else {
+                      submitLecture();
+                    }
+                  }}
                   variant="contained"
                   color={uploadedChunk < chunkCount ? "grey" : "primary"}
                   disabled={uploadedChunk < chunkCount}
