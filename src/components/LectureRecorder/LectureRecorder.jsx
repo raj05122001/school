@@ -229,6 +229,7 @@ const LectureRecorder = ({ open, closeDrawer, recordingData }) => {
   };
 
   const submitLecture = async () => {
+    setIsStopsubmit(false);
     if (!videoChunks.length && !videoAttachment.length > 0) {
       alert("Please record video or upload video attachment");
       return;
@@ -880,13 +881,11 @@ const LectureRecorder = ({ open, closeDrawer, recordingData }) => {
               <Box sx={{ display: "flex", justifyContent: "flex-end" }}>
                 <Button
                   onClick={() => {
-                    if (!lectureStoped.stopRecording) {
+                    if (!lectureStoped.stopRecording && !videoAttachment.length > 0) {
                       setIsStopsubmit(true);
                       stopRecording();
-                      console.log("call right function");
                     } else {
                       submitLecture();
-                      console.log("call wrong function");
                     }
                   }}
                   variant="contained"
