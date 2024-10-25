@@ -53,7 +53,7 @@ const VideoPlayer = ({ id }) => {
         controls
         preload="auto"
         style={{width:'100%',height:'100%',borderRadius:10}}
-        data-setup="{}"
+        data-setup='{ "html5": { "nativeTextTracks": true },"playbackRates" : [0.25, 0.5, 0.75, 1, 1.25, 1.5,1.75]}'
       >
         <source
           src={`https://d3515ggloh2j4b.cloudfront.net/videos/${id}.mp4`}
