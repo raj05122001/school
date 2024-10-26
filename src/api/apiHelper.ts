@@ -142,3 +142,13 @@ export const getLectureById = async (lectureId) => {
   const apiInstance = new apiServices(axiosAPIInstance);
   return await apiInstance.getLectureById(lectureId);
 };
+
+export const getLectureSummary = async (lectureId) => {
+  const apiInstance = new apiServices(axiosAPIInstance);
+  return await apiInstance.getLectureSummary(lectureId);
+};
+
+export const getLectureHighlights = async (lectureId) => {
+  const apiInstance = new apiServices(axiosAPIInstance);
+  return await apiInstance.getLectureHighlights(lectureId);
+};

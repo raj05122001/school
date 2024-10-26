@@ -268,4 +268,19 @@ export default class apiServices {
       .then((Response) => Response)
       .catch((error) => console.error(error));
   };
+
+  public getLectureSummary = async (lectureId) => {
+    return await this.axiosInstance
+      .get(`/api/v1/lecture/${lectureId}/summary/`)
+      .then((Response) => Response)
+      .catch((error) => console.error(error));
+  };
+
+  public getLectureHighlights = async (lectureId) => {
+    return await this.axiosInstance
+      .get(`/api/v1/lecture/${lectureId}/highlights/`)
+      .then((Response) => Response)
+      .catch((error) => console.error(error));
+  };
+  
 }
