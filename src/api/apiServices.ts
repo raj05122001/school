@@ -296,4 +296,11 @@ export default class apiServices {
       .patch(`/api/v1/lecture/${lectureId}/upload_media/`, formData)
       .then((Response) => Response);
   };
+
+  public getAllLectureCount = async () => {
+    return await this.axiosInstance
+      .get(`/api/v1/lecture_tracking/`)
+      .then((Response) => Response)
+      .catch((error) => console.error(error));
+  };
 }
