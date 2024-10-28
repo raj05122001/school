@@ -9,7 +9,7 @@ import {
   Divider,
   IconButton,
 } from "@mui/material";
-import { FaHeart, FaRegHeart, FaTimes, FaPaperPlane } from "react-icons/fa";
+import { FaHeart, FaRegHeart, FaPaperPlane } from "react-icons/fa";
 import { useThemeContext } from "@/hooks/ThemeContext";
 
 const comments = [
@@ -47,7 +47,7 @@ const comments = [
   },
 ];
 
-const CommentCard = ({ comment }) => (
+const CommentCard = ({ comment, isDarkMode,secondaryColor }) => (
   <Box display="flex" alignItems="flex-start" mb={2}>
     <Avatar
       src="/path-to-avatar.jpg"
@@ -55,13 +55,24 @@ const CommentCard = ({ comment }) => (
       sx={{ width: 48, height: 48, mr: 2 }}
     />
     <Box>
-      <Typography variant="body1" fontWeight="bold">
+      <Typography
+        variant="body1"
+        fontWeight="bold"
+        color={isDarkMode ? "white" : "black"}
+      >
         {comment.name}
       </Typography>
-      <Typography variant="caption" color="textSecondary">
+      <Typography
+        variant="caption"
+        color={isDarkMode ? "gray" : "textSecondary"}
+      >
         {comment.time}
       </Typography>
-      <Typography variant="body2" mt={1}>
+      <Typography
+        variant="body2"
+        mt={1}
+        color={secondaryColor}
+      >
         {comment.text}
       </Typography>
       <Box display="flex" alignItems="center" mt={1}>
@@ -82,7 +93,11 @@ const CommentCard = ({ comment }) => (
         <IconButton size="small" color="error">
           {comment.liked ? <FaHeart color="red" /> : <FaRegHeart />}
         </IconButton>
-        <Typography variant="body2" ml={1}>
+        <Typography
+          variant="body2"
+          ml={1}
+          color={isDarkMode ? "gray.300" : "black"}
+        >
           {comment.likes}
         </Typography>
       </Box>
@@ -94,16 +109,26 @@ const CommentsSection = () => {
   const { isDarkMode, primaryColor, secondaryColor } = useThemeContext();
   return (
     <Card
-      sx={{ maxWidth: 400, p: 2, boxShadow: 3 }}
-      className="blur_effect_card"
+      sx={{
+        maxWidth: 400,
+        p: 2,
+        backdropFilter: "blur(10px)",
+        backgroundColor:"rgba(255, 255, 255, 0.2)",
+        boxShadow: "0 4px 30px rgba(0, 0, 0, 0.1)",
+        borderRadius: "16px",
+      }}
     >
       <Box display="flex" alignItems="center" pb={1}>
-        <Typography variant="h6" fontWeight="bold">
+        <Typography
+          variant="h6"
+          fontWeight="bold"
+          color={isDarkMode ? "white" : "black"}
+        >
           Comments
         </Typography>
         <Box
           sx={{
-            backgroundColor: "#FFEA00",
+            backgroundColor: isDarkMode ? "#FFC107" : "#FFEA00",
             width: 30,
             height: 30,
             marginLeft: 1,
@@ -122,20 +147,27 @@ const CommentsSection = () => {
             34
           </Typography>
         </Box>
-        {/* <IconButton size="small">
-              <FaTimes />
-            </IconButton> */}
       </Box>
 
-      <Divider />
+      <Divider sx={{ borderColor: isDarkMode ? "gray.600" : "gray.300" }} />
       <CardContent sx={{ maxHeight: "400px", overflowY: "auto" }}>
         {comments.map((comment) => (
-          <CommentCard key={comment.id} comment={comment} />
+          <CommentCard key={comment.id} comment={comment} isDarkMode={isDarkMode} secondaryColor={secondaryColor}/>
         ))}
       </CardContent>
-      <Divider />
+      <Divider sx={{ borderColor: isDarkMode ? "gray.600" : "gray.300" }} />
       <Box display="flex" alignItems="center" p={1}>
-        <InputBase placeholder="Type a comment..." fullWidth sx={{ ml: 1 }} />
+        <InputBase
+          placeholder="Type a comment..."
+          fullWidth
+          sx={{
+            ml: 1,
+            color: isDarkMode ? "white" : "black",
+            backgroundColor: isDarkMode ? "gray.700" : "white",
+            borderRadius: "4px",
+            padding: "4px 8px",
+          }}
+        />
         <IconButton color="primary" sx={{ ml: 1, backgroundColor: "#E0F7FA" }}>
           <FaPaperPlane color="#0288D1" />
         </IconButton>

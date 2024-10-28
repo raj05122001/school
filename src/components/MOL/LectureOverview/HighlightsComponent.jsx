@@ -1,28 +1,26 @@
-import { Box, Typography, IconButton } from "@mui/material";
-import TextWithMath from "@/commonComponents/TextWithMath/TextWithMath";
+import { Box, Typography, Skeleton } from "@mui/material";
 import { getLectureHighlights } from "@/api/apiHelper";
 import { useEffect, useState } from "react";
-import TextEditor from "@/commonComponents/TextEditor/TextEditor";
-import { FaEdit, FaSave, FaInfoCircle } from "react-icons/fa";
+import { FaInfoCircle } from "react-icons/fa";
 import MathJax from "react-mathjax2";
 
 const HighlightsComponent = ({ lectureId, isDarkMode }) => {
   const [decisions, setDecisions] = useState("");
-  const [decisionId, setDecisionId] = useState("");
-  const [isEditData, setIsEditData] = useState(false);
-  const [editedText, setEditedText] = useState("");
+  const [loading, setLoading] = useState(true);
 
   const fetchHighlight = async () => {
+    setLoading(true);
     try {
       const apiResponse = await getLectureHighlights(lectureId);
       const decisionData = apiResponse?.data?.data;
       const jsonData = decisionData?.highlight_text
         ? JSON.parse(decisionData?.highlight_text)
         : [];
-      setDecisionId(decisionData?.id);
       setDecisions(jsonData);
     } catch (error) {
       console.error("Error fetching meeting decision:", error);
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -52,7 +50,6 @@ const HighlightsComponent = ({ lectureId, isDarkMode }) => {
     });
   };
 
-  console.log("decisions", decisions);
   return (
     <Box
       sx={{
@@ -69,85 +66,60 @@ const HighlightsComponent = ({ lectureId, isDarkMode }) => {
         maxHeight: 450,
       }}
     >
-      {
-        //   isEditData ? (
-        //     <Box sx={{ position: "relative" }}>
-        //       <Box
-        //         sx={{
-        //           display: "flex",
-        //           justifyContent: "flex-end",
-        //           position: "absolute",
-        //           right: 4,
-        //           top: 4,
-        //         }}
-        //       >
-        //         <IconButton
-        //           onClick={() => {
-        //           }}
-        //         >
-        //           <FaSave
-        //             size={24}
-        //             style={{ color: isDarkMode ? "#F0EAD6" : "#36454F" }}
-        //           />
-        //         </IconButton>
-        //       </Box>
-        //       <TextEditor text={decisions[0]} onChange={onChange} />
-        //     </Box>
-        //   ) :
-        decisions.length > 0 ? (
-          <Box>
-            <Box sx={{ display: "flex", justifyContent: "flex-end" }}>
-              <IconButton onClick={() => setIsEditData(true)}>
-                <FaEdit
-                  size={24}
-                  style={{ color: isDarkMode ? "#F0EAD6" : "#36454F" }}
-                />
-              </IconButton>
-            </Box>
-            <MathJax.Context input="tex" inline>
-              <Box sx={{ textAlign: "justify", mt: 2 }}>
-                {decisions.map((section) => (
-                  <Box key={section.title} sx={{ mb: 2 }}>
-                    <Typography variant="subtitle1" sx={{ fontWeight: "bold" }}>
-                      {section.title} -
-                    </Typography>
-                    <Box component="ul" sx={{ pl: 2 }}>
-                      {section.keypoints.map((point, index) => (
-                        <Box
-                          component="li"
-                          key={index}
-                          sx={{ fontSize: "0.875rem" }}
-                        >
-                          {renderTextWithMathJax(
-                            point.replace(/^- /, "").trim()
-                          )}
-                        </Box>
-                      ))}
-                    </Box>
+      {loading ? (
+        <Box>
+          <Skeleton variant="rectangular" height={40} sx={{ mb: 2 }} />
+          <Skeleton variant="text" height={30} sx={{ mb: 1 }} />
+          <Skeleton variant="text" height={30} sx={{ mb: 1 }} />
+          <Skeleton variant="text" height={30} sx={{ mb: 1 }} />
+          <Skeleton variant="text" height={30} sx={{ mb: 1 }} />
+          <Skeleton variant="text" height={30} sx={{ mb: 1 }} />
+          <Skeleton variant="text" height={30} sx={{ mb: 1 }} />
+          <Skeleton variant="text" height={30} sx={{ mb: 1 }} />
+        </Box>
+      ) : decisions.length > 0 ? (
+        <Box>
+          <MathJax.Context input="tex" inline>
+            <Box sx={{ textAlign: "justify", mt: 2 }}>
+              {decisions.map((section) => (
+                <Box key={section.title} sx={{ mb: 2 }}>
+                  <Typography variant="subtitle1" sx={{ fontWeight: "bold" }}>
+                    {section.title} -
+                  </Typography>
+                  <Box component="ul" sx={{ pl: 2 }}>
+                    {section.keypoints.map((point, index) => (
+                      <Box
+                        component="li"
+                        key={index}
+                        sx={{ fontSize: "0.875rem" }}
+                      >
+                        {renderTextWithMathJax(point.replace(/^- /, "").trim())}
+                      </Box>
+                    ))}
                   </Box>
-                ))}
-              </Box>
-            </MathJax.Context>
-          </Box>
-        ) : (
-          <Box
-            sx={{
-              width: "100%",
-              height: "100%",
-              display: "flex",
-              justifyContent: "center",
-              alignItems: "center",
-              flexDirection: "column",
-              color: "#999",
-            }}
-          >
-            <FaInfoCircle size={24} />
-            <Typography variant="h5" sx={{ color: "text.secondary", mt: 1 }}>
-              No highlights available.
-            </Typography>
-          </Box>
-        )
-      }
+                </Box>
+              ))}
+            </Box>
+          </MathJax.Context>
+        </Box>
+      ) : (
+        <Box
+          sx={{
+            width: "100%",
+            height: "100%",
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
+            flexDirection: "column",
+            color: "#999",
+          }}
+        >
+          <FaInfoCircle size={24} />
+          <Typography variant="h5" sx={{ color: "text.secondary", mt: 1 }}>
+            No highlights available.
+          </Typography>
+        </Box>
+      )}
     </Box>
   );
 };

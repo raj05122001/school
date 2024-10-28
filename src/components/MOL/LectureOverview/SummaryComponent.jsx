@@ -96,6 +96,9 @@ const SummaryComponent = ({ lectureId, isDarkMode }) => {
           <Skeleton variant="text" height={30} sx={{ mb: 1 }} />
           <Skeleton variant="text" height={30} sx={{ mb: 1 }} />
           <Skeleton variant="text" height={30} sx={{ mb: 1 }} />
+          <Skeleton variant="text" height={30} sx={{ mb: 1 }} />
+          <Skeleton variant="text" height={30} sx={{ mb: 1 }} />
+          <Skeleton variant="text" height={30} sx={{ mb: 1 }} />
         </Box>
       ) : isEditData ? (
         <Box sx={{ position: "relative" }}>
