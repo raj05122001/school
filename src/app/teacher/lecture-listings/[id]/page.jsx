@@ -81,7 +81,7 @@ const LecturePage = ({ params }) => {
             {videoPlayer}
           </Box>
           <Box mt={4}>
-            <LectureOverview isDarkMode={isDarkMode} />
+            <LectureOverview isDarkMode={isDarkMode} lectureId={id} />
           </Box>
 
           <Box mt={4}>

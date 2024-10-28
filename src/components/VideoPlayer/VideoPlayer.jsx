@@ -20,7 +20,6 @@ const VideoPlayer = ({ id }) => {
       markers.forEach((marker) => {
         const left = (marker.time / total) * 100 + "%";
         const el = document.createElement("div");
-        console.log("el====>", el);
         el.className = "vjs-marker";
         el.style.left = left;
         el.dataset.time = marker.time;
