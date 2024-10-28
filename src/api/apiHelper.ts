@@ -148,6 +148,41 @@ export const uploadS3Video = async (lectureId, formData) => {
   return await apiInstance.uploadS3Video(lectureId, formData);
 };
 
+export const getLectureById = async (lectureId) => {
+  const apiInstance = new apiServices(axiosAPIInstance);
+  return await apiInstance.getLectureById(lectureId);
+};
+
+export const getLectureSummary = async (lectureId) => {
+  const apiInstance = new apiServices(axiosAPIInstance);
+  return await apiInstance.getLectureSummary(lectureId);
+};
+
+export const getLectureHighlights = async (lectureId) => {
+  const apiInstance = new apiServices(axiosAPIInstance);
+  return await apiInstance.getLectureHighlights(lectureId);
+};
+
+export const getBreakpoint = async (lectureId) => {
+  const apiInstance = new apiServices(axiosAPIInstance);
+  return await apiInstance.getBreakpoint(lectureId);
+};
+
+export const generateContent = async (data) => {
+  const apiInstance = new apiServices(axiosAPIInstance);
+  return await apiInstance.generateContent(data);
+};
+
+export const generateArticle = async (data) => {
+  const apiInstance = new apiServices(axiosAPIInstance);
+  return await apiInstance.generateArticle(data);
+};
+
+export const meetingAnalytics = async (meetingId) => {
+  const apiInstance = new apiServices(axiosAPIInstance);
+  return await apiInstance.meetingAnalytics(meetingId);
+}
+
 export const getAllLectureCount = async () => {
   const apiInstance = new apiServices(axiosAPIInstance);
   return await apiInstance.getAllLectureCount();

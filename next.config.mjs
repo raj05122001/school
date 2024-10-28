@@ -9,9 +9,10 @@ const nextConfig = {
       },
       {
         protocol: 'https',
-        hostname: 'res.cloudinary.com',
+        hostname: 'dev-vidyaai.ultimeet.io',
         pathname: '**',
       },
+      
     ],
   },
   env: {

@@ -1,0 +1,42 @@
+/* styles.css */
+
+/* .video-js .vjs-marker {
+  position: absolute;
+  top: 0;
+  height: 100%;
+  cursor: pointer;
+  z-index: 10;
+} */
+
+
+.vjs-marker
+{
+  position:absolute;
+  background:red;
+  width:5px;
+  height:110%;
+  top:-5%;
+  z-index:30;
+  margin-left:-3px;
+}
+
+.vjs-marker:hover span 
+{
+  opacity:1;
+}
+
+.vjs-marker span
+{
+  position:absolute;
+  bottom:15px;
+  opacity:0;
+  margin-left:-80px;
+  z-index:90;
+  padding:8px;
+  font-size:12px;
+  background-color: white;
+  border-radius: 10px;
+  width: 160px;
+  color: black;
+}
+
