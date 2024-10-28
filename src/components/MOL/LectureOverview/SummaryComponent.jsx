@@ -1,4 +1,4 @@
-import { Box, Typography } from "@mui/material";
+import { Box, Typography, Skeleton } from "@mui/material";
 import TextWithMath from "@/commonComponents/TextWithMath/TextWithMath";
 import { getLectureSummary, updateSummary } from "@/api/apiHelper";
 import { useEffect, useState } from "react";
@@ -12,12 +12,14 @@ const SummaryComponent = ({ lectureId, isDarkMode }) => {
   const [summaryId, setSummaryId] = useState("");
   const [isEditData, setIsEditData] = useState(false);
   const [editedText, setEditedText] = useState("");
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     fetchSummary();
   }, [lectureId]);
 
   const fetchSummary = async () => {
+    setLoading(true);
     try {
       const summaryResponse = await getLectureSummary(lectureId);
       const summaryData = summaryResponse?.data?.data;
@@ -29,6 +31,8 @@ const SummaryComponent = ({ lectureId, isDarkMode }) => {
       setSummary(jsonData);
     } catch (error) {
       console.error("Error fetching API response:", error);
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -85,7 +89,15 @@ const SummaryComponent = ({ lectureId, isDarkMode }) => {
         maxHeight: 450,
       }}
     >
-      {isEditData ? (
+      {loading ? (
+        <Box>
+          <Skeleton variant="rectangular" height={40} sx={{ mb: 2 }} />
+          <Skeleton variant="text" height={30} sx={{ mb: 1 }} />
+          <Skeleton variant="text" height={30} sx={{ mb: 1 }} />
+          <Skeleton variant="text" height={30} sx={{ mb: 1 }} />
+          <Skeleton variant="text" height={30} sx={{ mb: 1 }} />
+        </Box>
+      ) : isEditData ? (
         <Box sx={{ position: "relative" }}>
           <Box
             sx={{
