@@ -123,8 +123,6 @@ const Articles = ({ lectureId }) => {
   return (
     <Box
       sx={{
-        borderRadius: 2,
-        boxShadow: 3,
         p: 2,
         display: "flex",
         flexDirection: "column",
