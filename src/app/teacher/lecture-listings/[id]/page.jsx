@@ -18,6 +18,7 @@ import { useThemeContext } from "@/hooks/ThemeContext";
 import HeaderMOL from "@/components/MOL/Header/HeaderMOL";
 import VideoPlayer from "@/components/VideoPlayer/VideoPlayer";
 import LectureOverview from "@/components/MOL/LectureOverview/LectureOverview";
+import CommentsSection from "@/components/teacher/CommentsSection/CommentsSection";
 
 const LecturePage = ({ params }) => {
   const { id } = params;
@@ -70,6 +71,7 @@ const LecturePage = ({ params }) => {
       </Paper>
       <Box sx={{ width: "800px", height: "500px", mt: 2 }}>{videoPlayer}</Box>
       <Box sx={{ width: "800px", height: "500px", mt: 2, borderRadius:"8px", marginTop:"8px" }}><LectureOverview isDarkMode={isDarkMode} /></Box>
+      <CommentsSection/>
     </Box>
   );
 };
