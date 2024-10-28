@@ -193,7 +193,26 @@ const LectureTabs = () => {
             variant="outlined"
             size="small"
             onChange={handleSearchChange}
-            sx={{ marginRight: 2 }}
+            sx={{
+              marginRight: 2,
+              "& .MuiOutlinedInput-root": {
+                "& fieldset": {
+                  borderColor: isDarkMode ? "#F9F6EE" : "#353935", // sets the outline color to white
+                },
+                "&:hover fieldset": {
+                  borderColor: isDarkMode ? "#F9F6EE" : "#353935", // sets the outline color to white on hover
+                },
+                "&.Mui-focused fieldset": {
+                  borderColor: isDarkMode ? "#F9F6EE" : "#353935", // keeps the outline color white when focused
+                },
+              },
+              "& .MuiInputLabel-root": {
+                color: isDarkMode ? "#F9F6EE" : "#353935", // sets the label color to white
+              },
+              "& .MuiInputLabel-root.Mui-focused": {
+                color: isDarkMode ? "#F9F6EE" : "#353935", // keeps the label color white when focused
+              },
+            }}
           />
 
           {/* Month Selector */}
@@ -203,6 +222,27 @@ const LectureTabs = () => {
               value={selectedMonth}
               onChange={handleMonthChange}
               label="Month"
+              sx={{
+                color: isDarkMode ? "#F9F6EE" : "#353935", // changes the selected text color to white
+                "& .MuiOutlinedInput-notchedOutline": {
+                  borderColor: isDarkMode ? "#F9F6EE" : "#353935", // changes the outline color to white
+                },
+                "&:hover .MuiOutlinedInput-notchedOutline": {
+                  borderColor: isDarkMode ? "#F9F6EE" : "#353935", // keeps the outline color white on hover
+                },
+                "&.Mui-focused .MuiOutlinedInput-notchedOutline": {
+                  borderColor: isDarkMode ? "#F9F6EE" : "#353935", // keeps the outline color white when focused
+                },
+                "& .MuiSvgIcon-root": {
+                  color: isDarkMode ? "#F9F6EE" : "#353935", // changes the dropdown icon color to white
+                },
+                "& .MuiInputLabel-root": {
+                      color: isDarkMode ? "#F9F6EE" : "#353935", // Label color
+                    },
+                "& .MuiInputBase-input": {
+                      color: isDarkMode ? "#F9F6EE" : "#353935", // Input text (date value) color
+                },
+              }}
             >
               <MenuItem value="">
                 <em>All</em>
@@ -232,17 +272,18 @@ const LectureTabs = () => {
               onClick={() => handleChange(value, "status")}
               className="blur_effect_card"
               sx={{
-                color: "white",
+                color: isDarkMode ? "#F9F6EE" : "#353935",
                 cursor: "pointer",
                 padding: 2,
                 textAlign: "center",
                 position: "relative",
-                background:
-                  "linear-gradient(178.6deg, rgb(20, 36, 50) 11.8%, rgb(124, 143, 161) 83.8%)",
+                background: isDarkMode
+                  ? "linear-gradient(178.6deg, rgb(20, 36, 50) 11.8%, rgb(124, 143, 161) 83.8%)"
+                  : "linear-gradient(to top, #dfe9f3 0%, white 100%)",
                 display: "flex",
                 justifyContent: "space-between",
                 alignItems: "center",
-                height:'100%'
+                height: "100%",
               }}
             >
               <Box
@@ -278,7 +319,7 @@ const LectureTabs = () => {
                   <Typography
                     variant="caption"
                     component="div"
-                    sx={{ color: "text.secondary" }}
+                    sx={{ color: isDarkMode ? "#F9F6EE" : "#353935" }}
                   >{`${
                     lectureCount[mapData[value]]?.percent || 0
                   }%`}</Typography>
@@ -308,34 +349,90 @@ const LectureTabs = () => {
       <TableContainer
         component={Paper}
         className="blur_effect_card"
-        sx={{ maxHeight: 420, mt: 4 }}
+        sx={{
+          maxHeight: 420,
+          mt: 4,
+          background: isDarkMode
+            ? ""
+            : "linear-gradient(to top, #dfe9f3 0%, white 100%)",
+        }}
       >
-        <Table stickyHeader>
+        <Table>
           <TableHead>
-            <TableRow>
-              <TableCell sx={{ color: "white", backgroundColor: "black" }}>
+            <TableRow
+              className="blur_effect_card"
+              sx={{
+                background: isDarkMode
+                  ? "radial-gradient(circle at 10% 20%, rgb(87, 108, 117) 0%, rgb(37, 50, 55) 100.2%)"
+                  : "radial-gradient(circle at 18.7% 37.8%, rgb(250, 250, 250) 0%, rgb(225, 234, 238) 90%)",
+                position: "sticky",
+                top: 0,
+                zIndex: 1,
+              }}
+            >
+              <TableCell
+                sx={{
+                  color: isDarkMode ? "#F9F6EE" : "#353935",
+                  position: "sticky",
+                }}
+              >
                 Name
               </TableCell>
-              <TableCell sx={{ color: "white", backgroundColor: "black" }}>
+              <TableCell
+                sx={{
+                  color: isDarkMode ? "#F9F6EE" : "#353935",
+                  position: "sticky",
+                }}
+              >
                 Type
               </TableCell>
-              <TableCell sx={{ color: "white", backgroundColor: "black" }}>
+              <TableCell
+                sx={{
+                  color: isDarkMode ? "#F9F6EE" : "#353935",
+                  position: "sticky",
+                }}
+              >
                 Date
               </TableCell>
-              <TableCell sx={{ color: "white", backgroundColor: "black" }}>
+              <TableCell
+                sx={{
+                  color: isDarkMode ? "#F9F6EE" : "#353935",
+                  position: "sticky",
+                }}
+              >
                 Time
               </TableCell>
-              <TableCell sx={{ color: "white", backgroundColor: "black" }}>
+              <TableCell
+                sx={{
+                  color: isDarkMode ? "#F9F6EE" : "#353935",
+                  position: "sticky",
+                }}
+              >
                 Class
               </TableCell>
-              <TableCell sx={{ color: "white", backgroundColor: "black" }}>
+              <TableCell
+                sx={{
+                  color: isDarkMode ? "#F9F6EE" : "#353935",
+                  position: "sticky",
+                }}
+              >
                 Subject Name
               </TableCell>
-              <TableCell sx={{ color: "white", backgroundColor: "black" }}>
+              <TableCell
+                sx={{
+                  color: isDarkMode ? "#F9F6EE" : "#353935",
+                  position: "sticky",
+                }}
+              >
                 Chapter
               </TableCell>
               {status === "UPCOMMING" && (
-                <TableCell sx={{ color: "white", backgroundColor: "black" }}>
+                <TableCell
+                  sx={{
+                    color: isDarkMode ? "#F9F6EE" : "#353935",
+                    position: "sticky",
+                  }}
+                >
                   Action
                 </TableCell>
               )}
