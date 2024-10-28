@@ -181,4 +181,9 @@ export const generateArticle = async (data) => {
 export const meetingAnalytics = async (meetingId) => {
   const apiInstance = new apiServices(axiosAPIInstance);
   return await apiInstance.meetingAnalytics(meetingId);
+}
+
+export const getAllLectureCount = async () => {
+  const apiInstance = new apiServices(axiosAPIInstance);
+  return await apiInstance.getAllLectureCount();
 };

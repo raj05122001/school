@@ -365,4 +365,10 @@ export default class apiServices {
         console.error(error);
       });
   };
+  public getAllLectureCount = async () => {
+    return await this.axiosInstance
+      .get(`/api/v1/lecture_tracking/`)
+      .then((Response) => Response)
+      .catch((error) => console.error(error));
+  };
 }
