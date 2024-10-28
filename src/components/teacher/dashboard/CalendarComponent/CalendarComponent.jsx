@@ -18,7 +18,7 @@ const getCurrentMonthYear = () => {
   return [month.toString(), year.toString()];
 };
 
-const CalendarComponent = () => {
+const CalendarComponent = ({maxHeight="585px"}) => {
   const { isDarkMode, primaryColor } = useThemeContext();
 
   // Default the current month to the current month and year
@@ -84,7 +84,7 @@ const CalendarComponent = () => {
       style={{
         color: isDarkMode ? primaryColor : "#333",
         padding: "20px",
-        maxHeight: "585px",
+        maxHeight: maxHeight,
         overflowY: "auto",
       }}
     >

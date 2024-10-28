@@ -1,5 +1,5 @@
 "use client";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useContext } from "react";
 import { Box, Typography, Grid, Button } from "@mui/material";
 import { FaChalkboardTeacher } from "react-icons/fa";
 import LectureCard from "@/commonComponents/LectureCard/LectureCard";
@@ -7,6 +7,7 @@ import { useThemeContext } from "@/hooks/ThemeContext";
 import { getMyLectures } from "@/api/apiHelper";
 import LectureCardSkeleton from "@/commonComponents/Skeleton/LectureCardSkeleton/LectureCardSkeleton";
 import { FaExclamationCircle } from "react-icons/fa";
+import { AppContextProvider } from "@/app/main";
 
 const iconStyle = {
   fontSize: "24px",
@@ -14,13 +15,17 @@ const iconStyle = {
 };
 
 const OverviewSection = () => {
+  const { handleCreateLecture, openCreateLecture, openRecordingDrawer } =
+    useContext(AppContextProvider);
   const { isDarkMode } = useThemeContext();
   const [allLecture, setAllLecture] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
-    getAllLecture();
-  }, []);
+    if (!openCreateLecture && !openRecordingDrawer) {
+      getAllLecture();
+    }
+  }, [openCreateLecture, openRecordingDrawer]);
 
   const getAllLecture = async () => {
     setIsLoading(true);
@@ -148,6 +153,7 @@ const OverviewSection = () => {
                   },
                 }}
                 startIcon={<FaChalkboardTeacher size={20} />}
+                onClick={() => handleCreateLecture("", false)}
               >
                 Create Lecture
               </Button>
