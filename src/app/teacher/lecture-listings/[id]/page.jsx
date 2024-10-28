@@ -23,6 +23,7 @@ import CommentsSection from "@/components/teacher/CommentsSection/CommentsSectio
 import Articles from "@/components/teacher/Articles/Articles";
 import RatingSection from "@/components/teacher/RatingSection/RatingSection";
 import LectureAnalytics from "@/components/teacher/LectureAnalytics/LectureAnalytics";
+import LectureDetails from "@/components/MOL/LectureDetails/LectureDetails";
 
 const LecturePage = ({ params }) => {
   const { id } = params;
@@ -81,6 +82,10 @@ const LecturePage = ({ params }) => {
           </Box>
           <Box mt={4}>
             <LectureOverview isDarkMode={isDarkMode} />
+          </Box>
+
+          <Box mt={4}>
+          <LectureDetails isDarkMode={isDarkMode} />
           </Box>
         </Grid>
         <Grid item xs={12} md={4}>
