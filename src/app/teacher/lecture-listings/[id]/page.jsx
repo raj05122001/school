@@ -7,6 +7,7 @@ import {
   Button,
   useTheme,
   Paper,
+  Grid,
 } from "@mui/material";
 import React, { useEffect, useMemo, useState } from "react";
 import { getLectureById } from "@/api/apiHelper";
@@ -19,6 +20,9 @@ import HeaderMOL from "@/components/MOL/Header/HeaderMOL";
 import VideoPlayer from "@/components/VideoPlayer/VideoPlayer";
 import LectureOverview from "@/components/MOL/LectureOverview/LectureOverview";
 import CommentsSection from "@/components/teacher/CommentsSection/CommentsSection";
+import Articles from "@/components/teacher/Articles/Articles";
+import RatingSection from "@/components/teacher/RatingSection/RatingSection";
+import LectureAnalytics from "@/components/teacher/LectureAnalytics/LectureAnalytics";
 
 const LecturePage = ({ params }) => {
   const { id } = params;
@@ -69,9 +73,34 @@ const LecturePage = ({ params }) => {
       >
         <HeaderMOL lectureData={lectureData} isDarkMode={isDarkMode} />
       </Paper>
-      <Box sx={{ width: "800px", height: "500px", mt: 2 }}>{videoPlayer}</Box>
-      <Box sx={{ width: "800px", height: "500px", mt: 2, borderRadius:"8px", marginTop:"8px" }}><LectureOverview isDarkMode={isDarkMode} /></Box>
-      <CommentsSection/>
+
+      <Grid container direction="row" spacing={2} mt={2}>
+        <Grid item xs={12} md={8}>
+          <Box sx={{ maxHeight: "500px", width: "100%", height: "100%" }}>
+            {videoPlayer}
+          </Box>
+          <Box mt={4}>
+            <LectureOverview isDarkMode={isDarkMode} />
+          </Box>
+        </Grid>
+        <Grid item xs={12} md={4}>
+          <Grid container direction="column" spacing={2}>
+            <Grid item xs={12}>
+              <LectureAnalytics lectureId={id} />
+            </Grid>
+            <Grid item xs={12}>
+              <RatingSection />
+            </Grid>
+            <Grid item xs={12}>
+              <CommentsSection />
+            </Grid>
+          </Grid>
+        </Grid>
+      </Grid>
+
+      <Box mt={2}>
+        <Articles lectureId={id} />
+      </Box>
     </Box>
   );
 };

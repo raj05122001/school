@@ -283,4 +283,51 @@ export default class apiServices {
       .catch((error) => console.error(error));
   };
   
+  public getBreakpoint = async (lectureId) => {
+    return await this.axiosInstance
+      .get(`/api/v1/lecture/${lectureId}/breakpoint/`)
+      .then((Response) => Response)
+      .catch((error) => console.error(error));
+  };
+
+  public generateContent = async (data) => {
+    return await this.authAxiosInstance
+      .post(`/api/v1/generate_content/`, data, {
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+      })
+      .then((response) => {
+        return response;
+      })
+      .catch((error) => {
+        console.error(error);
+      });
+  };
+
+  public generateArticle = async (data) => {
+    return await this.authAxiosInstance
+      .post(`/api/v1/generate_article/`, data, {
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+      })
+      .then((response) => {
+        return response;
+      })
+      .catch((error) => {
+        console.error(error);
+      });
+  };
+
+  public meetingAnalytics = async (meetingId) => {
+    return await this.axiosInstance
+      .get(`/api/v1/lecture/${meetingId}/analytics/`)
+      .then((response) => {
+        return response;
+      })
+      .catch((error) => {
+        console.error(error);
+      });
+  };
 }

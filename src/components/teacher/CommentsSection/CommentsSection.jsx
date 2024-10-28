@@ -10,6 +10,7 @@ import {
   IconButton,
 } from "@mui/material";
 import { FaHeart, FaRegHeart, FaTimes, FaPaperPlane } from "react-icons/fa";
+import { useThemeContext } from "@/hooks/ThemeContext";
 
 const comments = [
   {
@@ -89,52 +90,58 @@ const CommentCard = ({ comment }) => (
   </Box>
 );
 
-const CommentsSection = () => (
-  <Card sx={{ maxWidth: 400, p: 2, boxShadow: 3 }}>
-    <Box display="flex" alignItems="center" pb={1}>
-      <Typography variant="h6" fontWeight="bold">
-        Comments
-      </Typography>
-      <Box
-        sx={{
-          backgroundColor: "#FFEA00",
-          width: 30,
-          height: 30,
-          marginLeft:1,
-          borderRadius: "50%",
-          textAlign: "center",
-          display: "flex",
-          justifyContent: "center",
-          alignItems: "center",
-        }}
-      >
-        <Typography
-          variant="subtitle2"
-          color="black"
-          sx={{ fontSize: "18px" }}
-        >
-          34
+const CommentsSection = () => {
+  const { isDarkMode, primaryColor, secondaryColor } = useThemeContext();
+  return (
+    <Card
+      sx={{ maxWidth: 400, p: 2, boxShadow: 3 }}
+      className="blur_effect_card"
+    >
+      <Box display="flex" alignItems="center" pb={1}>
+        <Typography variant="h6" fontWeight="bold">
+          Comments
         </Typography>
+        <Box
+          sx={{
+            backgroundColor: "#FFEA00",
+            width: 30,
+            height: 30,
+            marginLeft: 1,
+            borderRadius: "50%",
+            textAlign: "center",
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
+          }}
+        >
+          <Typography
+            variant="subtitle2"
+            color="black"
+            sx={{ fontSize: "18px" }}
+          >
+            34
+          </Typography>
+        </Box>
+        {/* <IconButton size="small">
+              <FaTimes />
+            </IconButton> */}
       </Box>
-      {/* <IconButton size="small">
-        <FaTimes />
-      </IconButton> */}
-    </Box>
 
-    <Divider />
-    <CardContent sx={{maxHeight:'400px',overflowY:'auto'}}>
-      {comments.map((comment) => (
-        <CommentCard key={comment.id} comment={comment} />
-      ))}
-    </CardContent>
-    <Divider />
-    <Box display="flex" alignItems="center" p={1}>
-      <InputBase placeholder="Type a comment..." fullWidth sx={{ ml: 1 }} />
-      <IconButton color="primary" sx={{ ml: 1, backgroundColor: "#E0F7FA" }}>
-        <FaPaperPlane color="#0288D1" />
-      </IconButton>
-    </Box>
-  </Card>
-);
+      <Divider />
+      <CardContent sx={{ maxHeight: "400px", overflowY: "auto" }}>
+        {comments.map((comment) => (
+          <CommentCard key={comment.id} comment={comment} />
+        ))}
+      </CardContent>
+      <Divider />
+      <Box display="flex" alignItems="center" p={1}>
+        <InputBase placeholder="Type a comment..." fullWidth sx={{ ml: 1 }} />
+        <IconButton color="primary" sx={{ ml: 1, backgroundColor: "#E0F7FA" }}>
+          <FaPaperPlane color="#0288D1" />
+        </IconButton>
+      </Box>
+    </Card>
+  );
+};
 
 export default CommentsSection;
