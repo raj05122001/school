@@ -9,15 +9,11 @@ import {
   InputLabel,
   Select,
   Typography,
-  ListItemIcon,
-  ListItemText,
   Dialog,
   DialogTitle,
   DialogContent,
   DialogActions,
   TextField,
-  InputAdornment,
-  IconButton,
 } from "@mui/material";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
@@ -39,9 +35,7 @@ import {
 import { decodeToken } from "react-jwt";
 import Cookies from "js-cookie";
 import { useThemeContext } from "@/hooks/ThemeContext";
-import { FaTimes } from "react-icons/fa";
-
-const platforms = ["Zoom", "Google Meet", "Microsoft Teams"];
+import CustomAutocomplete from "@/commonComponents/CustomAutocomplete/CustomAutocomplete";
 
 const userDetails = decodeToken(Cookies.get("ACCESS_TOKEN"));
 
@@ -51,68 +45,50 @@ const CreatingLecture = ({
   lecture,
   isEditMode = false,
 }) => {
-  const [lectureClass, setLectureClass] = useState("");
-  const [lectureSubject, setLectureSubject] = useState("");
-  const [lectureChapter, setLectureChapter] = useState("");
-  const [lectureTopics, setLectureTopics] = useState("");
+  const { isDarkMode } = useThemeContext();
+
+  const [lectureSubject, setLectureSubject] = useState(null);
+  const [subjectName, setSubjectName] = useState(null);
+  const [lectureChapter, setLectureChapter] = useState(null);
+  const [chapterName, setChapterName] = useState(null);
+  const [selectedClass, setSelectedClass] = useState(null);
+  const [selectedClassName, setSelectedClassName] = useState(null);
+  const [lectureTopics, setLectureTopics] = useState(null);
+  const [topicsName, setTopicsName] = useState(null);
+
   const [lectureDescription, setLectureDescription] = useState("");
-
-  // Default the lecture type to "subject"
   const [lectureType, setLectureType] = useState("subject");
-
-  // Set the current date and time as default
   const [lectureDate, setLectureDate] = useState(dayjs());
   const [lectureStartTime, setLectureStartTime] = useState(dayjs());
-
-  const [lectureDuration, setLectureDuration] = useState("");
-  const [platform, setPlatform] = useState("");
   const [file, setFile] = useState(null);
 
   // Dropdown options state
   const [classOptions, setClassOptions] = useState([]);
-  const [selectedClass, setSelectedClass] = useState(null);
   const [subjectOptions, setSubjectOptions] = useState([]);
-  const [selectedSubject, setSelectedSubject] = useState([]);
   const [chapterOptions, setChapterOptions] = useState([]);
   const [topicOptions, setTopicOptions] = useState([]);
-  const [chapterID, setChapterID] = useState(null);
-  const [classID, setClassID] = useState(null);
 
-  const { isDarkMode, primaryColor, secondaryColor } = useThemeContext();
+  const encodeURI = (value) => encodeURIComponent(value);
 
-  const encodeURI = (value) => {
-    return encodeURIComponent(value);
-  };
+  const lowerCase = (str) => str?.toLowerCase();
 
   useEffect(() => {
     if (isEditMode && lecture) {
-      // Find the class object from the classOptions that matches the lecture class name
-      const classObj = classOptions.find(
-        (option) =>
-          option.name.toLowerCase() ===
-          lecture?.lecture_class?.name?.toLowerCase()
+
+      setSelectedClass(
+        {
+          name: lecture?.lecture_class?.name,
+          id: lecture?.lecture_class?.id,
+        } || null
       );
-
-      // Find the subject object from the subjectOptions that matches the lecture subject name
-      const subjectObj = subjectOptions.find(
-        (option) =>
-          option.name.toLowerCase() ===
-          lecture?.chapter?.subject?.name?.toLowerCase()
+      setLectureSubject(lecture?.chapter?.subject || null);
+      setLectureChapter(
+        { name: lecture?.chapter?.chapter, id: lecture?.chapter?.id } || ""
       );
+      setLectureTopics({name:lecture?.topics,id:0} || "");
 
-      const chapterObj = chapterOptions.find(
-        (option) => option.name === lecture?.chapter?.chapter
-      );
+      console.log("lecture=====>",lecture)
 
-      setSelectedClass(classObj || null); // Set the selected class object
-      setLectureClass(lecture?.lecture_class?.name || "");
-
-      setLectureSubject(lecture?.chapter?.subject?.name || "");
-      setSelectedSubject(subjectObj || null); // Set the selected subject object
-
-      setLectureChapter(lecture?.chapter?.chapter || "");
-      setChapterID(chapterObj ? chapterObj.id : lecture?.chapter?.id || null);
-      setLectureTopics(lecture?.topics || "");
       setLectureDescription(lecture?.description || "");
       setLectureType(lecture?.type || "subject");
       setLectureDate(dayjs(lecture?.schedule_date) || dayjs());
@@ -121,7 +97,7 @@ const CreatingLecture = ({
       const formattedTime = `${lecture.schedule_date}T${scheduleTime}`; // ISO 8601 format
       setLectureStartTime(dayjs(formattedTime)); // Set the start time
     }
-  }, [isEditMode, lecture, classOptions, subjectOptions]);
+  }, [isEditMode, lecture]);
 
   // Fetch the class options from the API and extract the class names
   useEffect(() => {
@@ -184,7 +160,7 @@ const CreatingLecture = ({
     if (lectureSubject) {
       const fetchChapterOptions = async () => {
         try {
-          const response = await getChapterBySubject(lectureSubject, "");
+          const response = await getChapterBySubject(lectureSubject?.name, "");
 
           // Check if response contains the data array
           if (response?.data?.data && Array.isArray(response?.data?.data)) {
@@ -214,7 +190,7 @@ const CreatingLecture = ({
     if (lectureChapter) {
       const fetchTopicOptions = async () => {
         try {
-          const response = await getTopicsByChapter(lectureChapter, "");
+          const response = await getTopicsByChapter(lectureChapter?.name, "");
           // Check if response contains the data array
           if (response?.data?.data && Array.isArray(response?.data?.data)) {
             // Filter out subjects that have empty or null names
@@ -241,27 +217,36 @@ const CreatingLecture = ({
   const handleSubmit = async (e) => {
     e.preventDefault();
     // Create a new FormData object to send to the API
-    const formData = new FormData();
 
-    // Append the form data
-    formData.append("lecture_class", selectedClass?.id);
-    formData.append("subject", lectureSubject);
-    formData.append("chapter", chapterID);
-    formData.append("topics", lectureTopics);
-    formData.append("title", lectureTopics);
-    formData.append("organizer", userDetails.teacher_id);
-    formData.append("schedule_date", lectureDate.format("YYYY-MM-DD")); // Format date
-    formData.append("schedule_time", lectureStartTime.format("HH:mm")); // Format time
-    formData.append("type", lectureType);
-    formData.append("description", lectureDescription || ""); // Append description if provided
+    const checkCondition = (firstValue, secondValue) => {
+      if (lowerCase(firstValue?.name) === lowerCase(secondValue)) {
+        return Number(firstValue?.id);
+      } else {
+        return secondValue;
+      }
+    };
+
+    const data = {
+      subject: checkCondition(lectureSubject, subjectName),
+      chapter: checkCondition(lectureChapter, chapterName),
+      lecture_class: checkCondition(selectedClass, selectedClassName),
+      topics: topicsName,
+      title: topicsName,
+      organizer: Number(userDetails.teacher_id),
+      schedule_date: lectureDate.format("YYYY-MM-DD"),
+      schedule_time: lectureStartTime.format("HH:mm"),
+      type: lectureType,
+      description: lectureDescription || "",
+    };
+
     if (file) {
-      formData.append("file", file); // Append file if uploaded
+      data.file = file;
     }
 
     try {
       if (isEditMode && lecture?.id) {
         // Call the updateLecture API when isEditMode is true
-        const response = await updateLecture(lecture.id, formData);
+        const response = await updateLecture(lecture.id, data);
 
         if (response.data.success) {
           handleClose(); // Close the dialog after a successful update
@@ -270,7 +255,8 @@ const CreatingLecture = ({
         }
       } else {
         // Call the createLecture API when not in edit mode
-        const response = await createLecture(formData);
+
+        const response = await createLecture(data);
 
         if (response.data.success) {
           handleClose(); // Close the dialog after a successful creation
@@ -333,173 +319,45 @@ const CreatingLecture = ({
           <Grid container spacing={3} marginTop={2}>
             {/* Lecture Class */}
             <Grid item xs={6}>
-              <Autocomplete
-                freeSolo
-                disableClearable
+              <CustomAutocomplete
                 options={classOptions}
-                getOptionLabel={(option) => option.name} // Display the department name in dropdown
-                onChange={(event, newValue) => {
-                  console.log("newValue", newValue);
-                  setSelectedClass(newValue);
-                  setClassID(newValue?.id);
-                }}
-                renderInput={(params) => (
-                  <TextField
-                    {...params}
-                    label="Lecture Class"
-                    variant="outlined"
-                    InputLabelProps={{
-                      style: { color: isDarkMode ? "#d7e4fc" : "" },
-                    }}
-                    InputProps={{
-                      ...params.InputProps,
-                      type: "search",
-                      // endAdornment: lectureTopics && (
-                      //   <InputAdornment position="end">
-                      //     <IconButton onClick={clearSubject}>
-                      //       <FaTimes />
-                      //     </IconButton>
-                      //   </InputAdornment>
-                      // ),
-                      sx: {
-                        backdropFilter: "blur(10px)",
-                        backgroundColor: "rgba(255, 255, 255, 0.5)",
-                        "& .MuiOutlinedInput-notchedOutline": {},
-                      },
-                    }}
-                  />
-                )}
+                onSelect={setSelectedClass}
+                onChange={setSelectedClassName}
+                label={"Lecture Class"}
                 value={selectedClass}
               />
             </Grid>
 
             {/* Lecture Subject */}
             <Grid item xs={6}>
-              <Autocomplete
-                freeSolo
-                disableClearable
-                options={subjectOptions} // Use the state that holds the subject options
-                getOptionLabel={(option) => option.name} // Display subject names
-                onChange={(event, newValue) => {
-                  if (newValue) {
-                    setLectureSubject(newValue?.name);
-                  }
-                }} // Set selected subject name
-                renderInput={(params) => (
-                  <TextField
-                    {...params}
-                    label="Lecture Subject"
-                    variant="outlined"
-                    InputLabelProps={{
-                      style: { color: isDarkMode ? "#d7e4fc" : "" },
-                    }}
-                    InputProps={{
-                      ...params.InputProps,
-                      type: "search",
-                      // endAdornment: lectureTopics && (
-                      //   <InputAdornment position="end">
-                      //     <IconButton onClick={clearSubject}>
-                      //       <FaTimes />
-                      //     </IconButton>
-                      //   </InputAdornment>
-                      // ),
-                      sx: {
-                        backdropFilter: "blur(10px)",
-                        backgroundColor: "rgba(255, 255, 255, 0.5)",
-                        "& .MuiOutlinedInput-notchedOutline": {},
-                      },
-                    }}
-                  />
-                )}
-                value={
-                  subjectOptions.find(
-                    (option) => option?.name === lectureSubject
-                  ) || null
-                } // Find selected subject by name
+              <CustomAutocomplete
+                options={subjectOptions}
+                onSelect={setLectureSubject}
+                onChange={setSubjectName}
+                label={"Lecture Subject"}
+                value={lectureSubject}
               />
             </Grid>
 
             {/* Lecture Chapter */}
             <Grid item xs={6}>
-              <Autocomplete
-                freeSolo
-                disableClearable
-                options={chapterOptions} // Use the updated chapter options array
-                getOptionLabel={(option) => option.name} // Display chapter names
-                value={
-                  chapterOptions.find(
-                    (option) => option?.name === lectureChapter
-                  ) || null
-                } // Set the selected chapter
-                onChange={(event, newValue) => {
-                  if (newValue) {
-                    setLectureChapter(newValue?.name); // Set the chapter name
-                    setChapterID(newValue?.id);
-                  }
-                }}
-                renderInput={(params) => (
-                  <TextField
-                    {...params}
-                    label="Lecture Chapter"
-                    variant="outlined"
-                    InputLabelProps={{
-                      style: { color: isDarkMode ? "#d7e4fc" : "" },
-                    }}
-                    InputProps={{
-                      ...params.InputProps,
-                      type: "search",
-                      // endAdornment: lectureTopics && (
-                      //   <InputAdornment position="end">
-                      //     <IconButton onClick={clearSubject}>
-                      //       <FaTimes />
-                      //     </IconButton>
-                      //   </InputAdornment>
-                      // ),
-                      sx: {
-                        backdropFilter: "blur(10px)",
-                        backgroundColor: "rgba(255, 255, 255, 0.5)",
-                        "& .MuiOutlinedInput-notchedOutline": {},
-                      },
-                    }}
-                  />
-                )}
+              <CustomAutocomplete
+                options={chapterOptions}
+                onSelect={setLectureChapter}
+                onChange={setChapterName}
+                label={"Lecture Chapter"}
+                value={lectureChapter}
               />
             </Grid>
 
             {/* Lecture Topics */}
             <Grid item xs={6}>
-              <Autocomplete
-                freeSolo
-                disableClearable
-                options={topicOptions.map((option) => option.name)}
+              <CustomAutocomplete
+                options={topicOptions}
+                onSelect={setLectureTopics}
+                onChange={setTopicsName}
+                label={"Lecture Name (Topics)"}
                 value={lectureTopics}
-                onChange={(e, newValue) => setLectureTopics(newValue)}
-                renderInput={(params) => (
-                  <TextField
-                    {...params}
-                    label="Lecture Name (Topics)"
-                    variant="outlined"
-                    InputLabelProps={{
-                      style: { color: isDarkMode ? "#d7e4fc" : "" },
-                    }}
-                    InputProps={{
-                      ...params.InputProps,
-                      type: "search",
-                      // endAdornment: lectureTopics && (
-                      //   <InputAdornment position="end">
-                      //     <IconButton onClick={clearSubject}>
-                      //       <FaTimes />
-                      //     </IconButton>
-                      //   </InputAdornment>
-                      // ),
-                      sx: {
-                        backdropFilter: "blur(10px)",
-                        backgroundColor: "rgba(255, 255, 255, 0.5)",
-                        "& .MuiOutlinedInput-notchedOutline": {},
-                      },
-                    }}
-                  />
-                )}
               />
             </Grid>
 
@@ -628,35 +486,41 @@ const CreatingLecture = ({
             </Grid>
 
             {/* Attach Lecture Material */}
-            
-              <Grid item xs={12} justifyContent={"center"} sx={{display:"flex", justifyItems:"center", alignItems:"center"}}>
-              <Grid item xs={4} >
-                  <Button
-                    variant="color"
-                    component="label"
-                    fullWidth
-                    sx={{
-                      color: isDarkMode ? "#d7e4fc" : "", // Text color inside the button
-                      border: "1px solid",
-                      borderColor: isDarkMode ? "#d7e4fc" : "",
-                    }}
-                  >
-                    <IoDocumentAttachOutline
-                      style={{ marginRight: 3, fontSize: "22px" }}
-                    />{" "}
-                    Attach Lecture Material
-                    <input
-                      type="file"
-                      hidden
-                      onChange={(e) => setFile(e.target.files[0])}
-                    />
-                  </Button>
-                  {file && <Typography variant="body2">{file.name}</Typography>}
-                </Grid>
+
+            <Grid
+              item
+              xs={12}
+              justifyContent={"center"}
+              sx={{
+                display: "flex",
+                justifyItems: "center",
+                alignItems: "center",
+              }}
+            >
+              <Grid item xs={4}>
+                <Button
+                  variant="color"
+                  component="label"
+                  fullWidth
+                  sx={{
+                    color: isDarkMode ? "#d7e4fc" : "", // Text color inside the button
+                    border: "1px solid",
+                    borderColor: isDarkMode ? "#d7e4fc" : "",
+                  }}
+                >
+                  <IoDocumentAttachOutline
+                    style={{ marginRight: 3, fontSize: "22px" }}
+                  />{" "}
+                  Attach Material
+                  <input
+                    type="file"
+                    hidden
+                    onChange={(e) => setFile(e.target.files[0])}
+                  />
+                </Button>
+                {file && <Typography variant="body2">{file.name}</Typography>}
               </Grid>
-                
-              
-            
+            </Grid>
           </Grid>
         </form>
       </DialogContent>
