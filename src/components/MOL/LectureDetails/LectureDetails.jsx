@@ -7,7 +7,7 @@ import LectureQuestions from "./LectureQuestions";
 import LectureAssignment from "./LectureAssignment";
 import LectureReferrence from "./LectureReferrence";
 
-const LectureDetails = ({ isDarkMode }) => {
+const LectureDetails = ({id, isDarkMode }) => {
   const [value, setValue] = useState(0);
   const [loading, setLoading] = useState(true);
   const [decisionId, setDecisionId] = useState(null);
@@ -17,18 +17,18 @@ const LectureDetails = ({ isDarkMode }) => {
   };
 
   const memoizedLectureNotes = useMemo(
-    () => <LectureNotes isDarkMode={isDarkMode} />,
-    [isDarkMode]
+    () => <LectureNotes id={id} isDarkMode={isDarkMode} />,
+    [id, isDarkMode]
   );
 
   const memoizedLectureMCQ = useMemo(
-    () => <LectureMCQ isDarkMode={isDarkMode} />,
-    [isDarkMode]
+    () => <LectureMCQ id={id} isDarkMode={isDarkMode} />,
+    [id, isDarkMode]
   );
 
-  const memoizedLectureQuestions = useMemo(()=> <LectureQuestions isDarkMode = {isDarkMode} /> , [isDarkMode])
-  const memoizedLectureAssignment = useMemo(()=><LectureAssignment isDarkMode={isDarkMode} />, [isDarkMode])
-  const memoizedLectureReferrence = useMemo(()=><LectureReferrence isDarkMode={isDarkMode} />, [isDarkMode])
+  const memoizedLectureQuestions = useMemo(()=> <LectureQuestions id={id} isDarkMode = {isDarkMode} /> , [id, isDarkMode])
+  const memoizedLectureAssignment = useMemo(()=><LectureAssignment id={id} isDarkMode={isDarkMode} />, [id, isDarkMode])
+  const memoizedLectureReferrence = useMemo(()=><LectureReferrence id={id} isDarkMode={isDarkMode} />, [id, isDarkMode])
 
   return (
     <Box sx={{ marginTop: "8px" }}>
