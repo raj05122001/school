@@ -187,3 +187,41 @@ export const getAllLectureCount = async () => {
   const apiInstance = new apiServices(axiosAPIInstance);
   return await apiInstance.getAllLectureCount();
 };
+
+export const getLectureNotes = async (lectureId) => {
+  const apiInstance = new apiServices(axiosAPIInstance);
+  return await apiInstance.getLectureNotes(lectureId);
+}
+
+export const regenrateNotes = async (lectureId, formData) => {
+  const apiInstance = new apiServices(axiosAPIInstance);
+  return await apiInstance.regenrateNotes(lectureId, formData);
+};
+
+export const getLectureQuiz = async (lectureId) => {
+  const apiInstance = new apiServices(axiosAPIInstance);
+  return await apiInstance.getLectureQuiz(lectureId);
+};
+
+export const getLectureQuestion = async (lectureId) => {
+  const apiInstance = new apiServices(axiosAPIInstance);
+  return await apiInstance.getLectureQuestion(lectureId);
+};
+
+export const getLectureResources = async (lectureId) => {
+  const apiInstance = new apiServices(axiosAPIInstance);
+  return await apiInstance.getLectureResources(lectureId);
+};
+
+export const getLectureAssignment = async (lectureId) => {
+  const apiInstance = new apiServices(axiosAPIInstance);
+  return await apiInstance.getLectureAssignment(lectureId);
+};
+
+export const updateLectureAssignment = async (lectureId, formData) => {
+  const apiInstance = new apiServices(axiosAPIInstance);
+  return await apiInstance.updateLectureAssignment(lectureId, formData);
+};
+
+
+
