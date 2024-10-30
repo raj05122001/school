@@ -26,7 +26,7 @@ const TextWithMath = ({ text }) => {
       if (i % 2 === 1) {
         const cleanedLatex = chunk.replace(/\n/g, ' '); // Replace newlines inside LaTeX with spaces
         return (
-          <span className='text-black text-xl'>
+          <span className='text-black text-xl' key={i}>
             <MathJax.Node key={i} inline>
               {cleanedLatex}
             </MathJax.Node>

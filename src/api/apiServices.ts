@@ -288,7 +288,7 @@ export default class apiServices {
       .patch(`/api/v1/lecture/${lectureId}/audio_media/`, formData)
       .then((response) => {
         return response;
-      })
+      });
   };
 
   public uploadS3Video = async (lectureId, formData) => {
@@ -317,7 +317,14 @@ export default class apiServices {
       .then((Response) => Response)
       .catch((error) => console.error(error));
   };
-  
+
+  public getLectureNotes = async (lectureId) => {
+    return await this.axiosInstance
+      .get(`/api/v1/lecture/${lectureId}/notes/`)
+      .then((Response) => Response.data)
+      .catch((error) => console.error(error));
+  };
+
   public getBreakpoint = async (lectureId) => {
     return await this.axiosInstance
       .get(`/api/v1/lecture/${lectureId}/breakpoint/`)
@@ -373,16 +380,18 @@ export default class apiServices {
       .catch((error) => console.error(error));
   };
 
-  public getCountByCategory = async (class_ids="") => {
+  public getCountByCategory = async (class_ids = "") => {
     return await this.axiosInstance
       .get(`/api/v1/dashboard/count_by_category/?class_ids=${class_ids}`)
       .then((Response) => Response)
       .catch((error) => console.error(error));
   };
 
-  public getStudentByGrade = async (class_ids="",grade="A") => {
+  public getStudentByGrade = async (class_ids = "", grade = "A") => {
     return await this.axiosInstance
-      .get(`/api/v1/dashboard/get_by_category/?class_ids=${class_ids}&grade=${grade}`)
+      .get(
+        `/api/v1/dashboard/get_by_category/?class_ids=${class_ids}&grade=${grade}`
+      )
       .then((Response) => Response)
       .catch((error) => console.error(error));
   };
@@ -406,5 +415,80 @@ export default class apiServices {
       .get(`/api/v1/dashboard/assignment-student-details/${class_ids}/`)
       .then((Response) => Response)
       .catch((error) => console.error(error));
+  };
+
+  public regenrateNotes = (lectureId, formData) => {
+    const toastInstance = toast.loading("Loading Notes...");
+    return this.axiosInstance
+      .post(`api/v1/dynamic_notes/?lecture_id=${lectureId}`, formData)
+      .then((response) => {
+        toast.success("Updated Notes Successfully", {
+          id: toastInstance,
+          duration: Constants.toastTimer,
+        });
+        return response;
+      })
+      .catch((error) => {
+        toast.error(
+          error?.response?.data?.message || "Failed to update notes",
+          {
+            id: toastInstance,
+            duration: Constants.toastTimer,
+          }
+        );
+        console.error("this is error", error);
+      });
+  };
+
+  public getLectureQuiz = async (lectureId) => {
+    return await this.axiosInstance
+      .get(`/api/v1/lecture/${lectureId}/quiz/`)
+      .then((Response) => Response.data)
+      .catch((error) => console.error(error));
+  };
+
+  public getLectureQuestion = async (lectureId) => {
+    return await this.axiosInstance
+      .get(`/api/v1/lecture/${lectureId}/questions/`)
+      .then((Response) => Response.data)
+      .catch((error) => console.error(error));
+  };
+
+  public getLectureResources = async (lectureId) => {
+    return await this.axiosInstance
+      .get(`/api/v1/lecture/${lectureId}/resources/`)
+      .then((Response) => Response.data)
+      .catch((error) => console.error(error));
+  };
+
+  public getLectureAssignment = async (lectureId) => {
+    return await this.axiosInstance
+      .get(`/api/v1/get_assignment/${lectureId}/`)
+      .then((Response) => Response.data)
+      .catch((error) => console.error(error));
+  };
+
+  public updateLectureAssignment = async (lectureId, formData) => {
+    return await this.axiosInstance
+      .patch(`/api/v1/lecture_assignment/${lectureId}/`, formData)
+      .then((Response) => Response)
+      .catch((error) => console.error(error));
+  };
+
+  public updateSummary = async (summaryId, data) => {
+    return await this.axiosInstance
+      .patch(`api/v1/edit/summary/${summaryId}/`, data)
+      .then((response) => {
+        if (!response.data.success) {
+          return response;
+        }
+        return response;
+      })
+      .catch((error) => {
+        const errorText = error.response.data.errors
+          ? error.response.data.errors.username[0]
+          : error.response.data.message;
+        console.error(error);
+      });
   };
 }
