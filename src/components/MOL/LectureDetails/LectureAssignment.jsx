@@ -29,7 +29,7 @@ const LectureAssignment = ({ id, isDarkMode }) => {
 
   const handleMarkChange = (assignmentId, newMark) => {
     setAssignments((prevAssignments) =>
-      prevAssignments.map((assignment) =>
+      prevAssignments?.map((assignment) =>
         assignment.id === assignmentId
           ? { ...assignment, assignment_mark: newMark }
           : assignment
@@ -53,7 +53,7 @@ const LectureAssignment = ({ id, isDarkMode }) => {
       );
       if (response.success) {
         setAssignments((prevAssignments) =>
-          prevAssignments.map((a) =>
+          prevAssignments?.map((a) =>
             a.id === assignment_id ? { ...a, is_assigned: true } : a
           )
         );
@@ -96,7 +96,7 @@ const LectureAssignment = ({ id, isDarkMode }) => {
       <Typography variant="h6" sx={{ mb: 2, fontWeight:"bold" }}>
         {lectureTitle}
       </Typography>
-      {assignments.map((assignment, index) => (
+      {assignments?.map((assignment, index) => (
         <Box
           key={assignment.id}
           sx={{ mb: 2, display: "flex", flexDirection: "column" }}

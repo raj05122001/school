@@ -151,7 +151,7 @@ const CommentsSection = () => {
 
       <Divider sx={{ borderColor: isDarkMode ? "gray.600" : "gray.300" }} />
       <CardContent sx={{ maxHeight: "400px", overflowY: "auto" }}>
-        {comments.map((comment) => (
+        {comments?.map((comment) => (
           <CommentCard key={comment.id} comment={comment} isDarkMode={isDarkMode} secondaryColor={secondaryColor}/>
         ))}
       </CardContent>

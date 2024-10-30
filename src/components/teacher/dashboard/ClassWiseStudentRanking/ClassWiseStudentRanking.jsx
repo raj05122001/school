@@ -127,7 +127,7 @@ const ClassWiseStudentRanking = () => {
       tabValue === 0
         ? data.active_students_gradewise
         : data.inactive_students_gradewise;
-    return Object.entries(gradewiseData).map(([key, value]) => ({
+    return Object.entries(gradewiseData)?.map(([key, value]) => ({
       name: key,
       value,
     }));
@@ -177,7 +177,7 @@ const ClassWiseStudentRanking = () => {
         freeSolo
         id="class"
         disableClearable
-        options={classOptions.map((option) => option.class_name)}
+        options={classOptions?.map((option) => option.class_name)}
         value={selectedOptions?.class_name || ""} // Set value to the class name only
         onChange={(event, newValue) => {
           const selected = classOptions.find(
@@ -307,7 +307,7 @@ const ClassWiseStudentRanking = () => {
                 label={renderCustomizedLabel}
                 dataKey="value"
               >
-                {getChartData().map((entry, index) => (
+                {getChartData()?.map((entry, index) => (
                   <Cell
                     key={`cell-${index}`}
                     fill={mapData[entry.name]?.color}
@@ -329,7 +329,7 @@ const ClassWiseStudentRanking = () => {
       ) : (
         Object.entries(data)?.length > 0 && (
           <Grid container spacing={2}>
-            {getChartData().map((entry) => (
+            {getChartData()?.map((entry) => (
               <Grid
                 item
                 xs={12}

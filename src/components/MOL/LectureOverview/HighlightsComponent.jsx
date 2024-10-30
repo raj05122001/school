@@ -31,7 +31,7 @@ const HighlightsComponent = ({ lectureId, isDarkMode }) => {
   const renderTextWithMathJax = (text) => {
     const parts = text.split(/(\\\[.*?\\\]|\\\(.*?\\\))/g);
 
-    return parts.map((part, idx) => {
+    return parts?.map((part, idx) => {
       if (part.match(/\\\[.*?\\\]/)) {
         return (
           <MathJax.Node key={idx} inline>
@@ -81,13 +81,13 @@ const HighlightsComponent = ({ lectureId, isDarkMode }) => {
         <Box>
           <MathJax.Context input="tex" inline>
             <Box sx={{ textAlign: "justify", mt: 2 }}>
-              {decisions.map((section) => (
+              {decisions?.map((section) => (
                 <Box key={section.title} sx={{ mb: 2 }}>
                   <Typography variant="subtitle1" sx={{ fontWeight: "bold" }}>
                     {section.title} -
                   </Typography>
                   <Box component="ul" sx={{ pl: 2 }}>
-                    {section.keypoints.map((point, index) => (
+                    {section?.keypoints?.map((point, index) => (
                       <Box
                         component="li"
                         key={index}

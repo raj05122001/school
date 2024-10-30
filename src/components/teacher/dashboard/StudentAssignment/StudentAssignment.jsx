@@ -118,7 +118,7 @@ const StudentAssignment = ({ classOptions }) => {
           freeSolo
           id="class"
           disableClearable
-          options={classOptions.map((option) => option.class_name)}
+          options={classOptions?.map((option) => option.class_name)}
           value={selectedOptions?.class_name || ""} // Set value to the class name only
           onChange={(event, newValue) => {
             const selected = classOptions.find(
@@ -246,7 +246,7 @@ const StudentAssignment = ({ classOptions }) => {
                     </TableCell>
                   </TableRow>
                 ))
-              : data.map((student, index) => (
+              : data?.map((student, index) => (
                   <TableRow
                     key={index}
                     sx={{

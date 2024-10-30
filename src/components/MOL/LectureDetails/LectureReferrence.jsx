@@ -47,7 +47,7 @@ const LectureReferrence = ({ id, isDarkMode }) => {
         Lecture Resources
       </Typography>
 
-      {displayedResources.map((resource, index) => {
+      {displayedResources?.map((resource, index) => {
         // Display research papers, YouTube videos, and Google Books separately
         return (
           <Box key={index} sx={{ mb: 2 }}>

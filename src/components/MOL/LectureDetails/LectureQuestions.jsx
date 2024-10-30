@@ -52,7 +52,7 @@ const LectureQuestions = ({ id, isDarkMode }) => {
             {item.title}
           </Typography>
           <ul>
-            {item.questions.map((question, qIndex) => (
+            {item?.questions?.map((question, qIndex) => (
               <li key={qIndex}>
                 <Typography variant="body2">{question}</Typography>
               </li>

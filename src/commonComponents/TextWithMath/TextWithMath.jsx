@@ -22,7 +22,7 @@ const TextWithMath = ({ text }) => {
   const processText = (part) => {
     const chunks = part.split(latexRegex).filter(Boolean);
 
-    return chunks.map((chunk, i) => {
+    return chunks?.map((chunk, i) => {
       if (i % 2 === 1) {
         const cleanedLatex = chunk.replace(/\n/g, ' '); // Replace newlines inside LaTeX with spaces
         return (
@@ -44,7 +44,7 @@ const TextWithMath = ({ text }) => {
   return (
     <MathJax.Context input="tex">
       <div className="text-justify">
-        {textArray.map((part, index) => (
+        {textArray?.map((part, index) => (
           <div key={index} className="text-justify">
             {processText(part)}
           </div>

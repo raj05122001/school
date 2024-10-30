@@ -56,7 +56,7 @@ const LectureMCQ = ({ id, isDarkMode }) => {
       <MathJax.Context input="tex">
         <>
           <List>
-            {displayedNotes.map((item, questionIndex) => (
+            {displayedNotes?.map((item, questionIndex) => (
               <ListItem
                 key={item.id}
                 sx={{
@@ -79,7 +79,7 @@ const LectureMCQ = ({ id, isDarkMode }) => {
                 <List sx={{ padding: 0 }}>
                   {" "}
                   {/* Remove padding for nested list */}
-                  {parseOptions(item.options).map((option, index) => (
+                  {parseOptions(item.options)?.map((option, index) => (
                     <ListItem key={index} sx={{ padding: 0 }}>
                       {" "}
                       {/* Remove padding for nested items */}

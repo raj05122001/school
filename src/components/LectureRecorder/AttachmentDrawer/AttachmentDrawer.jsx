@@ -155,7 +155,7 @@ function AttachmentDrawer({ attachments, setAttachments }) {
                   gap: "8px",
                 }}
               >
-                {attachments.map((file, index) => (
+                {attachments?.map((file, index) => (
                   <Box
                     key={index}
                     sx={{

@@ -94,7 +94,7 @@ console.log("lectureData",lectureData)
                     : "linear-gradient(178.6deg, rgb(20, 36, 50) 11.8%, rgb(124, 143, 161) 83.8%)",
                 }}
               >
-                {TABLE_HEAD.map((head, index) => (
+                {TABLE_HEAD?.map((head, index) => (
                   <TableCell
                     key={index}
                     sx={{ color: isDarkMode ? "white" : "black" }}
@@ -106,9 +106,9 @@ console.log("lectureData",lectureData)
               </TableRow>
             </TableHead>
             <TableBody>
-              {[...Array(5)].map((_, index) => (
+              {[...Array(5)]?.map((_, index) => (
                 <TableRow key={index}>
-                  {TABLE_HEAD.map((_, idx) => (
+                  {TABLE_HEAD?.map((_, idx) => (
                     <TableCell key={idx}>
                       <Skeleton
                         variant="text"
@@ -136,7 +136,7 @@ console.log("lectureData",lectureData)
                     : "linear-gradient(178.6deg, rgb(20, 36, 50) 11.8%, rgb(124, 143, 161) 83.8%)",
                 }}
               >
-                {TABLE_HEAD.map((head) => (
+                {TABLE_HEAD?.map((head) => (
                   <TableCell
                     key={head}
                     sx={{ color: isDarkMode ? "white" : "black" }}

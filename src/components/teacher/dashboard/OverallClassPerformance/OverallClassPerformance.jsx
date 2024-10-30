@@ -217,7 +217,7 @@ const OverallClassPerformance = () => {
               label={renderCustomizedLabel}
               onClick={() => handleOpenModal()}
             >
-              {data.map((entry, index) => (
+              {data?.map((entry, index) => (
                 <Cell key={`cell-${index}`} fill={entry.color} />
               ))}
             </Pie>
@@ -227,7 +227,7 @@ const OverallClassPerformance = () => {
 
       {/* Legend */}
       <Grid container spacing={2}>
-        {data.map((entry) => (
+        {data?.map((entry) => (
           <Grid
             item
             xs={12}
@@ -371,7 +371,7 @@ function Row({ row }) {
                   </TableRow>
                 </TableHead>
                 <TableBody>
-                  {row.students.map((student, index) => (
+                  {row?.students?.map((student, index) => (
                     <TableRow
                       key={index}
                       sx={{ "&:hover": { backgroundColor: "#f5f5f5" } }}

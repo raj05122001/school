@@ -216,7 +216,7 @@ const LectureAnalytics = ({ lectureId }) => {
                 >
                   {Object.entries(
                     createData(analytics.topics_distribution)
-                  ).map((entry, index) => (
+                  )?.map((entry, index) => (
                     <Cell
                       key={`cell-${index}`}
                       fill={COLORS[index % COLORS.length]}
