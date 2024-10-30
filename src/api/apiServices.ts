@@ -365,9 +365,45 @@ export default class apiServices {
         console.error(error);
       });
   };
+
   public getAllLectureCount = async () => {
     return await this.axiosInstance
       .get(`/api/v1/lecture_tracking/`)
+      .then((Response) => Response)
+      .catch((error) => console.error(error));
+  };
+
+  public getCountByCategory = async (class_ids="") => {
+    return await this.axiosInstance
+      .get(`/api/v1/dashboard/count_by_category/?class_ids=${class_ids}`)
+      .then((Response) => Response)
+      .catch((error) => console.error(error));
+  };
+
+  public getStudentByGrade = async (class_ids="",grade="A") => {
+    return await this.axiosInstance
+      .get(`/api/v1/dashboard/get_by_category/?class_ids=${class_ids}&grade=${grade}`)
+      .then((Response) => Response)
+      .catch((error) => console.error(error));
+  };
+
+  public getteacherClass = async () => {
+    return await this.axiosInstance
+      .get(`/api/v1/dashboard/teacher/average_duration/`)
+      .then((Response) => Response)
+      .catch((error) => console.error(error));
+  };
+
+  public getClassAssignment = async (class_ids) => {
+    return await this.axiosInstance
+      .get(`/api/v1/dashboard/assignment-class-details/${class_ids}/`)
+      .then((Response) => Response)
+      .catch((error) => console.error(error));
+  };
+
+  public getStudentAssignment = async (class_ids) => {
+    return await this.axiosInstance
+      .get(`/api/v1/dashboard/assignment-student-details/${class_ids}/`)
       .then((Response) => Response)
       .catch((error) => console.error(error));
   };

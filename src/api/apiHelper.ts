@@ -187,3 +187,29 @@ export const getAllLectureCount = async () => {
   const apiInstance = new apiServices(axiosAPIInstance);
   return await apiInstance.getAllLectureCount();
 };
+
+export const getCountByCategory = async (class_ids) => {
+  const apiInstance = new apiServices(axiosAPIInstance);
+  return await apiInstance.getCountByCategory(class_ids);
+};
+
+export const getClassAssignment = async (class_ids) => {
+  const apiInstance = new apiServices(axiosAPIInstance);
+  return await apiInstance.getClassAssignment(class_ids);
+};
+
+export const getStudentAssignment = async (class_ids) => {
+  const apiInstance = new apiServices(axiosAPIInstance);
+  return await apiInstance.getStudentAssignment(class_ids);
+};
+
+export const getStudentByGrade = async (class_ids,grade) => {
+  const apiInstance = new apiServices(axiosAPIInstance);
+  return await apiInstance.getStudentByGrade(class_ids,grade);
+};
+
+export const getteacherClass = async () => {
+  const apiInstance = new apiServices(axiosAPIInstance);
+  return await apiInstance.getteacherClass();
+};
+
