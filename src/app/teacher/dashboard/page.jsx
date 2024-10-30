@@ -21,6 +21,7 @@ import { getteacherClass } from "@/api/apiHelper";
 
 const Page = () => {
   const [classOptions, setClassOptions] = useState([]);
+  const [averageDuration,setAverageDuration]=useState(0)
 
   useEffect(() => {
     fetchClassOptions();
@@ -30,6 +31,7 @@ const Page = () => {
     try {
       const response = await getteacherClass();
       setClassOptions(response?.data?.data?.class_subject_list);
+      setAverageDuration(response?.data?.data?.avg_duration)
     } catch (error) {
       console.error(error);
     }
@@ -47,7 +49,7 @@ const Page = () => {
           <ProfileCard />
         </Grid>
         <Grid item xs={12} sm={6} lg={3}>
-          <LectureDuration />
+          <LectureDuration averageDuration={averageDuration} />
         </Grid>
         <Grid item xs={12} lg={4}>
           <SubjectCompletion />

@@ -180,7 +180,9 @@ const ClassWiseStudentRanking = () => {
         options={classOptions.map((option) => option.class_name)}
         value={selectedOptions?.class_name || ""} // Set value to the class name only
         onChange={(event, newValue) => {
-          const selected = classOptions.find((option) => option.class_name === newValue);
+          const selected = classOptions.find(
+            (option) => option.class_name === newValue
+          );
           setSelectedOptions(selected || null); // Set selected option object
         }}
         renderInput={(params) => (
@@ -195,10 +197,9 @@ const ClassWiseStudentRanking = () => {
                 backdropFilter: "blur(10px)",
                 backgroundColor: "rgba(255, 255, 255, 0.2)",
                 color: currentStyles.inputColor,
-                height:40,
+                height: 40,
                 "& .MuiOutlinedInput-notchedOutline": {
                   border: "none",
-                  
                 },
               },
             }}
@@ -216,7 +217,7 @@ const ClassWiseStudentRanking = () => {
         aria-label="lecture overview tabs"
         indicatorColor="none"
         sx={{
-            mt:2,
+          mt: 2,
           ".MuiTabs-flexContainer": {
             gap: 2,
             background:
@@ -265,39 +266,64 @@ const ClassWiseStudentRanking = () => {
         >
           <Skeleton variant="circular" width={240} height={240} />
         </Box>
+      ) : Object.entries(data)?.length > 0 &&
+        getChartData().every((item) => Number(item.value) === 0) ? (
+        <Box
+          sx={{
+            width: "100%",
+            height: 240,
+            mt: 4,
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
+            position: "relative",
+          }}
+        >
+          <Skeleton variant="circular" width={240} height={240} />
+          <Typography
+            sx={{
+              textAlign: "center",
+              position: "absolute",
+              top: "50%",
+              left: "50%",
+              transform: "translate(-50%, -50%)",
+              zIndex: 10,
+            }}
+          >
+            0%
+          </Typography>
+        </Box>
       ) : (
-        Object.entries(data)?.length > 0 && (
-          <Box sx={{ width: "100%", height: 240, mt: 4 }}>
-            <ResponsiveContainer width="100%" height="100%">
-              <PieChart>
-                <Pie
-                  data={getChartData()}
-                  cx="50%"
-                  cy="50%"
-                  labelLine={false}
-                  innerRadius={50}
-                  outerRadius={100}
-                  label={renderCustomizedLabel}
-                  dataKey="value"
-                >
-                  {getChartData().map((entry, index) => (
-                    <Cell
-                      key={`cell-${index}`}
-                      fill={mapData[entry.name]?.color}
-                    />
-                  ))}
-                </Pie>
-              </PieChart>
-            </ResponsiveContainer>
-          </Box>
-        )
+        <Box sx={{ width: "100%", height: 240, mt: 4 }}>
+          <ResponsiveContainer width="100%" height="100%">
+            <PieChart>
+              <Pie
+                data={getChartData()}
+                cx="50%"
+                cy="50%"
+                labelLine={false}
+                innerRadius={50}
+                outerRadius={100}
+                label={renderCustomizedLabel}
+                dataKey="value"
+              >
+                {getChartData().map((entry, index) => (
+                  <Cell
+                    key={`cell-${index}`}
+                    fill={mapData[entry.name]?.color}
+                  />
+                ))}
+              </Pie>
+            </PieChart>
+          </ResponsiveContainer>
+        </Box>
       )}
 
       {loading ? (
         <Skeleton
           variant="rectangular"
           width="100%"
-          height={150}
+          height={100}
           sx={{ mt: 2 }}
         />
       ) : (

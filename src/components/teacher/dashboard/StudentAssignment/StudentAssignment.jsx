@@ -11,14 +11,17 @@ import {
   Typography,
   Autocomplete,
   TextField,
+  Skeleton,
 } from "@mui/material";
 import UserImage from "@/commonComponents/UserImage/UserImage";
 import { useThemeContext } from "@/hooks/ThemeContext";
 import { getStudentAssignment } from "@/api/apiHelper";
+import { FiAlertTriangle } from "react-icons/fi";
 
 const StudentAssignment = ({ classOptions }) => {
   const { isDarkMode } = useThemeContext();
   const [data, setData] = useState([]);
+  const [loading, setLoading] = useState(true);
   const [selectedOptions, setSelectedOptions] = useState(null);
 
   useEffect(() => {
@@ -32,11 +35,14 @@ const StudentAssignment = ({ classOptions }) => {
   }, [selectedOptions, classOptions]);
 
   const fetchStudentAssignment = async () => {
+    setLoading(true);
     try {
       const response = await getStudentAssignment(selectedOptions?.class_id);
       setData(response?.data?.data?.data);
     } catch (error) {
       console.error(error);
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -69,7 +75,6 @@ const StudentAssignment = ({ classOptions }) => {
     fontWeight: "bold",
   });
 
-  // Define light and dark mode styles
   const darkModeStyles = {
     backgroundColor: "#1a1a1a",
     color: "#ffffff",
@@ -87,6 +92,7 @@ const StudentAssignment = ({ classOptions }) => {
   };
 
   const currentStyles = isDarkMode ? darkModeStyles : lightModeStyles;
+
   return (
     <Box mt={4} sx={{ display: "flex", flexDirection: "column", gap: 1 }}>
       <Box
@@ -153,7 +159,6 @@ const StudentAssignment = ({ classOptions }) => {
           maxHeight: 420,
           borderRadius: "8px",
           overflow: "hidden",
-
           backdropFilter: "blur(10px)",
           backgroundColor: "rgba(255, 255, 255, 0.2)",
         }}
@@ -218,164 +223,204 @@ const StudentAssignment = ({ classOptions }) => {
             </TableRow>
           </TableHead>
           <TableBody>
-            {data.map((student, index) => (
-              <TableRow
-                key={index}
-                sx={{
-                  backgroundColor: getRowColor(
-                    student.average_scored_percentage
-                  ),
-                }}
-              >
-                <TableCell>
-                  <Box display="flex" alignItems="center">
-                    <UserImage
-                      name={student?.student_name}
-                      width={36}
-                      height={36}
-                    />
-                    <Typography sx={{ marginLeft: 2 }}>
-                      {student?.student_name}
-                    </Typography>
-                  </Box>
-                </TableCell>
-                <TableCell align="center">
-                  {student?.student_name}/{student?.total_assignment}
-                </TableCell>
-                <TableCell align="center">
-                  <Box
+            {loading
+              ? Array.from(new Array(5)).map((_, index) => (
+                  <TableRow key={index}>
+                    <TableCell>
+                      <Skeleton variant="rectangular" width={120} height={30} />
+                    </TableCell>
+                    <TableCell align="center">
+                      <Skeleton variant="rectangular" width={60} height={30} />
+                    </TableCell>
+                    <TableCell align="center">
+                      <Skeleton variant="rectangular" width="80%" height={30} />
+                    </TableCell>
+                    <TableCell align="center">
+                      <Skeleton variant="circular" width={30} height={30} />
+                    </TableCell>
+                    <TableCell align="center">
+                      <Skeleton variant="circular" width={30} height={30} />
+                    </TableCell>
+                    <TableCell align="center">
+                      <Skeleton variant="circular" width={30} height={30} />
+                    </TableCell>
+                  </TableRow>
+                ))
+              : data.map((student, index) => (
+                  <TableRow
+                    key={index}
                     sx={{
-                      width: "100%",
-                      height: "100%",
-                      display: "flex",
-                      justifyContent: "center",
-                      alignItems: "center",
+                      backgroundColor: getRowColor(
+                        student.average_scored_percentage
+                      ),
                     }}
                   >
-                    <Box
-                      sx={{
-                        width: "80%",
-                        height: 40,
-                        position: "relative",
-                      }}
-                    >
-                      {/* Background bar */}
+                    <TableCell>
+                      <Box display="flex" alignItems="center">
+                        <UserImage
+                          name={student?.student_name}
+                          width={36}
+                          height={36}
+                        />
+                        <Typography sx={{ marginLeft: 2 }}>
+                          {student?.student_name}
+                        </Typography>
+                      </Box>
+                    </TableCell>
+                    <TableCell align="center">
+                      {student?.student_name}/{student?.total_assignment}
+                    </TableCell>
+                    <TableCell align="center">
                       <Box
                         sx={{
-                          backgroundColor: "white",
-                          borderRadius: "4px",
-                          position: "absolute",
-                          top: 0,
-                          bottom: 0,
-                          right: 0,
-                          left: 0,
-                          zIndex: 6,
                           width: "100%",
                           height: "100%",
-                        }}
-                      />
-                      {/* Progress bar */}
-                      <Box
-                        sx={{
-                          backgroundColor: getScoreColor(
-                            student.average_scored_percentage
-                          ),
-                          borderRadius: "4px",
-                          position: "absolute",
-                          top: 0,
-                          bottom: 0,
-                          left: 0,
-                          zIndex: 8,
-                          width: `${student.average_scored_percentage}%`,
-                          height: "100%",
-                        }}
-                      />
-                      {/* Score text */}
-                      <Box
-                        sx={{
-                          color: "black",
-                          textAlign: "center",
-                          position: "absolute",
-                          top: "50%",
-                          left: "50%",
-                          transform: "translate(-50%, -50%)",
-                          zIndex: 10,
-                          fontWeight: "bold",
+                          display: "flex",
+                          justifyContent: "center",
+                          alignItems: "center",
                         }}
                       >
-                        {student?.average_scored_percentage}%
+                        <Box
+                          sx={{
+                            width: "80%",
+                            height: 40,
+                            position: "relative",
+                          }}
+                        >
+                          {/* Background bar */}
+                          <Box
+                            sx={{
+                              backgroundColor: "white",
+                              borderRadius: "4px",
+                              position: "absolute",
+                              top: 0,
+                              bottom: 0,
+                              right: 0,
+                              left: 0,
+                              zIndex: 6,
+                              width: "100%",
+                              height: "100%",
+                            }}
+                          />
+                          {/* Progress bar */}
+                          <Box
+                            sx={{
+                              backgroundColor: getScoreColor(
+                                student.average_scored_percentage
+                              ),
+                              borderRadius: "4px",
+                              position: "absolute",
+                              top: 0,
+                              bottom: 0,
+                              left: 0,
+                              zIndex: 8,
+                              width: `${student.average_scored_percentage}%`,
+                              height: "100%",
+                            }}
+                          />
+                          {/* Score text */}
+                          <Box
+                            sx={{
+                              color: "black",
+                              textAlign: "center",
+                              position: "absolute",
+                              top: "50%",
+                              left: "50%",
+                              transform: "translate(-50%, -50%)",
+                              zIndex: 10,
+                              fontWeight: "bold",
+                            }}
+                          >
+                            {student?.average_scored_percentage}%
+                          </Box>
+                        </Box>
                       </Box>
-                    </Box>
-                  </Box>
-                </TableCell>
-                <TableCell align="center">
-                  <Box
-                    sx={{
-                      width: "100%",
-                      height: "100%",
-                      display: "flex",
-                      justifyContent: "center",
-                      alignItems: "center",
-                    }}
-                  >
-                    <Box
-                      sx={getCircleStyle(
-                        student?.my_assignment_in_which_i_got_less_than_50,
-                        "need"
-                      )}
-                    >
-                      {student?.my_assignment_in_which_i_got_less_than_50}
-                    </Box>
-                  </Box>
-                </TableCell>
-                <TableCell align="center">
-                  <Box
-                    sx={{
-                      width: "100%",
-                      height: "100%",
-                      display: "flex",
-                      justifyContent: "center",
-                      alignItems: "center",
-                    }}
-                  >
-                    <Box
-                      sx={getCircleStyle(
-                        student?.my_assignment_in_which_i_got_between_than_50_to_80,
-                        "working"
-                      )}
-                    >
-                      {
-                        student?.my_assignment_in_which_i_got_between_than_50_to_80
-                      }
-                    </Box>
-                  </Box>
-                </TableCell>
-                <TableCell align="center">
-                  <Box
-                    sx={{
-                      width: "100%",
-                      height: "100%",
-                      display: "flex",
-                      justifyContent: "center",
-                      alignItems: "center",
-                    }}
-                  >
-                    <Box
-                      sx={getCircleStyle(
-                        student?.my_assignment_in_which_i_got_between_than_80_to_100,
-                        "masterd"
-                      )}
-                    >
-                      {
-                        student?.my_assignment_in_which_i_got_between_than_80_to_100
-                      }
-                    </Box>
-                  </Box>
-                </TableCell>
-              </TableRow>
-            ))}
+                    </TableCell>
+                    <TableCell align="center">
+                      <Box
+                        sx={{
+                          width: "100%",
+                          height: "100%",
+                          display: "flex",
+                          justifyContent: "center",
+                          alignItems: "center",
+                        }}
+                      >
+                        <Box
+                          sx={getCircleStyle(
+                            student?.my_assignment_in_which_i_got_less_than_50,
+                            "need"
+                          )}
+                        >
+                          {student?.my_assignment_in_which_i_got_less_than_50}
+                        </Box>
+                      </Box>
+                    </TableCell>
+                    <TableCell align="center">
+                      <Box
+                        sx={{
+                          width: "100%",
+                          height: "100%",
+                          display: "flex",
+                          justifyContent: "center",
+                          alignItems: "center",
+                        }}
+                      >
+                        <Box
+                          sx={getCircleStyle(
+                            student?.my_assignment_in_which_i_got_between_than_50_to_80,
+                            "working"
+                          )}
+                        >
+                          {
+                            student?.my_assignment_in_which_i_got_between_than_50_to_80
+                          }
+                        </Box>
+                      </Box>
+                    </TableCell>
+                    <TableCell align="center">
+                      <Box
+                        sx={{
+                          width: "100%",
+                          height: "100%",
+                          display: "flex",
+                          justifyContent: "center",
+                          alignItems: "center",
+                        }}
+                      >
+                        <Box
+                          sx={getCircleStyle(
+                            student?.my_assignment_in_which_i_got_between_than_80_to_100,
+                            "masterd"
+                          )}
+                        >
+                          {
+                            student?.my_assignment_in_which_i_got_between_than_80_to_100
+                          }
+                        </Box>
+                      </Box>
+                    </TableCell>
+                  </TableRow>
+                ))}
           </TableBody>
         </Table>
+        {!data?.length > 0 && !loading && (
+          <Box
+            display="flex"
+            alignItems="center"
+            justifyContent="center"
+            textAlign="center"
+            marginY={8}
+            width={"100%"}
+          >
+            <FiAlertTriangle
+              style={{ marginRight: 8 }}
+              size={24}
+              color="gray"
+            />
+            <Typography color="textSecondary">No Data Found</Typography>
+          </Box>
+        )}
       </TableContainer>
     </Box>
   );

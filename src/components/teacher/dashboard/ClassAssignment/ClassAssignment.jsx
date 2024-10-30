@@ -16,10 +16,11 @@ const ClassAssignment = () => {
       console.error(error);
     }
   };
+
   return (
     <Grid container spacing={2} mt={2}>
       {/* Left Card */}
-      <Grid item xs={12} sm={6}>
+      <Grid item xs={12} sm={7}>
         <Card variant="outlined" sx={{ padding: 3, borderRadius: 2 }}>
           <Grid container>
             {/* Overall Class Score */}
@@ -35,11 +36,11 @@ const ClassAssignment = () => {
                   Overall Class Score
                 </Typography>
                 <Typography variant="h4" color="primary" fontWeight="bold">
-                  68%
+                  {data?.over_all_class_score}
                 </Typography>
-                <Typography variant="body2">Grade average</Typography>
+                <Typography variant="body2">Average Grade</Typography>
                 <Typography variant="body1" color="textSecondary">
-                  71%
+                  {data?.average_grade}%
                 </Typography>
               </Grid>
               <Grid
@@ -68,11 +69,11 @@ const ClassAssignment = () => {
                   Work Assigned
                 </Typography>
                 <Typography variant="h4" color="primary" fontWeight="bold">
-                  82
+                  {data?.total_assignments}
                 </Typography>
-                <Typography variant="body2">Grade average</Typography>
+                <Typography variant="body2">Average Percentage</Typography>
                 <Typography variant="body1" color="textSecondary">
-                  38%
+                  {data?.average_percentage}%
                 </Typography>
               </Grid>
               <Grid
@@ -92,9 +93,72 @@ const ClassAssignment = () => {
       </Grid>
 
       {/* Right Cards */}
-      <Grid item xs={12} sm={6}>
+      <Grid item xs={12} sm={5}>
         <Grid container spacing={2} sx={{ height: "100%" }}>
-          <Grid item xs={4}>
+          <Grid item xs={12} sm={4}>
+            <Box
+              sx={{
+                backgroundColor: "#f2757d",
+                padding: 2,
+                textAlign: "center",
+                borderRadius: 2,
+                color: "white",
+                height: "100%",
+                display: "flex",
+                flexDirection: "column",
+                justifyContent: "center",
+                alignItems: "center",
+              }}
+            >
+              <Typography variant="h4" fontWeight="bold">
+                {data?.student_counts?.range_0_50}
+              </Typography>
+              <Typography variant="body2">Range 0 To 50</Typography>
+            </Box>
+          </Grid>
+          <Grid item xs={12} sm={4}>
+            <Box
+              sx={{
+                backgroundColor: "#ffcc73",
+                padding: 2,
+                textAlign: "center",
+                borderRadius: 2,
+                color: "white",
+                height: "100%",
+                display: "flex",
+                flexDirection: "column",
+                justifyContent: "center",
+                alignItems: "center",
+              }}
+            >
+              <Typography variant="h4" fontWeight="bold">
+                {data?.student_counts?.range_50_80}
+              </Typography>
+              <Typography variant="body2">Range 50 To 80</Typography>
+            </Box>
+          </Grid>
+          <Grid item xs={12} sm={4}>
+            <Box
+              sx={{
+                backgroundColor: "#86e28a",
+                padding: 2,
+                textAlign: "center",
+                borderRadius: 2,
+                color: "white",
+                height: "100%",
+                display: "flex",
+                flexDirection: "column",
+                justifyContent: "center",
+                alignItems: "center",
+              }}
+            >
+              <Typography variant="h4" fontWeight="bold">
+                {data?.student_counts?.range_80_100}
+              </Typography>
+              <Typography variant="body2">Range 80 To 100</Typography>
+            </Box>
+          </Grid>
+          {/* <Grid item xs={4}>
             <StudentCard
               bgColor="#86e28a"
               avatarSrc="/path/to/avatar1.png"
@@ -120,7 +184,7 @@ const ClassAssignment = () => {
               percentage="20%"
               gradeAvg={15}
             />
-          </Grid>
+          </Grid> */}
         </Grid>
       </Grid>
     </Grid>
@@ -154,32 +218,5 @@ export const BubblePattern = () => (
         }}
       />
     ))}
-  </Box>
-);
-
-// Component for individual student cards
-export const StudentCard = ({
-  bgColor,
-  avatarSrc,
-  score,
-  percentage,
-  gradeAvg,
-}) => (
-  <Box
-    sx={{
-      backgroundColor: bgColor,
-      padding: 2,
-      textAlign: "center",
-      borderRadius: 2,
-      color: "white",
-      height: "100%",
-    }}
-  >
-    <Avatar src={avatarSrc} sx={{ margin: "0 auto" }} />
-    <Typography variant="h4" fontWeight="bold">
-      {score}
-    </Typography>
-    <Typography variant="body2">{percentage} of class</Typography>
-    <Typography variant="body2">Grade avg: {gradeAvg}%</Typography>
   </Box>
 );
