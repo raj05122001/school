@@ -1,27 +1,39 @@
 import React, { useEffect, useState } from "react";
-import { Grid, Card, Typography, Avatar, Box } from "@mui/material";
+import { Grid, Card, Typography, Avatar, Box, Skeleton } from "@mui/material";
 import { FaTrophy, FaCircle } from "react-icons/fa";
 import { getClassAssignment } from "@/api/apiHelper";
+import { useThemeContext } from "@/hooks/ThemeContext";
 
 const ClassAssignment = () => {
   const [data, setData] = useState({});
+  const [loading, setLoading] = useState(true);
+  const { isDarkMode, primaryColor, secondaryColor } = useThemeContext();
+
   useEffect(() => {
     fetchClassAssignment();
   }, []);
+
   const fetchClassAssignment = async () => {
+    setLoading(true);
     try {
       const response = await getClassAssignment(2);
       setData(response?.data?.data);
     } catch (error) {
       console.error(error);
+    } finally {
+      setLoading(false);
     }
   };
 
   return (
-    <Grid container spacing={2} mt={2}>
+    <Grid container spacing={2}>
       {/* Left Card */}
       <Grid item xs={12} sm={7}>
-        <Card variant="outlined" sx={{ padding: 3, borderRadius: 2 }}>
+        <Card variant="outlined" sx={{ padding: 3,           backdropFilter: "blur(10px)",
+          backgroundColor: "rgba(255, 255, 255, 0.2)",
+          boxShadow: "0 4px 30px rgba(0, 0, 0, 0.1)",
+          borderRadius: "16px"
+          }} className="blur_effect_card">
           <Grid container>
             {/* Overall Class Score */}
             <Grid item xs={12} sm={6} container spacing={2}>
@@ -32,16 +44,25 @@ const ClassAssignment = () => {
                 direction="column"
                 alignItems="flex-start"
               >
-                <Typography variant="h6" gutterBottom>
+                <Typography variant="h6" gutterBottom color={primaryColor}>
                   Overall Class Score
                 </Typography>
-                <Typography variant="h4" color="primary" fontWeight="bold">
-                  {data?.over_all_class_score}
-                </Typography>
-                <Typography variant="body2">Average Grade</Typography>
-                <Typography variant="body1" color="textSecondary">
-                  {data?.average_grade}%
-                </Typography>
+                {loading ? (
+                  <>
+                    <Skeleton variant="text" width={80} height={40} />
+                    <Skeleton variant="text" width={60} height={20} />
+                  </>
+                ) : (
+                  <>
+                    <Typography variant="h4" color="primary" fontWeight="bold">
+                      {data?.over_all_class_score || 0}
+                    </Typography>
+                    <Typography variant="body2" color={secondaryColor}>Average Grade</Typography>
+                    <Typography variant="body1" color={secondaryColor}>
+                      {data?.average_grade || 0}%
+                    </Typography>
+                  </>
+                )}
               </Grid>
               <Grid
                 item
@@ -52,7 +73,11 @@ const ClassAssignment = () => {
                   alignItems: "center",
                 }}
               >
-                <FaTrophy size={100} color="green" />
+                {loading ? (
+                  <Skeleton variant="circular" width={100} height={100} />
+                ) : (
+                  <FaTrophy size={100} color="green" />
+                )}
               </Grid>
             </Grid>
 
@@ -65,16 +90,25 @@ const ClassAssignment = () => {
                 direction="column"
                 alignItems="flex-start"
               >
-                <Typography variant="h6" gutterBottom>
+                <Typography variant="h6" gutterBottom color={primaryColor}>
                   Work Assigned
                 </Typography>
-                <Typography variant="h4" color="primary" fontWeight="bold">
-                  {data?.total_assignments}
-                </Typography>
-                <Typography variant="body2">Average Percentage</Typography>
-                <Typography variant="body1" color="textSecondary">
-                  {data?.average_percentage}%
-                </Typography>
+                {loading ? (
+                  <>
+                    <Skeleton variant="text" width={80} height={40} />
+                    <Skeleton variant="text" width={60} height={20} />
+                  </>
+                ) : (
+                  <>
+                    <Typography variant="h4" color="primary" fontWeight="bold">
+                      {data?.total_assignments || 0}
+                    </Typography>
+                    <Typography variant="body2" color={secondaryColor}>Average Percentage</Typography>
+                    <Typography variant="body1" color={secondaryColor}>
+                      {data?.average_percentage || 0}%
+                    </Typography>
+                  </>
+                )}
               </Grid>
               <Grid
                 item
@@ -85,7 +119,11 @@ const ClassAssignment = () => {
                   alignItems: "center",
                 }}
               >
-                <BubblePattern />
+                {loading ? (
+                  <Skeleton variant="circular" width={100} height={100} />
+                ) : (
+                  <BubblePattern />
+                )}
               </Grid>
             </Grid>
           </Grid>
@@ -93,12 +131,13 @@ const ClassAssignment = () => {
       </Grid>
 
       {/* Right Cards */}
-      <Grid item xs={12} sm={5}>
-        <Grid container spacing={2} sx={{ height: "100%" }}>
-          <Grid item xs={12} sm={4}>
+      <Grid item xs={12} container sm={5} spacing={2}>
+        {[0, 50, 80].map((range, index) => (
+          <Grid item xs={12} sm={4} key={index}>
             <Box
               sx={{
-                backgroundColor: "#f2757d",
+                backgroundColor:
+                  index === 0 ? "#f2757d" : index === 1 ? "#ffcc73" : "#86e28a",
                 padding: 2,
                 textAlign: "center",
                 borderRadius: 2,
@@ -110,82 +149,27 @@ const ClassAssignment = () => {
                 alignItems: "center",
               }}
             >
-              <Typography variant="h4" fontWeight="bold">
-                {data?.student_counts?.range_0_50}
+              {loading ? (
+                <Skeleton variant="text" width={40} height={40} />
+              ) : (
+                <Typography variant="h4" fontWeight="bold">
+                  {(index === 0
+                    ? data?.student_counts?.range_0_50
+                    : index === 1
+                    ? data?.student_counts?.range_50_80
+                    : data?.student_counts?.range_80_100) || 0}
+                </Typography>
+              )}
+              <Typography variant="body2">
+                {index === 0
+                  ? "Range 0 To 50"
+                  : index === 1
+                  ? "Range 50 To 80"
+                  : "Range 80 To 100"}
               </Typography>
-              <Typography variant="body2">Range 0 To 50</Typography>
             </Box>
           </Grid>
-          <Grid item xs={12} sm={4}>
-            <Box
-              sx={{
-                backgroundColor: "#ffcc73",
-                padding: 2,
-                textAlign: "center",
-                borderRadius: 2,
-                color: "white",
-                height: "100%",
-                display: "flex",
-                flexDirection: "column",
-                justifyContent: "center",
-                alignItems: "center",
-              }}
-            >
-              <Typography variant="h4" fontWeight="bold">
-                {data?.student_counts?.range_50_80}
-              </Typography>
-              <Typography variant="body2">Range 50 To 80</Typography>
-            </Box>
-          </Grid>
-          <Grid item xs={12} sm={4}>
-            <Box
-              sx={{
-                backgroundColor: "#86e28a",
-                padding: 2,
-                textAlign: "center",
-                borderRadius: 2,
-                color: "white",
-                height: "100%",
-                display: "flex",
-                flexDirection: "column",
-                justifyContent: "center",
-                alignItems: "center",
-              }}
-            >
-              <Typography variant="h4" fontWeight="bold">
-                {data?.student_counts?.range_80_100}
-              </Typography>
-              <Typography variant="body2">Range 80 To 100</Typography>
-            </Box>
-          </Grid>
-          {/* <Grid item xs={4}>
-            <StudentCard
-              bgColor="#86e28a"
-              avatarSrc="/path/to/avatar1.png"
-              score={5}
-              percentage="20%"
-              gradeAvg={23}
-            />
-          </Grid>
-          <Grid item xs={4}>
-            <StudentCard
-              bgColor="#ffcc73"
-              avatarSrc="/path/to/avatar2.png"
-              score={10}
-              percentage="40%"
-              gradeAvg={50}
-            />
-          </Grid>
-          <Grid item xs={4}>
-            <StudentCard
-              bgColor="#f2757d"
-              avatarSrc="/path/to/avatar3.png"
-              score={5}
-              percentage="20%"
-              gradeAvg={15}
-            />
-          </Grid> */}
-        </Grid>
+        ))}
       </Grid>
     </Grid>
   );

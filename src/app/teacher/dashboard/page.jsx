@@ -21,7 +21,7 @@ import { getteacherClass } from "@/api/apiHelper";
 
 const Page = () => {
   const [classOptions, setClassOptions] = useState([]);
-  const [averageDuration,setAverageDuration]=useState(0)
+  const [averageDuration, setAverageDuration] = useState(0);
 
   useEffect(() => {
     fetchClassOptions();
@@ -31,7 +31,7 @@ const Page = () => {
     try {
       const response = await getteacherClass();
       setClassOptions(response?.data?.data?.class_subject_list);
-      setAverageDuration(response?.data?.data?.avg_duration)
+      setAverageDuration(response?.data?.data?.avg_duration);
     } catch (error) {
       console.error(error);
     }
@@ -67,8 +67,8 @@ const Page = () => {
         <Grid item xs={12} md={3} mt={9}>
           <Grid container direction="column" spacing={2}>
             <Grid item xs={12}>
-              {/* <StrugglingExcelling /> */}
-              <ClassWiseStudentRanking />
+              <StrugglingExcelling />
+              {/* <ClassWiseStudentRanking /> */}
             </Grid>
             <Grid item xs={12}>
               <OverallClassPerformance />
@@ -99,8 +99,16 @@ const Page = () => {
           <SubjectAnalytics />
         </Grid>
       </Grid>
-      <ClassAssignment />
-      <StudentAssignment classOptions={classOptions}/>
+
+      <Grid container direction="row" spacing={2} mt={2}>
+        <Grid item xs={9} sx={{display:'flex',flexDirection:'column',gap:2}}>
+          <ClassAssignment />
+          <StudentAssignment classOptions={classOptions} />
+        </Grid>
+        <Grid item xs={3}>
+          <ClassWiseStudentRanking />
+        </Grid>
+      </Grid>
     </Box>
   );
 };

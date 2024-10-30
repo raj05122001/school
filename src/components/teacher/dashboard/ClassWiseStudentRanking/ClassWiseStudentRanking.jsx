@@ -127,7 +127,7 @@ const ClassWiseStudentRanking = () => {
       tabValue === 0
         ? data.active_students_gradewise
         : data.inactive_students_gradewise;
-    return Object.entries(gradewiseData)?.map(([key, value]) => ({
+    return Object?.entries(gradewiseData)?.map(([key, value]) => ({
       name: key,
       value,
     }));
@@ -266,57 +266,59 @@ const ClassWiseStudentRanking = () => {
         >
           <Skeleton variant="circular" width={240} height={240} />
         </Box>
-      ) : Object.entries(data)?.length > 0 &&
-        getChartData().every((item) => Number(item.value) === 0) ? (
-        <Box
-          sx={{
-            width: "100%",
-            height: 240,
-            mt: 4,
-            display: "flex",
-            justifyContent: "center",
-            alignItems: "center",
-            position: "relative",
-          }}
-        >
-          <Skeleton variant="circular" width={240} height={240} />
-          <Typography
+      ) : (
+        Object.entries(data)?.length > 0 &&
+        (getChartData().every((item) => Number(item.value) === 0) ? (
+          <Box
             sx={{
-              textAlign: "center",
-              position: "absolute",
-              top: "50%",
-              left: "50%",
-              transform: "translate(-50%, -50%)",
-              zIndex: 10,
+              width: "100%",
+              height: 240,
+              mt: 4,
+              display: "flex",
+              justifyContent: "center",
+              alignItems: "center",
+              position: "relative",
             }}
           >
-            0%
-          </Typography>
-        </Box>
-      ) : (
-        <Box sx={{ width: "100%", height: 240, mt: 4 }}>
-          <ResponsiveContainer width="100%" height="100%">
-            <PieChart>
-              <Pie
-                data={getChartData()}
-                cx="50%"
-                cy="50%"
-                labelLine={false}
-                innerRadius={50}
-                outerRadius={100}
-                label={renderCustomizedLabel}
-                dataKey="value"
-              >
-                {getChartData()?.map((entry, index) => (
-                  <Cell
-                    key={`cell-${index}`}
-                    fill={mapData[entry.name]?.color}
-                  />
-                ))}
-              </Pie>
-            </PieChart>
-          </ResponsiveContainer>
-        </Box>
+            <Skeleton variant="circular" width={240} height={240} />
+            <Typography
+              sx={{
+                textAlign: "center",
+                position: "absolute",
+                top: "50%",
+                left: "50%",
+                transform: "translate(-50%, -50%)",
+                zIndex: 10,
+              }}
+            >
+              0%
+            </Typography>
+          </Box>
+        ) : (
+          <Box sx={{ width: "100%", height: 240, mt: 4 }}>
+            <ResponsiveContainer width="100%" height="100%">
+              <PieChart>
+                <Pie
+                  data={getChartData()}
+                  cx="50%"
+                  cy="50%"
+                  labelLine={false}
+                  innerRadius={50}
+                  outerRadius={100}
+                  label={renderCustomizedLabel}
+                  dataKey="value"
+                >
+                  {getChartData()?.map((entry, index) => (
+                    <Cell
+                      key={`cell-${index}`}
+                      fill={mapData[entry.name]?.color}
+                    />
+                  ))}
+                </Pie>
+              </PieChart>
+            </ResponsiveContainer>
+          </Box>
+        ))
       )}
 
       {loading ? (

@@ -94,7 +94,7 @@ const StudentAssignment = ({ classOptions }) => {
   const currentStyles = isDarkMode ? darkModeStyles : lightModeStyles;
 
   return (
-    <Box mt={4} sx={{ display: "flex", flexDirection: "column", gap: 1 }}>
+    <Box sx={{ display: "flex", flexDirection: "column", gap: 1 }}>
       <Box
         sx={{
           display: "flex",
@@ -268,7 +268,7 @@ const StudentAssignment = ({ classOptions }) => {
                       </Box>
                     </TableCell>
                     <TableCell align="center">
-                      {student?.student_name}/{student?.total_assignment}
+                      {student?.completed_assignment}/{student?.total_assignment}
                     </TableCell>
                     <TableCell align="center">
                       <Box
@@ -410,7 +410,7 @@ const StudentAssignment = ({ classOptions }) => {
             alignItems="center"
             justifyContent="center"
             textAlign="center"
-            marginY={8}
+            marginY={16}
             width={"100%"}
           >
             <FiAlertTriangle

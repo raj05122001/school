@@ -10,6 +10,7 @@ import {
 } from "react-icons/fa";
 import { useThemeContext } from "@/hooks/ThemeContext";
 import { AppContextProvider } from "@/app/main";
+import { FaBookOpen } from "react-icons/fa";
 
 const day = [
   "Sunday",
@@ -74,6 +75,8 @@ const LectureCard = ({ lecture }) => {
     color: isDarkMode ? "#ffffff" : "#000000",
   };
 
+  console.log("lecture",lecture)
+
   return (
     <Paper sx={lectureCardStyle} onClick={()=>handleLectureRecord(lecture)}>
       <Box sx={dateSectionStyle}>
@@ -91,12 +94,15 @@ const LectureCard = ({ lecture }) => {
         </Typography>
       </Box>
       <Box sx={lectureInfoStyle}>
+
         <Typography
           variant="h6"
           sx={{ fontWeight: "bold", mb: 1, color: textStyle.color }}
+          noWrap
         >
-          {lecture?.chapter?.subject?.name}
+          {lecture?.title?.slice(0,24)}...
         </Typography>
+
         <Box display="flex" alignItems="center" mb={1}>
           <FaCalendarAlt style={iconStyle} />
           <Typography variant="body2" sx={{ color: textStyle.color }}>
@@ -107,6 +113,7 @@ const LectureCard = ({ lecture }) => {
             {lecture?.schedule_time}
           </Typography>
         </Box>
+        
         <Box display="flex" alignItems="center" mb={1}>
           <FaGraduationCap style={iconStyle} />
           <Typography variant="body2" sx={{ color: textStyle.color }}>
@@ -116,10 +123,16 @@ const LectureCard = ({ lecture }) => {
         <Box display="flex" alignItems="center" mb={1}>
           <FaBook style={iconStyle} />
           <Typography variant="body2" sx={{ color: textStyle.color }}>
-            {lecture?.topics}
+          {lecture?.chapter?.subject?.name}
           </Typography>
         </Box>
-        <Box display="flex" alignItems="center">
+        <Box display="flex" alignItems="center" mb={1}>
+          <FaBookOpen style={iconStyle} />
+          <Typography variant="body2" sx={{ color: textStyle.color }}>
+          {lecture?.chapter?.chapter}
+          </Typography>
+        </Box>
+        {/* <Box display="flex" alignItems="center">
           <Avatar
             src={lecture?.organizer?.user?.profile_pic}
             alt={lecture?.organizer?.user?.full_name}
@@ -128,7 +141,7 @@ const LectureCard = ({ lecture }) => {
           <Typography variant="body2" sx={{ color: textStyle.color }}>
             {lecture?.organizer?.user?.full_name}
           </Typography>
-        </Box>
+        </Box> */}
       </Box>
       {/* Edit button on the top-right corner */}
       <Box sx={{ position: "absolute", top: "8px", right: "8px" }}>
