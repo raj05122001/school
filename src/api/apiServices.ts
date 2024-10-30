@@ -372,9 +372,47 @@ export default class apiServices {
         console.error(error);
       });
   };
+
   public getAllLectureCount = async () => {
     return await this.axiosInstance
       .get(`/api/v1/lecture_tracking/`)
+      .then((Response) => Response)
+      .catch((error) => console.error(error));
+  };
+
+  public getCountByCategory = async (class_ids = "") => {
+    return await this.axiosInstance
+      .get(`/api/v1/dashboard/count_by_category/?class_ids=${class_ids}`)
+      .then((Response) => Response)
+      .catch((error) => console.error(error));
+  };
+
+  public getStudentByGrade = async (class_ids = "", grade = "A") => {
+    return await this.axiosInstance
+      .get(
+        `/api/v1/dashboard/get_by_category/?class_ids=${class_ids}&grade=${grade}`
+      )
+      .then((Response) => Response)
+      .catch((error) => console.error(error));
+  };
+
+  public getteacherClass = async () => {
+    return await this.axiosInstance
+      .get(`/api/v1/dashboard/teacher/average_duration/`)
+      .then((Response) => Response)
+      .catch((error) => console.error(error));
+  };
+
+  public getClassAssignment = async (class_ids) => {
+    return await this.axiosInstance
+      .get(`/api/v1/dashboard/assignment-class-details/${class_ids}/`)
+      .then((Response) => Response)
+      .catch((error) => console.error(error));
+  };
+
+  public getStudentAssignment = async (class_ids) => {
+    return await this.axiosInstance
+      .get(`/api/v1/dashboard/assignment-student-details/${class_ids}/`)
       .then((Response) => Response)
       .catch((error) => console.error(error));
   };
@@ -425,15 +463,32 @@ export default class apiServices {
 
   public getLectureAssignment = async (lectureId) => {
     return await this.axiosInstance
-    .get(`/api/v1/get_assignment/${lectureId}/`)
-    .then((Response) => Response.data)
-    .catch((error) => console.error(error));
-  }
+      .get(`/api/v1/get_assignment/${lectureId}/`)
+      .then((Response) => Response.data)
+      .catch((error) => console.error(error));
+  };
 
   public updateLectureAssignment = async (lectureId, formData) => {
     return await this.axiosInstance
       .patch(`/api/v1/lecture_assignment/${lectureId}/`, formData)
       .then((Response) => Response)
       .catch((error) => console.error(error));
+  };
+
+  public updateSummary = async (summaryId, data) => {
+    return await this.axiosInstance
+      .patch(`api/v1/edit/summary/${summaryId}/`, data)
+      .then((response) => {
+        if (!response.data.success) {
+          return response;
+        }
+        return response;
+      })
+      .catch((error) => {
+        const errorText = error.response.data.errors
+          ? error.response.data.errors.username[0]
+          : error.response.data.message;
+        console.error(error);
+      });
   };
 }

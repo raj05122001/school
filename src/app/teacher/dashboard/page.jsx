@@ -1,5 +1,5 @@
 "use client";
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { Box, Grid } from "@mui/material";
 import OverviewSection from "@/components/teacher/dashboard/OverviewSection/OverviewSection";
 import AnalyticsReports from "@/components/teacher/dashboard/AnalyticsReports/AnalyticsReports";
@@ -14,8 +14,28 @@ import ProfileCard from "@/components/teacher/dashboard/ProfileCard/ProfileCard"
 import LectureDuration from "@/components/teacher/dashboard/LectureDuration/LectureDuration";
 import SubjectCompletion from "@/components/teacher/dashboard/SubjectCompletion/SubjectCompletion";
 import StudentQueries from "@/components/teacher/dashboard/StudentQueries/StudentQueries";
+import ClassWiseStudentRanking from "@/components/teacher/dashboard/ClassWiseStudentRanking/ClassWiseStudentRanking";
+import ClassAssignment from "@/components/teacher/dashboard/ClassAssignment/ClassAssignment";
+import StudentAssignment from "@/components/teacher/dashboard/StudentAssignment/StudentAssignment";
+import { getteacherClass } from "@/api/apiHelper";
 
 const Page = () => {
+  const [classOptions, setClassOptions] = useState([]);
+  const [averageDuration,setAverageDuration]=useState(0)
+
+  useEffect(() => {
+    fetchClassOptions();
+  }, []);
+
+  const fetchClassOptions = async () => {
+    try {
+      const response = await getteacherClass();
+      setClassOptions(response?.data?.data?.class_subject_list);
+      setAverageDuration(response?.data?.data?.avg_duration)
+    } catch (error) {
+      console.error(error);
+    }
+  };
   return (
     <Box sx={{ flexGrow: 1, m: 2 }}>
       {/* Greeting Card */}
@@ -29,7 +49,7 @@ const Page = () => {
           <ProfileCard />
         </Grid>
         <Grid item xs={12} sm={6} lg={3}>
-          <LectureDuration />
+          <LectureDuration averageDuration={averageDuration} />
         </Grid>
         <Grid item xs={12} lg={4}>
           <SubjectCompletion />
@@ -47,7 +67,8 @@ const Page = () => {
         <Grid item xs={12} md={3} mt={9}>
           <Grid container direction="column" spacing={2}>
             <Grid item xs={12}>
-              <StrugglingExcelling />
+              {/* <StrugglingExcelling /> */}
+              <ClassWiseStudentRanking />
             </Grid>
             <Grid item xs={12}>
               <OverallClassPerformance />
@@ -78,6 +99,8 @@ const Page = () => {
           <SubjectAnalytics />
         </Grid>
       </Grid>
+      <ClassAssignment />
+      <StudentAssignment classOptions={classOptions}/>
     </Box>
   );
 };

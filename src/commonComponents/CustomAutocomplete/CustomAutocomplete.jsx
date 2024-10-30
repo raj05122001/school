@@ -2,7 +2,6 @@ import { Autocomplete, TextField } from "@mui/material";
 import { useThemeContext } from "@/hooks/ThemeContext";
 
 const CustomAutocomplete = ({ options, onSelect, onChange, label, value }) => {
-    console.log(label,options)
   const { isDarkMode } = useThemeContext();
 
   const lowerCase = (value) => {
