@@ -18,21 +18,16 @@ import { useThemeContext } from "@/hooks/ThemeContext";
 import { getStudentAssignment } from "@/api/apiHelper";
 import { FiAlertTriangle } from "react-icons/fi";
 
-const StudentAssignment = ({ classOptions }) => {
+const StudentAssignment = ({ selectedOptions }) => {
   const { isDarkMode } = useThemeContext();
   const [data, setData] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [selectedOptions, setSelectedOptions] = useState(null);
-
-  useEffect(() => {
-    setSelectedOptions(classOptions?.[0]);
-  }, [classOptions]);
 
   useEffect(() => {
     if (selectedOptions?.class_id) {
       fetchStudentAssignment();
     }
-  }, [selectedOptions, classOptions]);
+  }, [selectedOptions]);
 
   const fetchStudentAssignment = async () => {
     setLoading(true);
@@ -75,24 +70,6 @@ const StudentAssignment = ({ classOptions }) => {
     fontWeight: "bold",
   });
 
-  const darkModeStyles = {
-    backgroundColor: "#1a1a1a",
-    color: "#ffffff",
-    inputBackgroundColor: "#ffffff",
-    inputColor: "#ffffff",
-    boxShadow: "0px 2px 5px rgba(255, 255, 255, 0.1)",
-  };
-
-  const lightModeStyles = {
-    backgroundColor: "#ffffff",
-    color: "#000000",
-    inputBackgroundColor: "#333333",
-    inputColor: "#000000",
-    boxShadow: "0px 2px 5px rgba(0, 0, 0, 0.1)",
-  };
-
-  const currentStyles = isDarkMode ? darkModeStyles : lightModeStyles;
-
   return (
     <Box sx={{ display: "flex", flexDirection: "column", gap: 1 }}>
       <Box
@@ -103,7 +80,7 @@ const StudentAssignment = ({ classOptions }) => {
         }}
       >
         <Typography
-          variant="h4"
+          variant="h5"
           className={`${isDarkMode ? "dark-heading" : "light-heading"}`}
           component="div"
           sx={{
@@ -114,7 +91,7 @@ const StudentAssignment = ({ classOptions }) => {
         >
           Student Proficiency
         </Typography>
-        <Autocomplete
+        {/* <Autocomplete
           freeSolo
           id="class"
           disableClearable
@@ -151,7 +128,7 @@ const StudentAssignment = ({ classOptions }) => {
               }}
             />
           )}
-        />
+        /> */}
       </Box>
       <TableContainer
         component={Paper}
@@ -268,7 +245,8 @@ const StudentAssignment = ({ classOptions }) => {
                       </Box>
                     </TableCell>
                     <TableCell align="center">
-                      {student?.completed_assignment}/{student?.total_assignment}
+                      {student?.completed_assignment}/
+                      {student?.total_assignment}
                     </TableCell>
                     <TableCell align="center">
                       <Box

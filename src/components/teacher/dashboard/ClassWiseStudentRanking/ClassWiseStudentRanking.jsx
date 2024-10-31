@@ -30,6 +30,8 @@ import {
   TextField,
 } from "@mui/material";
 import { AiOutlineClose, AiOutlineUp, AiOutlineDown } from "react-icons/ai";
+import { decodeToken } from "react-jwt";
+import Cookies from "js-cookie";
 
 const RADIAN = Math.PI / 180;
 
@@ -67,15 +69,15 @@ const renderCustomizedLabel = ({
   );
 };
 
-const ClassWiseStudentRanking = () => {
+const ClassWiseStudentRanking = ({ selectedOptions, isMyClass }) => {
+  const userDetails = decodeToken(Cookies.get("ACCESS_TOKEN"));
+
   const { isDarkMode, primaryColor, secondaryColor } = useThemeContext();
   const [data, setData] = useState({});
   const [loading, setLoading] = useState(true); // Add loading state
   const [tabValue, setTabValue] = useState(0);
   const [modalOpen, setModalOpen] = useState(false);
   const [selectedGrad, setSelectedGrad] = useState("");
-  const [classOptions, setClassOptions] = useState([]);
-  const [selectedOptions, setSelectedOptions] = useState(null);
 
   const handleOpenModal = (grade) => {
     setSelectedGrad(grade);
@@ -87,29 +89,18 @@ const ClassWiseStudentRanking = () => {
   };
 
   useEffect(() => {
-    fetchClassOptions();
-  }, []);
-
-  const fetchClassOptions = async () => {
-    try {
-      const response = await getteacherClass();
-      setClassOptions(response?.data?.data?.class_subject_list);
-      setSelectedOptions(response?.data?.data?.class_subject_list?.[0]);
-    } catch (error) {
-      console.error(error);
-    }
-  };
-
-  useEffect(() => {
     if (selectedOptions?.class_id) {
       fetchCountByCategory();
     }
-  }, [selectedOptions]);
+  }, [selectedOptions, isMyClass]);
 
   const fetchCountByCategory = async () => {
     setLoading(true);
     try {
-      const response = await getCountByCategory(selectedOptions?.class_id);
+      const response = await getCountByCategory(
+        selectedOptions?.class_id,
+        isMyClass !== 0 ? userDetails?.teacher_id : 0
+      );
       setData(response?.data?.data || {});
     } catch (error) {
       console.error(error);
@@ -169,11 +160,11 @@ const ClassWiseStudentRanking = () => {
           className={`${isDarkMode ? "dark-heading" : "light-heading"}`}
           whiteSpace="nowrap"
         >
-          Class Wise Student Ranking
+          Student Ranking
         </Typography>
       </Box>
 
-      <Autocomplete
+      {/* <Autocomplete
         freeSolo
         id="class"
         disableClearable
@@ -209,7 +200,7 @@ const ClassWiseStudentRanking = () => {
             }}
           />
         )}
-      />
+      /> */}
 
       <Tabs
         value={tabValue}
@@ -217,9 +208,9 @@ const ClassWiseStudentRanking = () => {
         aria-label="lecture overview tabs"
         indicatorColor="none"
         sx={{
-          mt: 2,
+          // mt: 2,
           ".MuiTabs-flexContainer": {
-            gap: 2,
+            // gap: 2,
             background:
               isDarkMode &&
               "linear-gradient(89.7deg, rgb(0, 0, 0) -10.7%, rgb(53, 92, 125) 88.8%)",
@@ -228,12 +219,16 @@ const ClassWiseStudentRanking = () => {
             backgroundPosition: "center", // Center the image
             padding: 1,
             borderRadius: "12px",
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
+            gap: 1,
           },
           ".MuiTab-root": {
             color: "#333",
-            padding: "10px 20px",
+            padding: "10px 10px",
             minHeight: 0,
-            marginTop: "8px",
+            // marginTop: "8px",
             textAlign: "center",
             color: isDarkMode && "#F0EAD6",
             "&:hover": {
@@ -379,6 +374,8 @@ const ClassWiseStudentRanking = () => {
           data={data}
           selectedGrad={selectedGrad}
           selectedOptions={selectedOptions}
+          isMyClass={isMyClass}
+          userDetails={userDetails}
         />
       )}
     </Box>
@@ -393,6 +390,8 @@ export const StudentModal = ({
   data,
   selectedGrad,
   selectedOptions,
+  isMyClass,
+  userDetails
 }) => {
   const [studentData, setStudentData] = useState([]);
   const [loading, setLoading] = useState(true); // Add loading state
@@ -406,7 +405,8 @@ export const StudentModal = ({
     try {
       const response = await getStudentByGrade(
         selectedOptions?.class_id,
-        selectedGrad
+        selectedGrad,
+        isMyClass !== 0 ? userDetails?.teacher_id : 0
       );
       setStudentData(response?.data?.data);
     } catch (error) {

@@ -4,19 +4,21 @@ import { FaTrophy, FaCircle } from "react-icons/fa";
 import { getClassAssignment } from "@/api/apiHelper";
 import { useThemeContext } from "@/hooks/ThemeContext";
 
-const ClassAssignment = () => {
+const ClassAssignment = ({selectedOptions}) => {
   const [data, setData] = useState({});
   const [loading, setLoading] = useState(true);
   const { isDarkMode, primaryColor, secondaryColor } = useThemeContext();
 
   useEffect(() => {
+    if(selectedOptions?.class_id){
     fetchClassAssignment();
-  }, []);
+  }
+  }, [selectedOptions]);
 
   const fetchClassAssignment = async () => {
     setLoading(true);
     try {
-      const response = await getClassAssignment(2);
+      const response = await getClassAssignment(selectedOptions);
       setData(response?.data?.data);
     } catch (error) {
       console.error(error);
@@ -29,11 +31,17 @@ const ClassAssignment = () => {
     <Grid container spacing={2}>
       {/* Left Card */}
       <Grid item xs={12} sm={7}>
-        <Card variant="outlined" sx={{ padding: 3,           backdropFilter: "blur(10px)",
-          backgroundColor: "rgba(255, 255, 255, 0.2)",
-          boxShadow: "0 4px 30px rgba(0, 0, 0, 0.1)",
-          borderRadius: "16px"
-          }} className="blur_effect_card">
+        <Card
+          variant="outlined"
+          sx={{
+            padding: 3,
+            backdropFilter: "blur(10px)",
+            backgroundColor: "rgba(255, 255, 255, 0.2)",
+            boxShadow: "0 4px 30px rgba(0, 0, 0, 0.1)",
+            borderRadius: "16px",
+          }}
+          className="blur_effect_card"
+        >
           <Grid container>
             {/* Overall Class Score */}
             <Grid item xs={12} sm={6} container spacing={2}>
@@ -57,7 +65,9 @@ const ClassAssignment = () => {
                     <Typography variant="h4" color="primary" fontWeight="bold">
                       {data?.over_all_class_score || 0}
                     </Typography>
-                    <Typography variant="body2" color={secondaryColor}>Average Grade</Typography>
+                    <Typography variant="body2" color={secondaryColor}>
+                      Average Grade
+                    </Typography>
                     <Typography variant="body1" color={secondaryColor}>
                       {data?.average_grade || 0}%
                     </Typography>
@@ -103,7 +113,9 @@ const ClassAssignment = () => {
                     <Typography variant="h4" color="primary" fontWeight="bold">
                       {data?.total_assignments || 0}
                     </Typography>
-                    <Typography variant="body2" color={secondaryColor}>Average Percentage</Typography>
+                    <Typography variant="body2" color={secondaryColor}>
+                      Average Percentage
+                    </Typography>
                     <Typography variant="body1" color={secondaryColor}>
                       {data?.average_percentage || 0}%
                     </Typography>
