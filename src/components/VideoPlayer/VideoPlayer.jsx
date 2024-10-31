@@ -1,14 +1,16 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef, useContext } from "react";
 import videojs from "video.js";
 import "video.js/dist/video-js.css";
-import "./VideoPlayer.css"; // Create a CSS file for custom styles
-import { Box } from "@mui/material";
+import "./VideoPlayer.css";
 import { getBreakpoint } from "@/api/apiHelper";
+import { Button, Box, Typography, IconButton } from "@mui/material";
+import { AppContextProvider } from "@/app/main";
 
 const VideoPlayer = ({ id }) => {
   const videoRef = React.useRef(null);
   const playerRef = React.useRef(null);
   const [markers, setMarkers] = useState([]);
+  const [suggestionData, setSuggestionData] = useState([]);
 
   useEffect(() => {
     if (id) {
@@ -23,6 +25,13 @@ const VideoPlayer = ({ id }) => {
         ? JSON.parse(apiResponse?.data?.data?.break_point)
         : [];
     setMarkers(breakPoint);
+
+    setSuggestionData(
+      breakPoint.map((topic) => ({
+        originalTitle: topic.gist,
+        lowercaseTitle: topic.gist.toLowerCase(),
+      }))
+    );
   };
 
   console.log("markers", markers);
@@ -68,7 +77,7 @@ const VideoPlayer = ({ id }) => {
         className="video-js"
         controls
         preload="auto"
-        style={{ width: "100%", height: "100%", borderRadius: 10 }}
+        style={{ width: "100%", height: "90%", borderRadius: 10 }}
         data-setup='{ "html5": { "nativeTextTracks": true },"playbackRates" : [0.25, 0.5, 0.75, 1, 1.25, 1.5,1.75]}'
       >
         <source
@@ -87,52 +96,150 @@ const VideoPlayer = ({ id }) => {
           </a>
         </p>
       </video>
+      {suggestionData?.length > 0 && (
+        <Box height="10%">
+          <Suggestion suggestionData={suggestionData} />
+        </Box>
+      )}
     </Box>
   );
 };
 
 export default VideoPlayer;
 
-// export const markers = [
-//   {
-//     summary:
-//       "This is a part of our Java tutorial series. First we will talk about objects and we will implement two programs on intellij to learn about objects. Then we will move on to classes in Java where we will see an advanced program to learn classes more in depth.",
-//     gist: "Objects and Classes in Java",
-//     headline: "This tutorial will cover objects and classes in Java",
-//     time: 7480 / 1000,
-//     end: 33962,
-//   },
-//   {
-//     summary:
-//       "An object is an instance of a class. An object has its own states and behaviors. Let us see an example how we can use multiple objects for a single class. Using Java code.",
-//     gist: "Java Object syntax",
-//     headline:
-//       "Object is an instance of a class. So an object has its own states and behaviors",
-//     time: 34066 / 1000,
-//     end: 444602,
-//   },
-//   {
-//     summary:
-//       "In this program, we are going to ask the users what would they like either bikes or cars. Our next program will be based on the options that the user select, not the options we give as a command. For this, we need to run the program using scanner.",
-//     gist: "stdio",
-//     headline: "Next program will be based on the options that the user select",
-//     time: 444746 / 1000,
-//     end: 901028,
-//   },
-//   {
-//     summary:
-//       "A class is a blueprint from which objects are created. We use objects of a class to use variables and functions of the class. With this, lets understand classes with a simple Java code.",
-//     gist: "Java Classes, Explained",
-//     headline: "With this, lets understand classes with a simple Java code",
-//     time: 901184 / 1000,
-//     end: 1211268,
-//   },
-//   {
-//     summary:
-//       "We learn about objects and classes in Java. To nerd up and get certified, click here. If you like this video, subscribe to the simply learn YouTube channel and click here to watch similar videos.",
-//     gist: "Objects and Classes in Java",
-//     headline: "This video teaches you about objects and classes in Java",
-//     time: 1211404 / 1000,
-//     end: 1235050,
-//   },
-// ];
+export const Suggestion = ({ suggestionData }) => {
+  const { handelChatBotText } = useContext(AppContextProvider);
+  const containerRef = useRef(null);
+
+  const uniqueTitles = [
+    ...new Set(suggestionData.map((topic) => topic.lowercaseTitle)),
+  ];
+
+  const scrollContainer = (direction) => {
+    if (containerRef.current) {
+      containerRef.current.scrollBy({
+        left: direction === "left" ? -200 : 200,
+        behavior: "smooth",
+      });
+    }
+  };
+
+  return (
+    <Box sx={{ position: "relative", display: "flex", alignItems: "center" }}>
+      {uniqueTitles.length > 0 && (
+        <Button
+          onClick={() => scrollContainer("left")}
+          sx={{
+            position: "absolute",
+            left: 0,
+            top: "50%",
+            transform: "translateY(-50%)",
+            bgcolor: "grey.300",
+            "&:hover": { bgcolor: "grey.400" },
+            p: 1,
+            width: 40,
+            height: 40,
+            minWidth: "unset",
+            borderRadius: "50%",
+            zIndex: 10,
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+          }}
+        >
+          ←
+        </Button>
+      )}
+      <Box
+        ref={containerRef}
+        sx={{
+          display: "flex",
+          overflowX: "auto",
+          width: "100%",
+          whiteSpace: "nowrap",
+          py: 2,
+          mx: 6,
+          "&::-webkit-scrollbar": {
+            display: "none",
+          },
+          msOverflowStyle: "none", // For Internet Explorer and Edge
+          scrollbarWidth: "none", // For Firefox
+        }}
+      >
+        {uniqueTitles.map((lowercaseTitle, index) => {
+          const originalTitle = suggestionData.find(
+            (s) => s.lowercaseTitle === lowercaseTitle
+          ).originalTitle;
+          return (
+            <IconButton
+              key={index}
+              onClick={() => handelChatBotText(originalTitle)}
+              sx={{
+                position: "relative",
+                overflow: "hidden",
+                bgcolor: "green.100",
+                "&:hover": {
+                  bgcolor: "green.200",
+                  ringColor: "green.400",
+                  boxShadow: "0 0 5px rgba(0, 128, 0, 0.2)",
+                },
+                px: 2,
+                py: 1,
+                borderRadius: 2,
+                transition: "all 0.3s ease-out",
+                "& .shine": {
+                  position: "absolute",
+                  right: 0,
+                  width: 24,
+                  height: 96,
+                  mt: -1,
+                  opacity: 0.1,
+                  bgcolor: "white",
+                  rotate: "12deg",
+                  transform: "translateX(8px)",
+                  transition: "transform 1s",
+                },
+                "&:hover .shine": {
+                  transform: "translateX(-100%)",
+                },
+              }}
+            >
+              <Box className="shine" />
+              <Typography
+                variant="body2"
+                sx={{ color: "primary.main", fontWeight: "bold", px: 1 }}
+              >
+                ✦ {originalTitle}
+                {originalTitle.includes("?") ? "" : "?"}
+              </Typography>
+            </IconButton>
+          );
+        })}
+      </Box>
+      {uniqueTitles.length > 0 && (
+        <Button
+          onClick={() => scrollContainer("right")}
+          sx={{
+            position: "absolute",
+            right: 0,
+            top: "50%",
+            transform: "translateY(-50%)",
+            bgcolor: "grey.300",
+            "&:hover": { bgcolor: "grey.400" },
+            p: 1,
+            width: 40,
+            height: 40,
+            minWidth: "unset",
+            borderRadius: "50%",
+            zIndex: 10,
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+          }}
+        >
+          →
+        </Button>
+      )}
+    </Box>
+  );
+};

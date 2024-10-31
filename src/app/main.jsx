@@ -9,7 +9,7 @@ import { Box, IconButton } from "@mui/material";
 import { ThemeProvider } from "@/hooks/ThemeContext";
 import LectureRecorder from "@/components/LectureRecorder/LectureRecorder";
 import CreatingLecture from "@/components/teacher/LectureCreate/CreatingLecture";
-import ChatBot from "@/components/ChatBoat/ChatBoat";
+import ChatBot from "@/components/ChatBot/ChatBot";
 import { BsChatSquareText } from "react-icons/bs";
 import Image from "next/image";
 
@@ -23,6 +23,7 @@ const Main = ({ children }) => {
   const [openCreateLecture, setOpenCreateLecture] = useState(false);
   const [isEditLecture, setIsEditLecture] = useState(false);
   const [isOpenChatBot, setIsOpenChatBot] = useState(false);
+  const [userInput, setUserInput] = useState("");
 
   const handleResize = () => {
     if (window.innerWidth < 980) {
@@ -68,6 +69,11 @@ const Main = ({ children }) => {
     setOpenRecordingDrawer(true);
   };
 
+  const handelChatBotText = (value) => {
+    setUserInput(value);
+    setIsOpenChatBot(true);
+  };
+
   return (
     <Suspense>
       <Toaster position="bottom-center" reverseOrder={false} />
@@ -85,6 +91,7 @@ const Main = ({ children }) => {
               handleCreateLecture,
               openCreateLecture,
               handleLectureRecord,
+              handelChatBotText,
             }}
           >
             <Box
@@ -123,7 +130,10 @@ const Main = ({ children }) => {
             <Box position="fixed" bottom={4} right={4}>
               {/* Chatbot Icon Button */}
               <IconButton
-                onClick={() => setIsOpenChatBot((prev) => !prev)}
+                onClick={() => {
+                  setUserInput("");
+                  setIsOpenChatBot((prev) => !prev);
+                }}
                 size="large"
                 color="primary"
               >
@@ -139,7 +149,7 @@ const Main = ({ children }) => {
               {/* Chatbot Component */}
               {isOpenChatBot && (
                 <ChatBot
-                  userInput={""}
+                  suggestionInput={userInput}
                   setIsOpenChatBot={setIsOpenChatBot}
                   isOpenChatBot={isOpenChatBot}
                 />
