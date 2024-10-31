@@ -491,4 +491,12 @@ export default class apiServices {
         console.error(error);
       });
   };
+
+  public getLectureAns = async (data) => {
+    return await this.axiosInstance
+      .post(`/api/v1/get/ans/`, data)
+      .then((Response) => Response.data)
+      .catch((error) => console.error(error));
+  };
+
 }

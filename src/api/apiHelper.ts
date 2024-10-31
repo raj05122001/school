@@ -252,3 +252,8 @@ export const updateSummary = async (transcriptId, data) => {
   const apiInstance = new apiServices(axiosAPIInstance);
   return await apiInstance.updateSummary(transcriptId, data);
 };
+
+export const getLectureAns = async (data) => {
+  const apiInstance = new apiServices(axiosAPIInstance);
+  return await apiInstance.getLectureAns(data);
+};

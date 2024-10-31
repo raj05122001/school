@@ -5,10 +5,13 @@ import { Toaster } from "react-hot-toast";
 import { Suspense } from "react";
 import Footer from "@/components/Footer/Footer";
 import Sidebar from "@/components/Sidebar/Sidebar";
-import { Box } from "@mui/material";
+import { Box, IconButton } from "@mui/material";
 import { ThemeProvider } from "@/hooks/ThemeContext";
 import LectureRecorder from "@/components/LectureRecorder/LectureRecorder";
 import CreatingLecture from "@/components/teacher/LectureCreate/CreatingLecture";
+import ChatBot from "@/components/ChatBoat/ChatBoat";
+import { BsChatSquareText } from "react-icons/bs";
+import Image from "next/image";
 
 export const AppContextProvider = createContext({});
 
@@ -19,6 +22,7 @@ const Main = ({ children }) => {
   const [recordingData, setRecordingData] = useState({});
   const [openCreateLecture, setOpenCreateLecture] = useState(false);
   const [isEditLecture, setIsEditLecture] = useState(false);
+  const [isOpenChatBot, setIsOpenChatBot] = useState(false);
 
   const handleResize = () => {
     if (window.innerWidth < 980) {
@@ -114,6 +118,32 @@ const Main = ({ children }) => {
                   <Footer />
                 </Box>
               </Box>
+            </Box>
+
+            <Box position="fixed" bottom={4} right={4}>
+              {/* Chatbot Icon Button */}
+              <IconButton
+                onClick={() => setIsOpenChatBot((prev) => !prev)}
+                size="large"
+                color="primary"
+              >
+                <Image
+                  className="cursor-pointer"
+                  src="/chatbot.png"
+                  alt="chat bot"
+                  width={50}
+                  height={50}
+                />
+              </IconButton>
+
+              {/* Chatbot Component */}
+              {isOpenChatBot && (
+                <ChatBot
+                  userInput={""}
+                  setIsOpenChatBot={setIsOpenChatBot}
+                  isOpenChatBot={isOpenChatBot}
+                />
+              )}
             </Box>
           </AppContextProvider.Provider>
         </ThemeProvider>
