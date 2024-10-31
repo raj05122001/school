@@ -1,5 +1,5 @@
 "use client";
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useMemo } from "react";
 import {
   Box,
   Grid,
@@ -71,42 +71,75 @@ const Page = () => {
 
   const currentStyles = isDarkMode ? darkModeStyles : lightModeStyles;
 
+  const greetingCard = useMemo(() => <GreetingCard />, []);
+  const profileCard = useMemo(() => <ProfileCard />, []);
+  const lectureDuration = useMemo(
+    () => <LectureDuration averageDuration={averageDuration} />,
+    [averageDuration]
+  );
+  const subjectCompletion = useMemo(() => <SubjectCompletion />, []);
+  const overviewSection = useMemo(() => <OverviewSection />, []);
+  const strugglingExcelling = useMemo(() => <StrugglingExcelling />, []);
+  const overallClassPerformance = useMemo(
+    () => <OverallClassPerformance />,
+    []
+  );
+  const studentQueries = useMemo(() => <StudentQueries />, []);
+  const analyticsReports = useMemo(() => <AnalyticsReports />, []);
+  const calendarComponent = useMemo(() => <CalendarComponent />, []);
+  const classStatistics = useMemo(() => <ClassStatistics />, []);
+  const lectureAnalytics = useMemo(() => <LectureAnalytics />, []);
+  const subjectAnalytics = useMemo(() => <SubjectAnalytics />, []);
+  const classAssignment = useMemo(
+    () => <ClassAssignment selectedOptions={selectedOptions} />,
+    [selectedOptions]
+  );
+  const studentAssignment = useMemo(
+    () => <StudentAssignment selectedOptions={selectedOptions} />,
+    [selectedOptions]
+  );
+  const classWiseStudentRanking = useMemo(
+    () => (
+      <ClassWiseStudentRanking
+        selectedOptions={selectedOptions}
+        isMyClass={tabValue}
+      />
+    ),
+    [selectedOptions, tabValue]
+  );
+
   return (
     <Box sx={{ flexGrow: 1, m: 2 }}>
       {/* Greeting Card */}
-      <Box>
-        <GreetingCard />
-      </Box>
+      <Box>{greetingCard}</Box>
 
       {/* Profile, Lecture Duration, Subject Completion */}
       <Grid container spacing={2} mt={3}>
         <Grid item xs={12} sm={6} lg={5}>
-          <ProfileCard />
+          {profileCard}
         </Grid>
         <Grid item xs={12} sm={6} lg={3}>
-          <LectureDuration averageDuration={averageDuration} />
+          {lectureDuration}
         </Grid>
         <Grid item xs={12} lg={4}>
-          <SubjectCompletion />
+          {subjectCompletion}
         </Grid>
       </Grid>
 
       {/* Overview and Calendar */}
       <Grid container direction="row" spacing={2} mt={2}>
         <Grid item xs={12} md={9}>
-          <OverviewSection />
-          <Box mt={4}>
-            <CalendarComponent />
-          </Box>
+          {overviewSection}
+          <Box mt={4}>{calendarComponent}</Box>
         </Grid>
         <Grid item xs={12} md={3} mt={9}>
           <Grid container direction="column" spacing={2}>
             <Grid item xs={12}>
-              <StrugglingExcelling />
+              {strugglingExcelling}
               {/* <ClassWiseStudentRanking /> */}
             </Grid>
             <Grid item xs={12}>
-              <OverallClassPerformance />
+              {overallClassPerformance}
             </Grid>
           </Grid>
         </Grid>
@@ -115,23 +148,23 @@ const Page = () => {
       {/* Student Queries, Analytics Reports, and Class Statistics */}
       <Grid container spacing={2} mt={4}>
         <Grid item xs={12} md={4}>
-          <StudentQueries />
+          {studentQueries}
         </Grid>
         <Grid item xs={12} md={4}>
-          <AnalyticsReports />
+          {analyticsReports}
         </Grid>
         <Grid item xs={12} md={4}>
-          <ClassStatistics />
+          {classStatistics}
         </Grid>
       </Grid>
 
       {/* Lecture and Subject Analytics */}
       <Grid container spacing={2} mt={4}>
         <Grid item xs={12} md={6}>
-          <LectureAnalytics />
+          {lectureAnalytics}
         </Grid>
         <Grid item xs={12} md={6}>
-          <SubjectAnalytics />
+          {subjectAnalytics}
         </Grid>
       </Grid>
 
@@ -155,7 +188,7 @@ const Page = () => {
         >
           Class Proficiency
         </Typography>
-        <Box sx={{ display: "flex", gap: 2 ,alignItems:'center'}}>
+        <Box sx={{ display: "flex", gap: 2, alignItems: "center" }}>
           <Autocomplete
             freeSolo
             id="class"
@@ -205,9 +238,9 @@ const Page = () => {
               backdropFilter: "blur(10px)",
               backgroundColor: "rgba(255, 255, 255, 0.2)",
               borderRadius: "10px",
-              display:'flex',
-              justifyContent:'center',
-              alignItems:'center',
+              display: "flex",
+              justifyContent: "center",
+              alignItems: "center",
               ".MuiTabs-flexContainer": {
                 padding: "1px 10px",
               },
@@ -241,11 +274,11 @@ const Page = () => {
           xs={9}
           sx={{ display: "flex", flexDirection: "column", gap: 2 }}
         >
-          <ClassAssignment selectedOptions={selectedOptions} />
-          <StudentAssignment selectedOptions={selectedOptions} />
+          {classAssignment}
+          {studentAssignment}
         </Grid>
         <Grid item xs={3}>
-          <ClassWiseStudentRanking selectedOptions={selectedOptions} isMyClass={tabValue} />
+          {classWiseStudentRanking}
         </Grid>
       </Grid>
     </Box>
