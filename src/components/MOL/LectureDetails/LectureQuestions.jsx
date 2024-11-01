@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { Box, Typography, Button } from "@mui/material";
 import { getLectureQuestion } from "@/api/apiHelper";
+import MathJax from "react-mathjax2";
 
 const LectureQuestions = ({ id, isDarkMode }) => {
   const [questionsData, setQuestionsData] = useState([]);
@@ -43,32 +44,38 @@ const LectureQuestions = ({ id, isDarkMode }) => {
         width: "100%",
       }}
     >
-      <Typography variant="h6" fontWeight="bold" gutterBottom>
-        Lecture Questions
-      </Typography>
-      {displayedQuestion?.map((item, index) => (
-        <Box key={index} sx={{ mb: 2 }}>
-          <Typography variant="subtitle1" fontWeight="bold">
-            {item.title}
+      <MathJax.Context input="tex">
+        <>
+          <Typography variant="h6" fontWeight="bold" gutterBottom>
+            Lecture Questions
           </Typography>
-          <ul>
-            {item?.questions?.map((question, qIndex) => (
-              <li key={qIndex}>
-                <Typography variant="body2">{question}</Typography>
-              </li>
-            ))}
-          </ul>
-        </Box>
-      ))}
-      {visibleCount < questionsData.length && (
-        <Button
-          variant="contained"
-          onClick={() => setVisibleCount((prevCount) => prevCount + 5)}
-          sx={{ mt: 2 }}
-        >
-          Need More
-        </Button>
-      )}
+          {displayedQuestion?.map((item, index) => (
+            <Box key={index} sx={{ mb: 2 }}>
+              <Typography variant="subtitle1" fontWeight="bold">
+                <MathJax.Text text={item.title} />
+              </Typography>
+              <ul>
+                {item.questions.map((question, qIndex) => (
+                  <li key={qIndex}>
+                    <Typography variant="body2">
+                      <MathJax.Text text={question} />
+                    </Typography>
+                  </li>
+                ))}
+              </ul>
+            </Box>
+          ))}
+          {visibleCount < questionsData.length && (
+            <Button
+              variant="contained"
+              onClick={() => setVisibleCount((prevCount) => prevCount + 5)}
+              sx={{ mt: 2 }}
+            >
+              Need More
+            </Button>
+          )}
+        </>
+      </MathJax.Context>
     </Box>
   );
 };

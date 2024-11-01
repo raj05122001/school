@@ -163,6 +163,11 @@ export const getLectureHighlights = async (lectureId) => {
   return await apiInstance.getLectureHighlights(lectureId);
 };
 
+export const updateSummary = async (transcriptId, data) => {
+  const apiInstance = new apiServices(axiosAPIInstance);
+  return await apiInstance.updateSummary(transcriptId, data);
+};
+
 export const getBreakpoint = async (lectureId) => {
   const apiInstance = new apiServices(axiosAPIInstance);
   return await apiInstance.getBreakpoint(lectureId);
@@ -248,9 +253,9 @@ export const updateLectureAssignment = async (lectureId, formData) => {
   return await apiInstance.updateLectureAssignment(lectureId, formData);
 };
 
-export const updateSummary = async (transcriptId, data) => {
+export const createAssignment = async (formData) => {
   const apiInstance = new apiServices(axiosAPIInstance);
-  return await apiInstance.updateSummary(transcriptId, data);
+  return await apiInstance.createAssignment(formData);
 };
 
 export const getLectureAns = async (data) => {

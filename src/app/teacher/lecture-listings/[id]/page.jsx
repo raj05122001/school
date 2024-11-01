@@ -47,6 +47,9 @@ const LecturePage = ({ params }) => {
 
   const videoPlayer = useMemo(() => <VideoPlayer id={id} />, [id]);
 
+  const classID = lectureData?.lecture_class?.id
+
+
   return (
     <Box
       sx={{
@@ -81,7 +84,7 @@ const LecturePage = ({ params }) => {
               {videoPlayer}
             </Box>
             <LectureOverview isDarkMode={isDarkMode} lectureId={id} />
-            <LectureDetails id={id} isDarkMode={isDarkMode} />
+            <LectureDetails id={id} isDarkMode={isDarkMode} classID={classID} />
             <Articles lectureId={id} />
           </Box>
         </Grid>
