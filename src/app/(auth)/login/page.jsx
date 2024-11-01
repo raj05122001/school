@@ -61,7 +61,7 @@ const LoginPage = () => {
         console.log("response.data", response.data);
         const { access, refresh, username, message } = response.data;
         Cookies.set("ACCESS_TOKEN", access, { expires: 7 }); // Store access token in cookies
-        Cookies.set("REFRESH_TOKEN", refresh, { expires: 7 }); // Store refresh token in cookies
+        Cookies.set("REFRESH_TOKEN", refresh, { expires: 30 }); // Store refresh token in cookies
 
         // Display success message
         setSuccess(message || "Logged in successfully!");

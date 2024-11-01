@@ -89,7 +89,7 @@ const Articles = ({ lectureId }) => {
     const headingRegex = /^(###|####|#####)\s+/;
     const boldRegex = /\*\*(.*?)\*\*/g;
 
-    return lines.map((line, index) => {
+    return lines?.map((line, index) => {
       const formattedLine = line.replace(
         boldRegex,
         (match, p1) => `<strong>${p1}</strong>`

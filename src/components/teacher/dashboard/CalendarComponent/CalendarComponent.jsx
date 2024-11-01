@@ -40,7 +40,7 @@ const CalendarComponent = ({maxHeight="585px"}) => {
       );
       const dataCalendar = response?.data?.data?.data || [];
 
-      const formattedData = dataCalendar.map((obj) => ({
+      const formattedData = dataCalendar?.map((obj) => ({
         ...obj,
         id: obj.id,
         title: obj.title || "Untitled Event",

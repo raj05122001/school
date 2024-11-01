@@ -57,7 +57,7 @@ const LectureAssignment = ({ id, isDarkMode, class_ID }) => {
 
   const handleMarkChange = (assignmentId, newMark) => {
     setAssignments((prevAssignments) =>
-      prevAssignments.map((assignment) =>
+      prevAssignments?.map((assignment) =>
         assignment.id === assignmentId
           ? { ...assignment, assignment_mark: newMark }
           : assignment
@@ -81,7 +81,7 @@ const LectureAssignment = ({ id, isDarkMode, class_ID }) => {
       );
       if (response.success) {
         setAssignments((prevAssignments) =>
-          prevAssignments.map((a) =>
+          prevAssignments?.map((a) =>
             a.id === assignment_id ? { ...a, is_assigned: true } : a
           )
         );
@@ -270,7 +270,7 @@ const LectureAssignment = ({ id, isDarkMode, class_ID }) => {
               marginRight: "2px",
             }}
           />{" "}
-          Create
+          Create Assignment
         </DialogTitle>
         <DialogContent>
           <TextField

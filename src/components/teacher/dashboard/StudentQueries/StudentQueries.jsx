@@ -61,7 +61,7 @@ function StudentQueries() {
         Student Queries
       </Typography>
       <List>
-        {queries.map((query) => (
+        {queries?.map((query) => (
           <ListItem key={query.id}>
             <ListItemText
               primary={query.query}

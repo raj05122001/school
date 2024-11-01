@@ -116,7 +116,7 @@ const StrugglingExcelling = () => {
             Bottom 3 Struggling
           </Typography>
           <List>
-            {students.struggling.map((student) => (
+            {students?.struggling?.map((student) => (
               <ListItem
                 key={student.id}
                 sx={{ display: "flex", justifyContent: "space-between" }}
@@ -156,7 +156,7 @@ const StrugglingExcelling = () => {
             Top 3 Excelling
           </Typography>
           <List>
-            {students.excelling.map((student) => (
+            {students?.excelling?.map((student) => (
               <ListItem
                 key={student.id}
                 sx={{ display: "flex", justifyContent: "space-between" }}

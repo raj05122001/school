@@ -168,7 +168,7 @@ const CreatingLecture = ({
             const validChapters = response?.data?.data?.filter(
               (chapter) => chapter?.chapter && chapter?.chapter?.trim() !== ""
             );
-            const chapters = validChapters.map((chapter) => ({
+            const chapters = validChapters?.map((chapter) => ({
               id: chapter.id,
               name: chapter.chapter, // Use the "chapter" field for names
             }));

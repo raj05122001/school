@@ -59,7 +59,7 @@ const LectureNotes = ({ id, isDarkMode }) => {
 
       if (updatedNoteData) {
         setNotes((prevNotes) =>
-          prevNotes.map((note) =>
+          prevNotes?.map((note) =>
             note.id === noteId ? { ...note, notes: updatedNoteData } : note
           )
         );
@@ -110,7 +110,7 @@ const LectureNotes = ({ id, isDarkMode }) => {
     >
       <MathJax.Context input="tex">
         <>
-          {displayedNotes.map((note) => (
+          {displayedNotes?.map((note) => (
             <Box key={note.id} sx={{ mb: 2 }}>
               <Box
                 display="flex"
