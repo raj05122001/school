@@ -44,10 +44,18 @@ const LecturePage = ({ params }) => {
       console.error(e);
     }
   };
+  const classID = lectureData?.lecture_class?.id
 
   const videoPlayer = useMemo(() => <VideoPlayer id={id} />, [id]);
+  const headerMOL = useMemo(()=><HeaderMOL lectureData={lectureData} isDarkMode={isDarkMode} />, [lectureData, isDarkMode])
+  const lectureOverview = useMemo(()=><LectureOverview isDarkMode={isDarkMode} lectureId={id} />,[isDarkMode, id])
+  const lectureDetails = useMemo(()=><LectureDetails id={id} isDarkMode={isDarkMode} classID={classID} />,[id, isDarkMode, classID])
+  const articles = useMemo(()=><Articles lectureId={id} />, [id])
+  const lectureAnalytics = useMemo(()=><LectureAnalytics lectureId={id} />,[id])
+  const ratingSection = useMemo(()=><RatingSection />,[])
+  const commentSection = useMemo(()=><CommentsSection />,[])
 
-  const classID = lectureData?.lecture_class?.id
+  
 
 
   return (
@@ -73,7 +81,7 @@ const LecturePage = ({ params }) => {
           p: 2,
         }}
       >
-        <HeaderMOL lectureData={lectureData} isDarkMode={isDarkMode} />
+        {headerMOL}
       </Paper>
 
       <Grid container spacing={2}>
@@ -83,18 +91,18 @@ const LecturePage = ({ params }) => {
             <Box sx={{ maxHeight: "500px", width: "100%", height: 500 }}>
               {videoPlayer}
             </Box>
-            <LectureOverview isDarkMode={isDarkMode} lectureId={id} />
-            <LectureDetails id={id} isDarkMode={isDarkMode} classID={classID} />
-            <Articles lectureId={id} />
+            {lectureOverview}
+            {lectureDetails}
+            {articles}
           </Box>
         </Grid>
 
         {/* Sidebar */}
         <Grid item xs={12} md={4} lg={4}>
           <Box sx={{ display: "flex", flexDirection: "column", gap: 2 }}>
-            <LectureAnalytics lectureId={id} />
-            <RatingSection />
-            <CommentsSection />
+            {lectureAnalytics}
+            {ratingSection}
+            {commentSection}
           </Box>
         </Grid>
       </Grid>
