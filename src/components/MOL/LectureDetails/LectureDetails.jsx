@@ -7,10 +7,14 @@ import LectureQuestions from "./LectureQuestions";
 import LectureAssignment from "./LectureAssignment";
 import LectureReferrence from "./LectureReferrence";
 
-const LectureDetails = ({id, isDarkMode }) => {
+const LectureDetails = ({id, isDarkMode, classID }) => {
   const [value, setValue] = useState(0);
   const [loading, setLoading] = useState(true);
   const [decisionId, setDecisionId] = useState(null);
+
+  const class_ID = classID;
+
+
 
   const handleChange = (event, newValue) => {
     setValue(newValue);
@@ -27,7 +31,7 @@ const LectureDetails = ({id, isDarkMode }) => {
   );
 
   const memoizedLectureQuestions = useMemo(()=> <LectureQuestions id={id} isDarkMode = {isDarkMode} /> , [id, isDarkMode])
-  const memoizedLectureAssignment = useMemo(()=><LectureAssignment id={id} isDarkMode={isDarkMode} />, [id, isDarkMode])
+  const memoizedLectureAssignment = useMemo(()=><LectureAssignment id={id} isDarkMode={isDarkMode} class_ID={class_ID} />, [id, isDarkMode])
   const memoizedLectureReferrence = useMemo(()=><LectureReferrence id={id} isDarkMode={isDarkMode} />, [id, isDarkMode])
 
   return (

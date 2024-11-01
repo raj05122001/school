@@ -318,6 +318,23 @@ export default class apiServices {
       .catch((error) => console.error(error));
   };
 
+  public updateSummary = async (summaryId, data) => {
+    return await this.axiosInstance
+      .patch(`api/v1/edit/summary/${summaryId}/`, data)
+      .then((response) => {
+        if (!response.data.success) {
+          return response;
+        }
+        return response;
+      })
+      .catch((error) => {
+        const errorText = error.response.data.errors
+          ? error.response.data.errors.username[0]
+          : error.response.data.message;
+        console.error(error);
+      });
+  };
+
   public getLectureNotes = async (lectureId) => {
     return await this.axiosInstance
       .get(`/api/v1/lecture/${lectureId}/notes/`)
@@ -435,5 +452,34 @@ export default class apiServices {
       .patch(`/api/v1/lecture_assignment/${lectureId}/`, formData)
       .then((Response) => Response)
       .catch((error) => console.error(error));
+  };
+
+  public createAssignment = (formData) => {
+    const toastInstance = toast.loading("Loading...");
+    return this.axiosInstance
+      .post(`/api/v1/lecture_assignment/`, formData)
+      .then((response) => {
+        if (!response.data.success) {
+          toast.dismiss(toastInstance); // Dismiss the loading toast
+          toast.error(response.data.message, {
+            duration: Constants.toastTimer,
+          });
+          return response;
+        }
+        toast.dismiss(toastInstance); // Dismiss the loading toast
+        toast.success("Assignment is created", {
+          duration: Constants.toastTimer,
+        });
+        return response;
+      })
+      .catch((error) => {
+        toast.dismiss(toastInstance); // Dismiss the loading toast
+        const errorText = error.response?.data?.message || "An error occurred";
+        toast.error(errorText, {
+          duration: Constants.toastTimer,
+        });
+        console.error(error);
+        throw error;
+      });
   };
 }

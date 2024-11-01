@@ -261,7 +261,7 @@ const Filters = ({
               freeSolo
               id="class"
               disableClearable
-              options={classList.map((option) => option.name)}
+              options={classList?.map((option) => option.name)}
               value={decodeURI(selectedClass)}
               onChange={handleClassChange}
               renderInput={(params) => (
@@ -308,7 +308,7 @@ const Filters = ({
               freeSolo
               id="subject"
               disableClearable
-              options={subjectList.map((option) => option.name)}
+              options={subjectList?.map((option) => option.name)}
               value={selectedSubject}
               onChange={handleSubjectChange}
               renderInput={(params) => (
