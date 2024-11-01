@@ -169,7 +169,7 @@ const LectureAssignment = ({ id, isDarkMode, class_ID }) => {
               }}
               onClick={() => setOpenDialog(true)}
             >
-              Create Assignment
+              Create
             </Button>
           </Box>
           {assignments.map((assignment, index) => (
