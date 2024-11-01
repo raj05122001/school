@@ -518,7 +518,7 @@ export default class apiServices {
         });
         console.error(error);
         throw error;
-      });
+});
   };
 
   public getLectureAns = async (data) => {
