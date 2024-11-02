@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useState } from "react";
+import React, { useEffect, useMemo, useState, useCallback } from "react";
 import {
   Autocomplete,
   Box,
@@ -6,11 +6,10 @@ import {
   InputAdornment,
   Grid,
   IconButton,
-  Typography,
   Badge,
   Avatar,
 } from "@mui/material";
-import { FaBell, FaSearch, FaTimes } from "react-icons/fa"; // Importing search and close icons
+import { FaBell, FaSearch, FaTimes } from "react-icons/fa";
 import { getClassByCourse, getSubjectByClass } from "@/api/apiHelper";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { DatePicker } from "@mui/x-date-pickers";
@@ -23,163 +22,102 @@ import { decodeToken } from "react-jwt";
 import Cookies from "js-cookie";
 import { useThemeContext } from "@/hooks/ThemeContext";
 
+const darkModeStyles = {
+  backgroundColor: "#1a1a1a",
+  color: "#ffffff",
+  inputBackgroundColor: "#ffffff",
+  inputColor: "#ffffff",
+  boxShadow: "0px 2px 5px rgba(255, 255, 255, 0.1)",
+};
+
+const lightModeStyles = {
+  backgroundColor: "#ffffff",
+  color: "#000000",
+  inputBackgroundColor: "#333333",
+  inputColor: "#000000",
+  boxShadow: "0px 2px 5px rgba(0, 0, 0, 0.1)",
+};
+
 const Filters = ({
   classValue = "",
   subject = "",
   searchQuery = "",
   month = null,
   lectureType = "",
+  label = "",
 }) => {
-  const { isDarkMode, primaryColor, secondaryColor } = useThemeContext();
+  const { isDarkMode } = useThemeContext();
   const userDetails = decodeToken(Cookies.get("ACCESS_TOKEN"));
   const router = useRouter();
+
+  const [filterState, setFilterState] = useState({
+    selectedClass: classValue,
+    selectedSubject: subject,
+    globalSearch: searchQuery,
+    selectedMonth: dayjs(month),
+    selectedLectureType: lectureType,
+  });
   const [classList, setClassList] = useState([]);
   const [subjectList, setSubjectList] = useState([]);
-  const [selectedClass, setSelectedClass] = useState(classValue);
-  const [selectedSubject, setSelectedSubject] = useState(subject);
-  const [globalSearch, setGlobalSearch] = useState(searchQuery);
-  const [selectedMonth, setSelectedMonth] = useState(dayjs(month));
-  const [selectedLectureType, setSelectedLectureType] = useState(lectureType);
-
-  const decodeURI = (value) => {
-    return decodeURIComponent(value);
-  };
-
-  useEffect(() => {
-    fetchClassData();
-    fetchSubjectData("", "");
-  }, []);
-
-  const fetchClassData = async () => {
-    const response = await getClassByCourse("", "");
-    setClassList(response?.data?.data);
-  };
-
-  const fetchSubjectData = async (className, search) => {
-    const response = await getSubjectByClass(className, search);
-    setSubjectList(response?.data?.data);
-  };
-
-  const updateURL = (params) => {
-    const query = new URLSearchParams(params).toString();
-    router.push(`?${query}`, undefined, { shallow: true });
-  };
-
-  const handleClassChange = (event, newValue) => {
-    setSelectedClass(newValue);
-    updateURL({
-      class: encodeURI(newValue) || "",
-      subject: encodeURI(selectedSubject) || "",
-      globalSearch: encodeURI(globalSearch) || "",
-      month: month ? month : "",
-      lectureType: selectedLectureType || "",
-    });
-  };
-
-  const clearClass = () => {
-    setSelectedClass("");
-    updateURL({
-      class: "",
-      subject: encodeURI(selectedSubject) || "",
-      globalSearch: encodeURI(globalSearch) || "",
-      month: month ? month : "",
-      lectureType: selectedLectureType || "",
-    });
-  };
-
-  const handleSubjectChange = (event, newValue) => {
-    setSelectedSubject(newValue);
-    updateURL({
-      class: encodeURI(selectedClass) || "",
-      subject: encodeURI(newValue) || "",
-      globalSearch: encodeURI(globalSearch) || "",
-      month: month ? month : "",
-      lectureType: selectedLectureType || "",
-    });
-  };
-
-  const clearSubject = () => {
-    setSelectedSubject("");
-    updateURL({
-      class: encodeURI(selectedClass) || "",
-      subject: "",
-      globalSearch: encodeURI(globalSearch) || "",
-      month: month ? month : "",
-      lectureType: selectedLectureType || "",
-    });
-  };
-
-  const handleGlobalSearchChange = (event) => {
-    setGlobalSearch(event.target.value);
-    updateURL({
-      class: encodeURI(selectedClass) || "",
-      subject: encodeURI(selectedSubject) || "",
-      globalSearch: encodeURI(event.target.value) || "",
-      month: month ? month : "",
-      lectureType: selectedLectureType || "",
-    });
-  };
-
-  const clearGlobalSearch = () => {
-    setGlobalSearch("");
-    updateURL({
-      class: encodeURI(selectedClass) || "",
-      subject: encodeURI(selectedSubject) || "",
-      globalSearch: "",
-      month: month ? month : "",
-      lectureType: selectedLectureType || "",
-    });
-  };
-
-  const handleDateChange = (newValue) => {
-    setSelectedMonth(newValue);
-    updateURL({
-      class: encodeURI(selectedClass) || "",
-      subject: encodeURI(selectedSubject) || "",
-      globalSearch: encodeURI(globalSearch) || "",
-      month: newValue ? newValue.format("YYYY-MM") : "",
-      lectureType: selectedLectureType || "",
-    });
-  };
-
-  const handleSelectType = (type) => {
-    setSelectedLectureType(type);
-    updateURL({
-      class: encodeURI(selectedClass) || "",
-      subject: encodeURI(selectedSubject) || "",
-      globalSearch: encodeURI(globalSearch) || "",
-      month: month ? month : "",
-      lectureType: type || "",
-    });
-  };
-
-  // Define light and dark mode styles
-  const darkModeStyles = {
-    backgroundColor: "#1a1a1a",
-    color: "#ffffff",
-    inputBackgroundColor: "#ffffff",
-    inputColor: "#ffffff",
-    boxShadow: "0px 2px 5px rgba(255, 255, 255, 0.1)",
-  };
-
-  const lightModeStyles = {
-    backgroundColor: "#ffffff",
-    color: "#000000",
-    inputBackgroundColor: "#333333",
-    inputColor: "#000000",
-    boxShadow: "0px 2px 5px rgba(0, 0, 0, 0.1)",
-  };
 
   const currentStyles = isDarkMode ? darkModeStyles : lightModeStyles;
 
+  // Helper function for updating the URL with new parameters
+  const updateURL = useCallback(
+    (params) => {
+      const query = new URLSearchParams(params).toString();
+      router.push(`?${query}`, undefined, { shallow: true });
+    },
+    [router]
+  );
+
+  // Fetch classes and subjects data
+  useEffect(() => {
+    const fetchData = async () => {
+      const classResponse = await getClassByCourse("", "");
+      setClassList(classResponse?.data?.data || []);
+    };
+    fetchData();
+  }, []);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      const subjectResponse = await getSubjectByClass(classValue, "");
+      setSubjectList(subjectResponse?.data?.data || []);
+    };
+    fetchData();
+  }, [classValue]);
+
+  // Handle changes to filters and update the URL
+  const handleChange = (value, key) => {
+    setFilterState((prev) => {
+      const newState = { ...prev, [key]: value };
+      updateURL({
+        class: encodeURIComponent(newState.selectedClass) || "",
+        subject: encodeURIComponent(newState.selectedSubject) || "",
+        globalSearch: encodeURIComponent(newState.globalSearch) || "",
+        month:
+          key === "selectedMonth"
+            ? newState.selectedMonth || month || ""
+            : month || "",
+        lectureType: newState.selectedLectureType || "",
+      });
+      return newState;
+    });
+  };
+
+  // Clear specific filter fields
+  const clearField = (fieldKey) => handleChange("", fieldKey);
+
+  // Memoized LectureType Dropdown
   const lectureTypeDropDown = useMemo(
     () => (
       <LectureTypeDropDown
-        handleSelectType={handleSelectType}
-        lectureType={lectureType}
+        handleSelectType={(type) => handleChange(type, "selectedLectureType")}
+        lectureType={filterState.selectedLectureType}
       />
     ),
-    [lectureType, month]
+    [filterState.selectedLectureType]
   );
 
   return (
@@ -189,8 +127,8 @@ const Filters = ({
           display: "flex",
           flexDirection: "column",
           gap: 4,
-          marginTop: 4,
-          padding: 4,
+          mt: 4,
+          p: 4,
           color: currentStyles.color,
         }}
       >
@@ -200,44 +138,7 @@ const Filters = ({
           alignItems="center"
           justifyContent="space-between"
         >
-          <Box
-            sx={{
-              display: "flex",
-              alignItems: "center",
-              gap: 2,
-              flexWrap: "wrap",
-            }}
-          >
-            <Typography
-              variant="h6" // Corresponds to text-xl
-              sx={{
-                color: currentStyles.color,
-                fontWeight: "bold",
-              }}
-            >
-              Your Lecture
-            </Typography>
-            <Typography
-              variant="body2" // Corresponds to text-sm
-              sx={{
-                color: "gray",
-              }}
-            >
-              Facilitated by
-            </Typography>
-            <Typography
-              variant="body2"
-              sx={{
-                fontWeight: "bold",
-                fontStyle: "italic",
-                color: currentStyles.color,
-              }}
-            >
-              VidyaAI
-            </Typography>
-          </Box>
-
-          {/* Right side: Dark Mode, Notifications, Profile */}
+          {label}
           <Box sx={{ display: "flex", alignItems: "center", gap: 3 }}>
             {lectureTypeDropDown}
             <DarkMode />
@@ -255,128 +156,101 @@ const Filters = ({
         </Grid>
 
         <Grid container spacing={3}>
-          {/* Class Search */}
-          <Grid item xs={12} sm={6} md={3}>
-            <Autocomplete
-              freeSolo
-              id="class"
-              disableClearable
-              options={classList?.map((option) => option.name)}
-              value={decodeURI(selectedClass)}
-              onChange={handleClassChange}
-              renderInput={(params) => (
-                <TextField
-                  {...params}
-                  placeholder="Search Class"
-                  variant="outlined"
-                  InputProps={{
-                    ...params.InputProps,
-                    type: "search",
-                    startAdornment: (
-                      <InputAdornment position="start">
-                        <FaSearch />
-                      </InputAdornment>
-                    ),
-                    endAdornment: selectedClass && (
-                      <InputAdornment position="end">
-                        <IconButton onClick={clearClass}>
-                          <FaTimes />
-                        </IconButton>
-                      </InputAdornment>
-                    ),
-                    sx: {
-                      backdropFilter: "blur(10px)",
-                      backgroundColor: "rgba(255, 255, 255, 0.2)",
-                      color: currentStyles.inputColor,
-                      "& .MuiOutlinedInput-notchedOutline": {
-                        border: "none",
+          {["class", "subject"].map((field, index) => (
+            <Grid item xs={12} sm={6} md={3} key={field}>
+              <Autocomplete
+                freeSolo
+                id={field}
+                disableClearable
+                options={(field === "class" ? classList : subjectList)?.map(
+                  (option) => option.name
+                )}
+                value={decodeURIComponent(
+                  filterState[
+                    `selected${field.charAt(0).toUpperCase() + field.slice(1)}`
+                  ]
+                )}
+                onChange={(event, newValue) =>
+                  handleChange(
+                    encodeURIComponent(newValue),
+                    `selected${field.charAt(0).toUpperCase() + field.slice(1)}`
+                  )
+                }
+                renderInput={(params) => (
+                  <TextField
+                    {...params}
+                    placeholder={`Search ${
+                      field.charAt(0).toUpperCase() + field.slice(1)
+                    }`}
+                    variant="outlined"
+                    InputProps={{
+                      ...params.InputProps,
+                      startAdornment: (
+                        <InputAdornment position="start">
+                          <FaSearch />
+                        </InputAdornment>
+                      ),
+                      endAdornment: filterState[
+                        `selected${
+                          field.charAt(0).toUpperCase() + field.slice(1)
+                        }`
+                      ] && (
+                        <InputAdornment position="end">
+                          <IconButton
+                            onClick={() =>
+                              clearField(
+                                `selected${
+                                  field.charAt(0).toUpperCase() + field.slice(1)
+                                }`
+                              )
+                            }
+                          >
+                            <FaTimes />
+                          </IconButton>
+                        </InputAdornment>
+                      ),
+                      sx: {
+                        ...currentStyles,
+                        "& .MuiOutlinedInput-notchedOutline": {
+                          border: "none",
+                        },
                       },
-                    },
-                  }}
-                  sx={{
-                    boxShadow: currentStyles.boxShadow,
-                    borderRadius: 1,
-                  }}
-                />
-              )}
-            />
-          </Grid>
+                    }}
+                    sx={{
+                      boxShadow: currentStyles.boxShadow,
+                      borderRadius: 1,
+                    }}
+                  />
+                )}
+              />
+            </Grid>
+          ))}
 
-          {/* Subject Search */}
-          <Grid item xs={12} sm={6} md={3}>
-            <Autocomplete
-              freeSolo
-              id="subject"
-              disableClearable
-              options={subjectList?.map((option) => option.name)}
-              value={selectedSubject}
-              onChange={handleSubjectChange}
-              renderInput={(params) => (
-                <TextField
-                  {...params}
-                  placeholder="Search Subject"
-                  variant="outlined"
-                  InputProps={{
-                    ...params.InputProps,
-                    type: "search",
-                    startAdornment: (
-                      <InputAdornment position="start">
-                        <FaSearch />
-                      </InputAdornment>
-                    ),
-                    endAdornment: selectedSubject && (
-                      <InputAdornment position="end">
-                        <IconButton onClick={clearSubject}>
-                          <FaTimes />
-                        </IconButton>
-                      </InputAdornment>
-                    ),
-                    sx: {
-                      backdropFilter: "blur(10px)",
-                      backgroundColor: "rgba(255, 255, 255, 0.2)",
-                      color: currentStyles.inputColor,
-                      "& .MuiOutlinedInput-notchedOutline": {
-                        border: "none",
-                      },
-                    },
-                  }}
-                  sx={{
-                    boxShadow: currentStyles.boxShadow,
-                    borderRadius: 1,
-                  }}
-                />
-              )}
-            />
-          </Grid>
-
-          {/* Global Search */}
           <Grid item xs={12} sm={6} md={3}>
             <TextField
               id="global-search"
               variant="outlined"
-              value={globalSearch}
+              value={filterState.globalSearch}
               placeholder="Global Search"
-              onChange={handleGlobalSearchChange}
+              onChange={(e) =>
+                handleChange(encodeURIComponent(e.target.value), "globalSearch")
+              }
               InputProps={{
                 startAdornment: (
                   <InputAdornment position="start">
                     <FaSearch />
                   </InputAdornment>
                 ),
-                endAdornment: globalSearch && (
+                endAdornment: filterState.globalSearch && (
                   <InputAdornment position="end">
-                    <IconButton onClick={clearGlobalSearch}>
+                    <IconButton onClick={() => clearField("globalSearch")}>
                       <FaTimes />
                     </IconButton>
                   </InputAdornment>
                 ),
                 sx: {
-                  backdropFilter: "blur(10px)",
-                  backgroundColor: "rgba(255, 255, 255, 0.2)",
-                  color: currentStyles.inputColor,
-                  "& .MuiOutlinedInput-notchedOutline": {
-                    border: "none",
-                  },
+                  ...currentStyles,
+                  "& .MuiOutlinedInput-notchedOutline": { border: "none" },
                 },
               }}
               sx={{
@@ -387,26 +261,19 @@ const Filters = ({
             />
           </Grid>
 
-          {/* Date Picker */}
           <Grid item xs={12} sm={6} md={3}>
             <DatePicker
               views={["month"]}
               placeholder="Select Month"
-              value={selectedMonth}
-              slotProps={{ field: { clearable: true } }}
-              onChange={handleDateChange}
+              value={filterState.selectedMonth}
+              onChange={(newValue) =>
+                handleChange(newValue.format("YYYY-MM"), "selectedMonth")
+              }
               sx={{
-                boxShadow: currentStyles.boxShadow,
-                borderRadius: 0,
-                backdropFilter: "blur(10px)",
-                backgroundColor: "rgba(255, 255, 255, 0.2)",
-                color: currentStyles.inputColor,
-                border: 0,
+                ...currentStyles,
                 width: "100%",
                 padding: 0,
-                "& .MuiOutlinedInput-notchedOutline": {
-                  border: "none",
-                },
+                "& .MuiOutlinedInput-notchedOutline": { border: "none" },
               }}
             />
           </Grid>

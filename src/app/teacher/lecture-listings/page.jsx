@@ -44,6 +44,44 @@ const Page = () => {
         searchQuery={searchQuery}
         month={month}
         lectureType={lectureType}
+        label={
+          <Box
+          sx={{
+            display: "flex",
+            alignItems: "center",
+            gap: 2,
+            flexWrap: "wrap",
+          }}
+        >
+          <Typography
+            variant="h6" // Corresponds to text-xl
+            sx={{
+              color: isDarkMode? "#ffffff" : "#000000",
+              fontWeight: "bold",
+            }}
+          >
+            Your Lecture
+          </Typography>
+          <Typography
+            variant="body2" // Corresponds to text-sm
+            sx={{
+              color: "gray",
+            }}
+          >
+            Facilitated by
+          </Typography>
+          <Typography
+            variant="body2"
+            sx={{
+              fontWeight: "bold",
+              fontStyle: "italic",
+              color: isDarkMode? "#ffffff" : "#000000",
+            }}
+          >
+            VidyaAI
+          </Typography>
+        </Box>
+        }
       />
     ),
     [classValue, subject, searchQuery, month, lectureType]
