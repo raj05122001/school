@@ -8,6 +8,7 @@ import {
   DialogActions,
   DialogContent,
   DialogTitle,
+  Skeleton,
 } from "@mui/material";
 import {
   getLectureAssignment,
@@ -121,12 +122,19 @@ const LectureAssignment = ({ id, isDarkMode, class_ID }) => {
     }
   };
 
-  if (loading) {
-    return <Typography>Loading assignments...</Typography>;
-  }
-
   const lectureTitle =
     assignments.length > 0 ? assignments[0].lecture.title : "";
+
+  if (loading) {
+    return (
+      <Box sx={{ p: 3, width: "100%" }}>
+        <Skeleton variant="rectangular" height={40} sx={{ mb: 2 }} />
+        {[...Array(7)].map((_, index) => (
+          <Skeleton key={index} variant="text" height={30} sx={{ mb: 1 }} />
+        ))}
+      </Box>
+    );
+  }
 
   return (
     <Box
@@ -213,9 +221,10 @@ const LectureAssignment = ({ id, isDarkMode, class_ID }) => {
                   variant="contained"
                   onClick={() => handleUpdateAssignment(assignment)}
                   sx={{
-                    backgroundColor: assignment.is_assigned
-                      ? "green"
-                      : "#89CFF0",
+                    // backgroundColor: assignment.is_assigned
+                    //   ? "green"
+                    //   : "#89CFF0",
+                    backgroundColor: "#89CFF0",
                     color: "white",
                   }}
                 >

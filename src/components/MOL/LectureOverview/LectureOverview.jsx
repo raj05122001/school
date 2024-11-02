@@ -15,8 +15,6 @@ const LectureOverview = ({ isDarkMode, lectureId }) => {
     setValue(newValue);
   };
 
-  console.log("summary,summary", summary);
-
   return (
     <Box sx={{ marginTop: "8px" }}>
       <Typography
