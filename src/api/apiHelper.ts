@@ -262,3 +262,45 @@ export const getLectureAns = async (data) => {
   const apiInstance = new apiServices(axiosAPIInstance);
   return await apiInstance.getLectureAns(data);
 };
+
+export const getStudentAllLecture = async (
+  search,
+  date,
+  type,
+  page,
+  pageSize,
+  subjectList = ""
+) => {
+  const apiInstance = new apiServices(axiosAPIInstance);
+  return await apiInstance.getStudentAllLecture(
+    search,
+    date,
+    type,
+    page,
+    pageSize,
+    subjectList
+  );
+};
+
+export const getLectureTracking = async (
+  status,
+  search,
+  type,
+  page,
+  size,
+  getDate,
+  subjectList = "",
+  classList=""
+) => {
+  const apiInstance = new apiServices(axiosAPIInstance);
+  return await apiInstance.getLectureTracking(
+    status,
+    search,
+    type,
+    page,
+    size,
+    getDate,
+    subjectList,
+    classList
+  );
+};

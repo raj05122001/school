@@ -3,8 +3,8 @@ import { Box, Grid, Pagination, Typography } from "@mui/material";
 import { FaChalkboardTeacher } from "react-icons/fa";
 import React, { useEffect, useMemo, useState } from "react";
 import ListingCard from "@/commonComponents/ListingCard/ListingCard";
-import TeacherFilters from "@/components/teacher/lecture-listings/Filters/TeacherFilters";
-import { getTeacherAllLecture } from "@/api/apiHelper";
+import StudentFilters from "@/components/teacher/lecture-listings/Filters/StudentFilters";
+import { getStudentAllLecture } from "@/api/apiHelper";
 import { decodeToken } from "react-jwt";
 import Cookies from "js-cookie";
 import { useSearchParams, useRouter, usePathname } from "next/navigation";
@@ -34,7 +34,6 @@ const Page = () => {
   const router = useRouter();
   const pathname = usePathname();
 
-  const classValue = searchParams.get("class") || "";
   const subject = searchParams.get("subject") || "";
   const searchQuery = searchParams.get("globalSearch") || "";
   const month = searchParams.get("month") || "";
@@ -46,7 +45,7 @@ const Page = () => {
 
   useEffect(() => {
     fetchData();
-  }, [activePage, classValue, subject, searchQuery, month, lectureType]);
+  }, [activePage, subject, searchQuery, month, lectureType]);
 
   const encodeURI = (value) => {
     return encodeURIComponent(value);
@@ -55,15 +54,13 @@ const Page = () => {
   const fetchData = async () => {
     setIsLoading(true);
     try {
-      const apiResponse = await getTeacherAllLecture(
-        userDetails?.teacher_id,
+      const apiResponse = await getStudentAllLecture(
         encodeURI(searchQuery),
         month,
         lectureType,
         activePage,
         9,
-        encodeURI(subject),
-        encodeURI(classValue)
+        encodeURI(subject)
       );
       if (apiResponse?.data?.success) {
         setLectureList(apiResponse?.data);
@@ -82,13 +79,12 @@ const Page = () => {
   };
 
   const handleChangeRoute = (id) => {
-    router.push(`/teacher/lecture-listings/${id}`);
+    router.push(`/student/lecture-listings/${id}`);
   };
 
   const filters = useMemo(
     () => (
-      <TeacherFilters
-        classValue={classValue}
+      <StudentFilters
         subject={subject}
         searchQuery={searchQuery}
         month={month}
@@ -133,7 +129,7 @@ const Page = () => {
         }
       />
     ),
-    [classValue, subject, searchQuery, month, lectureType]
+    [subject, searchQuery, month, lectureType]
   );
 
   return (

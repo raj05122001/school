@@ -7,7 +7,7 @@ import { FaEdit } from "react-icons/fa";
 import { FaSave } from "react-icons/fa";
 import { FaInfoCircle } from "react-icons/fa";
 
-const SummaryComponent = ({ lectureId, isDarkMode }) => {
+const SummaryComponent = ({ lectureId, isDarkMode, isEdit }) => {
   const [summary, setSummary] = useState({});
   const [summaryId, setSummaryId] = useState("");
   const [isEditData, setIsEditData] = useState(false);
@@ -121,13 +121,15 @@ const SummaryComponent = ({ lectureId, isDarkMode }) => {
         </Box>
       ) : summary.length > 0 ? (
         <Box>
-          <Box sx={{ display: "flex", justifyContent: "flex-end" }}>
-            <FaEdit
-              size={24}
-              onClick={() => setIsEditData(true)}
-              style={{ cursor: "pointer" }}
-            />
-          </Box>
+          {isEdit && (
+            <Box sx={{ display: "flex", justifyContent: "flex-end" }}>
+              <FaEdit
+                size={24}
+                onClick={() => setIsEditData(true)}
+                style={{ cursor: "pointer" }}
+              />
+            </Box>
+          )}
           <TextWithMath text={stringToHtml(summary[0])} />
         </Box>
       ) : (

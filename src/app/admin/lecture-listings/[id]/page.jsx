@@ -1,15 +1,6 @@
 "use client";
 import React, { useEffect, useMemo, useState } from "react";
-import {
-  Box,
-  Typography,
-  IconButton,
-  Badge,
-  Button,
-  Paper,
-  Grid,
-  useTheme,
-} from "@mui/material";
+import { Box, Paper, Grid } from "@mui/material";
 import { getLectureById } from "@/api/apiHelper";
 import { useThemeContext } from "@/hooks/ThemeContext";
 import HeaderMOL from "@/components/MOL/Header/HeaderMOL";
@@ -25,7 +16,6 @@ const LecturePage = ({ params }) => {
   const { id } = params;
   const { isDarkMode } = useThemeContext();
   const [lectureData, setLectureData] = useState({});
-  const theme = useTheme(); // Access theme to apply dynamic styling
 
   useEffect(() => {
     if (id) {
@@ -49,7 +39,7 @@ const LecturePage = ({ params }) => {
   const videoPlayer = useMemo(() => <VideoPlayer id={id} />, [id]);
   const headerMOL = useMemo(
     () => (
-      <HeaderMOL lectureData={lectureData} isEdit={true} isShowPic={false} />
+      <HeaderMOL lectureData={lectureData} isEdit={true} isShowPic={true} />
     ),
     [lectureData]
   );

@@ -6,8 +6,10 @@ import LectureMCQ from "./LectureMCQ";
 import LectureQuestions from "./LectureQuestions";
 import LectureAssignment from "./LectureAssignment";
 import LectureReferrence from "./LectureReferrence";
+import { useThemeContext } from "@/hooks/ThemeContext";
 
-const LectureDetails = ({id, isDarkMode, classID }) => {
+const LectureDetails = ({id, classID }) => {
+  const { isDarkMode } = useThemeContext();
   const [value, setValue] = useState(0);
   const [loading, setLoading] = useState(true);
   const [decisionId, setDecisionId] = useState(null);

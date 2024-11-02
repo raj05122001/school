@@ -21,6 +21,7 @@ import DarkMode from "@/components/DarkMode/DarkMode";
 import { decodeToken } from "react-jwt";
 import Cookies from "js-cookie";
 import { useThemeContext } from "@/hooks/ThemeContext";
+import UserImage from "@/commonComponents/UserImage/UserImage";
 
 const darkModeStyles = {
   backgroundColor: "#1a1a1a",
@@ -38,7 +39,7 @@ const lightModeStyles = {
   boxShadow: "0px 2px 5px rgba(0, 0, 0, 0.1)",
 };
 
-const Filters = ({
+const AdminFilters = ({
   classValue = "",
   subject = "",
   searchQuery = "",
@@ -147,11 +148,7 @@ const Filters = ({
                 <FaBell size={20} />
               </Badge>
             </IconButton>
-            <Avatar
-              alt={userDetails?.full_name || ""}
-              src="/sampleprofile.jpg"
-              sx={{ width: 40, height: 40 }}
-            />
+            <UserImage width={40} height={40} />
           </Box>
         </Grid>
 
@@ -283,4 +280,4 @@ const Filters = ({
   );
 };
 
-export default Filters;
+export default AdminFilters;

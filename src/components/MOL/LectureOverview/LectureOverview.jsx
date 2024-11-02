@@ -4,12 +4,14 @@ import { getLectureSummary, getLectureHighlights } from "@/api/apiHelper";
 import TextWithMath from "@/commonComponents/TextWithMath/TextWithMath";
 import SummaryComponent from "./SummaryComponent";
 import HighlightsComponent from "./HighlightsComponent";
+import { useThemeContext } from "@/hooks/ThemeContext";
 
-const LectureOverview = ({ isDarkMode, lectureId }) => {
+const LectureOverview = ({ lectureId, isEdit = false }) => {
   const [value, setValue] = useState(0);
   const [loading, setLoading] = useState(true);
   const [summary, setSummary] = useState({});
   const [summaryId, setSummaryId] = useState("");
+  const { isDarkMode } = useThemeContext();
 
   const handleChange = (event, newValue) => {
     setValue(newValue);
@@ -88,7 +90,11 @@ const LectureOverview = ({ isDarkMode, lectureId }) => {
 
       {/* Render tab content conditionally based on selected tab */}
       {value === 0 && (
-        <SummaryComponent lectureId={lectureId} isDarkMode={isDarkMode} />
+        <SummaryComponent
+          lectureId={lectureId}
+          isDarkMode={isDarkMode}
+          isEdit={isEdit}
+        />
       )}
       {value === 1 && (
         <HighlightsComponent lectureId={lectureId} isDarkMode={isDarkMode} />

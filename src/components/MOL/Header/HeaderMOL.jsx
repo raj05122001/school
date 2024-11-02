@@ -10,16 +10,22 @@ import DarkMode from "@/components/DarkMode/DarkMode";
 import { FaBell, FaDownload } from "react-icons/fa";
 import UserImage from "@/commonComponents/UserImage/UserImage";
 import React from "react";
+import { useThemeContext } from "@/hooks/ThemeContext";
 
-const HeaderMOL = ({ lectureData, isDarkMode }) => {
+const HeaderMOL = ({
+  lectureData,
+  isEdit = false,
+  isShowPic = false,
+}) => {
+  const { isDarkMode } = useThemeContext();
   const theme = useTheme();
 
-    // Helper function to convert duration from milliseconds to hours and minutes
-    const formatDuration = (ms) => {
-        const hours = Math.floor(ms / (1000 * 60 * 60));
-        const minutes = Math.floor((ms % (1000 * 60 * 60)) / (1000 * 60));
-        return `${hours}h ${minutes}m`;
-      };
+  // Helper function to convert duration from milliseconds to hours and minutes
+  const formatDuration = (ms) => {
+    const hours = Math.floor(ms / (1000 * 60 * 60));
+    const minutes = Math.floor((ms % (1000 * 60 * 60)) / (1000 * 60));
+    return `${hours}h ${minutes}m`;
+  };
 
   return (
     <Box
@@ -27,8 +33,6 @@ const HeaderMOL = ({ lectureData, isDarkMode }) => {
         padding: 3,
         color: isDarkMode ? "#fff" : "#000",
       }}
-    //   className="blur_effect_card"
-
     >
       {/* Header Section */}
       <Box
@@ -38,15 +42,8 @@ const HeaderMOL = ({ lectureData, isDarkMode }) => {
           alignItems: "center",
           mb: 4,
           paddingBottom: 2,
-          //   borderBottom: `2px solid ${
-          //     isDarkMode ? theme.palette.grey[700] : theme.palette.grey[300]
-          //   }`,
         }}
       >
-        {/* <Typography variant="h5" sx={{ fontWeight: "bold" }}>
-          {lectureData?.title || "Lecture Title"}
-        </Typography> */}
-
         <Box sx={{ display: "flex", gap: 3, alignItems: "center" }}>
           <Button
             variant="outlined"
@@ -83,10 +80,16 @@ const HeaderMOL = ({ lectureData, isDarkMode }) => {
             paddingRight: 2,
           }}
         >
-          <Typography variant="h4" fontFamily={"monospace"} sx={{ fontWeight: "bold"}}>
+          <Typography
+            variant="h4"
+            fontFamily={"monospace"}
+            sx={{ fontWeight: "bold" }}
+          >
             {lectureData?.title || "Lecture Topic"}
-            <br/>
-            <span style={{fontSize:"16px", fontStyle:"italic"}}>facilitated by VidyaAI</span>
+            <br />
+            <span style={{ fontSize: "16px", fontStyle: "italic" }}>
+              facilitated by VidyaAI
+            </span>
           </Typography>
         </Box>
 
@@ -129,7 +132,8 @@ const HeaderMOL = ({ lectureData, isDarkMode }) => {
             }}
           >
             <Typography variant="subtitle1">
-              <strong>Duration:</strong> {lectureData?.duration
+              <strong>Duration:</strong>{" "}
+              {lectureData?.duration
                 ? formatDuration(lectureData?.duration)
                 : "N/A"}
             </Typography>
@@ -142,6 +146,16 @@ const HeaderMOL = ({ lectureData, isDarkMode }) => {
               {lectureData?.schedule_time || "N/A"}
             </Typography>
           </Box>
+
+          {isShowPic && (
+            <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
+              <UserImage
+                profilePic={lectureData?.organizer?.profile_pic}
+                name={lectureData?.organizer?.full_name}
+              />
+              <Typography>{lectureData?.organizer?.full_name}</Typography>
+            </Box>
+          )}
         </Box>
       </Box>
     </Box>

@@ -3,7 +3,7 @@ import { Box, Grid, Pagination, Typography } from "@mui/material";
 import { FaChalkboardTeacher } from "react-icons/fa";
 import React, { useEffect, useMemo, useState } from "react";
 import ListingCard from "@/commonComponents/ListingCard/ListingCard";
-import TeacherFilters from "@/components/teacher/lecture-listings/Filters/TeacherFilters";
+import AdminFilters from "@/components/teacher/lecture-listings/Filters/AdminFilters";
 import { getTeacherAllLecture } from "@/api/apiHelper";
 import { decodeToken } from "react-jwt";
 import Cookies from "js-cookie";
@@ -55,16 +55,17 @@ const Page = () => {
   const fetchData = async () => {
     setIsLoading(true);
     try {
-      const apiResponse = await getTeacherAllLecture(
-        userDetails?.teacher_id,
+      const apiResponse = await getLectureTracking(
+        "COMPLETED",
         encodeURI(searchQuery),
-        month,
         lectureType,
         activePage,
         9,
+        month,
         encodeURI(subject),
         encodeURI(classValue)
       );
+
       if (apiResponse?.data?.success) {
         setLectureList(apiResponse?.data);
       }
@@ -82,12 +83,12 @@ const Page = () => {
   };
 
   const handleChangeRoute = (id) => {
-    router.push(`/teacher/lecture-listings/${id}`);
+    router.push(`/admin/lecture-listings/${id}`);
   };
 
   const filters = useMemo(
     () => (
-      <TeacherFilters
+      <AdminFilters
         classValue={classValue}
         subject={subject}
         searchQuery={searchQuery}

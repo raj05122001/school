@@ -528,4 +528,44 @@ export default class apiServices {
       .catch((error) => console.error(error));
   };
 
+  public getStudentAllLecture = async (
+    search = "",
+    date = "",
+    type = "",
+    page = 1,
+    pageSize = 9,
+    subjectList = ""
+  ) => {
+    return await this.axiosInstance
+      .get(
+        `/api/v1/student/lectures/?search=${
+          search ? search : ""
+        }&page=${page}&size=${pageSize}&date=${date ? date : ""}&type=${
+          type ? type : ""
+        }${subjectList ? `&subject=${subjectList}` : ""}`
+      )
+      .then((Response) => Response)
+      .catch((error) => console.error(error));
+  };
+
+  public getLectureTracking = async (
+    status,
+    search,
+    type,
+    page,
+    size,
+    getDate,
+    subjectList = "",
+    classList=""
+  ) => {
+    return await this.axiosInstance
+      .get(
+        `/api/v1/dashboard/all_lectures/?search=${search}&type=${type}&status=${status}&page=${page}&size=${size}${
+          getDate ? `&date=${getDate}` : ""
+        }${subjectList ? `&subject=${subjectList}` : ""}${classList? `&class=${classList}`:""}`
+      )
+      .then((Response) => Response)
+      .catch((error) => console.error(error));
+  };
+
 }
