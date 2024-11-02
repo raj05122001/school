@@ -73,7 +73,7 @@ const LectureManager = () => {
                 style={{
                   marginRight: 8,
                   marginBottom: 8,
-                  color: isDarkMode ? "white" : "black",
+                  color: "#00adb5"
                 }}
               />
               <Typography

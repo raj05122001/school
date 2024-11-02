@@ -13,6 +13,7 @@ import {
   Paper,
   Typography,
   Pagination,
+  Skeleton,
 } from "@mui/material";
 import CircularProgress, {
   circularProgressClasses,
@@ -26,6 +27,7 @@ import { MdOutlineEmergencyRecording } from "react-icons/md";
 import { GrEdit } from "react-icons/gr";
 import { AppContextProvider } from "@/app/main";
 import TeacherFilters from "@/components/teacher/lecture-listings/Filters/TeacherFilters";
+import TableSkeleton from "@/commonComponents/Skeleton/TableSkeleton/TableSkeleton";
 
 import { MdOutlineTrackChanges } from "react-icons/md";
 
@@ -170,234 +172,248 @@ const LectureTabs = () => {
       {filters}
 
       <Grid container spacing={2} sx={{ marginBottom: 2 }}>
-        {["COMPLETED", "UPCOMMING", "MISSED", "CANCELLED"].map((value) => (
-          <Grid item xs={3} key={value} sx={{ position: "relative" }}>
-            <Card
-              onClick={() => handleChange(value, "status")}
-              className="blur_effect_card"
-              sx={{
-                color: isDarkMode ? "#F9F6EE" : "#353935",
-                cursor: "pointer",
-                padding: 2,
-                textAlign: "center",
-                position: "relative",
-                background: isDarkMode
-                  ? "linear-gradient(178.6deg, rgb(20, 36, 50) 11.8%, rgb(124, 143, 161) 83.8%)"
-                  : "linear-gradient(to top, #dfe9f3 0%, white 100%)",
-                display: "flex",
-                justifyContent: "space-between",
-                alignItems: "center",
-                height: "100%",
-              }}
-            >
-              <Box
+        {["COMPLETED", "UPCOMMING", "MISSED", "CANCELLED"].map((value) =>
+          tabLoader ? (
+            <Grid item xs={3} key={value} sx={{ position: "relative" }}>
+              <Skeleton
+                variant="rectangular"
                 sx={{
+                  borderRadius: 10,
+                  background: isDarkMode
+                    ? "linear-gradient(178.6deg, rgb(20, 36, 50) 11.8%, rgb(124, 143, 161) 83.8%)"
+                    : "linear-gradient(to top, #dfe9f3 0%, white 100%)",
+                }}
+                width="100%"
+                height={100}
+              />
+            </Grid>
+          ) : (
+            <Grid item xs={3} key={value} sx={{ position: "relative" }}>
+              <Card
+                onClick={() => handleChange(value, "status")}
+                className="blur_effect_card"
+                sx={{
+                  color: isDarkMode ? "#F9F6EE" : "#353935",
+                  cursor: "pointer",
+                  padding: 2,
+                  textAlign: "center",
+                  position: "relative",
+                  background: isDarkMode
+                    ? "linear-gradient(178.6deg, rgb(20, 36, 50) 11.8%, rgb(124, 143, 161) 83.8%)"
+                    : "linear-gradient(to top, #dfe9f3 0%, white 100%)",
                   display: "flex",
-                  flexDirection: "column",
-                  justifyContent: "flex-start",
-                  alignItems: "flex-start",
+                  justifyContent: "space-between",
+                  alignItems: "center",
+                  height: "100%",
                 }}
               >
-                <Typography variant="h6">{value}</Typography>
-                <Typography variant="body1">
-                  {lectureCount[mapData[value]]?.count || 0} Lectures
-                </Typography>
-              </Box>
-
-              <Box sx={{ position: "relative", display: "inline-flex" }}>
-                <FacebookCircularProgress
-                  value={lectureCount[mapData[value]]?.percent || 0}
-                />
                 <Box
                   sx={{
-                    top: 0,
-                    left: 0,
-                    bottom: 0,
-                    right: 0,
-                    position: "absolute",
                     display: "flex",
-                    alignItems: "center",
-                    justifyContent: "center",
+                    flexDirection: "column",
+                    justifyContent: "flex-start",
+                    alignItems: "flex-start",
                   }}
                 >
-                  <Typography
-                    variant="caption"
-                    component="div"
-                    sx={{ color: isDarkMode ? "#F9F6EE" : "#353935" }}
-                  >{`${
-                    lectureCount[mapData[value]]?.percent || 0
-                  }%`}</Typography>
+                  <Typography variant="h6">{value}</Typography>
+                  <Typography variant="body1">
+                    {lectureCount[mapData[value]]?.count || 0} Lectures
+                  </Typography>
                 </Box>
-              </Box>
-            </Card>
-            {status === value && (
-              <Box
-                sx={{
-                  position: "absolute",
-                  bottom: -23,
-                  left: "50%",
-                  transform: "translateX(-50%)",
-                  display: "flex",
-                  justifyContent: "center",
-                  alignItems: "center",
-                }}
-              >
-                <BiSolidDownArrow size={30} color="#e9f1f8" />
-              </Box>
-            )}
-          </Grid>
-        ))}
+
+                <Box sx={{ position: "relative", display: "inline-flex" }}>
+                  <FacebookCircularProgress
+                    value={lectureCount[mapData[value]]?.percent || 0}
+                  />
+                  <Box
+                    sx={{
+                      top: 0,
+                      left: 0,
+                      bottom: 0,
+                      right: 0,
+                      position: "absolute",
+                      display: "flex",
+                      alignItems: "center",
+                      justifyContent: "center",
+                    }}
+                  >
+                    <Typography
+                      variant="caption"
+                      component="div"
+                      sx={{ color: isDarkMode ? "#F9F6EE" : "#353935" }}
+                    >{`${
+                      lectureCount[mapData[value]]?.percent || 0
+                    }%`}</Typography>
+                  </Box>
+                </Box>
+              </Card>
+              {status === value && (
+                <Box
+                  sx={{
+                    position: "absolute",
+                    bottom: -23,
+                    left: "50%",
+                    transform: "translateX(-50%)",
+                    display: "flex",
+                    justifyContent: "center",
+                    alignItems: "center",
+                  }}
+                >
+                  <BiSolidDownArrow size={30} color="#e9f1f8" />
+                </Box>
+              )}
+            </Grid>
+          )
+        )}
       </Grid>
 
       {/* Table */}
-      <TableContainer
-        component={Paper}
-        className="blur_effect_card"
-        sx={{
-          maxHeight: 420,
-          mt: 4,
-          background: isDarkMode
-            ? ""
-            : "linear-gradient(to top, #dfe9f3 0%, white 100%)",
-        }}
-      >
-        <Table>
-          <TableHead>
-            <TableRow
-              className="blur_effect_card"
-              sx={{
-                background: isDarkMode
-                  ? "radial-gradient(circle at 10% 20%, rgb(87, 108, 117) 0%, rgb(37, 50, 55) 100.2%)"
-                  : "radial-gradient(circle at 18.7% 37.8%, rgb(250, 250, 250) 0%, rgb(225, 234, 238) 90%)",
-                position: "sticky",
-                top: 0,
-                zIndex: 1,
-              }}
-            >
-              <TableCell
+      {loading ? (
+        <Box sx={{ mt: 4 }}>
+          <TableSkeleton row={9} />
+        </Box>
+      ) : (
+        <TableContainer
+          component={Paper}
+          className="blur_effect_card"
+          sx={{
+            maxHeight: 420,
+            mt: 4,
+            background: isDarkMode
+              ? ""
+              : "linear-gradient(to top, #dfe9f3 0%, white 100%)",
+          }}
+        >
+          <Table>
+            <TableHead>
+              <TableRow
+                className="blur_effect_card"
                 sx={{
-                  color: isDarkMode ? "#F9F6EE" : "#353935",
+                  background: isDarkMode
+                    ? "radial-gradient(circle at 10% 20%, rgb(87, 108, 117) 0%, rgb(37, 50, 55) 100.2%)"
+                    : "radial-gradient(circle at 18.7% 37.8%, rgb(250, 250, 250) 0%, rgb(225, 234, 238) 90%)",
                   position: "sticky",
+                  top: 0,
+                  zIndex: 1,
                 }}
               >
-                Name
-              </TableCell>
-              <TableCell
-                sx={{
-                  color: isDarkMode ? "#F9F6EE" : "#353935",
-                  position: "sticky",
-                }}
-              >
-                Type
-              </TableCell>
-              <TableCell
-                sx={{
-                  color: isDarkMode ? "#F9F6EE" : "#353935",
-                  position: "sticky",
-                }}
-              >
-                Date
-              </TableCell>
-              <TableCell
-                sx={{
-                  color: isDarkMode ? "#F9F6EE" : "#353935",
-                  position: "sticky",
-                }}
-              >
-                Time
-              </TableCell>
-              <TableCell
-                sx={{
-                  color: isDarkMode ? "#F9F6EE" : "#353935",
-                  position: "sticky",
-                }}
-              >
-                Class
-              </TableCell>
-              <TableCell
-                sx={{
-                  color: isDarkMode ? "#F9F6EE" : "#353935",
-                  position: "sticky",
-                }}
-              >
-                Subject Name
-              </TableCell>
-              <TableCell
-                sx={{
-                  color: isDarkMode ? "#F9F6EE" : "#353935",
-                  position: "sticky",
-                }}
-              >
-                Chapter
-              </TableCell>
-              {status === "UPCOMMING" && (
                 <TableCell
                   sx={{
                     color: isDarkMode ? "#F9F6EE" : "#353935",
                     position: "sticky",
                   }}
                 >
-                  Action
+                  Name
                 </TableCell>
-              )}
-            </TableRow>
-          </TableHead>
-          <TableBody>
-            {loading ? (
-              <TableRow>
-                <TableCell colSpan={9} align="center">
-                  Loading...
+                <TableCell
+                  sx={{
+                    color: isDarkMode ? "#F9F6EE" : "#353935",
+                    position: "sticky",
+                  }}
+                >
+                  Type
                 </TableCell>
+                <TableCell
+                  sx={{
+                    color: isDarkMode ? "#F9F6EE" : "#353935",
+                    position: "sticky",
+                  }}
+                >
+                  Date
+                </TableCell>
+                <TableCell
+                  sx={{
+                    color: isDarkMode ? "#F9F6EE" : "#353935",
+                    position: "sticky",
+                  }}
+                >
+                  Time
+                </TableCell>
+                <TableCell
+                  sx={{
+                    color: isDarkMode ? "#F9F6EE" : "#353935",
+                    position: "sticky",
+                  }}
+                >
+                  Class
+                </TableCell>
+                <TableCell
+                  sx={{
+                    color: isDarkMode ? "#F9F6EE" : "#353935",
+                    position: "sticky",
+                  }}
+                >
+                  Subject Name
+                </TableCell>
+                <TableCell
+                  sx={{
+                    color: isDarkMode ? "#F9F6EE" : "#353935",
+                    position: "sticky",
+                  }}
+                >
+                  Chapter
+                </TableCell>
+                {status === "UPCOMMING" && (
+                  <TableCell
+                    sx={{
+                      color: isDarkMode ? "#F9F6EE" : "#353935",
+                      position: "sticky",
+                    }}
+                  >
+                    Action
+                  </TableCell>
+                )}
               </TableRow>
-            ) : (
-              lectureData?.data?.length > 0 &&
-              lectureData?.data?.map((lecture, index) => (
-                <TableRow key={index} sx={{ color: secondaryColor }}>
-                  <TableCell sx={{ color: secondaryColor }}>
-                    {lecture.title}
-                  </TableCell>
-                  <TableCell sx={{ color: secondaryColor }}>
-                    <LectureType lectureType={lecture?.type} />
-                  </TableCell>
-                  <TableCell sx={{ color: secondaryColor }}>
-                    {lecture.schedule_date}
-                  </TableCell>
-                  <TableCell sx={{ color: secondaryColor }}>
-                    {lecture.schedule_time}
-                  </TableCell>
-                  <TableCell sx={{ color: secondaryColor }}>
-                    {lecture?.lecture_class?.name}
-                  </TableCell>
-                  <TableCell sx={{ color: secondaryColor }}>
-                    {lecture?.chapter?.subject?.name}
-                  </TableCell>
-                  <TableCell sx={{ color: secondaryColor }}>
-                    {lecture?.chapter?.chapter}
-                  </TableCell>
-                  {status === "UPCOMMING" && (
+            </TableHead>
+            <TableBody>
+              {lectureData?.data?.length > 0 &&
+                lectureData?.data?.map((lecture, index) => (
+                  <TableRow key={index} sx={{ color: secondaryColor }}>
                     <TableCell sx={{ color: secondaryColor }}>
-                      <Box
-                        sx={{ display: "flex", alignItems: "center", gap: 1 }}
-                      >
-                        <MdOutlineEmergencyRecording
-                          size={22}
-                          style={{ cursor: "pointer" }}
-                          onClick={() => handleLectureRecord(lecture)}
-                        />
-                        <GrEdit
-                          size={18}
-                          style={{ cursor: "pointer" }}
-                          onClick={() => handleCreateLecture(lecture, true)}
-                        />
-                      </Box>
+                      {lecture.title}
                     </TableCell>
-                  )}
-                </TableRow>
-              ))
-            )}
-          </TableBody>
-        </Table>
-      </TableContainer>
+                    <TableCell sx={{ color: secondaryColor }}>
+                      <LectureType lectureType={lecture?.type} />
+                    </TableCell>
+                    <TableCell sx={{ color: secondaryColor }}>
+                      {lecture.schedule_date}
+                    </TableCell>
+                    <TableCell sx={{ color: secondaryColor }}>
+                      {lecture.schedule_time}
+                    </TableCell>
+                    <TableCell sx={{ color: secondaryColor }}>
+                      {lecture?.lecture_class?.name}
+                    </TableCell>
+                    <TableCell sx={{ color: secondaryColor }}>
+                      {lecture?.chapter?.subject?.name}
+                    </TableCell>
+                    <TableCell sx={{ color: secondaryColor }}>
+                      {lecture?.chapter?.chapter}
+                    </TableCell>
+                    {status === "UPCOMMING" && (
+                      <TableCell sx={{ color: secondaryColor }}>
+                        <Box
+                          sx={{ display: "flex", alignItems: "center", gap: 1 }}
+                        >
+                          <MdOutlineEmergencyRecording
+                            size={22}
+                            style={{ cursor: "pointer" }}
+                            onClick={() => handleLectureRecord(lecture)}
+                          />
+                          <GrEdit
+                            size={18}
+                            style={{ cursor: "pointer" }}
+                            onClick={() => handleCreateLecture(lecture, true)}
+                          />
+                        </Box>
+                      </TableCell>
+                    )}
+                  </TableRow>
+                ))}
+            </TableBody>
+          </Table>
+        </TableContainer>
+      )}
 
       {lectureData?.data?.length > 0 && lectureData?.total > 1 ? (
         <Box

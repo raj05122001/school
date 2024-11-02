@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import Image from "next/image";
 import { Avatar } from "@mui/material";
 import { BASE_URL_MEET } from "@/constants/apiconfig";
@@ -6,6 +6,7 @@ import { decodeToken } from "react-jwt";
 import Cookies from "js-cookie";
 
 const UserImage = ({ profilePic = "", name = "", width = 32, height = 32 }) => {
+  const [imgError, setImgError] = useState(false);
   const stringAvatar = (name) => {
     return {
       children: `${name?.split(" ")?.[0]?.[0]}${name?.split(" ")?.[1]?.[0]}`,
@@ -18,13 +19,14 @@ const UserImage = ({ profilePic = "", name = "", width = 32, height = 32 }) => {
   return (
     <>
       {!profilePic && !name ? (
-        decodedToken?.profile_pic ? (
+        decodedToken?.profile_pic && !imgError ? (
           <Image
             src={`${BASE_URL_MEET}${decodedToken?.profile_pic}`}
             alt=""
             width={width}
             height={height}
             style={{ borderRadius: "50%" }}
+            onError={() => setImgError(true)}
           />
         ) : (
           <Avatar
@@ -32,13 +34,14 @@ const UserImage = ({ profilePic = "", name = "", width = 32, height = 32 }) => {
             sx={{ width: width, height: height }}
           />
         )
-      ) : profilePic ? (
+      ) : profilePic && !imgError ? (
         <Image
           src={`${BASE_URL_MEET}${profilePic}`}
           alt="Profile"
           width={width}
           height={height}
           style={{ borderRadius: "50%" }}
+          onError={() => setImgError(true)}
         />
       ) : (
         <Avatar
