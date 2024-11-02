@@ -1,5 +1,5 @@
 "use client";
-import React, { useState, useEffect, useContext } from "react";
+import React, { useState, useEffect, useContext, useMemo } from "react";
 import {
   Box,
   Card,
@@ -12,27 +12,22 @@ import {
   TableRow,
   Paper,
   Typography,
-  TextField,
-  InputLabel,
-  MenuItem,
-  FormControl,
-  Select,
   Pagination,
 } from "@mui/material";
 import CircularProgress, {
   circularProgressClasses,
 } from "@mui/material/CircularProgress";
-import { MdOutlineTrackChanges } from "react-icons/md";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { getAllLectureCount, getMyLectures } from "@/api/apiHelper";
 import { useThemeContext } from "@/hooks/ThemeContext";
-import DarkMode from "@/components/DarkMode/DarkMode";
-import { MdArrowDropDown } from "react-icons/md";
 import { BiSolidDownArrow } from "react-icons/bi";
 import LectureType from "@/commonComponents/LectureType/LectureType";
 import { MdOutlineEmergencyRecording } from "react-icons/md";
 import { GrEdit } from "react-icons/gr";
 import { AppContextProvider } from "@/app/main";
+import TeacherFilters from "@/components/teacher/lecture-listings/Filters/TeacherFilters";
+
+import { MdOutlineTrackChanges } from "react-icons/md";
 
 const LectureTabs = () => {
   const { isDarkMode, primaryColor, secondaryColor } = useThemeContext();
@@ -42,28 +37,26 @@ const LectureTabs = () => {
     handleCreateLecture,
     handleLectureRecord,
   } = useContext(AppContextProvider);
-  const [currentTab, setCurrentTab] = useState("UPCOMMING");
-  const [searchTerm, setSearchTerm] = useState("");
-  const [selectedMonth, setSelectedMonth] = useState("");
-  const [lectures, setLectures] = useState([]);
   const [loading, setLoading] = useState(false);
-
   const router = useRouter();
   const searchParams = useSearchParams();
-
   const pathname = usePathname();
 
-  const searchQuery = searchParams.get("search")
-    ? searchParams.get("search").replace(/-/g, " ")
-    : "";
   const status = searchParams.get("status") || "COMPLETED";
-  const getDate = searchParams.get("dateFilter") || null;
-  const selectedType = searchParams.get("meetingType") || null;
-  const activePage = searchParams.get("activePage") || 1;
-  const [searchData, setSearchData] = useState(searchQuery);
   const [lectureCount, setLectureCount] = useState({});
   const [tabLoader, setTabLoader] = useState(false);
   const [lectureData, setLectureData] = useState([]);
+
+  const classValue = searchParams.get("class") || "";
+  const subject = searchParams.get("subject") || "";
+  const searchQuery = searchParams.get("globalSearch") || "";
+  const month = searchParams.get("month") || "";
+  const lectureType = searchParams.get("lectureType") || "";
+  const activePage = parseInt(searchParams.get("activePage")) || 1;
+
+  const encodeURI = (value) => {
+    return encodeURIComponent(value);
+  };
 
   console.log("lectureData,", lectureData);
 
@@ -73,7 +66,15 @@ const LectureTabs = () => {
 
   useEffect(() => {
     fetchLectureData();
-  }, [searchQuery, getDate, selectedType, status, activePage]);
+  }, [
+    searchQuery,
+    month,
+    lectureType,
+    status,
+    activePage,
+    subject,
+    classValue,
+  ]);
 
   const fetchAllLectureCount = async () => {
     try {
@@ -92,11 +93,13 @@ const LectureTabs = () => {
       setLoading(true);
       const response = await getMyLectures(
         status,
-        selectedType ? selectedType : "",
+        lectureType ? lectureType : "",
         searchQuery,
         activePage,
         10,
-        getDate
+        month,
+        encodeURI(subject),
+        encodeURI(classValue)
       );
       setLectureData(response?.data?.data?.lecture_data);
       setLoading(false);
@@ -104,18 +107,6 @@ const LectureTabs = () => {
       setLoading(false);
       console.error(error);
     }
-  };
-
-  const handleSearchChange = (event) => {
-    setSearchTerm(event.target.value.toLowerCase());
-  };
-
-  const handleMonthChange = (event) => {
-    setSelectedMonth(event.target.value);
-  };
-
-  const handleTabClick = (status) => {
-    setCurrentTab(status);
   };
 
   const mapData = {
@@ -147,124 +138,37 @@ const LectureTabs = () => {
     router.push(`${pathname}?${newSearchParams.toString()}`);
   };
 
+  const filters = useMemo(
+    () => (
+      <TeacherFilters
+        classValue={classValue}
+        subject={subject}
+        searchQuery={searchQuery}
+        month={month}
+        lectureType={lectureType}
+        label={
+          <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
+            <MdOutlineTrackChanges size={30} color={primaryColor} />
+            <Typography variant="h4" color={primaryColor}>
+              Lecture Tracking
+            </Typography>
+          </Box>
+        }
+      />
+    ),
+    [classValue, subject, searchQuery, month, lectureType]
+  );
+
   return (
     <Box
       sx={{
         padding: 2,
-        // backgroundImage: "url('/lectureTracking.jpg')",
-        // backgroundSize: "cover",
-        // backgroundPosition: "center",
-        // backgroundRepeat: "no-repeat",
         height: "100%",
         minHeight: "100vh",
       }}
     >
-      {/* Top Controls: Search, Month Selector */}
-      <Grid
-        container
-        spacing={2}
-        justifyContent="space-between"
-        sx={{ marginBottom: 2 }}
-      >
-        <Grid
-          item
-          xs={12}
-          md={6}
-          sx={{ display: "flex", alignItems: "center", gap: 1 }}
-        >
-          <MdOutlineTrackChanges size={30} color={primaryColor} />
-          <Typography variant="h4" color={primaryColor}>
-            Lecture Tracking
-          </Typography>
-        </Grid>
-        <Grid
-          item
-          xs={12}
-          md={6}
-          display="flex"
-          justifyContent="flex-end"
-          alignItems="center"
-          spacing={1}
-        >
-          <DarkMode />
-          {/* Search Bar */}
-          <TextField
-            label="Search"
-            variant="outlined"
-            size="small"
-            onChange={handleSearchChange}
-            sx={{
-              marginRight: 2,
-              "& .MuiOutlinedInput-root": {
-                "& fieldset": {
-                  borderColor: isDarkMode ? "#F9F6EE" : "#353935", // sets the outline color to white
-                },
-                "&:hover fieldset": {
-                  borderColor: isDarkMode ? "#F9F6EE" : "#353935", // sets the outline color to white on hover
-                },
-                "&.Mui-focused fieldset": {
-                  borderColor: isDarkMode ? "#F9F6EE" : "#353935", // keeps the outline color white when focused
-                },
-              },
-              "& .MuiInputLabel-root": {
-                color: isDarkMode ? "#F9F6EE" : "#353935", // sets the label color to white
-              },
-              "& .MuiInputLabel-root.Mui-focused": {
-                color: isDarkMode ? "#F9F6EE" : "#353935", // keeps the label color white when focused
-              },
-            }}
-          />
+      {filters}
 
-          {/* Month Selector */}
-          <FormControl size="small" variant="outlined" sx={{ minWidth: 120 }}>
-            <InputLabel>Month</InputLabel>
-            <Select
-              value={selectedMonth}
-              onChange={handleMonthChange}
-              label="Month"
-              sx={{
-                color: isDarkMode ? "#F9F6EE" : "#353935", // changes the selected text color to white
-                "& .MuiOutlinedInput-notchedOutline": {
-                  borderColor: isDarkMode ? "#F9F6EE" : "#353935", // changes the outline color to white
-                },
-                "&:hover .MuiOutlinedInput-notchedOutline": {
-                  borderColor: isDarkMode ? "#F9F6EE" : "#353935", // keeps the outline color white on hover
-                },
-                "&.Mui-focused .MuiOutlinedInput-notchedOutline": {
-                  borderColor: isDarkMode ? "#F9F6EE" : "#353935", // keeps the outline color white when focused
-                },
-                "& .MuiSvgIcon-root": {
-                  color: isDarkMode ? "#F9F6EE" : "#353935", // changes the dropdown icon color to white
-                },
-                "& .MuiInputLabel-root": {
-                      color: isDarkMode ? "#F9F6EE" : "#353935", // Label color
-                    },
-                "& .MuiInputBase-input": {
-                      color: isDarkMode ? "#F9F6EE" : "#353935", // Input text (date value) color
-                },
-              }}
-            >
-              <MenuItem value="">
-                <em>All</em>
-              </MenuItem>
-              <MenuItem value={1}>January</MenuItem>
-              <MenuItem value={2}>February</MenuItem>
-              <MenuItem value={3}>March</MenuItem>
-              <MenuItem value={4}>April</MenuItem>
-              <MenuItem value={5}>May</MenuItem>
-              <MenuItem value={6}>June</MenuItem>
-              <MenuItem value={7}>July</MenuItem>
-              <MenuItem value={8}>August</MenuItem>
-              <MenuItem value={9}>September</MenuItem>
-              <MenuItem value={10}>October</MenuItem>
-              <MenuItem value={11}>November</MenuItem>
-              <MenuItem value={12}>December</MenuItem>
-            </Select>
-          </FormControl>
-        </Grid>
-      </Grid>
-
-      {/* Cards representing tabs */}
       <Grid container spacing={2} sx={{ marginBottom: 2 }}>
         {["COMPLETED", "UPCOMMING", "MISSED", "CANCELLED"].map((value) => (
           <Grid item xs={3} key={value} sx={{ position: "relative" }}>
@@ -338,7 +242,7 @@ const LectureTabs = () => {
                   alignItems: "center",
                 }}
               >
-                <BiSolidDownArrow size={30} color="#5F7182" />
+                <BiSolidDownArrow size={30} color="#e9f1f8" />
               </Box>
             )}
           </Grid>

@@ -77,7 +77,9 @@ export const getMyLectures = async (
   search = "",
   page = 1,
   size = 10,
-  getMyLectures
+  getMyLectures,
+  subjectList="",
+  classList=""
 ) => {
   const apiInstance = new apiServices(axiosAPIInstance);
   return await apiInstance.getMyLectures(
@@ -86,7 +88,9 @@ export const getMyLectures = async (
     search,
     page,
     size,
-    getMyLectures
+    getMyLectures,
+    subjectList,
+    classList
   );
 };
 
@@ -303,4 +307,9 @@ export const getLectureTracking = async (
     subjectList,
     classList
   );
+};
+
+export const postFeedback = async (formData) => {
+  const apiInstance = new apiServices(axiosAPIInstance);
+  return await apiInstance.postFeedback(formData);
 };

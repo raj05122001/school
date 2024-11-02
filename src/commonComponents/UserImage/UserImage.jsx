@@ -21,7 +21,7 @@ const UserImage = ({ profilePic = "", name = "", width = 32, height = 32 }) => {
         decodedToken?.profile_pic ? (
           <Image
             src={`${BASE_URL_MEET}${decodedToken?.profile_pic}`}
-            alt="Profile"
+            alt=""
             width={width}
             height={height}
             style={{ borderRadius: "50%" }}

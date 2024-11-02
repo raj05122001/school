@@ -178,12 +178,16 @@ export default class apiServices {
     search = "",
     page = 1,
     size = 10,
-    getMyLectures
+    getMyLectures,
+    subjectList="",
+    classList=""
   ) => {
     return await this.axiosInstance
       .get(
         `/api/v1/dashboard/teacher/lectures/?status=${status}&type=${type}&search=${search}&page=${page}&size=${size}${
           getMyLectures ? `&date=${getMyLectures}` : ""
+        }${subjectList ? `&subject=${subjectList}` : ""}${
+          classList ? `&class=${classList}` : ""
         }`
       )
       .then((Response) => Response)
@@ -397,17 +401,27 @@ export default class apiServices {
       .catch((error) => console.error(error));
   };
 
-  public getCountByCategory = async (class_ids = "",teacher_id) => {
+  public getCountByCategory = async (class_ids = "", teacher_id) => {
     return await this.axiosInstance
-      .get(`/api/v1/dashboard/count_by_category/?class_ids=${class_ids}${teacher_id!==0?`&teacher_id=${teacher_id}`:""}`)
+      .get(
+        `/api/v1/dashboard/count_by_category/?class_ids=${class_ids}${
+          teacher_id !== 0 ? `&teacher_id=${teacher_id}` : ""
+        }`
+      )
       .then((Response) => Response)
       .catch((error) => console.error(error));
   };
 
-  public getStudentByGrade = async (class_ids = "", grade = "A",teacher_id=0) => {
+  public getStudentByGrade = async (
+    class_ids = "",
+    grade = "A",
+    teacher_id = 0
+  ) => {
     return await this.axiosInstance
       .get(
-        `/api/v1/dashboard/get_by_category/?class_ids=${class_ids}&grade=${grade}${teacher_id!==0?`&teacher_id=${teacher_id}`:""}`
+        `/api/v1/dashboard/get_by_category/?class_ids=${class_ids}&grade=${grade}${
+          teacher_id !== 0 ? `&teacher_id=${teacher_id}` : ""
+        }`
       )
       .then((Response) => Response)
       .catch((error) => console.error(error));
@@ -518,7 +532,7 @@ export default class apiServices {
         });
         console.error(error);
         throw error;
-});
+      });
   };
 
   public getLectureAns = async (data) => {
@@ -556,16 +570,28 @@ export default class apiServices {
     size,
     getDate,
     subjectList = "",
-    classList=""
+    classList = ""
   ) => {
     return await this.axiosInstance
       .get(
         `/api/v1/dashboard/all_lectures/?search=${search}&type=${type}&status=${status}&page=${page}&size=${size}${
           getDate ? `&date=${getDate}` : ""
-        }${subjectList ? `&subject=${subjectList}` : ""}${classList? `&class=${classList}`:""}`
+        }${subjectList ? `&subject=${subjectList}` : ""}${
+          classList ? `&class=${classList}` : ""
+        }`
       )
       .then((Response) => Response)
       .catch((error) => console.error(error));
   };
 
+  public postFeedback = (formData) => {
+    return this.axiosInstance
+      .post(`api/v1/lecture_feedback/`, formData)
+      .then((response) => {
+        return response;
+      })
+      .catch((error) => {
+        console.error(error);
+      });
+  };
 }

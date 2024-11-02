@@ -128,7 +128,6 @@ const TeacherFilters = ({
           display: "flex",
           flexDirection: "column",
           gap: 4,
-          mt: 4,
           p: 4,
           color: currentStyles.color,
         }}
