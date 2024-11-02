@@ -156,7 +156,6 @@ export const Suggestion = ({ suggestionData }) => {
           display: "flex",
           overflowX: "auto",
           width: "100%",
-          whiteSpace: "nowrap",
           py: 2,
           mx: 6,
           "&::-webkit-scrollbar": {
