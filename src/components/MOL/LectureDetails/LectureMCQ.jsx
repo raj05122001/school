@@ -1,11 +1,12 @@
 import React, { useEffect, useState } from "react";
-import { Box, Typography, List, ListItem, Button } from "@mui/material";
+import { Box, Typography, List, ListItem, Button, Skeleton } from "@mui/material";
 import { getLectureQuiz } from "@/api/apiHelper";
 import MathJax from "react-mathjax2";
 
 const LectureMCQ = ({ id, isDarkMode }) => {
   const [quizData, setQuizData] = useState([]);
   const [visibleCount, setVisibleCount] = useState(5);
+  const [loading, setLoading] = useState(true)
 
   useEffect(() => {
     const fetchQuizData = async () => {
@@ -16,6 +17,8 @@ const LectureMCQ = ({ id, isDarkMode }) => {
         }
       } catch (error) {
         console.error("Error fetching quiz data:", error);
+      } finally {
+        setLoading(false);
       }
     };
 
@@ -35,6 +38,17 @@ const LectureMCQ = ({ id, isDarkMode }) => {
   };
 
   const displayedNotes = quizData.slice(0, visibleCount);
+
+  if (loading) {
+    return (
+      <Box sx={{ p: 3, width: "100%" }}>
+        <Skeleton variant="rectangular" height={40} sx={{ mb: 2 }} />
+        {[...Array(7)].map((_, index) => (
+          <Skeleton key={index} variant="text" height={30} sx={{ mb: 1 }} />
+        ))}
+      </Box>
+    );
+  }
 
   return (
     <Box

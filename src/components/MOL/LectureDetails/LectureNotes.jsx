@@ -6,6 +6,7 @@ import {
   Button,
   TextField,
   IconButton,
+  Skeleton,
 } from "@mui/material";
 import { IoMdSend } from "react-icons/io";
 import { getLectureNotes, regenrateNotes } from "@/api/apiHelper";
@@ -80,13 +81,11 @@ const LectureNotes = ({ id, isDarkMode }) => {
 
   if (loading) {
     return (
-      <Box
-        display="flex"
-        justifyContent="center"
-        alignItems="center"
-        height="100%"
-      >
-        <CircularProgress />
+      <Box sx={{ p: 3, width: "100%" }}>
+        <Skeleton variant="rectangular" height={40} sx={{ mb: 2 }} />
+        {[...Array(7)].map((_, index) => (
+          <Skeleton key={index} variant="text" height={30} sx={{ mb: 1 }} />
+        ))}
       </Box>
     );
   }

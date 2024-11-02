@@ -1,10 +1,11 @@
 import React, { useEffect, useState } from "react";
-import { Box, Typography, Link, Button } from "@mui/material";
+import { Box, Typography, Link, Button, Skeleton } from "@mui/material";
 import { getLectureResources } from "@/api/apiHelper";
 
 const LectureReferrence = ({ id, isDarkMode }) => {
   const [resources, setResources] = useState([]);
   const [visibleCount, setVisibleCount] = useState(10);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     // Fetch lecture resources
@@ -18,6 +19,8 @@ const LectureReferrence = ({ id, isDarkMode }) => {
         }
       } catch (error) {
         console.error("Error fetching lecture resources:", error);
+      } finally {
+        setLoading(false);
       }
     };
 
@@ -26,6 +29,16 @@ const LectureReferrence = ({ id, isDarkMode }) => {
 
   const displayedResources = resources.slice(0, visibleCount);
 
+  if (loading) {
+    return (
+      <Box sx={{ p: 3, width: "100%" }}>
+        <Skeleton variant="rectangular" height={40} sx={{ mb: 2 }} />
+        {[...Array(7)].map((_, index) => (
+          <Skeleton key={index} variant="text" height={30} sx={{ mb: 1 }} />
+        ))}
+      </Box>
+    );
+  }
   return (
     <Box
       sx={{
