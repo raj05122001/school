@@ -227,17 +227,17 @@ export default function ChatBot({
                 sx={{
                   display: "inline-block",
                   bgcolor:
-                    message.role === "assistant"
+                    message?.role === "assistant"
                       ? "background.paper"
                       : "grey.800",
                   color:
-                    message.role === "assistant" ? "text.primary" : "white",
+                    message?.role === "assistant" ? "text.primary" : "white",
                   p: 2,
                   borderRadius: 2,
                   maxWidth: "75%",
                 }}
               >
-                {message.role === "user" ? (
+                {message?.role === "user" ? (
                   message.content
                 ) : (
                   <>

@@ -19,6 +19,8 @@ function GreetingCard() {
   const userDetails = decodeToken(Cookies.get("ACCESS_TOKEN"));
   const { handleCreateLecture } = useContext(AppContextProvider);
 
+  console.log("USer Role is", userDetails?.role);
+
   const getGreeting = () => {
     const hours = new Date().getHours();
     if (hours < 12) return "Good Morning";
@@ -72,38 +74,73 @@ function GreetingCard() {
         </Box>
       </Box>
       <Box sx={{ display: "flex", justifyContent: "flex-end" }}>
-        <Box sx={{ display: "flex", gap: 2 }}>
-          <Button
-            variant="contained"
-            sx={{
-              backgroundColor: "#FFD700", // Gold
-              transition: "all 150ms ease-in-out",
-              color: "#003366", // Dark blue for text
+        {userDetails?.role === "STUDENT" ? (
+          <Box sx={{ display: "flex", gap: 2 }}>
+            <Button
+              variant="contained"
+              sx={{
+                backgroundColor: "#FFD700", // Gold
+                transition: "all 150ms ease-in-out",
+                color: "#003366", // Dark blue for text
 
-              ":hover": {
-                backgroundColor: "#FFC107", // Slightly darker gold on hover
-                boxShadow: "0 0 10px 0 #FFC107 inset, 0 0 10px 4px #FFC107", // Matching hover color with gold shade
-              },
-            }}
-            onClick={() => handleCreateLecture("", false)}
-          >
-            Create Lecture
-          </Button>
+                ":hover": {
+                  backgroundColor: "#FFC107", // Slightly darker gold on hover
+                  boxShadow: "0 0 10px 0 #FFC107 inset, 0 0 10px 4px #FFC107", // Matching hover color with gold shade
+                },
+              }}
+              onClick={() => handleCreateLecture("", false)}
+            >
+              Watch Lecture
+            </Button>
 
-          <Button
-            variant="contained"
-            sx={{
-              backgroundColor: "#90EE90",
-              ":hover": {
-                backgroundColor: "#3CB371",
-                boxShadow: "0 0 10px 0 #3CB371 inset, 0 0 10px 4px #3CB371",
-              },
-              color: "#006400",
-            }}
-          >
-            Create Quiz
-          </Button>
-        </Box>
+            <Button
+              variant="contained"
+              sx={{
+                backgroundColor: "#90EE90",
+                ":hover": {
+                  backgroundColor: "#3CB371",
+                  boxShadow: "0 0 10px 0 #3CB371 inset, 0 0 10px 4px #3CB371",
+                },
+                color: "#006400",
+              }}
+            >
+              Attempt Quiz
+            </Button>
+          </Box>
+        ) : (
+          <Box sx={{ display: "flex", gap: 2 }}>
+            <Button
+              variant="contained"
+              sx={{
+                backgroundColor: "#FFD700", // Gold
+                transition: "all 150ms ease-in-out",
+                color: "#003366", // Dark blue for text
+
+                ":hover": {
+                  backgroundColor: "#FFC107", // Slightly darker gold on hover
+                  boxShadow: "0 0 10px 0 #FFC107 inset, 0 0 10px 4px #FFC107", // Matching hover color with gold shade
+                },
+              }}
+              onClick={() => handleCreateLecture("", false)}
+            >
+              Create Lecture
+            </Button>
+
+            <Button
+              variant="contained"
+              sx={{
+                backgroundColor: "#90EE90",
+                ":hover": {
+                  backgroundColor: "#3CB371",
+                  boxShadow: "0 0 10px 0 #3CB371 inset, 0 0 10px 4px #3CB371",
+                },
+                color: "#006400",
+              }}
+            >
+              Create Quiz
+            </Button>
+          </Box>
+        )}
       </Box>
     </Paper>
   );

@@ -8,6 +8,8 @@ import { getMyLectures } from "@/api/apiHelper";
 import LectureCardSkeleton from "@/commonComponents/Skeleton/LectureCardSkeleton/LectureCardSkeleton";
 import { FaExclamationCircle } from "react-icons/fa";
 import { AppContextProvider } from "@/app/main";
+import { decodeToken } from "react-jwt";
+import Cookies from "js-cookie";
 
 const iconStyle = {
   fontSize: "24px",
@@ -21,6 +23,8 @@ const OverviewSection = () => {
   const [allLecture, setAllLecture] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
 
+  const userDetails = decodeToken(Cookies.get("ACCESS_TOKEN"));
+
   useEffect(() => {
     if (!openCreateLecture && !openRecordingDrawer) {
       getAllLecture();
@@ -30,7 +34,8 @@ const OverviewSection = () => {
   const getAllLecture = async () => {
     setIsLoading(true);
     try {
-      const response = await getMyLectures("UPCOMMING");
+      const status = userDetails?.role === "STUDENT" ? "COMPLETED" : "UPCOMMING";
+      const response = await getMyLectures(status);
       if (response?.data?.success) {
         setAllLecture(response?.data?.data);
         setIsLoading(false);
@@ -50,7 +55,9 @@ const OverviewSection = () => {
           className={`${isDarkMode ? "dark-heading" : "light-heading"}`}
           sx={{ fontWeight: "bold" }}
         >
-          Upcomming Lectures
+          {userDetails?.role === "STUDENT"
+            ? `Completed Lectures`
+            : `Upcomming Lectures`}
         </Typography>
       </Box>
 
@@ -110,55 +117,64 @@ const OverviewSection = () => {
               <LectureCardSkeleton />
             </Grid>
           </Grid>
-
           {/* Create Lecture Section */}
-          <Grid
-            item
-            container
-            xs={12}
-            sm={6}
-            justifyContent="center"
-            alignItems="center"
-            direction="column"
-            spacing={2}
-          >
-            <Grid item>
-              <Typography
-                variant="h6"
-                align="center"
-                color={isDarkMode ? "white" : "textSecondary"}
-              >
-                <FaExclamationCircle size={30} style={{ marginRight: "8px" }} />
-                <Box display="flex" alignItems="center" justifyContent="center">
-                  You don&apos;t have any lectures. Please create a lecture.
-                </Box>
-              </Typography>
-            </Grid>
+          {userDetails?.role !== "STUDENT" && (
+            <Grid
+              item
+              container
+              xs={12}
+              sm={6}
+              justifyContent="center"
+              alignItems="center"
+              direction="column"
+              spacing={2}
+            >
+              <Grid item>
+                <Typography
+                  variant="h6"
+                  align="center"
+                  color={isDarkMode ? "white" : "textSecondary"}
+                >
+                  <FaExclamationCircle
+                    size={30}
+                    style={{ marginRight: "8px" }}
+                  />
+                  <Box
+                    display="flex"
+                    alignItems="center"
+                    justifyContent="center"
+                  >
+                    You don&apos;t have any lectures. Please create a lecture.
+                  </Box>
+                </Typography>
+              </Grid>
 
-            <Grid item>
-              <Button
-                variant="contained"
-                sx={{
-                  backgroundColor: "#FFD700", // Gold
-                  transition: "all 150ms ease-in-out",
-                  color: "#003366", // Dark blue for text
-                  fontWeight: "bold",
-                  padding: "12px 24px",
-                  borderRadius: "8px", // Rounded corners
-                  display: "flex",
-                  alignItems: "center",
-                  ":hover": {
-                    backgroundColor: "#FFC107", // Slightly darker gold on hover
-                    boxShadow: "0 0 10px 0 #FFC107 inset, 0 0 10px 4px #FFC107", // Hover effect
-                  },
-                }}
-                startIcon={<FaChalkboardTeacher size={20} />}
-                onClick={() => handleCreateLecture("", false)}
-              >
-                Create Lecture
-              </Button>
+              <Grid item>
+                <Button
+                  variant="contained"
+                  sx={{
+                    backgroundColor: "#FFD700", // Gold
+                    transition: "all 150ms ease-in-out",
+                    color: "#003366", // Dark blue for text
+                    fontWeight: "bold",
+                    padding: "12px 24px",
+                    borderRadius: "8px", // Rounded corners
+                    display: "flex",
+                    alignItems: "center",
+                    ":hover": {
+                      backgroundColor: "#FFC107", // Slightly darker gold on hover
+                      boxShadow:
+                        "0 0 10px 0 #FFC107 inset, 0 0 10px 4px #FFC107", // Hover effect
+                    },
+                  }}
+                  startIcon={<FaChalkboardTeacher size={20} />}
+                  onClick={() => handleCreateLecture("", false)}
+                >
+                  Create Lecture
+                </Button>
+              </Grid>
             </Grid>
-          </Grid>
+          )}
         </Grid>
       )}
     </Box>
