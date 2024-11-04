@@ -92,7 +92,7 @@ function GreetingCard() {
                   boxShadow: "0 0 10px 0 #FFC107 inset, 0 0 10px 4px #FFC107", // Matching hover color with gold shade
                 },
               }}
-              onClick={userDetails.role !== "STUDENT" ? () => handleCreateLecture("", false) :  () => handleRoute()}
+              onClick={userDetails?.role !== "STUDENT" ? () => handleCreateLecture("", false) :  () => handleRoute()}
             >
               Watch Lecture
             </Button>
