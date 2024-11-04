@@ -9,7 +9,8 @@ const UserImage = ({ profilePic = "", name = "", width = 32, height = 32 }) => {
   const [imgError, setImgError] = useState(false);
   const stringAvatar = (name) => {
     return {
-      children: `${name?.split(" ")?.[0]?.[0]}${name?.split(" ")?.[1]?.[0]}`,
+      children: `${name?.split(" ")?.[0]?.[0]}`,
+      // children: `${name?.split(" ")?.[0]?.[0]}${name?.split(" ")?.[1]?.[0]}`,
     };
   };
   // Get the access token from cookies and decode it if props are not provided

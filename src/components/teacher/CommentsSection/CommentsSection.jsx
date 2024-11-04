@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from "react";
 import {
-  Avatar,
   Box,
   Card,
   CardContent,
@@ -9,6 +8,7 @@ import {
   Divider,
   IconButton,
   Button,
+  CircularProgress,
 } from "@mui/material";
 import { FaPaperPlane } from "react-icons/fa";
 import { useThemeContext } from "@/hooks/ThemeContext";
@@ -17,75 +17,88 @@ import {
   updateLectureDiscussion,
   updateCommentReply,
 } from "@/api/apiHelper";
-import moment from "moment";
+import { formatDistanceToNow } from "date-fns";
 import { decodeToken } from "react-jwt";
 import Cookies from "js-cookie";
+import UserImage from "@/commonComponents/UserImage/UserImage";
 
-const ReplyCard = ({ reply, isDarkMode, secondaryColor }) => (
-  <Box
-    display="flex"
-    alignItems="flex-start"
-    mb={2}
-    // p={1}
-    // sx={{
-    //   backgroundColor: isDarkMode ? "#1F1F1F" : "#F9F9F9",
-    //   borderRadius: "12px",
-    //   boxShadow: "0px 4px 12px rgba(0, 0, 0, 0.1)",
-    // }}
-  >
-    <Avatar
-      src={reply.replied_by?.profile_pic || "/default-avatar.jpg"}
-      alt={reply.replied_by?.full_name}
-      sx={{ width: 36, height: 36, mr: 1.5 }}
-    />
-    <Box>
-      <Typography
-        variant="body2"
-        fontWeight="bold"
-        color={isDarkMode ? "white" : "black"}
-      >
-        {reply.replied_by?.full_name}
-      </Typography>
-      <Typography variant="caption" color={secondaryColor}>
-        {moment(reply.replied_at).fromNow()}
-      </Typography>
-      <Typography variant="body2" mt={0.5} color={secondaryColor}>
-        {reply.reply_text}
-      </Typography>
+// ReplyCard Component
+const ReplyCard = ({ reply, isDarkMode, secondaryColor }) => {
+  const repliedBy = reply.replied_by || {};
+  return (
+    <Box display="flex" alignItems="flex-start" mb={2}>
+      <Box sx={{ mr: 1.5 }}>
+        <UserImage
+          profilePic={repliedBy.profile_pic}
+          name={repliedBy.full_name}
+          width={36}
+          height={36}
+        />
+      </Box>
+      <Box>
+        <Typography
+          variant="body2"
+          fontWeight="bold"
+          color={isDarkMode ? "white" : "black"}
+        >
+          {repliedBy.full_name || "Anonymous"}
+        </Typography>
+        <Typography variant="caption" color={secondaryColor}>
+          {formatDistanceToNow(new Date(reply.replied_at), { addSuffix: true })}
+        </Typography>
+        <Typography variant="body2" mt={0.5} color={secondaryColor}>
+          {reply.reply_text}
+        </Typography>
+      </Box>
     </Box>
-  </Box>
-);
+  );
+};
 
-const CommentCard = ({ comment, isDarkMode, secondaryColor ,handleSubmitReply}) => {
+// CommentCard Component
+const CommentCard = ({
+  comment,
+  isDarkMode,
+  secondaryColor,
+  handleSubmitReply,
+}) => {
   const [isShowReplyComment, setIsShowReplyComment] = useState(false);
   const [showRepliesCount, setShowRepliesCount] = useState(3);
   const [isReply, setIsReply] = useState(false);
   const [text, setText] = useState("");
 
-  const len = comment.replies?.length - showRepliesCount;
+  const replies = comment.replies || [];
+  const remainingReplies = replies.length - showRepliesCount;
 
-  const handleComment=async()=>{
-    handleSubmitReply(comment?.id,text)
-    setText("");
-    setIsReply(false);
-  }
+  const handleComment = () => {
+    if (text.trim()) {
+      handleSubmitReply(comment.id, text);
+      setText("");
+      setIsReply(false);
+    }
+  };
+
   return (
     <Box display="flex" alignItems="flex-start" mb={3}>
-      <Avatar
-        src={comment.made_by?.profile_pic || "/default-avatar.jpg"}
-        alt={comment?.made_by?.full_name}
-        sx={{ width: 48, height: 48, mr: 2 }}
-      />
-      <Box>
+      <Box sx={{ mr: 2 }}>
+        <UserImage
+          profilePic={comment.made_by?.profile_pic}
+          name={comment.made_by?.full_name}
+          width={48}
+          height={48}
+        />
+      </Box>
+      <Box flex={1}>
         <Typography
           variant="body1"
           fontWeight="bold"
           color={isDarkMode ? "white" : "black"}
         >
-          {comment?.made_by?.full_name}
+          {comment.made_by?.full_name || "Anonymous"}
         </Typography>
         <Typography variant="caption" color={secondaryColor}>
-          {moment(comment.created_at).fromNow()}
+          {formatDistanceToNow(new Date(comment.created_at), {
+            addSuffix: true,
+          })}
         </Typography>
         <Typography variant="body2" mt={1} color={secondaryColor}>
           {comment.comment}
@@ -96,18 +109,20 @@ const CommentCard = ({ comment, isDarkMode, secondaryColor ,handleSubmitReply}) 
             color="primary"
             size="small"
             sx={{ mr: 1 }}
-            onClick={() => setIsReply(true)}
+            onClick={() => setIsReply(!isReply)}
           >
-            Reply
+            {isReply ? "Cancel" : "Reply"}
           </Button>
-          {comment.replies?.length > 0 && (
+          {replies.length > 0 && (
             <Button
               variant="text"
               color="primary"
               size="small"
               onClick={() => setIsShowReplyComment(!isShowReplyComment)}
             >
-              {isShowReplyComment ? "Hide Replies" : "View Replies"}
+              {isShowReplyComment
+                ? "Hide Replies"
+                : `View Replies (${replies.length})`}
             </Button>
           )}
         </Box>
@@ -115,7 +130,7 @@ const CommentCard = ({ comment, isDarkMode, secondaryColor ,handleSubmitReply}) 
         {isReply && (
           <Box display="flex" alignItems="center" pt={2}>
             <InputBase
-              placeholder="Write a comment..."
+              placeholder="Write a reply..."
               fullWidth
               sx={{
                 ml: 1,
@@ -125,7 +140,8 @@ const CommentCard = ({ comment, isDarkMode, secondaryColor ,handleSubmitReply}) 
                 padding: "8px 16px",
                 boxShadow: "0px 4px 8px rgba(0, 0, 0, 0.1)",
               }}
-              onChange={(event) => setText(event?.target?.value)}
+              value={text}
+              onChange={(event) => setText(event.target.value)}
             />
             <IconButton
               color="primary"
@@ -133,9 +149,8 @@ const CommentCard = ({ comment, isDarkMode, secondaryColor ,handleSubmitReply}) 
                 ml: 1,
                 backgroundColor: isDarkMode ? "#FFD700" : "#E3F2FD",
               }}
-              onClick={() => {
-                text && handleComment();
-              }}
+              onClick={handleComment}
+              aria-label="Send reply"
             >
               <FaPaperPlane color={isDarkMode ? "#000" : "#0288D1"} />
             </IconButton>
@@ -143,16 +158,8 @@ const CommentCard = ({ comment, isDarkMode, secondaryColor ,handleSubmitReply}) 
         )}
 
         {isShowReplyComment && (
-          <Box
-            mt={2}
-            sx={{
-              // backgroundColor: isDarkMode ? "#2C2C2C" : "#FAFAFA",
-              // borderRadius: "8px",
-              // boxShadow: "0px 4px 12px rgba(0, 0, 0, 0.1)",
-              p: 1.5,
-            }}
-          >
-            {comment.replies?.slice(0, showRepliesCount).map((reply) => (
+          <Box mt={2} pl={1}>
+            {replies.slice(0, showRepliesCount).map((reply) => (
               <ReplyCard
                 key={reply.id}
                 reply={reply}
@@ -161,7 +168,7 @@ const CommentCard = ({ comment, isDarkMode, secondaryColor ,handleSubmitReply}) 
               />
             ))}
 
-            {comment.replies?.length > showRepliesCount && (
+            {remainingReplies > 0 && (
               <Box display="flex" justifyContent="center" mt={1}>
                 <Button
                   variant="text"
@@ -169,7 +176,8 @@ const CommentCard = ({ comment, isDarkMode, secondaryColor ,handleSubmitReply}) 
                   size="small"
                   onClick={() => setShowRepliesCount((prev) => prev + 5)}
                 >
-                  View {len} more replies
+                  View {remainingReplies} more{" "}
+                  {remainingReplies > 1 ? "replies" : "reply"}
                 </Button>
               </Box>
             )}
@@ -180,52 +188,63 @@ const CommentCard = ({ comment, isDarkMode, secondaryColor ,handleSubmitReply}) 
   );
 };
 
+// CommentsSection Component
 const CommentsSection = ({ id }) => {
   const { isDarkMode, primaryColor, secondaryColor } = useThemeContext();
   const [commentData, setCommentData] = useState([]);
-  const userDetails = decodeToken(Cookies.get("ACCESS_TOKEN"));
   const [text, setText] = useState("");
+  const [loading, setLoading] = useState(false);
+  const userDetails = decodeToken(Cookies.get("ACCESS_TOKEN"));
 
   useEffect(() => {
     fetchComments();
-  }, []);
+  }, [id]);
 
   const fetchComments = async () => {
+    setLoading(true);
     try {
-      const response = await getComments();
-      setCommentData(response?.data);
-      console.log("response", response);
+      const response = await getComments(id);
+      setCommentData(response.data || []);
     } catch (error) {
       console.error(error);
+      // Optionally, set an error state here to display to the user
+    } finally {
+      setLoading(false);
     }
   };
 
   const handleSubmitComment = async () => {
-    let data = {
-      comment: text,
-      lecture: Number(id),
-      made_by: userDetails?.user_id,
-    };
-    setText("");
-    try {
-      await updateLectureDiscussion(id, data);
-      fetchComments();
-    } catch (error) {
-      console.error(error);
+    if (text.trim()) {
+      const data = {
+        comment: text,
+        lecture: Number(id),
+        made_by: userDetails?.user_id,
+      };
+      try {
+        await updateLectureDiscussion(id, data);
+        setText("");
+        fetchComments();
+      } catch (error) {
+        console.error(error);
+        // Optionally, handle error
+      }
     }
   };
 
-  const handleSubmitReply = async (commentId,textMessage) => {
-    let data = {
-      lecture_discussion: commentId,
-      replied_by: userDetails?.user_id,
-      reply_text: textMessage,
-    };
-    try {
-      await updateCommentReply(data);
-      fetchComments();
-    } catch (error) {
-      console.error(error);
+  const handleSubmitReply = async (commentId, textMessage) => {
+    if (textMessage.trim()) {
+      const data = {
+        lecture_discussion: commentId,
+        replied_by: userDetails?.user_id,
+        reply_text: textMessage,
+      };
+      try {
+        await updateCommentReply(data);
+        fetchComments();
+      } catch (error) {
+        console.error(error);
+        // Optionally, handle error
+      }
     }
   };
 
@@ -266,24 +285,47 @@ const CommentsSection = ({ id }) => {
             color={isDarkMode ? "black" : "white"}
             sx={{ fontSize: "18px" }}
           >
-            {commentData?.length || 0}
+            {commentData.length}
           </Typography>
         </Box>
       </Box>
 
       <Divider sx={{ borderColor: isDarkMode ? "gray.600" : "gray.300" }} />
+
       <CardContent sx={{ maxHeight: "400px", overflowY: "auto" }}>
-        {commentData?.map((comment) => (
-          <CommentCard
-            key={comment.id}
-            comment={comment}
-            isDarkMode={isDarkMode}
-            secondaryColor={secondaryColor}
-            handleSubmitReply={handleSubmitReply}
-          />
-        ))}
+        {loading && commentData?.length===0  ? (
+          <Box
+            display="flex"
+            justifyContent="center"
+            alignItems="center"
+            mt={2}
+          >
+            <CircularProgress />
+          </Box>
+        ) : commentData.length > 0 ? (
+          commentData.map((comment) => (
+            <CommentCard
+              key={comment.id}
+              comment={comment}
+              isDarkMode={isDarkMode}
+              secondaryColor={secondaryColor}
+              handleSubmitReply={handleSubmitReply}
+            />
+          ))
+        ) : (
+          <Typography
+            variant="body2"
+            color={secondaryColor}
+            textAlign="center"
+            mt={2}
+          >
+            No comments yet. Be the first to comment!
+          </Typography>
+        )}
       </CardContent>
+
       <Divider sx={{ borderColor: isDarkMode ? "gray.600" : "gray.300" }} />
+
       <Box display="flex" alignItems="center" pt={2}>
         <InputBase
           placeholder="Write a comment..."
@@ -296,14 +338,17 @@ const CommentsSection = ({ id }) => {
             padding: "8px 16px",
             boxShadow: "0px 4px 8px rgba(0, 0, 0, 0.1)",
           }}
-          onChange={(event) => setText(event?.target?.value)}
+          value={text}
+          onChange={(event) => setText(event.target.value)}
         />
         <IconButton
           color="primary"
-          sx={{ ml: 1, backgroundColor: isDarkMode ? "#FFD700" : "#E3F2FD" }}
-          onClick={() => {
-            text && handleSubmitComment();
+          sx={{
+            ml: 1,
+            backgroundColor: isDarkMode ? "#FFD700" : "#E3F2FD",
           }}
+          onClick={handleSubmitComment}
+          aria-label="Send comment"
         >
           <FaPaperPlane color={isDarkMode ? "#000" : "#0288D1"} />
         </IconButton>

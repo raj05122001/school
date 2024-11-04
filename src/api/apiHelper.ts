@@ -329,3 +329,7 @@ export const updateCommentReply = async ( formData) => {
   return await apiInstance.updateCommentReply( formData);
 };
 
+export const getFeedback = async ( lectureId) => {
+  const apiInstance = new apiServices(axiosAPIInstance);
+  return await apiInstance.getFeedback( lectureId);
+};

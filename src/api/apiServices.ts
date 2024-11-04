@@ -625,4 +625,12 @@ export default class apiServices {
         console.error(error);
       });
   };
+
+  public getFeedback = async (lectureId) => {
+    return await this.axiosInstance
+      .get(`/api/v1/lecture_feedback/${lectureId}/`)
+      .then((Response) => Response.data)
+      .catch((error) => console.error(error));
+  };
+  
 }

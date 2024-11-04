@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import {
   Box,
   Typography,
@@ -11,18 +11,28 @@ import { GiStaryu } from "react-icons/gi";
 import { MdStar } from "react-icons/md";
 import { useThemeContext } from "@/hooks/ThemeContext";
 import Feedback from "./Feedback";
+import { getFeedback } from "@/api/apiHelper";
 
 const RatingSection = ({ id, isShowRating = false }) => {
   const { isDarkMode, primaryColor, secondaryColor } = useThemeContext();
-  const totalRatings = 77;
-  const averageRating = 4.3;
-  const ratings = {
-    5: 47,
-    4: 20,
-    3: 2,
-    2: 5,
-    1: 3,
+  const [data,setData]=useState({})
+
+  useEffect(() => {
+    fetchgetFeedback();
+  }, []);
+
+  const fetchgetFeedback = async () => {
+    try {
+      const response = await getFeedback(id);
+      setData(response?.data)
+    } catch (error) {
+      console.error(error);
+    }
   };
+
+  const totalRatings = [1, 2, 3, 4, 5].reduce((sum, rating) => {
+    return sum + (data?.feedback_index?.[`Rating${rating}`] || 0);
+  }, 0);  
 
   const getPercentage = (count) => (count / totalRatings) * 100;
 
@@ -55,7 +65,7 @@ const RatingSection = ({ id, isShowRating = false }) => {
             sx={{ fontWeight: "bold", mr: 1 }}
             color={isDarkMode ? "white" : "black"}
           >
-            {averageRating}
+            {data?.average_feedback}
           </Typography>
           <MdStar size={44} color="yellow" />
         </Box>
@@ -79,7 +89,7 @@ const RatingSection = ({ id, isShowRating = false }) => {
               <Box sx={{ flexGrow: 1, mr: 2 }}>
                 <LinearProgress
                   variant="determinate"
-                  value={getPercentage(ratings[star])}
+                  value={getPercentage(data?.feedback_index?.[`Rating${star}`])}
                   sx={{
                     height: 8,
                     borderRadius: 1,
@@ -102,7 +112,7 @@ const RatingSection = ({ id, isShowRating = false }) => {
                 variant="body2"
                 color={isDarkMode ? "gray.400" : "text.secondary"}
               >
-                {ratings[star]}
+                {data?.feedback_index?.[`Rating${star}`]}
               </Typography>
             </Box>
           ))}

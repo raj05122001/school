@@ -50,7 +50,8 @@ const VideoPlayer = ({ id }) => {
         el.style.left = left;
         el.dataset.time = marker.start / 1000;
         el.innerHTML = `<span style={{backgroundColor:'red'}}>
-        ${marker.headline} </span>`;
+        ${marker.headline}
+        </span>`;
 
         el.onclick = function () {
           playerRef.current.currentTime(marker.start / 1000);
@@ -66,7 +67,7 @@ const VideoPlayer = ({ id }) => {
       //     playerRef.current.dispose();
       //   }
     };
-  }, [markers]);
+  }, [markers?.length,markers]);
 
   return (
     <Box sx={{ width: "100%", height: "100%" }}>
@@ -82,17 +83,6 @@ const VideoPlayer = ({ id }) => {
           src={`https://d3515ggloh2j4b.cloudfront.net/videos/${id}.mp4`}
           type="video/mp4"
         />
-        <p className="vjs-no-js">
-          To view this video please enable JavaScript, and consider upgrading to
-          a web browser that
-          <a
-            href="https://videojs.com/html5-video-support/"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            supports HTML5 video
-          </a>
-        </p>
       </video>
       {suggestionData?.length > 0 && (
         <Box height="10%">
