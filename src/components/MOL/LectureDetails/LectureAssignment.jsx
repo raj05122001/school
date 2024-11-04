@@ -239,6 +239,8 @@ const LectureAssignment = ({ id, isDarkMode, class_ID }) => {
       <Dialog
         open={openDialog}
         onClose={() => setOpenDialog(false)}
+        maxWidth = "md"
+        fullWidth
         sx={{
           "& .MuiDialogContent-root": {
             // bgcolor: isDarkMode ? "#424242" : "white",
@@ -289,6 +291,8 @@ const LectureAssignment = ({ id, isDarkMode, class_ID }) => {
             type="text"
             fullWidth
             variant="outlined"
+            multiline
+            rows={5}
             InputLabelProps={{
               style: { color: isDarkMode ? "#d7e4fc" : "" },
             }}
