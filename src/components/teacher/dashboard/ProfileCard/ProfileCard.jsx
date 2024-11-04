@@ -34,7 +34,7 @@ function ProfileCard() {
       }}
     >
       {/* Edit Button */}
-      {userDetails.role !== "STUDENT" && (
+      {userDetails?.role !== "STUDENT" && (
         <IconButton
           aria-label="edit"
           sx={{ position: "absolute", top: 8, right: 8 }}
