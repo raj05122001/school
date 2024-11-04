@@ -87,8 +87,6 @@ const CreatingLecture = ({
       );
       setLectureTopics({name:lecture?.topics,id:0} || "");
 
-      console.log("lecture=====>",lecture)
-
       setLectureDescription(lecture?.description || "");
       setLectureType(lecture?.type || "subject");
       setLectureDate(dayjs(lecture?.schedule_date) || dayjs());

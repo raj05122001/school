@@ -48,7 +48,7 @@ const LectureScheduleTable = () => {
       setLoading(false); // End loading
     }
   };
-console.log("lectureData",lectureData)
+  
   useEffect(() => {
     fetchLectureData();
   }, []);

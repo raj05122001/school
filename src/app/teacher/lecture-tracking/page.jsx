@@ -60,8 +60,6 @@ const LectureTabs = () => {
     return encodeURIComponent(value);
   };
 
-  console.log("lectureData,", lectureData);
-
   useEffect(() => {
     fetchAllLectureCount();
   }, []);

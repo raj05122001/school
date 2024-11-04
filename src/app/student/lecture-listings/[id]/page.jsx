@@ -56,7 +56,7 @@ const LecturePage = ({ params }) => {
     () => <LectureAnalytics lectureId={id} />,
     [id]
   );
-  const ratingSection = useMemo(() => <RatingSection id={id} isShowRating={isShowRating}/>, [id]);
+  const ratingSection = useMemo(() => <RatingSection id={id} isShowRating={true}/>, [id]);
   const commentSection = useMemo(() => <CommentsSection id={id} />, [id]);
 
   return (

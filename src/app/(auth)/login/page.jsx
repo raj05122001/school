@@ -58,7 +58,6 @@ const LoginPage = () => {
     try {
       const response = await loginApi(formData);
       if (response.status === 200) {
-        console.log("response.data", response.data);
         const { access, refresh, username, message } = response.data;
         Cookies.set("ACCESS_TOKEN", access, { expires: 7 }); // Store access token in cookies
         Cookies.set("REFRESH_TOKEN", refresh, { expires: 30 }); // Store refresh token in cookies

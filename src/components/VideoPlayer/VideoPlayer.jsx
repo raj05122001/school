@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useRef, useContext } from "react";
+import React, { useEffect, useState, useRef, useContext, useMemo } from "react";
 import videojs from "video.js";
 import "video.js/dist/video-js.css";
 import "./VideoPlayer.css";
@@ -7,8 +7,6 @@ import { Button, Box, Typography, IconButton } from "@mui/material";
 import { AppContextProvider } from "@/app/main";
 
 const VideoPlayer = ({ id }) => {
-  const videoRef = React.useRef(null);
-  const playerRef = React.useRef(null);
   const [markers, setMarkers] = useState([]);
   const [suggestionData, setSuggestionData] = useState([]);
 
@@ -34,7 +32,28 @@ const VideoPlayer = ({ id }) => {
     );
   };
 
-  console.log("markers", markers);
+  const breakpointPlayer = useMemo(
+    () => <BreakpointPlayer markers={markers} id={id} />,
+    [markers, id,markers?.length]
+  );
+
+  return (
+    <Box sx={{ width: "100%", height: "100%" }}>
+      {breakpointPlayer}
+      {suggestionData?.length > 0 && (
+        <Box height="10%">
+          <Suggestion suggestionData={suggestionData} />
+        </Box>
+      )}
+    </Box>
+  );
+};
+
+export default VideoPlayer;
+
+export const BreakpointPlayer = ({ markers, id }) => {
+  const videoRef = useRef(null);
+  const playerRef = useRef(null);
 
   useEffect(() => {
     // Initialize Video.js
@@ -52,7 +71,8 @@ const VideoPlayer = ({ id }) => {
         el.style.left = left;
         el.dataset.time = marker.start / 1000;
         el.innerHTML = `<span style={{backgroundColor:'red'}}>
-        ${marker.headline} </span>`;
+        ${marker.headline}
+        </span>`;
 
         el.onclick = function () {
           playerRef.current.currentTime(marker.start / 1000);
@@ -64,48 +84,27 @@ const VideoPlayer = ({ id }) => {
 
     return () => {
       // Clean up Video.js player
-      //   if (playerRef.current) {
-      //     playerRef.current.dispose();
-      //   }
+        if (playerRef.current) {
+          playerRef.current=null
+        }
     };
-  }, [markers]);
-
+  }, [markers?.length, markers]);
   return (
-    <Box sx={{ width: "100%", height: "100%" }}>
-      <video
-        ref={videoRef}
-        className="video-js"
-        controls
-        preload="auto"
-        style={{ width: "100%", height: "90%", borderRadius: 10 }}
-        data-setup='{ "html5": { "nativeTextTracks": true },"playbackRates" : [0.25, 0.5, 0.75, 1, 1.25, 1.5,1.75]}'
-      >
-        <source
-          src={`https://d3515ggloh2j4b.cloudfront.net/videos/${id}.mp4`}
-          type="video/mp4"
-        />
-        <p className="vjs-no-js">
-          To view this video please enable JavaScript, and consider upgrading to
-          a web browser that
-          <a
-            href="https://videojs.com/html5-video-support/"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            supports HTML5 video
-          </a>
-        </p>
-      </video>
-      {suggestionData?.length > 0 && (
-        <Box height="10%">
-          <Suggestion suggestionData={suggestionData} />
-        </Box>
-      )}
-    </Box>
+    <video
+      ref={videoRef}
+      className="video-js"
+      controls
+      preload="auto"
+      style={{ width: "100%", height: "90%", borderRadius: 10 }}
+      data-setup='{ "html5": { "nativeTextTracks": true },"playbackRates" : [0.25, 0.5, 0.75, 1, 1.25, 1.5,1.75]}'
+    >
+      <source
+        src={`https://d3515ggloh2j4b.cloudfront.net/videos/${id}.mp4`}
+        type="video/mp4"
+      />
+    </video>
   );
 };
-
-export default VideoPlayer;
 
 export const Suggestion = ({ suggestionData }) => {
   const { handelChatBotText } = useContext(AppContextProvider);

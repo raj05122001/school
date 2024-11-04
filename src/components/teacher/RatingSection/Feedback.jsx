@@ -53,6 +53,7 @@ const Feedback = ({ lectureId, id }) => {
       lecture: Number(lectureId),
       feedback_parameter: feedbackText,
       made_by: studentID,
+      feedback_comment:""
     };
 
     try {

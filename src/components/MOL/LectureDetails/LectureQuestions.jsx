@@ -11,8 +11,7 @@ const LectureQuestions = ({ id, isDarkMode }) => {
   useEffect(() => {
     const fetchQuestions = async () => {
       try {
-        const data = await getLectureQuestion(id); // Assuming lecture ID is 2 for now
-        console.log(data, "Question Data");
+        const data = await getLectureQuestion(id); 
         let lectureQuestion = data?.data?.question_text;
 
         // Parse the question_text field

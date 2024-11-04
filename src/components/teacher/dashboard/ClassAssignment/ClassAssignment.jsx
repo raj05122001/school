@@ -18,7 +18,7 @@ const ClassAssignment = ({selectedOptions}) => {
   const fetchClassAssignment = async () => {
     setLoading(true);
     try {
-      const response = await getClassAssignment(selectedOptions);
+      const response = await getClassAssignment(selectedOptions?.class_id);
       setData(response?.data?.data);
     } catch (error) {
       console.error(error);

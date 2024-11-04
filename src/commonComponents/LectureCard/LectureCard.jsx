@@ -1,5 +1,5 @@
 "use client";
-import React, { useState ,useContext} from "react";
+import React, { useState, useContext } from "react";
 import { Box, Paper, Typography, Avatar } from "@mui/material";
 import {
   FaCalendarAlt,
@@ -11,6 +11,8 @@ import {
 import { useThemeContext } from "@/hooks/ThemeContext";
 import { AppContextProvider } from "@/app/main";
 import { FaBookOpen } from "react-icons/fa";
+import { decodeToken } from "react-jwt";
+import Cookies from "js-cookie";
 
 const day = [
   "Sunday",
@@ -28,7 +30,7 @@ const LectureCard = ({ lecture }) => {
     openRecordingDrawer,
     openCreateLecture,
     handleCreateLecture,
-    handleLectureRecord
+    handleLectureRecord,
   } = useContext(AppContextProvider);
 
   const lectureCardStyle = {
@@ -75,10 +77,10 @@ const LectureCard = ({ lecture }) => {
     color: isDarkMode ? "#ffffff" : "#000000",
   };
 
-  console.log("lecture",lecture)
+  const userDetails = decodeToken(Cookies.get("ACCESS_TOKEN"));
 
   return (
-    <Paper sx={lectureCardStyle} onClick={()=>handleLectureRecord(lecture)}>
+    <Paper sx={lectureCardStyle} onClick={() => handleLectureRecord(lecture)}>
       <Box sx={dateSectionStyle}>
         <Typography
           variant="h4"
@@ -94,13 +96,12 @@ const LectureCard = ({ lecture }) => {
         </Typography>
       </Box>
       <Box sx={lectureInfoStyle}>
-
         <Typography
           variant="h6"
           sx={{ fontWeight: "bold", mb: 1, color: textStyle.color }}
           noWrap
         >
-          {lecture?.title?.slice(0,24)}...
+          {lecture?.title?.slice(0, 24)}...
         </Typography>
 
         <Box display="flex" alignItems="center" mb={1}>
@@ -113,7 +114,7 @@ const LectureCard = ({ lecture }) => {
             {lecture?.schedule_time}
           </Typography>
         </Box>
-        
+
         <Box display="flex" alignItems="center" mb={1}>
           <FaGraduationCap style={iconStyle} />
           <Typography variant="body2" sx={{ color: textStyle.color }}>
@@ -123,13 +124,13 @@ const LectureCard = ({ lecture }) => {
         <Box display="flex" alignItems="center" mb={1}>
           <FaBook style={iconStyle} />
           <Typography variant="body2" sx={{ color: textStyle.color }}>
-          {lecture?.chapter?.subject?.name}
+            {lecture?.chapter?.subject?.name}
           </Typography>
         </Box>
         <Box display="flex" alignItems="center" mb={1}>
           <FaBookOpen style={iconStyle} />
           <Typography variant="body2" sx={{ color: textStyle.color }}>
-          {lecture?.chapter?.chapter}
+            {lecture?.chapter?.chapter}
           </Typography>
         </Box>
         {/* <Box display="flex" alignItems="center">
@@ -144,15 +145,20 @@ const LectureCard = ({ lecture }) => {
         </Box> */}
       </Box>
       {/* Edit button on the top-right corner */}
-      <Box sx={{ position: "absolute", top: "8px", right: "8px" }}>
-        <FaEdit
-          style={{ color: isDarkMode ? primaryColor : "#00796b",cursor:'pointer' }}
-          onClick={(e) => {
-            e.stopPropagation(); // Stop the click from bubbling up to the parent
-            handleCreateLecture(lecture, true);
-          }}      
-        />
-      </Box>
+      {userDetails?.role !== "STUDENT" && (
+        <Box sx={{ position: "absolute", top: "8px", right: "8px" }}>
+          <FaEdit
+            style={{
+              color: isDarkMode ? primaryColor : "#00796b",
+              cursor: "pointer",
+            }}
+            onClick={(e) => {
+              e.stopPropagation(); // Stop the click from bubbling up to the parent
+              handleCreateLecture(lecture, true);
+            }}
+          />
+        </Box>
+      )}
     </Paper>
   );
 };
