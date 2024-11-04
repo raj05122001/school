@@ -14,10 +14,12 @@ import { decodeToken } from "react-jwt";
 import Cookies from "js-cookie";
 import { capitalizeWords } from "@/helper/Helper";
 import { AppContextProvider } from "@/app/main";
+import { useRouter } from "next/navigation";
 
 function GreetingCard() {
   const userDetails = decodeToken(Cookies.get("ACCESS_TOKEN"));
   const { handleCreateLecture } = useContext(AppContextProvider);
+  const router = useRouter();
 
   const getGreeting = () => {
     const hours = new Date().getHours();
@@ -25,6 +27,10 @@ function GreetingCard() {
     if (hours >= 12 && hours < 17) return "Good Afternoon";
     return "Good Evening";
   };
+
+  const handleRoute = () => {
+    router.push(`/student/lecture-listings/`)
+  }
 
   return (
     <Paper
@@ -86,7 +92,7 @@ function GreetingCard() {
                   boxShadow: "0 0 10px 0 #FFC107 inset, 0 0 10px 4px #FFC107", // Matching hover color with gold shade
                 },
               }}
-              onClick={() => handleCreateLecture("", false)}
+              onClick={userDetails.role !== "STUDENT" ? () => handleCreateLecture("", false) :  () => handleRoute()}
             >
               Watch Lecture
             </Button>

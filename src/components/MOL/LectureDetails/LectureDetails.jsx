@@ -7,12 +7,17 @@ import LectureQuestions from "./LectureQuestions";
 import LectureAssignment from "./LectureAssignment";
 import LectureReferrence from "./LectureReferrence";
 import { useThemeContext } from "@/hooks/ThemeContext";
+import { decodeToken } from "react-jwt";
+import Cookies from "js-cookie";
+import StudentMCQ from "./StudentMCQ";
 
 const LectureDetails = ({id, classID }) => {
   const { isDarkMode } = useThemeContext();
   const [value, setValue] = useState(0);
   const [loading, setLoading] = useState(true);
   const [decisionId, setDecisionId] = useState(null);
+
+  const userDetails = decodeToken(Cookies.get("ACCESS_TOKEN"));
 
   const class_ID = classID;
 
@@ -31,6 +36,8 @@ const LectureDetails = ({id, classID }) => {
     () => <LectureMCQ id={id} isDarkMode={isDarkMode} />,
     [id, isDarkMode]
   );
+
+  const memoizedStudentMCQ = useMemo(() => <StudentMCQ id={id} isDarkMode={isDarkMode} />, [id, isDarkMode])
 
   const memoizedLectureQuestions = useMemo(()=> <LectureQuestions id={id} isDarkMode = {isDarkMode} /> , [id, isDarkMode])
   const memoizedLectureAssignment = useMemo(()=><LectureAssignment id={id} isDarkMode={isDarkMode} class_ID={class_ID} />, [id, isDarkMode])
@@ -102,7 +109,7 @@ const LectureDetails = ({id, classID }) => {
 
       {/* Render tab content conditionally based on selected tab */}
       {value === 0 && memoizedLectureNotes}
-      {value === 1 && memoizedLectureMCQ}
+      {value === 1 && (userDetails?.role==="STUDENT" ? (memoizedStudentMCQ) : (memoizedLectureMCQ))}
       {value === 2 && memoizedLectureQuestions}
       {value === 3 && memoizedLectureAssignment}
       {value === 4 && memoizedLectureReferrence}

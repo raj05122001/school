@@ -161,7 +161,7 @@ const Sidebar = ({ open, setOpen }) => {
 
           <List>
             {sidebarLinks.overview
-              .filter((val) => val.show.includes("TEACHER"))
+              .filter((val) => val.show.includes(userDetails?.role))
               .map((item, index) => (
                 <Tooltip
                   title={item.text}

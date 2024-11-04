@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { Box, Typography, Select, MenuItem } from "@mui/material";
-import { PieChart } from "@mui/x-charts/PieChart";
+import { PieChart, Pie, Cell, Tooltip, Legend } from "recharts";
 import { useThemeContext } from "@/hooks/ThemeContext";
 import { GiSandsOfTime } from "react-icons/gi";
 
@@ -21,18 +21,8 @@ function WatchTimeChart() {
 
   // Prepare data for the PieChart component
   const data = [
-    {
-      id: 0,
-      label: "Watched Lectures",
-      value: lectureData[selectedSubject].watched,
-      color: "#4caf50",
-    },
-    {
-      id: 1,
-      label: "Pending Lectures",
-      value: lectureData[selectedSubject].pending,
-      color: "#f44336",
-    },
+    { name: "Watched Lectures", value: lectureData[selectedSubject].watched, color: "#4caf50" },
+    { name: "Pending Lectures", value: lectureData[selectedSubject].pending, color: "#f44336" },
   ];
 
   return (
@@ -50,11 +40,9 @@ function WatchTimeChart() {
       <Typography
         variant="h6"
         className={`${isDarkMode ? "dark-heading" : "light-heading"}`}
-        sx={{marginBottom:"4px"}}
+        sx={{ marginBottom: "4px" }}
       >
-        <GiSandsOfTime
-          style={{ color: isDarkMode ? "dark-heading" : "light-heading" }}
-        />{" "}
+        <GiSandsOfTime style={{ color: isDarkMode ? "dark-heading" : "light-heading" }} />{" "}
         Lecture Watch Time
       </Typography>
 
@@ -119,20 +107,26 @@ function WatchTimeChart() {
         </Box>
       </Box>
 
-      {/* Chart */}
+      {/* Donut Chart */}
       <Box width="300px" height="200px">
-        <PieChart
-          series={[
-            {
-              innerRadius: 60, // Adjust for donut-style appearance
-              outerRadius: 100,
-              data,
-            },
-          ]}
-          slotProps={{
-            legend: { hidden: true },
-          }}
-        />
+        <PieChart width={300} height={200}>
+          <Pie
+            data={data}
+            dataKey="value"
+            nameKey="name"
+            cx="50%"
+            cy="50%"
+            innerRadius={60}
+            outerRadius={100}
+            fill="#8884d8"
+            paddingAngle={0.5}
+          >
+            {data.map((entry, index) => (
+              <Cell key={`cell-${index}`} fill={entry.color} />
+            ))}
+          </Pie>
+          <Tooltip />
+        </PieChart>
       </Box>
     </Box>
   );

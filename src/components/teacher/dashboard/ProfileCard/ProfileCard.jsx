@@ -34,13 +34,15 @@ function ProfileCard() {
       }}
     >
       {/* Edit Button */}
-      <IconButton
-        aria-label="edit"
-        sx={{ position: "absolute", top: 8, right: 8 }}
-        onClick={() => router.push("/teacher/myprofile")}
-      >
-        <FaEdit style={{ color: "white" }} />
-      </IconButton>
+      {userDetails.role !== "STUDENT" && (
+        <IconButton
+          aria-label="edit"
+          sx={{ position: "absolute", top: 8, right: 8 }}
+          onClick={() => router.push("/teacher/myprofile")}
+        >
+          <FaEdit style={{ color: "white" }} />
+        </IconButton>
+      )}
 
       {/* Profile Picture */}
       {userDetails?.profile_pic ? (

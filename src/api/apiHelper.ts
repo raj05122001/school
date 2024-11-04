@@ -333,3 +333,8 @@ export const getFeedback = async ( lectureId) => {
   const apiInstance = new apiServices(axiosAPIInstance);
   return await apiInstance.getFeedback( lectureId);
 };
+
+export const getStudentLectures = async (type) => {
+  const apiInstance = new apiServices(axiosAPIInstance);
+  return await apiInstance.getStudentLectures(type);
+};
