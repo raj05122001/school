@@ -40,7 +40,7 @@ const LectureDetails = ({id, classID }) => {
   const memoizedStudentMCQ = useMemo(() => <StudentMCQ id={id} isDarkMode={isDarkMode} />, [id, isDarkMode])
 
   const memoizedLectureQuestions = useMemo(()=> <LectureQuestions id={id} isDarkMode = {isDarkMode} /> , [id, isDarkMode])
-  const memoizedLectureAssignment = useMemo(()=><LectureAssignment id={id} isDarkMode={isDarkMode} class_ID={class_ID} />, [id, isDarkMode])
+  const memoizedLectureAssignment = useMemo(()=><LectureAssignment id={id} isDarkMode={isDarkMode} class_ID={class_ID} />, [id, isDarkMode, class_ID])
   const memoizedLectureReferrence = useMemo(()=><LectureReferrence id={id} isDarkMode={isDarkMode} />, [id, isDarkMode])
 
   return (
