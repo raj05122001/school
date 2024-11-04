@@ -4,7 +4,6 @@ import { FunnelChart, Funnel, LabelList } from "recharts";
 import { useThemeContext } from "@/hooks/ThemeContext";
 import { GiBallPyramid } from "react-icons/gi";
 
-
 function MyRank() {
   const [subject, setSubject] = useState("Math");
   const [myScore, setMyScore] = useState(68); // Dummy score percentage
@@ -20,11 +19,13 @@ function MyRank() {
 
   // Determine the grade based on myScore
   const getMyGrade = (score) => {
-    if (score >= 75) return "Grade A (75-100%)";
-    if (score >= 50) return "Grade B (50-75%)";
-    if (score >= 25) return "Grade C (25-50%)";
-    return "Grade D (0-25%)";
+    if (score >= 75) return { label: "Grade A (75-100%)", color: "#228B22" };
+    if (score >= 50) return { label: "Grade B (50-75%)", color: "#F4BB44" };
+    if (score >= 25) return { label: "Grade C (25-50%)", color: "#FF7518" };
+    return { label: "Grade D (0-25%)", color: "#E35335" };
   };
+
+  const { label: gradeLabel, color: gradeColor } = getMyGrade(myScore);
 
   const handleSubjectChange = (event) => {
     setSubject(event.target.value);
@@ -34,23 +35,50 @@ function MyRank() {
   return (
     <Box
       sx={{
-        
         width: "100%",
         p: 2,
         height: "100%",
       }}
       className="blur_effect_card"
     >
-      <Typography variant="h6" sx={{ mb: 2 }} className={`${isDarkMode ? "dark-heading" : "light-heading"}`}>
-        <GiBallPyramid style={{color: isDarkMode ? "#F0EAD6" : "#36454F"}}/> My Rank
+      <Typography
+        variant="h6"
+        sx={{ mb: 2 }}
+        className={`${isDarkMode ? "dark-heading" : "light-heading"}`}
+      >
+        <GiBallPyramid style={{ color: isDarkMode ? "#F0EAD6" : "#36454F" }} />{" "}
+        My Rank
       </Typography>
 
       <Box
         sx={{
           display: "flex",
           mb: 2,
+          flexDirection:"row",
+          justifyContent:"space-between"
         }}
       >
+        <Box display="flex" alignItems="center" ml={4}>
+          <Box
+            sx={{
+              width: 12,
+              height: 12,
+              borderRadius: "50%", // Circle shape; use `borderRadius: 0` for square
+              backgroundColor: gradeColor,
+              mr: 1,
+            }}
+          />
+          <Typography
+            textAlign={"center"}
+            variant="body1"
+            sx={{
+              color: isDarkMode ? "#F0EAD6" : "#36454F",
+              fontWeight: "bold",
+            }}
+          >
+            My Grade: {myScore}% - {gradeLabel}
+          </Typography>
+        </Box>
         <Select
           value={subject}
           onChange={handleSubjectChange}
@@ -73,14 +101,6 @@ function MyRank() {
           <MenuItem value="English">English</MenuItem>
           {/* Add more subjects as needed */}
         </Select>
-        <Typography
-          marginLeft={4}
-          textAlign={"center"}
-          variant="body1"
-          sx={{ color: isDarkMode ? "#F0EAD6" : "#36454F", fontWeight: "bold" }}
-        >
-          My Grade: {myScore}% - {getMyGrade(myScore)}
-        </Typography>
       </Box>
 
       <FunnelChart width={400} height={300}>

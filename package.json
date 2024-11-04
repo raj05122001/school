@@ -23,7 +23,6 @@
     "@fullcalendar/timegrid": "^6.1.15",
     "@mui/material": "^5.16.7",
     "@mui/system": "^6.0.2",
-    "@mui/x-charts": "^7.22.1",
     "@mui/x-date-pickers": "^7.21.0",
     "@mui/x-date-pickers-pro": "^7.20.0",
     "axios": "^1.7.5",

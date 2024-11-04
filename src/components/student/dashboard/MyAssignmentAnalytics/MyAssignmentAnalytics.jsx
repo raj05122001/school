@@ -33,7 +33,7 @@ const MyAssignmentAnalytics = () => {
       sx={{
         width: "100%",
         p: 4,
-        maxHeight: "420px",
+        maxHeight: "450px",
         height: "100%",
       }}
       className="blur_effect_card"

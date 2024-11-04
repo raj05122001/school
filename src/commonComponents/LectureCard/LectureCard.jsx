@@ -13,6 +13,7 @@ import { AppContextProvider } from "@/app/main";
 import { FaBookOpen } from "react-icons/fa";
 import { decodeToken } from "react-jwt";
 import Cookies from "js-cookie";
+import { useRouter } from "next/navigation";
 
 const day = [
   "Sunday",
@@ -32,6 +33,8 @@ const LectureCard = ({ lecture }) => {
     handleCreateLecture,
     handleLectureRecord,
   } = useContext(AppContextProvider);
+
+  const router = useRouter();
 
   const lectureCardStyle = {
     position: "relative",
@@ -79,8 +82,12 @@ const LectureCard = ({ lecture }) => {
 
   const userDetails = decodeToken(Cookies.get("ACCESS_TOKEN"));
 
+  const handleRoute = (id) => {
+    router.push(`/student/lecture-listings/${id}`);
+  }
+
   return (
-    <Paper sx={lectureCardStyle} onClick={() => handleLectureRecord(lecture)}>
+    <Paper sx={lectureCardStyle} onClick={userDetails.role !== "STUDENT" ? () => handleLectureRecord(lecture) : () => handleRoute(lecture?.id)}>
       <Box sx={dateSectionStyle}>
         <Typography
           variant="h4"

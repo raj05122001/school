@@ -63,7 +63,7 @@ const Page = () => {
         encodeURI(subject)
       );
       if (apiResponse?.data?.success) {
-        setLectureList(apiResponse?.data);
+        setLectureList(apiResponse?.data?.data);
       }
     } catch (error) {
       console.error(error);

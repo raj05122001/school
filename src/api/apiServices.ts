@@ -633,4 +633,10 @@ export default class apiServices {
       .catch((error) => console.error(error));
   };
   
+  public getStudentLectures = async (type = "COMPLETED") => {
+    return await this.axiosInstance
+      .get(`api/v1/dashboard/student/lectures/?status=${type}`)
+      .then((Response) => Response)
+      .catch((error) => console.error(error));
+  };
 }
