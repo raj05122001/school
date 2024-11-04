@@ -639,4 +639,23 @@ export default class apiServices {
       .then((Response) => Response)
       .catch((error) => console.error(error));
   };
+
+  public submitQuiz = (formData, lectureId) => {
+    return this.axiosInstance
+      .post(`api/v1/student/answer_quiz/${lectureId}/`, formData)
+      .then((response) => {
+        return response;
+      })
+      .catch((error) => {
+        console.error(error);
+      });
+  };
+
+  public getQuizResponse = async (lectureId) => {
+    return await this.axiosInstance
+      .get(`/api/v1/student/answer_quiz/${lectureId}/`)
+      .then((Response) => Response.data)
+      .catch((error) => console.error(error));
+  };
+
 }

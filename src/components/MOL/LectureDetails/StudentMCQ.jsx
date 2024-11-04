@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { Box, Typography, List, ListItem, Button, Skeleton, Radio, RadioGroup, FormControlLabel } from "@mui/material";
-import { getLectureQuiz } from "@/api/apiHelper";
+import { getLectureQuiz, submitQuiz, getQuizResponse } from "@/api/apiHelper";
 import MathJax from "react-mathjax2";
 import { decodeToken } from "react-jwt";
 import Cookies from "js-cookie";
@@ -11,6 +11,7 @@ const StudentMCQ = ({ id, isDarkMode }) => {
   const [loading, setLoading] = useState(true);
   const [selectedAnswers, setSelectedAnswers] = useState({});
   const [submittedAnswers, setSubmittedAnswers] = useState({});
+  const [quizResponses, setQuizResponses] = useState({});
 
   const userDetails = decodeToken(Cookies.get("ACCESS_TOKEN"));
   const studentID = userDetails?.student_id
@@ -22,6 +23,19 @@ const StudentMCQ = ({ id, isDarkMode }) => {
         if (response.success) {
           setQuizData(response.data); // Set the fetched data to state
         }
+        const quizResponse = await getQuizResponse(id);
+        if (quizResponse.success) {
+            // Store already answered quiz IDs
+            const answeredQuestions = quizResponse.data.answered_quiz.reduce((acc, item) => {
+              acc[item.quiz.id] = {
+                yourAnswer: item.your_answer,
+                correctAnswer: item.quiz.answer,
+                isCorrect: item.is_correct,
+              };
+              return acc;
+            }, {});
+            setSubmittedAnswers(answeredQuestions);
+          }
       } catch (error) {
         console.error("Error fetching quiz data:", error);
       } finally {
@@ -46,8 +60,34 @@ const StudentMCQ = ({ id, isDarkMode }) => {
     setSelectedAnswers((prev) => ({ ...prev, [questionId]: option }));
   };
 
-  const handleSubmitAnswer = (questionId) => {
-    setSubmittedAnswers((prev) => ({ ...prev, [questionId]: selectedAnswers[questionId] }));
+  const handleSubmitAnswer = async (questionId) => {
+    try {
+      const formData = [{
+        your_answer: selectedAnswers[questionId],
+        lecture: id,
+        answered_by: studentID,
+        quiz: questionId,
+      }];
+      await submitQuiz(formData, id);
+
+      const response = await getQuizResponse(id);
+      if (response.success) {
+        const quizResponse = await getQuizResponse(id);
+        if (quizResponse.success) {
+            const responseData = quizResponse.data.answered_quiz.reduce((acc, item) => {
+              acc[item.quiz.id] = {
+                yourAnswer: item.your_answer,
+                correctAnswer: item.quiz.answer,
+                isCorrect: item.is_correct,
+              };
+              return acc;
+            }, {});
+            setSubmittedAnswers((prev) => ({ ...prev, ...responseData }));
+          }
+        }
+    } catch (error) {
+      console.error("Error submitting answer or fetching response:", error);
+    }
   };
 
   const displayedNotes = quizData.slice(0, visibleCount);
@@ -118,23 +158,25 @@ const StudentMCQ = ({ id, isDarkMode }) => {
                     />
                   ))}
                 </RadioGroup>
-                <Button
-                  variant="outlined"
-                  onClick={() => handleSubmitAnswer(item.id)}
-                  sx={{ mt: 1 }}
-                >
-                  Submit
-                </Button>
+                {!submittedAnswers[item.id] && (
+                  <Button
+                    variant="outlined"
+                    onClick={() => handleSubmitAnswer(item.id)}
+                    sx={{ mt: 1 }}
+                  >
+                    Submit
+                  </Button>
+                )}
                 {submittedAnswers[item.id] && (
                   <Box display="flex" alignItems="center" marginTop={"4px"} sx={{ fontSize: "16px" }}>
                     <Typography sx={{ fontWeight: "bold", textAlign: "left", fontSize: "16px" }}>
                       Your Answer: 
                     </Typography>
-                    <MathJax.Text text={submittedAnswers[item.id]} />
+                    <MathJax.Text text={submittedAnswers[item.id].yourAnswer} />
                     <Typography sx={{ fontWeight: "bold", textAlign: "left", fontSize: "16px", ml: 2 }}>
                       Correct Answer: 
                     </Typography>
-                    <MathJax.Text text={item.answer} />
+                    <MathJax.Text text={submittedAnswers[item.id].correctAnswer} />
                   </Box>
                 )}
               </ListItem>

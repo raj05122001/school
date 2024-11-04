@@ -338,3 +338,13 @@ export const getStudentLectures = async (type) => {
   const apiInstance = new apiServices(axiosAPIInstance);
   return await apiInstance.getStudentLectures(type);
 };
+
+export const submitQuiz = async (formData, lectureId) => {
+  const apiInstance = new apiServices(axiosAPIInstance);
+  return await apiInstance.submitQuiz(formData, lectureId);
+};
+
+export const getQuizResponse = async (lectureId) => {
+  const apiInstance = new apiServices(axiosAPIInstance);
+  return await apiInstance.getQuizResponse(lectureId);
+};
