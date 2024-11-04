@@ -56,11 +56,19 @@ const ReplyCard = ({ reply, isDarkMode, secondaryColor }) => (
   </Box>
 );
 
-const CommentCard = ({ comment, isDarkMode, secondaryColor }) => {
+const CommentCard = ({ comment, isDarkMode, secondaryColor ,handleSubmitReply}) => {
   const [isShowReplyComment, setIsShowReplyComment] = useState(false);
   const [showRepliesCount, setShowRepliesCount] = useState(3);
+  const [isReply, setIsReply] = useState(false);
+  const [text, setText] = useState("");
 
   const len = comment.replies?.length - showRepliesCount;
+
+  const handleComment=async()=>{
+    handleSubmitReply(comment?.id,text)
+    setText("");
+    setIsReply(false);
+  }
   return (
     <Box display="flex" alignItems="flex-start" mb={3}>
       <Avatar
@@ -83,7 +91,13 @@ const CommentCard = ({ comment, isDarkMode, secondaryColor }) => {
           {comment.comment}
         </Typography>
         <Box display="flex" alignItems="center" mt={1}>
-          <Button variant="text" color="primary" size="small" sx={{ mr: 1 }}>
+          <Button
+            variant="text"
+            color="primary"
+            size="small"
+            sx={{ mr: 1 }}
+            onClick={() => setIsReply(true)}
+          >
             Reply
           </Button>
           {comment.replies?.length > 0 && (
@@ -97,6 +111,36 @@ const CommentCard = ({ comment, isDarkMode, secondaryColor }) => {
             </Button>
           )}
         </Box>
+
+        {isReply && (
+          <Box display="flex" alignItems="center" pt={2}>
+            <InputBase
+              placeholder="Write a comment..."
+              fullWidth
+              sx={{
+                ml: 1,
+                color: isDarkMode ? "white" : "black",
+                backgroundColor: isDarkMode ? "#3A3A3A" : "#FFFFFF",
+                borderRadius: "24px",
+                padding: "8px 16px",
+                boxShadow: "0px 4px 8px rgba(0, 0, 0, 0.1)",
+              }}
+              onChange={(event) => setText(event?.target?.value)}
+            />
+            <IconButton
+              color="primary"
+              sx={{
+                ml: 1,
+                backgroundColor: isDarkMode ? "#FFD700" : "#E3F2FD",
+              }}
+              onClick={() => {
+                text && handleComment();
+              }}
+            >
+              <FaPaperPlane color={isDarkMode ? "#000" : "#0288D1"} />
+            </IconButton>
+          </Box>
+        )}
 
         {isShowReplyComment && (
           <Box
@@ -171,13 +215,12 @@ const CommentsSection = ({ id }) => {
     }
   };
 
-  const handleSubmitReply = async () => {
+  const handleSubmitReply = async (commentId,textMessage) => {
     let data = {
       lecture_discussion: commentId,
       replied_by: userDetails?.user_id,
-      reply_text: text,
+      reply_text: textMessage,
     };
-    setText("");
     try {
       await updateCommentReply(data);
       fetchComments();
@@ -236,6 +279,7 @@ const CommentsSection = ({ id }) => {
             comment={comment}
             isDarkMode={isDarkMode}
             secondaryColor={secondaryColor}
+            handleSubmitReply={handleSubmitReply}
           />
         ))}
       </CardContent>
