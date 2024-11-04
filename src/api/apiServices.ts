@@ -594,4 +594,35 @@ export default class apiServices {
         console.error(error);
       });
   };
+
+  public getComments = async () => {
+    return await this.axiosInstance
+      .get(`/api/v1/discussion_reply/`)
+      .then((Response) => Response.data)
+      .catch((error) => console.error(error));
+  };
+
+  public updateLectureDiscussion = (lectureId, formData) => {
+    const headers = { "Content-Type": "multipart/form-data" };
+    return this.axiosInstance
+      .post(`/api/v1/lecture/${lectureId}/discussion/`, formData, headers)
+      .then((response) => {
+        return response;
+      })
+      .catch((error) => {
+        toast.error("Job Title not loaded, please contact to admin.");
+        console.error(error);
+      });
+  };
+
+  public updateCommentReply = ( formData) => {
+    return this.axiosInstance
+      .post(`/api/v1/discussion_reply/`, formData)
+      .then((response) => {
+        return response;
+      })
+      .catch((error) => {
+        console.error(error);
+      });
+  };
 }

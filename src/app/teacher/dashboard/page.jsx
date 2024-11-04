@@ -43,6 +43,7 @@ const Page = () => {
     try {
       const response = await getteacherClass();
       setClassOptions(response?.data?.data?.class_subject_list);
+      setSelectedOptions(response?.data?.data?.class_subject_list?.[0])
       setAverageDuration(response?.data?.data?.avg_duration);
     } catch (error) {
       console.error(error);
@@ -146,7 +147,7 @@ const Page = () => {
       </Grid>
 
       {/* Student Queries, Analytics Reports, and Class Statistics */}
-      <Grid container spacing={2} mt={4}>
+      {/* <Grid container spacing={2} mt={4}>
         <Grid item xs={12} md={4}>
           {studentQueries}
         </Grid>
@@ -156,17 +157,7 @@ const Page = () => {
         <Grid item xs={12} md={4}>
           {classStatistics}
         </Grid>
-      </Grid>
-
-      {/* Lecture and Subject Analytics */}
-      <Grid container spacing={2} mt={4}>
-        <Grid item xs={12} md={6}>
-          {lectureAnalytics}
-        </Grid>
-        <Grid item xs={12} md={6}>
-          {subjectAnalytics}
-        </Grid>
-      </Grid>
+      </Grid> */}
 
       <Box
         sx={{
@@ -279,6 +270,16 @@ const Page = () => {
         </Grid>
         <Grid item xs={3}>
           {classWiseStudentRanking}
+        </Grid>
+      </Grid>
+
+      {/* Lecture and Subject Analytics */}
+      <Grid container spacing={2} mt={4}>
+        <Grid item xs={12} md={6}>
+          {lectureAnalytics}
+        </Grid>
+        <Grid item xs={12} md={6}>
+          {subjectAnalytics}
         </Grid>
       </Grid>
     </Box>

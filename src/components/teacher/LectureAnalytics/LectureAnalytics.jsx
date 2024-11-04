@@ -46,7 +46,6 @@ const LectureAnalytics = ({ lectureId }) => {
   const fetchData = async () => {
     try {
       const response = await meetingAnalytics(lectureId);
-      console.log("response?.data?.data", response?.data?.data);
       setAnalytics(response?.data?.data || {});
     } catch (error) {
       console.error("Error fetching analytics data:", error);

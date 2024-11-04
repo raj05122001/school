@@ -34,8 +34,6 @@ const VideoPlayer = ({ id }) => {
     );
   };
 
-  console.log("markers", markers);
-
   useEffect(() => {
     // Initialize Video.js
     const videoElement = videoRef.current;

@@ -79,8 +79,6 @@ const LectureCard = ({ lecture }) => {
 
   const userDetails = decodeToken(Cookies.get("ACCESS_TOKEN"));
 
-  console.log("lecture", lecture);
-
   return (
     <Paper sx={lectureCardStyle} onClick={() => handleLectureRecord(lecture)}>
       <Box sx={dateSectionStyle}>

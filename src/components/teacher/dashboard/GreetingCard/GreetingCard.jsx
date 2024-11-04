@@ -19,8 +19,6 @@ function GreetingCard() {
   const userDetails = decodeToken(Cookies.get("ACCESS_TOKEN"));
   const { handleCreateLecture } = useContext(AppContextProvider);
 
-  console.log("USer Role is", userDetails?.role);
-
   const getGreeting = () => {
     const hours = new Date().getHours();
     if (hours < 12) return "Good Morning";
