@@ -82,12 +82,12 @@ export const BreakpointPlayer = ({ markers, id }) => {
       });
     });
 
-    return () => {
-      // Clean up Video.js player
-        if (playerRef.current) {
-          playerRef.current=null
-        }
-    };
+    // return () => {
+    //   // Clean up Video.js player
+    //     if (playerRef.current) {
+    //       playerRef.current=null
+    //     }
+    // };
   }, [markers?.length, markers]);
   return (
     <video
