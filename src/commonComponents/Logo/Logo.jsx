@@ -1,11 +1,11 @@
 import { Typography } from "@mui/material";
 
-const Logo = () => {
+const Logo = ({ color = 'initial' }) => {
   return (
     <Typography
       variant="h5"
       sx={{
-        color: "#fff",
+        color: color === 'black' ? '#023020' : 'inherit',
         fontWeight: "bold",
         letterSpacing: "0.5px",
       }}
