@@ -31,6 +31,7 @@ const LectureAssignment = ({ id, isDarkMode, class_ID }) => {
     assignment_text: "",
     assignment_mark: 0,
   });
+  const [file, setFile] = useState(null); // New state for file
 
   const lectureID = id;
 
@@ -104,6 +105,10 @@ const LectureAssignment = ({ id, isDarkMode, class_ID }) => {
       lecture_class: class_ID,
       is_assigned: 1,
     };
+
+    if (file) {
+      formData.append("assignment_attachment", file); // Append file if available
+    }
 
     try {
       const response = await createAssignment(formData);
@@ -334,6 +339,12 @@ const LectureAssignment = ({ id, isDarkMode, class_ID }) => {
                 assignment_mark: Number(e.target.value),
               })
             }
+          />
+          <input
+            type="file"
+            accept="application/pdf"
+            onChange={(e) => setFile(e.target.files[0])}
+            style={{ marginTop: "16px" }}
           />
         </DialogContent>
         <DialogActions

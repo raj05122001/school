@@ -66,7 +66,7 @@ const LectureReferrence = ({ id, isDarkMode }) => {
           <Box key={index} sx={{ mb: 2 }}>
             {resource.research_papers && resource.research_papers.title && (
               <Box sx={{ mb: 1 }}>
-                <Typography variant="subtitle1">Research Paper:</Typography>
+                <Typography variant="subtitle1" fontWeight={"bold"}>Research Paper:</Typography>
                 <Link
                   href={resource.research_papers.link}
                   target="_blank"
@@ -78,26 +78,46 @@ const LectureReferrence = ({ id, isDarkMode }) => {
             )}
             {resource.youtube_videos && (
               <Box sx={{ mb: 1 }}>
-                <Typography variant="subtitle1">YouTube Video:</Typography>
-                <Link
-                  href={resource.youtube_videos}
-                  target="_blank"
-                  rel="noopener"
-                >
-                  Watch Video
-                </Link>
+                <Typography variant="subtitle1" fontWeight={"bold"}>YouTube Video:</Typography>
+                <Box sx={{ display: "flex", alignItems: "center", gap: 4 }}>
+                  {resource.youtube_videos.thumbnail && (
+                    <Box
+                      component="img"
+                      src={resource.youtube_videos.thumbnail}
+                      alt="YouTube Video Thumbnail"
+                      sx={{ width: 100, height: "auto", mt: 1 }}
+                    />
+                  )}
+                  <Link
+                    href={resource.youtube_videos}
+                    target="_blank"
+                    rel="noopener"
+                  >
+                    Watch Video
+                  </Link>
+                </Box>
               </Box>
             )}
             {resource.Google_Book_Links && (
               <Box sx={{ mb: 1 }}>
-                <Typography variant="subtitle1">Google Book Link:</Typography>
-                <Link
-                  href={resource.Google_Book_Links}
-                  target="_blank"
-                  rel="noopener"
-                >
-                  View Book
-                </Link>
+                <Typography variant="subtitle1" fontWeight={"bold"}>Google Book Link:</Typography>
+                <Box sx={{ display: "flex", alignItems: "center", gap: 4 }}>
+                  {resource.Google_Book_Links.thumbnail && (
+                    <Box
+                      component="img"
+                      src={resource.Google_Book_Links.thumbnail}
+                      alt="Google Book Thumbnail"
+                      sx={{ width: 100, height: "auto", mt: 1 }}
+                    />
+                  )}
+                  <Link
+                    href={resource.Google_Book_Links}
+                    target="_blank"
+                    rel="noopener"
+                  >
+                    View Book
+                  </Link>
+                </Box>
               </Box>
             )}
           </Box>
