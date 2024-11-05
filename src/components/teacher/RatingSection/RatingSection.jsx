@@ -31,6 +31,8 @@ const RatingSection = ({ id, isShowRating = false }) => {
         userDetails?.role === "STUDENT" ? userDetails?.student_id : 0
       );
       setData(response?.data);
+
+      console.log("response?.data=====",response?.data)
     } catch (error) {
       console.error(error);
     }
@@ -129,7 +131,7 @@ const RatingSection = ({ id, isShowRating = false }) => {
       {isShowRating && (
         <>
           <Divider sx={{ borderBottomWidth: 2, my: 2 }} />
-          <Feedback lectureId={id} id={4} />
+          <Feedback lectureId={id} data={data} fetchgetFeedback={fetchgetFeedback}/>
         </>
       )}
     </Box>

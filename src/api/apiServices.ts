@@ -650,4 +650,12 @@ export default class apiServices {
       .then((Response) => Response)
       .catch((error) => console.error(error));
   };
+
+  public updateFeedback = async (teacherId, formData) => {
+    return await this.axiosInstance
+      .patch(`/api/v1/lecture_feedback/${teacherId}/`, formData)
+      .then((Response) => Response)
+      .catch((error) => console.error(error));
+  };
+
 }

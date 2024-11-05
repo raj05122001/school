@@ -344,3 +344,8 @@ export const updateTeacherDetails = async (teacherId,formData) => {
   return await apiInstance.updateTeacherDetails(teacherId,formData);
 };
 
+export const updateFeedback = async (teacherId,formData) => {
+  const apiInstance = new apiServices(axiosAPIInstance);
+  return await apiInstance.updateFeedback(teacherId,formData);
+};
+
