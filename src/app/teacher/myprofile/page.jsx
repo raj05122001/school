@@ -15,21 +15,23 @@ import {
 } from "@mui/material";
 import { FaSave, FaCamera } from "react-icons/fa";
 import { useForm } from "react-hook-form";
-import axios from "axios";
 import { decodeToken } from "react-jwt";
-import { BASE_URL } from "@/constants/apiconfig";
+import { BASE_URL_MEET } from "@/constants/apiconfig";
 import Cookies from "js-cookie";
+import { getTeacherDetails, updateTeacherDetails } from "@/api/apiHelper";
+import toast from "react-hot-toast";
 
 const EditDetailsPage = () => {
   const userDetails = decodeToken(Cookies.get("ACCESS_TOKEN"));
   const [profilePicUrl, setProfilePicUrl] = useState(null);
-  const [profile_pic, setProfile_pic] = useState("");
   const [snackbar, setSnackbar] = useState({
     open: false,
     message: "",
     severity: "success",
   });
   const fileInputRef = useRef(null);
+  const [subject, setSubject] = useState([]);
+  const [initialData, setInitialData] = useState({});
 
   const {
     register,
@@ -38,8 +40,40 @@ const EditDetailsPage = () => {
     reset,
     formState: { errors },
   } = useForm({
-    defaultValues: {}, // Start with empty default values
+    defaultValues: {},
   });
+
+  useEffect(() => {
+    fetchTeacherDetails();
+  }, []);
+
+  const fetchTeacherDetails = async () => {
+    try {
+      const response = await getTeacherDetails(userDetails?.teacher_id);
+      const fetchedData = response?.data?.data;
+
+      setValue("full_name", fetchedData?.full_name);
+      setValue("designation", fetchedData?.designation);
+      setValue("experience", fetchedData?.experience);
+      setValue("department", fetchedData?.department?.name);
+      setValue("email", fetchedData?.email);
+      setProfilePicUrl(`${BASE_URL_MEET}${fetchedData?.profile_pic}`);
+      setSubject(fetchedData?.subjects);
+
+      setInitialData({
+        full_name: fetchedData?.full_name,
+        designation: fetchedData?.designation,
+        experience: fetchedData?.experience,
+        department: fetchedData?.department?.name,
+        email: fetchedData?.email,
+        profile_pic:`${BASE_URL_MEET}${fetchedData?.profile_pic}`,
+      });
+
+      console.log("fetchTeacherDetails response", response);
+    } catch (error) {
+      console.error(error);
+    }
+  };
 
   const handleEditPicClick = () => {
     if (fileInputRef.current) {
@@ -58,7 +92,6 @@ const EditDetailsPage = () => {
         });
         return;
       }
-      setProfile_pic(file);
       setProfilePicUrl(URL.createObjectURL(file));
     }
   };
@@ -71,8 +104,30 @@ const EditDetailsPage = () => {
     };
   }, [profilePicUrl]);
 
-  const onSubmit = async (data) => {
-    console.log("data", data);
+  const onSubmit = async (formData) => {
+    const updateData = new FormData();
+
+    Object.keys(formData).forEach((key) => {
+      if (formData[key] !== initialData[key]) {
+        updateData.append(key, formData[key]);
+      }
+    });
+
+    if (profilePicUrl && profilePicUrl !== initialData.profile_pic) {
+      updateData.append("profile_pic", fileInputRef.current.files[0]);
+    }
+
+    try {
+      const response = await updateTeacherDetails(
+        userDetails?.teacher_id,
+        updateData
+      );
+      console.log("Update response:", response);
+      toast.success("Details updated successfully.")
+    } catch (error) {
+      console.error("Update error:", error);
+      toast.error("Failed to update details.")
+    }
   };
 
   const handleCloseSnackbar = () => {
@@ -165,17 +220,17 @@ const EditDetailsPage = () => {
               color="textSecondary"
               sx={{ fontWeight: "bold" }}
             >
-              Age*
+              Designation*
             </Typography>
             <TextField
               fullWidth
               variant="outlined"
               size="small"
-              type="number"
-              inputProps={{ min: 0 }}
-              {...register("age", { required: "Age is required" })}
-              error={!!errors.age}
-              helperText={errors.age?.message}
+              {...register("designation", {
+                required: "Designation is required",
+              })}
+              error={!!errors.designation}
+              helperText={errors.designation?.message}
               sx={{ marginTop: 1 }}
             />
           </Grid>
@@ -222,7 +277,7 @@ const EditDetailsPage = () => {
             />
           </Grid>
 
-          <Grid item xs={12} sm={6}>
+          <Grid item xs={12} sm={12}>
             <Typography
               variant="subtitle2"
               color="textSecondary"
@@ -246,6 +301,40 @@ const EditDetailsPage = () => {
               helperText={errors.email?.message}
               sx={{ marginTop: 1 }}
             />
+          </Grid>
+
+          <Grid item xs={12} sm={12}>
+            <Typography
+              variant="subtitle2"
+              color="textSecondary"
+              sx={{ fontWeight: "bold" }}
+            >
+              Subjects*
+            </Typography>
+
+            <Box maxHeight={300} sx={{ overflowY: "auto" }}>
+              {subject?.length > 0 &&
+                subject?.map((val, index) => (
+                  <Typography
+                    key={index}
+                    variant="span"
+                    style={{
+                      display: "inline-block",
+                      padding: "6px 12px",
+                      margin: "4px",
+                      border: "1px solid #1976d2",
+                      borderRadius: "4px",
+                      backgroundColor: "#e3f2fd",
+                      color: "#1976d2",
+                      cursor: "pointer",
+                      fontSize: "14px",
+                      fontWeight: "500",
+                    }}
+                  >
+                    {val?.name}
+                  </Typography>
+                ))}
+            </Box>
           </Grid>
         </Grid>
 

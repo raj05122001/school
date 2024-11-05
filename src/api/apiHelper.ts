@@ -329,12 +329,18 @@ export const updateCommentReply = async ( formData) => {
   return await apiInstance.updateCommentReply( formData);
 };
 
-export const getFeedback = async ( lectureId) => {
+export const getFeedback = async ( lectureId,student_id) => {
   const apiInstance = new apiServices(axiosAPIInstance);
-  return await apiInstance.getFeedback( lectureId);
+  return await apiInstance.getFeedback( lectureId,student_id);
 };
 
 export const getStudentLectures = async (type) => {
   const apiInstance = new apiServices(axiosAPIInstance);
   return await apiInstance.getStudentLectures(type);
 };
+
+export const updateTeacherDetails = async (teacherId,formData) => {
+  const apiInstance = new apiServices(axiosAPIInstance);
+  return await apiInstance.updateTeacherDetails(teacherId,formData);
+};
+

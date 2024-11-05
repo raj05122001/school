@@ -179,8 +179,8 @@ export default class apiServices {
     page = 1,
     size = 10,
     getMyLectures,
-    subjectList="",
-    classList=""
+    subjectList = "",
+    classList = ""
   ) => {
     return await this.axiosInstance
       .get(
@@ -354,7 +354,7 @@ export default class apiServices {
   };
 
   public generateContent = async (data) => {
-    return await this.authAxiosInstance
+    return await this.axiosInstance
       .post(`/api/v1/generate_content/`, data, {
         headers: {
           "Content-Type": "multipart/form-data",
@@ -369,7 +369,7 @@ export default class apiServices {
   };
 
   public generateArticle = async (data) => {
-    return await this.authAxiosInstance
+    return await this.axiosInstance
       .post(`/api/v1/generate_article/`, data, {
         headers: {
           "Content-Type": "multipart/form-data",
@@ -615,7 +615,7 @@ export default class apiServices {
       });
   };
 
-  public updateCommentReply = ( formData) => {
+  public updateCommentReply = (formData) => {
     return this.axiosInstance
       .post(`/api/v1/discussion_reply/`, formData)
       .then((response) => {
@@ -626,16 +626,27 @@ export default class apiServices {
       });
   };
 
-  public getFeedback = async (lectureId) => {
+  public getFeedback = async (lectureId, student_id) => {
     return await this.axiosInstance
-      .get(`/api/v1/lecture_feedback/${lectureId}/`)
+      .get(
+        `/api/v1/lecture_feedback/${lectureId}/${
+          student_id ? `?student_id=${student_id}` : ""
+        }`
+      )
       .then((Response) => Response.data)
       .catch((error) => console.error(error));
   };
-  
+
   public getStudentLectures = async (type = "COMPLETED") => {
     return await this.axiosInstance
       .get(`api/v1/dashboard/student/lectures/?status=${type}`)
+      .then((Response) => Response)
+      .catch((error) => console.error(error));
+  };
+
+  public updateTeacherDetails = async (teacherId, formData) => {
+    return await this.axiosInstance
+      .patch(`/api/v1/teacher/${teacherId}/`, formData)
       .then((Response) => Response)
       .catch((error) => console.error(error));
   };

@@ -65,6 +65,7 @@ export const BreakpointPlayer = ({ markers, id }) => {
       const progressControl = playerRef.current.controlBar.progressControl;
 
       markers.forEach((marker) => {
+        console.log("marker====>",marker)
         const left = (marker.start / 1000 / total) * 100 + "%";
         const el = document.createElement("div");
         el.className = "vjs-marker";
@@ -156,7 +157,7 @@ export const Suggestion = ({ suggestionData }) => {
           overflowX: "auto",
           width: "100%",
           py: 2,
-          mx: 6,
+          mx:5,
           "&::-webkit-scrollbar": {
             display: "none",
           },
@@ -181,7 +182,6 @@ export const Suggestion = ({ suggestionData }) => {
                   ringColor: "green.400",
                   boxShadow: "0 0 5px rgba(0, 128, 0, 0.2)",
                 },
-                px: 2,
                 py: 1,
                 borderRadius: 2,
                 transition: "all 0.3s ease-out",
@@ -205,7 +205,7 @@ export const Suggestion = ({ suggestionData }) => {
               <Box className="shine" />
               <Typography
                 variant="body2"
-                sx={{ color: "primary.main", fontWeight: "bold", px: 1 }}
+                sx={{ color: "primary.main", fontWeight: "bold" }}
               >
                 ✦ {originalTitle}
                 {originalTitle.includes("?") ? "" : "?"}

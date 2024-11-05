@@ -52,7 +52,7 @@ const Feedback = ({ lectureId, id }) => {
     const data = {
       lecture: Number(lectureId),
       feedback_parameter: feedbackText,
-      made_by: studentID,
+      made_by: Number(studentID),
       feedback_comment:""
     };
 
