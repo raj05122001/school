@@ -1,4 +1,4 @@
-import { Box, Typography, Skeleton } from "@mui/material";
+import { Box, Typography, Skeleton, IconButton } from "@mui/material";
 import TextWithMath from "@/commonComponents/TextWithMath/TextWithMath";
 import { getLectureSummary, updateSummary } from "@/api/apiHelper";
 import { useEffect, useState } from "react";
@@ -39,13 +39,15 @@ const SummaryComponent = ({ lectureId, isDarkMode, isEdit }) => {
   const onUpdateSummary = async () => {
     try {
       const updatedSummaryText = JSON.stringify([editedText]);
+      
+
       await updateSummary(summaryId, { summary_text: updatedSummaryText });
+      
 
       setSummary([editedText]);
+      setIsEditData(false); // Move here to ensure edit mode exits after success
     } catch (error) {
-      console.error(error);
-    } finally {
-      setIsEditData(false);
+      console.error("Error updating summary:", error);
     }
   };
 
@@ -109,13 +111,18 @@ const SummaryComponent = ({ lectureId, isDarkMode, isEdit }) => {
               position: "absolute",
               right: 4,
               top: 4,
+              zIndex: 10, // Ensures the button is above other elements
             }}
           >
-            <FaSave
-              size={24}
-              onClick={() => onUpdateSummary()}
+            <IconButton
+              onClick={() => {
+                console.log("Save button clicked"); // Debugging line
+                onUpdateSummary();
+              }}
               style={{ cursor: "pointer" }}
-            />
+            >
+              <FaSave size={24} />
+            </IconButton>
           </Box>
           <TextEditor text={summary[0]} onChange={onChange} />
         </Box>
