@@ -69,7 +69,8 @@ const StudentMCQ = ({ id, isDarkMode }) => {
         p: 3,
         width: "100%",
         color: isDarkMode ? "#F0EAD6" : "#36454F",
-        borderRadius: "8px",
+        borderBottomLeftRadius:"8px",
+        borderBottomRightRadius:"8px",
         background: isDarkMode
           ? "radial-gradient(circle at 10% 20%, rgb(90, 92, 106) 0%, rgb(32, 45, 58) 81.3%)"
           : "radial-gradient(circle at 18.7% 37.8%, rgb(250, 250, 250) 0%, rgb(225, 234, 238) 90%)",

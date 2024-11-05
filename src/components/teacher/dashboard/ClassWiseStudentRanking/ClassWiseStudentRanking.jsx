@@ -36,11 +36,11 @@ import Cookies from "js-cookie";
 const RADIAN = Math.PI / 180;
 
 const mapData = {
-  A: { name: "Advanced", color: "#00b894" },
-  B: { name: "Intermediate", color: "#ff7675" },
-  C: { name: "Proficient", color: "#0984e3" },
-  D: { name: "Basic", color: "#fdcb6e" },
-  E: { name: "Beginner", color: "#e17055" },
+  A: { name: "Advanced", color: "#00b894",grade:"A" },
+  B: { name: "Intermediate", color: "#ff7675",grade:"B" },
+  C: { name: "Proficient", color: "#0984e3",grade:"C" },
+  D: { name: "Basic", color: "#fdcb6e" ,grade:"D"},
+  E: { name: "Beginner", color: "#e17055" ,grade:"E"},
 };
 
 // Custom label for pie chart slices
@@ -325,7 +325,7 @@ const ClassWiseStudentRanking = ({ selectedOptions, isMyClass }) => {
         />
       ) : (
         Object.entries(data)?.length > 0 && (
-          <Grid container spacing={2}>
+          <Grid container spacing={2} mt={4}>
             {getChartData()?.map((entry) => (
               <Grid
                 item
@@ -350,7 +350,7 @@ const ClassWiseStudentRanking = ({ selectedOptions, isMyClass }) => {
                 />
                 <Box>
                   <Typography sx={{ color: primaryColor }}>
-                    {mapData[entry.name]?.name}
+                    {mapData[entry.name]?.name}({mapData[entry.name]?.grade})
                   </Typography>
                   <Typography
                     sx={{

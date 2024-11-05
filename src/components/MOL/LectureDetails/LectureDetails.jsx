@@ -77,7 +77,8 @@ const LectureDetails = ({id, classID }) => {
             backgroundSize: "cover", // Ensure the image covers the entire page
             backgroundPosition: "center", // Center the image
             padding: 1,
-            borderRadius: "12px",
+            borderTopLeftRadius:"12px",
+            borderTopRightRadius:"12px",
           },
           ".MuiTab-root": {
             color: "#333",

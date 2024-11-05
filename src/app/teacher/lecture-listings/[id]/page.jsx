@@ -97,7 +97,7 @@ const LecturePage = ({ params }) => {
 
       <Grid container spacing={2}>
         {/* Main Content */}
-        <Grid item xs={12} md={8} lg={8}>
+        <Grid item xs={12} md={8.2} lg={8.2}>
           <Box sx={{ display: "flex", flexDirection: "column", gap: 2 }}>
             <Box sx={{ maxHeight: "500px", width: "100%", height: 500 }}>
               {videoPlayer}
@@ -109,7 +109,7 @@ const LecturePage = ({ params }) => {
         </Grid>
 
         {/* Sidebar */}
-        <Grid item xs={12} md={4} lg={4}>
+        <Grid item xs={12} md={3.8} lg={3.8}>
           <Box sx={{ display: "flex", flexDirection: "column", gap: 2 }}>
             {lectureAnalytics}
             {ratingSection}
