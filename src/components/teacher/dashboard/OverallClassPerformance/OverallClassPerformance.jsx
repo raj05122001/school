@@ -202,7 +202,7 @@ const OverallClassPerformance = () => {
       </Box>
 
       {/* Pie Chart */}
-      <Box sx={{ width: "100%", height: 240 }}>
+      <Box sx={{ width: "100%", height: 200 }}>
         <ResponsiveContainer width="100%" height="100%">
           <PieChart>
             <Pie
@@ -210,8 +210,8 @@ const OverallClassPerformance = () => {
               cx="50%"
               cy="50%"
               labelLine={false}
-              innerRadius={50}
-              outerRadius={100}
+              innerRadius={40}
+              outerRadius={90}
               fill="#8884d8"
               dataKey="value"
               label={renderCustomizedLabel}
