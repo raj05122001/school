@@ -179,8 +179,8 @@ export default class apiServices {
     page = 1,
     size = 10,
     getMyLectures,
-    subjectList="",
-    classList=""
+    subjectList = "",
+    classList = ""
   ) => {
     return await this.axiosInstance
       .get(
@@ -354,7 +354,7 @@ export default class apiServices {
   };
 
   public generateContent = async (data) => {
-    return await this.authAxiosInstance
+    return await this.axiosInstance
       .post(`/api/v1/generate_content/`, data, {
         headers: {
           "Content-Type": "multipart/form-data",
@@ -369,7 +369,7 @@ export default class apiServices {
   };
 
   public generateArticle = async (data) => {
-    return await this.authAxiosInstance
+    return await this.axiosInstance
       .post(`/api/v1/generate_article/`, data, {
         headers: {
           "Content-Type": "multipart/form-data",
@@ -615,7 +615,18 @@ export default class apiServices {
       });
   };
 
-  public updateCommentReply = ( formData) => {
+  public getLectureDiscussion = (lectureId) => {
+    return this.axiosInstance
+      .get(`/api/v1/lecture/${lectureId}/discussion/`)
+      .then((response) => {
+        return response;
+      })
+      .catch((error) => {
+        console.error(error);
+      });
+  };
+
+  public updateCommentReply = (formData) => {
     return this.axiosInstance
       .post(`/api/v1/discussion_reply/`, formData)
       .then((response) => {
@@ -626,13 +637,17 @@ export default class apiServices {
       });
   };
 
-  public getFeedback = async (lectureId) => {
+  public getFeedback = async (lectureId, student_id) => {
     return await this.axiosInstance
-      .get(`/api/v1/lecture_feedback/${lectureId}/`)
+      .get(
+        `/api/v1/lecture_feedback/${lectureId}/${
+          student_id ? `?student_id=${student_id}` : ""
+        }`
+      )
       .then((Response) => Response.data)
       .catch((error) => console.error(error));
   };
-  
+
   public getStudentLectures = async (type = "COMPLETED") => {
     return await this.axiosInstance
       .get(`api/v1/dashboard/student/lectures/?status=${type}`)
@@ -655,6 +670,54 @@ export default class apiServices {
     return await this.axiosInstance
       .get(`/api/v1/student/answer_quiz/${lectureId}/`)
       .then((Response) => Response.data)
+  }
+  public updateTeacherDetails = async (teacherId, formData) => {
+    return await this.axiosInstance
+      .patch(`/api/v1/teacher/${teacherId}/`, formData)
+      .then((Response) => Response)
+      .catch((error) => console.error(error));
+  };
+
+  public updateFeedback = async (teacherId, formData) => {
+    return await this.axiosInstance
+      .patch(`/api/v1/lecture_feedback/${teacherId}/`, formData)
+      .then((Response) => Response)
+      .catch((error) => console.error(error));
+  };
+
+  public submitMOLAssignment = (formData) => {
+    const toastInstance = toast.loading("Loading...");
+    return this.axiosInstance
+      .post(`/api/v1/lecture_assignmentAnswer/`, formData)
+      .then((response) => {
+        if (!response.data.success) {
+          toast.dismiss(toastInstance); // Dismiss the loading toast
+          toast.error(response.data.message, {
+            duration: Constants.toastTimer,
+          });
+          return response;
+        }
+        toast.dismiss(toastInstance); // Dismiss the loading toast
+        toast.success("Submitted", {
+          duration: Constants.toastTimer,
+        });
+        return response;
+      })
+      .catch((error) => {
+        toast.dismiss(toastInstance); // Dismiss the loading toast
+        const errorText = error.response?.data?.message || "An error occurred";
+        toast.error(errorText, {
+          duration: Constants.toastTimer,
+        });
+        console.error(error);
+        throw error;
+      });
+  };
+
+  public getAssignmentAnswer = async (classname, subject, lecture_topic, lecture_id, assignment_id, size="10") => {
+    return await this.axiosInstance
+      .get(`/api/v1/get_assignment_answer/?class=${classname}&subject=${subject}&lecture_topic=${lecture_topic}&lecture_id=${lecture_id}&assignment_id={assignment_id}&size=${size}`)
+      .then((Response) => Response)
       .catch((error) => console.error(error));
   };
 

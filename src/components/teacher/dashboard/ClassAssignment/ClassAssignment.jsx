@@ -69,7 +69,7 @@ const ClassAssignment = ({selectedOptions}) => {
                       Average Grade
                     </Typography>
                     <Typography variant="body1" color={secondaryColor}>
-                      {data?.average_grade || 0}%
+                      {data?.average_grade || 0}
                     </Typography>
                   </>
                 )}

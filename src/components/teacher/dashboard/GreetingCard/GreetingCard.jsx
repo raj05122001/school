@@ -15,6 +15,7 @@ import Cookies from "js-cookie";
 import { capitalizeWords } from "@/helper/Helper";
 import { AppContextProvider } from "@/app/main";
 import { useRouter } from "next/navigation";
+import UserImage from "@/commonComponents/UserImage/UserImage";
 
 function GreetingCard() {
   const userDetails = decodeToken(Cookies.get("ACCESS_TOKEN"));
@@ -70,11 +71,7 @@ function GreetingCard() {
               <FaBell size={24} color="#ffffff" />
             </Badge>
           </IconButton>
-          <Avatar
-            alt={userDetails?.full_name || ""}
-            src="/sampleprofile.jpg" // Sample profile image
-            sx={{ width: 40, height: 40 }}
-          />
+          <UserImage width={40} height={40}/>
         </Box>
       </Box>
       <Box sx={{ display: "flex", justifyContent: "flex-end" }}>

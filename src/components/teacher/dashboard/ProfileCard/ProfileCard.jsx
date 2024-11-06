@@ -14,6 +14,7 @@ import { capitalizeWords } from "@/helper/Helper";
 import { BASE_URL_MEET } from "@/constants/apiconfig";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
+import UserImage from "@/commonComponents/UserImage/UserImage";
 
 function ProfileCard() {
   const router = useRouter();
@@ -54,11 +55,9 @@ function ProfileCard() {
           style={{ borderRadius: "50%", marginRight: 2 }}
         />
       ) : (
-        <Avatar
-          alt={userDetails?.full_name || ""}
-          src="/sampleprofile.jpg" // Sample profile image
-          sx={{ width: 100, height: 100, mr: 2 }}
-        />
+        <Box sx={{ mr: 2 }}>
+          <UserImage width={100} height={100} name={userDetails?.full_name} />
+        </Box>
       )}
 
       {/* Card Content */}

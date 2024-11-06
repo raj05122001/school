@@ -55,7 +55,8 @@ const HighlightsComponent = ({ lectureId, isDarkMode }) => {
       sx={{
         p: 3,
         width: "100%",
-        borderRadius: 2,
+        borderBottomLeftRadius:"8px",
+        borderBottomRightRadius:"8px",
         color: isDarkMode ? "#F0EAD6" : "#36454F",
         background: isDarkMode
           ? "radial-gradient(circle at 10% 20%, rgb(90, 92, 106) 0%, rgb(32, 45, 58) 81.3%)"

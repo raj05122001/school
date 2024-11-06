@@ -131,18 +131,12 @@ const Page = () => {
       <Grid container direction="row" spacing={2} mt={2}>
         <Grid item xs={12} md={9}>
           {overviewSection}
-          <Box mt={4}>{calendarComponent}</Box>
+          {/* <Box mt={4}>{calendarComponent}</Box> */}
         </Grid>
-        <Grid item xs={12} md={3} mt={9}>
-          <Grid container direction="column" spacing={2}>
-            <Grid item xs={12}>
-              {strugglingExcelling}
-              {/* <ClassWiseStudentRanking /> */}
-            </Grid>
+        <Grid item xs={12} md={3} mt={4}>
             <Grid item xs={12}>
               {overallClassPerformance}
             </Grid>
-          </Grid>
         </Grid>
       </Grid>
 
@@ -254,8 +248,8 @@ const Page = () => {
               },
             }}
           >
-            <Tab label={`All Subject`} />
-            <Tab label={`My Subject`} />
+            <Tab label={`Overall Class`} />
+            <Tab label={`My Class`} />
           </Tabs>
         </Box>
       </Box>

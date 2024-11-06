@@ -9,6 +9,7 @@ import {
   IconButton,
   Button,
   CircularProgress,
+  Skeleton,
 } from "@mui/material";
 import { FaPaperPlane } from "react-icons/fa";
 import { useThemeContext } from "@/hooks/ThemeContext";
@@ -16,14 +17,28 @@ import {
   getComments,
   updateLectureDiscussion,
   updateCommentReply,
+  getLectureDiscussion,
 } from "@/api/apiHelper";
 import { formatDistanceToNow } from "date-fns";
 import { decodeToken } from "react-jwt";
 import Cookies from "js-cookie";
 import UserImage from "@/commonComponents/UserImage/UserImage";
 
-// ReplyCard Component
-const ReplyCard = ({ reply, isDarkMode, secondaryColor }) => {
+// ReplyCard Component with Skeleton Loader
+const ReplyCard = ({ reply, isDarkMode, secondaryColor, loading }) => {
+  if (loading) {
+    return (
+      <Box display="flex" alignItems="flex-start" mb={2}>
+        <Skeleton variant="circular" width={36} height={36} />
+        <Box ml={1.5} flex={1}>
+          <Skeleton width="50%" height={20} />
+          <Skeleton width="30%" height={20} />
+          <Skeleton width="80%" height={20} />
+        </Box>
+      </Box>
+    );
+  }
+
   const repliedBy = reply.replied_by || {};
   return (
     <Box display="flex" alignItems="flex-start" mb={2}>
@@ -54,12 +69,13 @@ const ReplyCard = ({ reply, isDarkMode, secondaryColor }) => {
   );
 };
 
-// CommentCard Component
+// CommentCard Component with Skeleton Loader
 const CommentCard = ({
   comment,
   isDarkMode,
   secondaryColor,
   handleSubmitReply,
+  loading,
 }) => {
   const [isShowReplyComment, setIsShowReplyComment] = useState(false);
   const [showRepliesCount, setShowRepliesCount] = useState(3);
@@ -76,6 +92,20 @@ const CommentCard = ({
       setIsReply(false);
     }
   };
+
+  if (loading) {
+    return (
+      <Box display="flex" alignItems="flex-start" mb={3}>
+        <Skeleton variant="circular" width={48} height={48} />
+        <Box ml={2} flex={1}>
+          <Skeleton width="50%" height={20} />
+          <Skeleton width="30%" height={20} />
+          <Skeleton width="80%" height={20} />
+          <Skeleton width="40%" height={20} />
+        </Box>
+      </Box>
+    );
+  }
 
   return (
     <Box display="flex" alignItems="flex-start" mb={3}>
@@ -165,6 +195,7 @@ const CommentCard = ({
                 reply={reply}
                 isDarkMode={isDarkMode}
                 secondaryColor={secondaryColor}
+                loading={loading}
               />
             ))}
 
@@ -188,7 +219,7 @@ const CommentCard = ({
   );
 };
 
-// CommentsSection Component
+// CommentsSection Component with updated layout for divider and centered message
 const CommentsSection = ({ id }) => {
   const { isDarkMode, primaryColor, secondaryColor } = useThemeContext();
   const [commentData, setCommentData] = useState([]);
@@ -197,17 +228,17 @@ const CommentsSection = ({ id }) => {
   const userDetails = decodeToken(Cookies.get("ACCESS_TOKEN"));
 
   useEffect(() => {
+    setLoading(true);
     fetchComments();
   }, [id]);
 
   const fetchComments = async () => {
-    setLoading(true);
     try {
-      const response = await getComments(id);
-      setCommentData(response.data || []);
+      const response = await getLectureDiscussion(id);
+      setCommentData(response?.data?.data || []);
     } catch (error) {
       console.error(error);
-      // Optionally, set an error state here to display to the user
+      setLoading(false);
     } finally {
       setLoading(false);
     }
@@ -226,7 +257,6 @@ const CommentsSection = ({ id }) => {
         fetchComments();
       } catch (error) {
         console.error(error);
-        // Optionally, handle error
       }
     }
   };
@@ -243,7 +273,6 @@ const CommentsSection = ({ id }) => {
         fetchComments();
       } catch (error) {
         console.error(error);
-        // Optionally, handle error
       }
     }
   };
@@ -252,6 +281,11 @@ const CommentsSection = ({ id }) => {
     <Card
       sx={{
         maxWidth: 450,
+        height: "100%",
+        minHeight: 450,
+        display: "flex",
+        flexDirection: "column",
+        justifyContent: "space-between",
         p: 3,
         backdropFilter: "blur(20px)",
         backgroundColor: "rgba(255, 255, 255, 0.2)",
@@ -259,99 +293,108 @@ const CommentsSection = ({ id }) => {
         borderRadius: "24px",
       }}
     >
-      <Box display="flex" alignItems="center" pb={2}>
-        <Typography
-          variant="h6"
-          fontWeight="bold"
-          color={isDarkMode ? "white" : "black"}
-        >
-          Comments
-        </Typography>
-        <Box
-          sx={{
-            backgroundColor: isDarkMode ? primaryColor : "#FFD700",
-            width: 34,
-            height: 34,
-            marginLeft: 1,
-            borderRadius: "50%",
-            textAlign: "center",
-            display: "flex",
-            justifyContent: "center",
-            alignItems: "center",
-          }}
-        >
+      <Box>
+        <Box display="flex" alignItems="center" pb={2}>
           <Typography
-            variant="subtitle2"
-            color={isDarkMode ? "black" : "white"}
-            sx={{ fontSize: "18px" }}
+            variant="h6"
+            fontWeight="bold"
+            color={isDarkMode ? "white" : "black"}
           >
-            {commentData.length}
+            Comments
           </Typography>
+          {commentData.length > 0 && (
+            <Box
+              sx={{
+                backgroundColor: isDarkMode ? primaryColor : "#FFD700",
+                width: 34,
+                height: 34,
+                marginLeft: 1,
+                borderRadius: "50%",
+                textAlign: "center",
+                display: "flex",
+                justifyContent: "center",
+                alignItems: "center",
+              }}
+            >
+              <Typography
+                variant="subtitle2"
+                color={isDarkMode ? "black" : "white"}
+                sx={{ fontSize: "18px" }}
+              >
+                {commentData.length}
+              </Typography>
+            </Box>
+          )}
         </Box>
+
+        <Divider sx={{ borderColor: isDarkMode ? "gray.600" : "gray.300" }} />
+
+        <CardContent sx={{ maxHeight: "400px", overflowY: "auto" }}>
+          {loading ? (
+            Array.from(new Array(3)).map((_, index) => (
+              <CommentCard
+                key={index}
+                comment={{}}
+                isDarkMode={isDarkMode}
+                secondaryColor={secondaryColor}
+                handleSubmitReply={handleSubmitReply}
+                loading={loading}
+              />
+            ))
+          ) : commentData.length > 0 ? (
+            commentData.map((comment) => (
+              <CommentCard
+                key={comment.id}
+                comment={comment}
+                isDarkMode={isDarkMode}
+                secondaryColor={secondaryColor}
+                handleSubmitReply={handleSubmitReply}
+                loading={false}
+              />
+            ))
+          ) : (
+            <Typography
+              variant="body2"
+              color={secondaryColor}
+              textAlign="center"
+              my={14}
+            >
+              No comments yet. Be the first to comment!
+            </Typography>
+          )}
+        </CardContent>
       </Box>
 
-      <Divider sx={{ borderColor: isDarkMode ? "gray.600" : "gray.300" }} />
+      <Box mt="auto" pt={2}>
+        <Divider sx={{ borderColor: isDarkMode ? "gray.600" : "gray.300" }} />
 
-      <CardContent sx={{ maxHeight: "400px", overflowY: "auto" }}>
-        {loading && commentData?.length===0  ? (
-          <Box
-            display="flex"
-            justifyContent="center"
-            alignItems="center"
-            mt={2}
+        <Box display="flex" alignItems="center" pt={2}>
+          <InputBase
+            placeholder="Write a comment..."
+            fullWidth
+            sx={{
+              ml: 1,
+              color: isDarkMode ? "white" : "black",
+              backgroundColor: isDarkMode ? "#3A3A3A" : "#FFFFFF",
+              borderRadius: "24px",
+              padding: "8px 16px",
+              boxShadow: "0px 4px 8px rgba(0, 0, 0, 0.1)",
+            }}
+            value={text}
+            onChange={(event) => setText(event.target.value)}
+          />
+          <IconButton
+            color="primary"
+            sx={{
+              ml: 1,
+              backgroundColor: isDarkMode ? "#FFD700" : "#E3F2FD",
+            }}
+            onClick={handleSubmitComment}
+            aria-label="Send comment"
           >
-            <CircularProgress />
-          </Box>
-        ) : commentData.length > 0 ? (
-          commentData.map((comment) => (
-            <CommentCard
-              key={comment.id}
-              comment={comment}
-              isDarkMode={isDarkMode}
-              secondaryColor={secondaryColor}
-              handleSubmitReply={handleSubmitReply}
-            />
-          ))
-        ) : (
-          <Typography
-            variant="body2"
-            color={secondaryColor}
-            textAlign="center"
-            mt={2}
-          >
-            No comments yet. Be the first to comment!
-          </Typography>
-        )}
-      </CardContent>
-
-      <Divider sx={{ borderColor: isDarkMode ? "gray.600" : "gray.300" }} />
-
-      <Box display="flex" alignItems="center" pt={2}>
-        <InputBase
-          placeholder="Write a comment..."
-          fullWidth
-          sx={{
-            ml: 1,
-            color: isDarkMode ? "white" : "black",
-            backgroundColor: isDarkMode ? "#3A3A3A" : "#FFFFFF",
-            borderRadius: "24px",
-            padding: "8px 16px",
-            boxShadow: "0px 4px 8px rgba(0, 0, 0, 0.1)",
-          }}
-          value={text}
-          onChange={(event) => setText(event.target.value)}
-        />
-        <IconButton
-          color="primary"
-          sx={{
-            ml: 1,
-            backgroundColor: isDarkMode ? "#FFD700" : "#E3F2FD",
-          }}
-          onClick={handleSubmitComment}
-          aria-label="Send comment"
-        >
-          <FaPaperPlane color={isDarkMode ? "#000" : "#0288D1"} />
-        </IconButton>
+            <FaPaperPlane color={isDarkMode ? "#000" : "#0288D1"} />
+          </IconButton>
+        </Box>
       </Box>
     </Card>
   );

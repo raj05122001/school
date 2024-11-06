@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { postFeedback } from "@/api/apiHelper";
+import { postFeedback, updateFeedback } from "@/api/apiHelper";
 import { decodeToken } from "react-jwt";
 import {
   FaRegSadCry,
@@ -35,30 +35,34 @@ const feedbackOptions = [
   },
 ];
 
-const Feedback = ({ lectureId, id }) => {
+const Feedback = ({ lectureId, data, fetchgetFeedback }) => {
   const { isDarkMode, primaryColor, secondaryColor } = useThemeContext();
-  const [selected, setSelected] = useState(null);
+  const [selected, setSelected] = useState(data?.average_feedback_parameter);
 
   useEffect(() => {
-    setSelected(id);
-  }, [lectureId, id]);
+    setSelected(data?.average_feedback_parameter);
+  }, [lectureId, data]);
 
-  const onSubmitFeedback = async (index) => {
+  const onSubmitFeedback = async (value) => {
     const userDetails = decodeToken(Cookies.get("ACCESS_TOKEN"));
     const studentID = userDetails?.student_id;
 
-    const feedbackText = feedbackOptions[index]["value"];
-
-    const data = {
+    const formData = {
       lecture: Number(lectureId),
-      feedback_parameter: feedbackText,
-      made_by: studentID,
-      feedback_comment:""
+      feedback_parameter: value,
+      made_by: Number(studentID),
+      feedback_comment: "",
     };
 
     try {
-      await postFeedback(data);
-      setSelected(index);
+      setSelected(value);
+      if (data?.["average_feedback_parameter"]) {
+        await updateFeedback(lectureId, formData);
+        fetchgetFeedback();
+      } else {
+        await postFeedback(formData);
+        fetchgetFeedback();
+      }
     } catch (error) {
       setSelected(null);
       return Error(error);
@@ -89,13 +93,13 @@ const Feedback = ({ lectureId, id }) => {
       </Box>
 
       <Box sx={{ display: "flex", gap: { xs: 1, sm: 2 } }}>
-        {feedbackOptions.map(({ icon: Icon, text, color }, index) => (
+        {feedbackOptions.map(({ icon: Icon, text, color, value }, index) => (
           <Tooltip key={index} title={text} arrow>
             <IconButton
-              onClick={() => onSubmitFeedback(index)}
+              onClick={() => onSubmitFeedback(value)}
               sx={{
                 backgroundColor:
-                  index === selected
+                  value === selected
                     ? isDarkMode
                       ? "rgba(255, 255, 255, 0.2)"
                       : "grey.300"

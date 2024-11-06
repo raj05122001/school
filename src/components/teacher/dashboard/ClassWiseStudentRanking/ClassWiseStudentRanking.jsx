@@ -36,11 +36,11 @@ import Cookies from "js-cookie";
 const RADIAN = Math.PI / 180;
 
 const mapData = {
-  A: { name: "Advanced", color: "#00b894" },
-  B: { name: "Intermediate", color: "#ff7675" },
-  C: { name: "Proficient", color: "#0984e3" },
-  D: { name: "Basic", color: "#fdcb6e" },
-  E: { name: "Beginner", color: "#e17055" },
+  A: { name: "Advanced", color: "#00b894",grade:"A" },
+  B: { name: "Intermediate", color: "#ff7675",grade:"B" },
+  C: { name: "Proficient", color: "#0984e3",grade:"C" },
+  D: { name: "Basic", color: "#fdcb6e" ,grade:"D"},
+  E: { name: "Beginner", color: "#e17055" ,grade:"E"},
 };
 
 // Custom label for pie chart slices
@@ -164,44 +164,6 @@ const ClassWiseStudentRanking = ({ selectedOptions, isMyClass }) => {
         </Typography>
       </Box>
 
-      {/* <Autocomplete
-        freeSolo
-        id="class"
-        disableClearable
-        options={classOptions?.map((option) => option.class_name)}
-        value={selectedOptions?.class_name || ""} // Set value to the class name only
-        onChange={(event, newValue) => {
-          const selected = classOptions.find(
-            (option) => option.class_name === newValue
-          );
-          setSelectedOptions(selected || null); // Set selected option object
-        }}
-        renderInput={(params) => (
-          <TextField
-            {...params}
-            placeholder="Search Class"
-            variant="outlined"
-            InputProps={{
-              ...params.InputProps,
-              type: "search",
-              sx: {
-                backdropFilter: "blur(10px)",
-                backgroundColor: "rgba(255, 255, 255, 0.2)",
-                color: currentStyles.inputColor,
-                height: 40,
-                "& .MuiOutlinedInput-notchedOutline": {
-                  border: "none",
-                },
-              },
-            }}
-            sx={{
-              boxShadow: currentStyles.boxShadow,
-              borderRadius: 1,
-            }}
-          />
-        )}
-      /> */}
-
       <Tabs
         value={tabValue}
         onChange={handleTabChange}
@@ -268,7 +230,7 @@ const ClassWiseStudentRanking = ({ selectedOptions, isMyClass }) => {
             sx={{
               width: "100%",
               height: 240,
-              mt: 4,
+              mt: 0,
               display: "flex",
               justifyContent: "center",
               alignItems: "center",
@@ -321,50 +283,61 @@ const ClassWiseStudentRanking = ({ selectedOptions, isMyClass }) => {
           variant="rectangular"
           width="100%"
           height={100}
-          sx={{ mt: 2 }}
+          sx={{ mt: 0 }}
         />
       ) : (
         Object.entries(data)?.length > 0 && (
-          <Grid container spacing={2}>
-            {getChartData()?.map((entry) => (
-              <Grid
-                item
-                xs={12}
-                sm={6}
-                md={6}
+          <Grid container spacing={2} mt={0}>
+          {getChartData()?.map((entry) => (
+            <Grid
+              item
+              xs={12}
+              sm={6}
+              md={6}
+              key={entry.name}
+              onClick={() => handleOpenModal(entry.name)}
+              sx={{
+                display: "flex",
+                alignItems: "center",
+                cursor: "pointer",
+                padding: 2,
+              }}
+            >
+              <Box
                 sx={{
-                  display: "flex",
-                  alignItems: "center",
-                  cursor: "pointer",
+                  width: 14,
+                  height: 14,
+                  bgcolor: mapData[entry.name]?.color,
+                  borderRadius: "50%",
+                  mr: 2,
+                  boxShadow: "0px 2px 4px rgba(0, 0, 0, 0.2)",
                 }}
-                key={entry.name}
-                onClick={() => handleOpenModal(entry.name)} // Handle click for legend
-              >
-                <Box
+              />
+              <Box>
+                <Typography
+                  variant="body1"
                   sx={{
-                    width: 12,
-                    height: 12,
-                    bgcolor: mapData[entry.name]?.color,
-                    mr: 1,
+                    color: primaryColor,
+                    fontWeight: 600,
                   }}
-                />
-                <Box>
-                  <Typography sx={{ color: primaryColor }}>
-                    {mapData[entry.name]?.name}
-                  </Typography>
-                  <Typography
-                    sx={{
-                      ml: "auto",
-                      fontWeight: "bold",
-                      color: secondaryColor,
-                    }}
-                  >
-                    {entry.value}%
-                  </Typography>
-                </Box>
-              </Grid>
-            ))}
-          </Grid>
+                >
+                  Grade: {mapData[entry.name]?.grade}
+                </Typography>
+                <Typography
+                  variant="h6"
+                  sx={{
+                    color: secondaryColor,
+                    fontWeight: "bold",
+                    mt: 0.5,
+                  }}
+                >
+                  {entry.value}
+                </Typography>
+              </Box>
+            </Grid>
+          ))}
+        </Grid>
+        
         )
       )}
       {modalOpen && (

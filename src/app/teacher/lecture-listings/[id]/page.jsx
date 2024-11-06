@@ -26,6 +26,7 @@ const LecturePage = ({ params }) => {
   const { isDarkMode } = useThemeContext();
   const [lectureData, setLectureData] = useState({});
   const theme = useTheme(); // Access theme to apply dynamic styling
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     if (id) {
@@ -34,14 +35,17 @@ const LecturePage = ({ params }) => {
   }, [id]);
 
   const getMeetingByID = async () => {
+    setLoading(true);
     try {
       const apiResponse = await getLectureById(id);
       if (apiResponse?.data?.success) {
         setLectureData(apiResponse?.data?.data);
       }
+      setLoading(false);
     } catch (e) {
       setLectureData({});
       console.error(e);
+      setLoading(false);
     }
   };
   const classID = lectureData?.lecture_class?.id;
@@ -49,7 +53,7 @@ const LecturePage = ({ params }) => {
   const videoPlayer = useMemo(() => <VideoPlayer id={id} />, [id]);
   const headerMOL = useMemo(
     () => (
-      <HeaderMOL lectureData={lectureData} isEdit={true} isShowPic={false} />
+      <HeaderMOL lectureData={lectureData} isEdit={true} isShowPic={false} loading={loading} />
     ),
     [lectureData]
   );
@@ -66,8 +70,11 @@ const LecturePage = ({ params }) => {
     () => <LectureAnalytics lectureId={id} />,
     [id]
   );
-  const ratingSection = useMemo(() => <RatingSection id={id} isShowRating={false}/>, [id]);
-  const commentSection = useMemo(() => <CommentsSection id={id}/>, [id]);
+  const ratingSection = useMemo(
+    () => <RatingSection id={id} isShowRating={false} />,
+    [id]
+  );
+  const commentSection = useMemo(() => <CommentsSection id={id} />, [id]);
 
   return (
     <Box
@@ -97,7 +104,7 @@ const LecturePage = ({ params }) => {
 
       <Grid container spacing={2}>
         {/* Main Content */}
-        <Grid item xs={12} md={8} lg={8}>
+        <Grid item xs={12} md={8.2} lg={8.2}>
           <Box sx={{ display: "flex", flexDirection: "column", gap: 2 }}>
             <Box sx={{ maxHeight: "500px", width: "100%", height: 500 }}>
               {videoPlayer}
@@ -109,7 +116,7 @@ const LecturePage = ({ params }) => {
         </Grid>
 
         {/* Sidebar */}
-        <Grid item xs={12} md={4} lg={4}>
+        <Grid item xs={12} md={3.8} lg={3.8}>
           <Box sx={{ display: "flex", flexDirection: "column", gap: 2 }}>
             {lectureAnalytics}
             {ratingSection}

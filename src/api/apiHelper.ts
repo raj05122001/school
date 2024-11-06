@@ -329,9 +329,9 @@ export const updateCommentReply = async ( formData) => {
   return await apiInstance.updateCommentReply( formData);
 };
 
-export const getFeedback = async ( lectureId) => {
+export const getFeedback = async ( lectureId,student_id) => {
   const apiInstance = new apiServices(axiosAPIInstance);
-  return await apiInstance.getFeedback( lectureId);
+  return await apiInstance.getFeedback( lectureId,student_id);
 };
 
 export const getStudentLectures = async (type) => {
@@ -347,4 +347,28 @@ export const submitQuiz = async (formData, lectureId) => {
 export const getQuizResponse = async (lectureId) => {
   const apiInstance = new apiServices(axiosAPIInstance);
   return await apiInstance.getQuizResponse(lectureId);
+}
+export const updateTeacherDetails = async (teacherId,formData) => {
+  const apiInstance = new apiServices(axiosAPIInstance);
+  return await apiInstance.updateTeacherDetails(teacherId,formData);
+};
+
+export const updateFeedback = async (teacherId,formData) => {
+  const apiInstance = new apiServices(axiosAPIInstance);
+  return await apiInstance.updateFeedback(teacherId,formData);
+};
+
+export const getLectureDiscussion = async ( lectureId) => {
+  const apiInstance = new apiServices(axiosAPIInstance);
+  return await apiInstance.getLectureDiscussion( lectureId);
+};
+
+export const submitMOLAssignment = async (formData) => {
+  const apiInstance = new apiServices(axiosAPIInstance);
+  return await apiInstance.submitMOLAssignment(formData);
+};
+
+export const getAssignmentAnswer = async (classname, subject, lecture_topic, lecture_id, assignment_id, size) => {
+  const apiInstance = new apiServices(axiosAPIInstance);
+  return await apiInstance.getAssignmentAnswer(classname, subject, lecture_topic, lecture_id, assignment_id, size);
 };

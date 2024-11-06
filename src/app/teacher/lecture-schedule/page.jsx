@@ -104,7 +104,7 @@ const LectureManager = () => {
                   },
                 }}
               >
-                <MdAdd fontSize={16} /> New Lecture
+                <MdAdd fontSize={16} size={22} style={{marginRight:2}} /> New Lecture
               </Button>
               <Button
                 variant="contained"
@@ -121,7 +121,7 @@ const LectureManager = () => {
                   },
                 }}
               >
-                <MdDownloadForOffline /> Download
+                <MdDownloadForOffline size={22} style={{marginRight:2}}/> Download Format
               </Button>
               <Button
                 variant="contained"
@@ -138,7 +138,7 @@ const LectureManager = () => {
                   },
                 }}
               >
-                <MdUpload />
+                <MdUpload size={22} style={{marginRight:2}}/>
                 Upload
               </Button>
               {open && <CreateLectureSchedule open={open} setOpen={setOpen} />}

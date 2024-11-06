@@ -1,4 +1,4 @@
-import { Box, Typography, Skeleton } from "@mui/material";
+import { Box, Typography, Skeleton, IconButton } from "@mui/material";
 import TextWithMath from "@/commonComponents/TextWithMath/TextWithMath";
 import { getLectureSummary, updateSummary } from "@/api/apiHelper";
 import { useEffect, useState } from "react";
@@ -18,13 +18,33 @@ const SummaryComponent = ({ lectureId, isDarkMode, isEdit }) => {
     fetchSummary();
   }, [lectureId]);
 
+  function safeParseJSON(data) {
+    try {
+      return JSON.parse(data);
+    } catch (error) {
+      console.warn(
+        "Initial JSON parsing failed, attempting to clean and retry."
+      );
+
+      const cleanedData = data.replace(/\\"/g, '"').replace(/\\\\n/g, "\n");
+
+      try {
+        return JSON.parse(cleanedData);
+      } catch (secondError) {
+        console.error("Failed to parse JSON even after cleaning:", secondError);
+        return null;
+      }
+    }
+  }
+
   const fetchSummary = async () => {
     setLoading(true);
     try {
       const summaryResponse = await getLectureSummary(lectureId);
       const summaryData = summaryResponse?.data?.data;
+
       const jsonData = summaryData?.summary_text
-        ? JSON.parse(summaryData?.summary_text)
+        ? safeParseJSON(summaryData.summary_text)
         : [];
 
       setSummaryId(summaryData?.id);
@@ -39,13 +59,13 @@ const SummaryComponent = ({ lectureId, isDarkMode, isEdit }) => {
   const onUpdateSummary = async () => {
     try {
       const updatedSummaryText = JSON.stringify([editedText]);
+
       await updateSummary(summaryId, { summary_text: updatedSummaryText });
 
       setSummary([editedText]);
+      setIsEditData(false); // Move here to ensure edit mode exits after success
     } catch (error) {
-      console.error(error);
-    } finally {
-      setIsEditData(false);
+      console.error("Error updating summary:", error);
     }
   };
 
@@ -78,7 +98,8 @@ const SummaryComponent = ({ lectureId, isDarkMode, isEdit }) => {
       sx={{
         p: 3,
         width: "100%",
-        borderRadius: "8px",
+        borderBottomLeftRadius: "8px",
+        borderBottomRightRadius: "8px",
         color: isDarkMode ? "#F0EAD6" : "#36454F",
         background: isDarkMode
           ? "radial-gradient(circle at 10% 20%, rgb(90, 92, 106) 0%, rgb(32, 45, 58) 81.3%)"
@@ -109,13 +130,18 @@ const SummaryComponent = ({ lectureId, isDarkMode, isEdit }) => {
               position: "absolute",
               right: 4,
               top: 4,
+              zIndex: 10, // Ensures the button is above other elements
             }}
           >
-            <FaSave
-              size={24}
-              onClick={() => onUpdateSummary()}
+            <IconButton
+              onClick={() => {
+                console.log("Save button clicked"); // Debugging line
+                onUpdateSummary();
+              }}
               style={{ cursor: "pointer" }}
-            />
+            >
+              <FaSave size={24} />
+            </IconButton>
           </Box>
           <TextEditor text={summary[0]} onChange={onChange} />
         </Box>

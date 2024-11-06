@@ -79,23 +79,24 @@ const LectureNotes = ({ id, isDarkMode }) => {
 
   const displayedNotes = notes.slice(0, visibleCount);
 
-  if (loading) {
-    return (
-      <Box sx={{ p: 3, width: "100%" }}>
-        <Skeleton variant="rectangular" height={40} sx={{ mb: 2 }} />
-        {[...Array(7)].map((_, index) => (
-          <Skeleton key={index} variant="text" height={30} sx={{ mb: 1 }} />
-        ))}
-      </Box>
-    );
-  }
+  // if (loading) {
+  //   return (
+  //     <Box sx={{ p: 3, width: "100%" }}>
+  //       <Skeleton variant="rectangular" height={40} sx={{ mb: 2 }} />
+  //       {[...Array(7)].map((_, index) => (
+  //         <Skeleton key={index} variant="text" height={30} sx={{ mb: 1 }} />
+  //       ))}
+  //     </Box>
+  //   );
+  // }
 
   return (
     <Box
       sx={{
         p: 3,
         width: "100%",
-        borderRadius: "8px",
+        borderBottomLeftRadius: "8px",
+        borderBottomRightRadius: "8px",
         color: isDarkMode ? "#F0EAD6" : "#36454F",
         background: isDarkMode
           ? "radial-gradient(circle at 10% 20%, rgb(90, 92, 106) 0%, rgb(32, 45, 58) 81.3%)"
@@ -107,57 +108,70 @@ const LectureNotes = ({ id, isDarkMode }) => {
         width: "100%",
       }}
     >
-      <MathJax.Context input="tex">
-        <>
-          {displayedNotes?.map((note) => (
-            <Box key={note.id} sx={{ mb: 2 }}>
-              <Box
-                display="flex"
-                alignItems="center"
-                justifyContent="space-between"
-              >
-                <Typography sx={{ fontWeight: "bold", fontSize: "18px" }}>
-                  <MathJax.Text text={note.title} />
-                </Typography>
-                {!showTextFields[note.id] ? (
-                  <Button
-                    variant="outlined"
-                    onClick={() => handleMoreInsightClick(note.id)}
-                  >
-                    More Insights
-                  </Button>
-                ) : (
-                  <Box display="flex" alignItems="center">
-                    <TextField
+      {loading ? (
+        <Box>
+          <Skeleton variant="rectangular" height={40} sx={{ mb: 2 }} />
+          <Skeleton variant="text" height={30} sx={{ mb: 1 }} />
+          <Skeleton variant="text" height={30} sx={{ mb: 1 }} />
+          <Skeleton variant="text" height={30} sx={{ mb: 1 }} />
+          <Skeleton variant="text" height={30} sx={{ mb: 1 }} />
+          <Skeleton variant="text" height={30} sx={{ mb: 1 }} />
+          <Skeleton variant="text" height={30} sx={{ mb: 1 }} />
+          <Skeleton variant="text" height={30} sx={{ mb: 1 }} />
+        </Box>
+      ) : (
+        <MathJax.Context input="tex">
+          <>
+            {displayedNotes?.map((note) => (
+              <Box key={note.id} sx={{ mb: 2 }}>
+                <Box
+                  display="flex"
+                  alignItems="center"
+                  justifyContent="space-between"
+                >
+                  <Typography sx={{ fontWeight: "bold", fontSize: "18px" }}>
+                    <MathJax.Text text={note.title} />
+                  </Typography>
+                  {!showTextFields[note.id] ? (
+                    <Button
                       variant="outlined"
-                      size="small"
-                      value={insightInputs[note.id] || ""}
-                      onChange={(e) =>
-                        setInsightInputs({
-                          ...insightInputs,
-                          [note.id]: e.target.value,
-                        })
-                      }
-                      placeholder="Type your query..."
-                      sx={{ mr: 1 }}
-                    />
-                    <IconButton
-                      onClick={() => sendInfo(note.id)}
-                      color="primary"
+                      onClick={() => handleMoreInsightClick(note.id)}
                     >
-                      <IoMdSend />
-                    </IconButton>
-                  </Box>
-                )}
+                      More Insights
+                    </Button>
+                  ) : (
+                    <Box display="flex" alignItems="center">
+                      <TextField
+                        variant="outlined"
+                        size="small"
+                        value={insightInputs[note.id] || ""}
+                        onChange={(e) =>
+                          setInsightInputs({
+                            ...insightInputs,
+                            [note.id]: e.target.value,
+                          })
+                        }
+                        placeholder="Type your query..."
+                        sx={{ mr: 1 }}
+                      />
+                      <IconButton
+                        onClick={() => sendInfo(note.id)}
+                        color="primary"
+                      >
+                        <IoMdSend />
+                      </IconButton>
+                    </Box>
+                  )}
+                </Box>
+                {/* Check and remove leading ** symbols from notes */}
+                <Typography variant="subtitle2">
+                  <MathJax.Text text={note.notes.replace(/^\*\*\s*/, "")} />
+                </Typography>
               </Box>
-              {/* Check and remove leading ** symbols from notes */}
-              <Typography variant="subtitle2">
-                <MathJax.Text text={note.notes.replace(/^\*\*\s*/, "")} />
-              </Typography>
-            </Box>
-          ))}
-        </>
-      </MathJax.Context>
+            ))}
+          </>
+        </MathJax.Context>
+      )}
 
       {visibleCount < notes.length && (
         <Button

@@ -12,10 +12,13 @@ import { MdStar } from "react-icons/md";
 import { useThemeContext } from "@/hooks/ThemeContext";
 import Feedback from "./Feedback";
 import { getFeedback } from "@/api/apiHelper";
+import { decodeToken } from "react-jwt";
+import Cookies from "js-cookie";
 
 const RatingSection = ({ id, isShowRating = false }) => {
   const { isDarkMode, primaryColor, secondaryColor } = useThemeContext();
-  const [data,setData]=useState({})
+  const [data, setData] = useState({});
+  const userDetails = decodeToken(Cookies.get("ACCESS_TOKEN"));
 
   useEffect(() => {
     fetchgetFeedback();
@@ -23,8 +26,12 @@ const RatingSection = ({ id, isShowRating = false }) => {
 
   const fetchgetFeedback = async () => {
     try {
-      const response = await getFeedback(id);
-      setData(response?.data)
+      const response = await getFeedback(
+        id,
+        userDetails?.role === "STUDENT" ? userDetails?.student_id : 0
+      );
+      setData(response?.data);
+
     } catch (error) {
       console.error(error);
     }
@@ -32,7 +39,7 @@ const RatingSection = ({ id, isShowRating = false }) => {
 
   const totalRatings = [1, 2, 3, 4, 5].reduce((sum, rating) => {
     return sum + (data?.feedback_index?.[`Rating${rating}`] || 0);
-  }, 0);  
+  }, 0);
 
   const getPercentage = (count) => (count / totalRatings) * 100;
 
@@ -40,8 +47,8 @@ const RatingSection = ({ id, isShowRating = false }) => {
     <Box
       sx={{
         p: 3,
-        maxWidth: 400,
         color: isDarkMode ? "#fff" : "#000",
+        width:"100%"
       }}
       className="blur_effect_card"
     >
@@ -121,7 +128,7 @@ const RatingSection = ({ id, isShowRating = false }) => {
       {isShowRating && (
         <>
           <Divider sx={{ borderBottomWidth: 2, my: 2 }} />
-          <Feedback lectureId={id} id={4} />
+          <Feedback lectureId={id} data={data} fetchgetFeedback={fetchgetFeedback}/>
         </>
       )}
     </Box>

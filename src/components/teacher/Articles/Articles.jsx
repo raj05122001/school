@@ -186,7 +186,7 @@ const Articles = ({ lectureId }) => {
           Twitter
         </Button>
       </Box>
-      <Box>
+      <Box sx={{ maxHeight: 300, overflowY: "auto" }}>
         {loading ? (
           <Box
             display="flex"

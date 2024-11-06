@@ -3,12 +3,14 @@ import videojs from "video.js";
 import "video.js/dist/video-js.css";
 import "./VideoPlayer.css";
 import { getBreakpoint } from "@/api/apiHelper";
-import { Button, Box, Typography, IconButton } from "@mui/material";
+import { Button, Box, Typography, IconButton, Skeleton } from "@mui/material";
 import { AppContextProvider } from "@/app/main";
+import { FaVideo } from "react-icons/fa";
 
 const VideoPlayer = ({ id }) => {
   const [markers, setMarkers] = useState([]);
   const [suggestionData, setSuggestionData] = useState([]);
+  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
     if (id) {
@@ -17,29 +19,59 @@ const VideoPlayer = ({ id }) => {
   }, [id]);
 
   const fetchBreakPoint = async () => {
-    const apiResponse = await getBreakpoint(id);
-    const breakPoint =
-      apiResponse?.data?.data?.break_point?.length > 0
-        ? JSON.parse(apiResponse?.data?.data?.break_point)
-        : [];
-    setMarkers(breakPoint);
+    setIsLoading(true);
+    try {
+      const apiResponse = await getBreakpoint(id);
+      const breakPoint =
+        apiResponse?.data?.data?.break_point?.length > 0
+          ? JSON.parse(apiResponse?.data?.data?.break_point)
+          : [];
+      setMarkers(breakPoint);
 
-    setSuggestionData(
-      breakPoint.map((topic) => ({
-        originalTitle: topic.gist,
-        lowercaseTitle: topic.gist.toLowerCase(),
-      }))
-    );
+      setSuggestionData(
+        breakPoint.map((topic) => ({
+          originalTitle: topic.gist,
+          lowercaseTitle: topic.gist.toLowerCase(),
+        }))
+      );
+      setIsLoading(false);
+    } catch (error) {
+      console.error(error);
+      setIsLoading(false);
+    }
   };
 
   const breakpointPlayer = useMemo(
     () => <BreakpointPlayer markers={markers} id={id} />,
-    [markers, id,markers?.length]
+    [markers, id, markers?.length]
   );
 
   return (
     <Box sx={{ width: "100%", height: "100%" }}>
-      {breakpointPlayer}
+      {isLoading ? (
+        <Box sx={{ position: "relative", width: "100%", height: "100%" }}>
+          <Skeleton
+            variant="rectangular"
+            width="100%"
+            height="100%"
+            sx={{ borderRadius: 8 }}
+          />
+          <Box
+            sx={{
+              position: "absolute",
+              top: "50%",
+              left: "50%",
+              transform: "translate(-50%, -50%)",
+              zIndex: 10,
+            }}
+          >
+            <FaVideo size={100} color="#808080" />
+          </Box>
+        </Box>
+      ) : (
+        breakpointPlayer
+      )}
+
       {suggestionData?.length > 0 && (
         <Box height="10%">
           <Suggestion suggestionData={suggestionData} />
@@ -156,7 +188,7 @@ export const Suggestion = ({ suggestionData }) => {
           overflowX: "auto",
           width: "100%",
           py: 2,
-          mx: 6,
+          mx: 5,
           "&::-webkit-scrollbar": {
             display: "none",
           },
@@ -181,7 +213,6 @@ export const Suggestion = ({ suggestionData }) => {
                   ringColor: "green.400",
                   boxShadow: "0 0 5px rgba(0, 128, 0, 0.2)",
                 },
-                px: 2,
                 py: 1,
                 borderRadius: 2,
                 transition: "all 0.3s ease-out",
@@ -205,7 +236,7 @@ export const Suggestion = ({ suggestionData }) => {
               <Box className="shine" />
               <Typography
                 variant="body2"
-                sx={{ color: "primary.main", fontWeight: "bold", px: 1 }}
+                sx={{ color: "primary.main", fontWeight: "bold" }}
               >
                 ✦ {originalTitle}
                 {originalTitle.includes("?") ? "" : "?"}

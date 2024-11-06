@@ -173,7 +173,7 @@ export default function ChatBot({
     <Box
       sx={{
         bgcolor: "grey.200",
-        maxWidth: 400,
+        maxWidth: 350,
         display: "flex",
         flexDirection: "column",
         justifyContent: "center",
@@ -200,7 +200,7 @@ export default function ChatBot({
           width: "100%",
         }}
       >
-        <Logo />
+        <Logo color="black"/>
         <IconButton onClick={toggleChatbot}>
           <BsChevronDown fontSize="large" />
         </IconButton>

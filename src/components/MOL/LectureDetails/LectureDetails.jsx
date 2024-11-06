@@ -10,6 +10,7 @@ import { useThemeContext } from "@/hooks/ThemeContext";
 import { decodeToken } from "react-jwt";
 import Cookies from "js-cookie";
 import StudentMCQ from "./StudentMCQ";
+import StudentMOLAssignment from "./StudentMOLAssignment";
 
 const LectureDetails = ({id, classID }) => {
   const { isDarkMode } = useThemeContext();
@@ -41,6 +42,7 @@ const LectureDetails = ({id, classID }) => {
 
   const memoizedLectureQuestions = useMemo(()=> <LectureQuestions id={id} isDarkMode = {isDarkMode} /> , [id, isDarkMode])
   const memoizedLectureAssignment = useMemo(()=><LectureAssignment id={id} isDarkMode={isDarkMode} class_ID={class_ID} />, [id, isDarkMode, class_ID])
+  const memoizedStudentMOLAssignment = useMemo(()=><StudentMOLAssignment id={id} isDarkMode={isDarkMode} class_ID={class_ID} />, [id, isDarkMode, class_ID])
   const memoizedLectureReferrence = useMemo(()=><LectureReferrence id={id} isDarkMode={isDarkMode} />, [id, isDarkMode])
 
   return (
@@ -77,7 +79,8 @@ const LectureDetails = ({id, classID }) => {
             backgroundSize: "cover", // Ensure the image covers the entire page
             backgroundPosition: "center", // Center the image
             padding: 1,
-            borderRadius: "12px",
+            borderTopLeftRadius:"12px",
+            borderTopRightRadius:"12px",
           },
           ".MuiTab-root": {
             color: "#333",
@@ -111,7 +114,7 @@ const LectureDetails = ({id, classID }) => {
       {value === 0 && memoizedLectureNotes}
       {value === 1 && (userDetails?.role==="STUDENT" ? (memoizedStudentMCQ) : (memoizedLectureMCQ))}
       {value === 2 && memoizedLectureQuestions}
-      {value === 3 && memoizedLectureAssignment}
+      {value === 3 && (userDetails?.role==="STUDENT" ?(memoizedStudentMOLAssignment):(memoizedLectureAssignment))}
       {value === 4 && memoizedLectureReferrence}
     </Box>
   );
