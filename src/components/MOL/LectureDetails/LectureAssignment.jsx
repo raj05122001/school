@@ -130,240 +130,274 @@ const LectureAssignment = ({ id, isDarkMode, class_ID }) => {
   const lectureTitle =
     assignments.length > 0 ? assignments[0].lecture.title : "";
 
-  if (loading) {
-    return (
-      <Box sx={{ p: 3, width: "100%" }}>
-        <Skeleton variant="rectangular" height={40} sx={{ mb: 2 }} />
-        {[...Array(7)].map((_, index) => (
-          <Skeleton key={index} variant="text" height={30} sx={{ mb: 1 }} />
-        ))}
-      </Box>
-    );
-  }
+  // if (loading) {
+  //   return (
+  //     <Box sx={{ p: 3, width: "100%" }}>
+  //       <Skeleton variant="rectangular" height={40} sx={{ mb: 2 }} />
+  //       {[...Array(7)].map((_, index) => (
+  //         <Skeleton key={index} variant="text" height={30} sx={{ mb: 1 }} />
+  //       ))}
+  //     </Box>
+  //   );
+  // }
 
   return (
-    <Box
-      sx={{
-        p: 3,
-        width: "100%",
-        borderBottomLeftRadius:"8px",
-        borderBottomRightRadius:"8px",
-        color: isDarkMode ? "#F0EAD6" : "#36454F",
-        background: isDarkMode
-          ? "radial-gradient(circle at 10% 20%, rgb(90, 92, 106) 0%, rgb(32, 45, 58) 81.3%)"
-          : "radial-gradient(circle at 18.7% 37.8%, rgb(250, 250, 250) 0%, rgb(225, 234, 238) 90%)",
-        overflowY: "auto",
-        height: "100%",
-        minHeight: 400,
-        maxHeight: 450,
-        width: "100%",
-      }}
-    >
-      <MathJax.Context input="tex">
-        <>
-          <Box
-            display="flex"
-            justifyContent="space-between"
-            alignItems="center"
-          >
-            <Typography variant="h6" sx={{ mb: 2, fontWeight: "bold" }}>
-              {lectureTitle}
-            </Typography>
-            <Button
-              variant="outlined"
-              sx={{
-                backgroundColor: "#4491fc", // blue
-                transition: "all 150ms ease-in-out",
-                color: "#f0f4fa", // white for text
-
-                ":hover": {
-                  backgroundColor: "#2474e3", // Slightly darker blue on hover
-                  boxShadow: "0 0 10px 0 #2474e3 inset, 0 0 10px 4px #2474e3", // Matching hover color with blue shade
-                },
-              }}
-              onClick={() => setOpenDialog(true)}
-            >
-              Create
-            </Button>
+    <>
+      {loading ? (
+        <Box
+          sx={{
+            p: 3,
+            width: "100%",
+            borderBottomLeftRadius: "8px",
+            borderBottomRightRadius: "8px",
+            color: isDarkMode ? "#F0EAD6" : "#36454F",
+            background: isDarkMode
+              ? "radial-gradient(circle at 10% 20%, rgb(90, 92, 106) 0%, rgb(32, 45, 58) 81.3%)"
+              : "radial-gradient(circle at 18.7% 37.8%, rgb(250, 250, 250) 0%, rgb(225, 234, 238) 90%)",
+            overflowY: "auto",
+            height: "100%",
+            minHeight: 400,
+            maxHeight: 450,
+            width: "100%",
+          }}
+        >
+          <Box>
+            <Skeleton variant="rectangular" height={40} sx={{ mb: 2 }} />
+            <Skeleton variant="text" height={30} sx={{ mb: 1 }} />
+            <Skeleton variant="text" height={30} sx={{ mb: 1 }} />
+            <Skeleton variant="text" height={30} sx={{ mb: 1 }} />
+            <Skeleton variant="text" height={30} sx={{ mb: 1 }} />
+            <Skeleton variant="text" height={30} sx={{ mb: 1 }} />
+            <Skeleton variant="text" height={30} sx={{ mb: 1 }} />
+            <Skeleton variant="text" height={30} sx={{ mb: 1 }} />
           </Box>
-          {assignments.map((assignment, index) => (
-            <Box
-              key={assignment.id}
-              sx={{ mb: 2, display: "flex", flexDirection: "column" }}
-            >
-              <Typography variant="body1" sx={{ mb: 1 }}>
-                {String.fromCharCode(65 + index)}.{" "}
-              </Typography>
-              <MathJax.Text text={assignment.assignment_text} />
+        </Box>
+      ) : (
+        <Box
+          sx={{
+            p: 3,
+            width: "100%",
+            borderBottomLeftRadius: "8px",
+            borderBottomRightRadius: "8px",
+            color: isDarkMode ? "#F0EAD6" : "#36454F",
+            background: isDarkMode
+              ? "radial-gradient(circle at 10% 20%, rgb(90, 92, 106) 0%, rgb(32, 45, 58) 81.3%)"
+              : "radial-gradient(circle at 18.7% 37.8%, rgb(250, 250, 250) 0%, rgb(225, 234, 238) 90%)",
+            overflowY: "auto",
+            height: "100%",
+            minHeight: 400,
+            maxHeight: 450,
+            width: "100%",
+          }}
+        >
+          <MathJax.Context input="tex">
+            <>
               <Box
-                sx={{
-                  display: "flex",
-                  alignItems: "center",
-                  justifyContent: "space-between",
-                  mt: "auto",
-                }}
+                display="flex"
+                justifyContent="space-between"
+                alignItems="center"
               >
-                <TextField
-                  type="number"
-                  InputLabelProps={{
-                    style: { color: isDarkMode ? "#d7e4fc" : "" },
-                  }}
-                  InputProps={{
-                    sx: {
-                      backdropFilter: "blur(10px)",
-                      backgroundColor: "rgba(255, 255, 255, 0.5)",
-                      "& .MuiOutlinedInput-notchedOutline": {},
+                <Typography variant="h6" sx={{ mb: 2, fontWeight: "bold" }}>
+                  {lectureTitle}
+                </Typography>
+                <Button
+                  variant="outlined"
+                  sx={{
+                    backgroundColor: "#4491fc", // blue
+                    transition: "all 150ms ease-in-out",
+                    color: "#f0f4fa", // white for text
+
+                    ":hover": {
+                      backgroundColor: "#2474e3", // Slightly darker blue on hover
+                      boxShadow:
+                        "0 0 10px 0 #2474e3 inset, 0 0 10px 4px #2474e3", // Matching hover color with blue shade
                     },
                   }}
-                  value={assignment.assignment_mark}
-                  onChange={(e) =>
-                    handleMarkChange(assignment.id, Number(e.target.value))
-                  }
-                  variant="outlined"
-                  size="small"
-                  sx={{ width: 80, mr: 2 }}
-                />
-                <Button
-                  variant="contained"
-                  onClick={() => handleUpdateAssignment(assignment)}
-                  sx={{
-                    // backgroundColor: assignment.is_assigned
-                    //   ? "green"
-                    //   : "#89CFF0",
-                    backgroundColor: "#89CFF0",
-                    color: "white",
-                  }}
+                  onClick={() => setOpenDialog(true)}
                 >
-                  {assignment.is_assigned ? "Assign" : "Assign"}
+                  Create
                 </Button>
               </Box>
-            </Box>
-          ))}
-        </>
-      </MathJax.Context>
+              {assignments.map((assignment, index) => (
+                <Box
+                  key={assignment.id}
+                  sx={{ mb: 2, display: "flex", flexDirection: "column" }}
+                >
+                  <Typography variant="body1" sx={{ mb: 1 }}>
+                    {String.fromCharCode(65 + index)}.{" "}
+                  </Typography>
+                  <MathJax.Text text={assignment.assignment_text} />
+                  <Box
+                    sx={{
+                      display: "flex",
+                      alignItems: "center",
+                      justifyContent: "space-between",
+                      mt: "auto",
+                    }}
+                  >
+                    <TextField
+                      type="number"
+                      InputLabelProps={{
+                        style: { color: isDarkMode ? "#d7e4fc" : "" },
+                      }}
+                      InputProps={{
+                        sx: {
+                          backdropFilter: "blur(10px)",
+                          backgroundColor: "rgba(255, 255, 255, 0.5)",
+                          "& .MuiOutlinedInput-notchedOutline": {},
+                        },
+                      }}
+                      value={assignment.assignment_mark}
+                      onChange={(e) =>
+                        handleMarkChange(assignment.id, Number(e.target.value))
+                      }
+                      variant="outlined"
+                      size="small"
+                      sx={{ width: 80, mr: 2 }}
+                    />
+                    <Button
+                      variant="contained"
+                      onClick={() => handleUpdateAssignment(assignment)}
+                      sx={{
+                        // backgroundColor: assignment.is_assigned
+                        //   ? "green"
+                        //   : "#89CFF0",
+                        backgroundColor: "#89CFF0",
+                        color: "white",
+                      }}
+                    >
+                      {assignment.is_assigned ? "Assign" : "Assign"}
+                    </Button>
+                  </Box>
+                </Box>
+              ))}
+            </>
+          </MathJax.Context>
 
-      <Dialog
-        open={openDialog}
-        onClose={() => setOpenDialog(false)}
-        maxWidth = "md"
-        fullWidth
-        sx={{
-          "& .MuiDialogContent-root": {
-            // bgcolor: isDarkMode ? "#424242" : "white",
-            color: isDarkMode ? "white" : "black",
-            background: isDarkMode
-              ? "linear-gradient(to top, #09203f 0%, #537895 100%)"
-              : "linear-gradient(109.6deg, rgb(223, 234, 247) 11.2%, rgb(244, 248, 252) 91.1%)",
-            // backgroundImage: "url('/create_lectureBG.jpg')", // Add background image
-            // backgroundSize: "cover", // Ensure the image covers the entire page
-            // backgroundPosition: "center", // Center the image
-          },
-          "& .MuiDialogTitle-root": {
-            bgcolor: isDarkMode ? "#424242" : "white",
-            color: isDarkMode ? "white" : "black",
-            display: "flex",
-            justifyContent: "center",
-            alignItems: "center",
-            background: isDarkMode
-              ? "linear-gradient(to top, #09203f 0%, #537895 100%);"
-              : "linear-gradient(to top, #dfe9f3 0%, white 100%)",
-          },
-          "& .MuiPaper-root": {
-            border: "2px solid #0096FF",
-            borderRadius: "12px",
-          },
-        }}
-      >
-        <DialogTitle
-          sx={{
-            bgcolor: isDarkMode ? "#424242" : "white", // Apply the background color dynamically
-            color: isDarkMode ? "white" : "black",
-          }}
-        >
-          {" "}
-          <MdAssignmentAdd
-            style={{
-              color: isDarkMode ? "white" : "black",
-              marginRight: "2px",
-            }}
-          />{" "}
-          Create Assignment
-        </DialogTitle>
-        <DialogContent>
-          <TextField
-            autoFocus
-            margin="dense"
-            label="Assignment Text"
-            type="text"
+          <Dialog
+            open={openDialog}
+            onClose={() => setOpenDialog(false)}
+            maxWidth="md"
             fullWidth
-            variant="outlined"
-            multiline
-            rows={5}
-            InputLabelProps={{
-              style: { color: isDarkMode ? "#d7e4fc" : "" },
-            }}
-            InputProps={{
-              sx: {
-                backdropFilter: "blur(10px)",
-                backgroundColor: "rgba(255, 255, 255, 0.5)",
-                "& .MuiOutlinedInput-notchedOutline": {},
+            sx={{
+              "& .MuiDialogContent-root": {
+                // bgcolor: isDarkMode ? "#424242" : "white",
+                color: isDarkMode ? "white" : "black",
+                background: isDarkMode
+                  ? "linear-gradient(to top, #09203f 0%, #537895 100%)"
+                  : "linear-gradient(109.6deg, rgb(223, 234, 247) 11.2%, rgb(244, 248, 252) 91.1%)",
+                // backgroundImage: "url('/create_lectureBG.jpg')", // Add background image
+                // backgroundSize: "cover", // Ensure the image covers the entire page
+                // backgroundPosition: "center", // Center the image
+              },
+              "& .MuiDialogTitle-root": {
+                bgcolor: isDarkMode ? "#424242" : "white",
+                color: isDarkMode ? "white" : "black",
+                display: "flex",
+                justifyContent: "center",
+                alignItems: "center",
+                background: isDarkMode
+                  ? "linear-gradient(to top, #09203f 0%, #537895 100%);"
+                  : "linear-gradient(to top, #dfe9f3 0%, white 100%)",
+              },
+              "& .MuiPaper-root": {
+                border: "2px solid #0096FF",
+                borderRadius: "12px",
               },
             }}
-            value={newAssignment.assignment_text}
-            onChange={(e) =>
-              setNewAssignment({
-                ...newAssignment,
-                assignment_text: e.target.value,
-              })
-            }
-          />
-          <TextField
-            margin="dense"
-            label="Assignment Marks"
-            type="number"
-            fullWidth
-            variant="outlined"
-            InputLabelProps={{
-              style: { color: isDarkMode ? "#d7e4fc" : "" },
-            }}
-            InputProps={{
-              sx: {
-                backdropFilter: "blur(10px)",
-                backgroundColor: "rgba(255, 255, 255, 0.5)",
-                "& .MuiOutlinedInput-notchedOutline": {},
-              },
-            }}
-            value={newAssignment.assignment_mark}
-            onChange={(e) =>
-              setNewAssignment({
-                ...newAssignment,
-                assignment_mark: Number(e.target.value),
-              })
-            }
-          />
-          <input
-            type="file"
-            accept="application/pdf"
-            onChange={(e) => setFile(e.target.files[0])}
-            style={{ marginTop: "16px" }}
-          />
-        </DialogContent>
-        <DialogActions
-          sx={{
-            background: isDarkMode
-              ? "linear-gradient(to top, #09203f 0%, #537895 100%);"
-              : "linear-gradient(to top, #dfe9f3 0%, white 100%)",
-          }}
-        >
-          <Button onClick={() => setOpenDialog(false)} color="warning">
-            Cancel
-          </Button>
-          <Button onClick={handleCreateAssignment} color="info">
-            Create
-          </Button>
-        </DialogActions>
-      </Dialog>
-    </Box>
+          >
+            <DialogTitle
+              sx={{
+                bgcolor: isDarkMode ? "#424242" : "white", // Apply the background color dynamically
+                color: isDarkMode ? "white" : "black",
+              }}
+            >
+              {" "}
+              <MdAssignmentAdd
+                style={{
+                  color: isDarkMode ? "white" : "black",
+                  marginRight: "2px",
+                }}
+              />{" "}
+              Create Assignment
+            </DialogTitle>
+            <DialogContent>
+              <TextField
+                autoFocus
+                margin="dense"
+                label="Assignment Text"
+                type="text"
+                fullWidth
+                variant="outlined"
+                multiline
+                rows={5}
+                InputLabelProps={{
+                  style: { color: isDarkMode ? "#d7e4fc" : "" },
+                }}
+                InputProps={{
+                  sx: {
+                    backdropFilter: "blur(10px)",
+                    backgroundColor: "rgba(255, 255, 255, 0.5)",
+                    "& .MuiOutlinedInput-notchedOutline": {},
+                  },
+                }}
+                value={newAssignment.assignment_text}
+                onChange={(e) =>
+                  setNewAssignment({
+                    ...newAssignment,
+                    assignment_text: e.target.value,
+                  })
+                }
+              />
+              <TextField
+                margin="dense"
+                label="Assignment Marks"
+                type="number"
+                fullWidth
+                variant="outlined"
+                InputLabelProps={{
+                  style: { color: isDarkMode ? "#d7e4fc" : "" },
+                }}
+                InputProps={{
+                  sx: {
+                    backdropFilter: "blur(10px)",
+                    backgroundColor: "rgba(255, 255, 255, 0.5)",
+                    "& .MuiOutlinedInput-notchedOutline": {},
+                  },
+                }}
+                value={newAssignment.assignment_mark}
+                onChange={(e) =>
+                  setNewAssignment({
+                    ...newAssignment,
+                    assignment_mark: Number(e.target.value),
+                  })
+                }
+              />
+              <input
+                type="file"
+                accept="application/pdf"
+                onChange={(e) => setFile(e.target.files[0])}
+                style={{ marginTop: "16px" }}
+              />
+            </DialogContent>
+            <DialogActions
+              sx={{
+                background: isDarkMode
+                  ? "linear-gradient(to top, #09203f 0%, #537895 100%);"
+                  : "linear-gradient(to top, #dfe9f3 0%, white 100%)",
+              }}
+            >
+              <Button onClick={() => setOpenDialog(false)} color="warning">
+                Cancel
+              </Button>
+              <Button onClick={handleCreateAssignment} color="info">
+                Create
+              </Button>
+            </DialogActions>
+          </Dialog>
+        </Box>
+      )}
+    </>
   );
 };
 

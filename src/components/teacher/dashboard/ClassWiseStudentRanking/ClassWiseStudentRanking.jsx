@@ -350,7 +350,7 @@ const ClassWiseStudentRanking = ({ selectedOptions, isMyClass }) => {
                 />
                 <Box>
                   <Typography sx={{ color: primaryColor }}>
-                    {mapData[entry.name]?.name}({mapData[entry.name]?.grade})
+                    Grade :{" "}{mapData[entry.name]?.grade}
                   </Typography>
                   <Typography
                     sx={{
@@ -359,7 +359,7 @@ const ClassWiseStudentRanking = ({ selectedOptions, isMyClass }) => {
                       color: secondaryColor,
                     }}
                   >
-                    {entry.value}%
+                    {entry.value}
                   </Typography>
                 </Box>
               </Grid>
