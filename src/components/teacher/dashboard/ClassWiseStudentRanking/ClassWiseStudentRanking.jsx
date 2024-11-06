@@ -230,7 +230,7 @@ const ClassWiseStudentRanking = ({ selectedOptions, isMyClass }) => {
             sx={{
               width: "100%",
               height: 240,
-              mt: 4,
+              mt: 0,
               display: "flex",
               justifyContent: "center",
               alignItems: "center",
@@ -283,11 +283,11 @@ const ClassWiseStudentRanking = ({ selectedOptions, isMyClass }) => {
           variant="rectangular"
           width="100%"
           height={100}
-          sx={{ mt: 2 }}
+          sx={{ mt: 0 }}
         />
       ) : (
         Object.entries(data)?.length > 0 && (
-          <Grid container spacing={2} mt={4}>
+          <Grid container spacing={2} mt={0}>
           {getChartData()?.map((entry) => (
             <Grid
               item
