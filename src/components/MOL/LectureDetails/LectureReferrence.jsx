@@ -27,7 +27,16 @@ const LectureReferrence = ({ id, isDarkMode }) => {
     fetchResources();
   }, [id]);
 
-  const displayedResources = resources.slice(0, visibleCount);
+    // Filter unique resources
+    const uniqueResources = resources?.filter((resource, index, self) => {
+      const link = resource?.research_papers?.link || resource?.youtube_videos?.link || resource?.Google_Book_Links?.link;
+      return self.findIndex((r) => {
+        const rLink = r.research_papers?.link || r.youtube_videos?.link || r.Google_Book_Links?.link;
+        return rLink === link;
+      }) === index;
+    });
+  
+    const displayedResources = uniqueResources.slice(0, visibleCount);
 
   if (loading) {
     return (
@@ -90,11 +99,11 @@ const LectureReferrence = ({ id, isDarkMode }) => {
                     />
                   )}
                   <Link
-                    href={resource.youtube_videos}
+                    href={resource.youtube_videos.link}
                     target="_blank"
                     rel="noopener"
                   >
-                    Watch Video
+                    {resource.youtube_videos.title}
                   </Link>
                 </Box>
               </Box>
@@ -112,11 +121,11 @@ const LectureReferrence = ({ id, isDarkMode }) => {
                     />
                   )}
                   <Link
-                    href={resource.Google_Book_Links}
+                    href={resource.Google_Book_Links.link}
                     target="_blank"
                     rel="noopener"
                   >
-                    View Book
+                    {resource.Google_Book_Links.title}
                   </Link>
                 </Box>
               </Box>
