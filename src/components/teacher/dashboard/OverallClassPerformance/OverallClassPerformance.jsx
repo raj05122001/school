@@ -24,12 +24,12 @@ function OverallClassPerformance() {
     <Box
       sx={{
         width: "100%",
-        p: 2,
+        // p: 2,
         height: "100%",
       }}
       className="blur_effect_card"
     >
-    <Typography variant="h6" textAlign={"center"} fontWeight={"bold"}>Overall Rating</Typography>
+    <Typography variant="h6" textAlign={"center"} fontWeight={"bold"} p={2}>Overall Rating</Typography>
       <BarChart
         width={300} // Set a fixed width
         height={400} // Set a fixed height

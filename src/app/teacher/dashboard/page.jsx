@@ -134,14 +134,9 @@ const Page = () => {
           {/* <Box mt={4}>{calendarComponent}</Box> */}
         </Grid>
         <Grid item xs={12} md={3} mt={4}>
-          <Grid container direction="column" spacing={2}>
-            {/* <Grid item xs={12}>
-              {strugglingExcelling}
-            </Grid> */}
             <Grid item xs={12}>
               {overallClassPerformance}
             </Grid>
-          </Grid>
         </Grid>
       </Grid>
 
