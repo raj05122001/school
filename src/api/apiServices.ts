@@ -595,9 +595,9 @@ export default class apiServices {
       });
   };
 
-  public getComments = async () => {
+  public getComments = async (id) => {
     return await this.axiosInstance
-      .get(`/api/v1/discussion_reply/`)
+      .get(`/api/v1/discussion_reply/${id ? `?lecture_id=${id}` : ""}`)
       .then((Response) => Response.data)
       .catch((error) => console.error(error));
   };
@@ -668,5 +668,4 @@ export default class apiServices {
       .then((Response) => Response)
       .catch((error) => console.error(error));
   };
-
 }

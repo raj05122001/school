@@ -314,9 +314,9 @@ export const postFeedback = async (formData) => {
   return await apiInstance.postFeedback(formData);
 };
 
-export const getComments = async () => {
+export const getComments = async (id) => {
   const apiInstance = new apiServices(axiosAPIInstance);
-  return await apiInstance.getComments();
+  return await apiInstance.getComments(id);
 };
 
 export const updateLectureDiscussion = async (lectureId, formData) => {
