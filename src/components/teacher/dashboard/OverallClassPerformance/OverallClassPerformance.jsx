@@ -8,6 +8,7 @@ import {
   Tooltip,
   Legend,
   CartesianGrid,
+  ResponsiveContainer,
 } from "recharts";
 
 function OverallClassPerformance() {
@@ -24,25 +25,32 @@ function OverallClassPerformance() {
     <Box
       sx={{
         width: "100%",
-        // p: 2,
-        height: "100%",
+        height: 400, // ऊंचाई निर्धारित करें
+        mt:5
       }}
       className="blur_effect_card"
     >
-    <Typography variant="h6" textAlign={"center"} fontWeight={"bold"} p={2}>Overall Rating</Typography>
-      <BarChart
-        width={300} // Set a fixed width
-        height={400} // Set a fixed height
-        data={data}
-        margin={{ top: 20, right: 30, left: 20, bottom: 5 }}
+      <Typography
+        variant="h6"
+        textAlign={"center"}
+        fontWeight={"bold"}
+        p={2}
       >
-        <CartesianGrid strokeDasharray="3 3" />
-        <XAxis dataKey="rating" />
-        <YAxis />
-        <Tooltip />
-        <Legend />
-        <Bar dataKey="count" fill="#8884d8" />
-      </BarChart>
+        Overall Rating
+      </Typography>
+      <ResponsiveContainer width="100%" height="80%">
+        <BarChart
+          data={data}
+          margin={{ top: 20, right: 30, left: 20, bottom: 5 }}
+        >
+          <CartesianGrid strokeDasharray="3 3" />
+          <XAxis dataKey="rating" />
+          <YAxis />
+          <Tooltip />
+          <Legend />
+          <Bar dataKey="count" fill="#8884d8" />
+        </BarChart>
+      </ResponsiveContainer>
     </Box>
   );
 }
