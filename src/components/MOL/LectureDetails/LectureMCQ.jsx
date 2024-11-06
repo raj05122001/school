@@ -101,17 +101,19 @@ const LectureMCQ = ({ id, isDarkMode }) => {
                 >
                   <Box
                     display="flex"
-                    alignItems="center"
+                    alignItems="flex-start"
                     sx={{ fontSize: "16px", fontWeight: "bold" }}
                   >
-                    <Typography sx={{ textAlign: "left", marginRight: 1 }}>
-                      {questionIndex + 1}.
+                    <Typography  >
+                      {questionIndex + 1}.&nbsp;
                     </Typography>
+                    <Typography
+                     sx={{marginTop:0.2}}
+                      variant="span"
+                    >
                     <MathJax.Text text={item.question} />{" "}
+                    </Typography>
                   </Box>
-                  {/* <Typography sx={{ textAlign: "left", fontSize:"14px" }}>
-                  Options:
-                </Typography> */}
                   <List sx={{ padding: 0 }}>
                     {" "}
                     {/* Remove padding for nested list */}
@@ -128,7 +130,7 @@ const LectureMCQ = ({ id, isDarkMode }) => {
                             variant="body2"
                             sx={{ textAlign: "left" }}
                           >
-                            {getLabel(index)}
+                            {getLabel(index)}&nbsp;&nbsp;
                           </Typography>
                           <MathJax.Text text={option} />
                         </Box>
@@ -137,7 +139,7 @@ const LectureMCQ = ({ id, isDarkMode }) => {
                   </List>
                   <Box
                     display="flex"
-                    alignItems="center"
+                    // alignItems="center"
                     marginTop={"4px"}
                     sx={{ fontSize: "16px" }}
                   >
@@ -148,9 +150,16 @@ const LectureMCQ = ({ id, isDarkMode }) => {
                         fontSize: "16px",
                       }}
                     >
-                      Answer:
+                      Answer:&nbsp;
                     </Typography>
+
+                    <Typography
+                     sx={{marginTop:0.4}}
+                      variant="span"
+                    >
                     <MathJax.Text text={item.answer} />
+                    </Typography>
+
                   </Box>
                 </ListItem>
               ))}

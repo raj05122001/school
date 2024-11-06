@@ -223,10 +223,15 @@ const LectureAssignment = ({ id, isDarkMode, class_ID }) => {
                   key={assignment.id}
                   sx={{ mb: 2, display: "flex", flexDirection: "column" }}
                 >
+                  <Box 
+                  sx={{display:'flex'}}
+                  >
+                    
                   <Typography variant="body1" sx={{ mb: 1 }}>
-                    {String.fromCharCode(65 + index)}.{" "}
+                    {String.fromCharCode(65 + index)}.&nbsp;
                   </Typography>
                   <MathJax.Text text={assignment.assignment_text} />
+                  </Box>
                   <Box
                     sx={{
                       display: "flex",
