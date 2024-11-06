@@ -164,44 +164,6 @@ const ClassWiseStudentRanking = ({ selectedOptions, isMyClass }) => {
         </Typography>
       </Box>
 
-      {/* <Autocomplete
-        freeSolo
-        id="class"
-        disableClearable
-        options={classOptions?.map((option) => option.class_name)}
-        value={selectedOptions?.class_name || ""} // Set value to the class name only
-        onChange={(event, newValue) => {
-          const selected = classOptions.find(
-            (option) => option.class_name === newValue
-          );
-          setSelectedOptions(selected || null); // Set selected option object
-        }}
-        renderInput={(params) => (
-          <TextField
-            {...params}
-            placeholder="Search Class"
-            variant="outlined"
-            InputProps={{
-              ...params.InputProps,
-              type: "search",
-              sx: {
-                backdropFilter: "blur(10px)",
-                backgroundColor: "rgba(255, 255, 255, 0.2)",
-                color: currentStyles.inputColor,
-                height: 40,
-                "& .MuiOutlinedInput-notchedOutline": {
-                  border: "none",
-                },
-              },
-            }}
-            sx={{
-              boxShadow: currentStyles.boxShadow,
-              borderRadius: 1,
-            }}
-          />
-        )}
-      /> */}
-
       <Tabs
         value={tabValue}
         onChange={handleTabChange}
@@ -326,45 +288,56 @@ const ClassWiseStudentRanking = ({ selectedOptions, isMyClass }) => {
       ) : (
         Object.entries(data)?.length > 0 && (
           <Grid container spacing={2} mt={4}>
-            {getChartData()?.map((entry) => (
-              <Grid
-                item
-                xs={12}
-                sm={6}
-                md={6}
+          {getChartData()?.map((entry) => (
+            <Grid
+              item
+              xs={12}
+              sm={6}
+              md={6}
+              key={entry.name}
+              onClick={() => handleOpenModal(entry.name)}
+              sx={{
+                display: "flex",
+                alignItems: "center",
+                cursor: "pointer",
+                padding: 2,
+              }}
+            >
+              <Box
                 sx={{
-                  display: "flex",
-                  alignItems: "center",
-                  cursor: "pointer",
+                  width: 14,
+                  height: 14,
+                  bgcolor: mapData[entry.name]?.color,
+                  borderRadius: "50%",
+                  mr: 2,
+                  boxShadow: "0px 2px 4px rgba(0, 0, 0, 0.2)",
                 }}
-                key={entry.name}
-                onClick={() => handleOpenModal(entry.name)} // Handle click for legend
-              >
-                <Box
+              />
+              <Box>
+                <Typography
+                  variant="body1"
                   sx={{
-                    width: 12,
-                    height: 12,
-                    bgcolor: mapData[entry.name]?.color,
-                    mr: 1,
+                    color: primaryColor,
+                    fontWeight: 600,
                   }}
-                />
-                <Box>
-                  <Typography sx={{ color: primaryColor }}>
-                    Grade :{" "}{mapData[entry.name]?.grade}
-                  </Typography>
-                  <Typography
-                    sx={{
-                      ml: "auto",
-                      fontWeight: "bold",
-                      color: secondaryColor,
-                    }}
-                  >
-                    {entry.value}
-                  </Typography>
-                </Box>
-              </Grid>
-            ))}
-          </Grid>
+                >
+                  Grade: {mapData[entry.name]?.grade}
+                </Typography>
+                <Typography
+                  variant="h6"
+                  sx={{
+                    color: secondaryColor,
+                    fontWeight: "bold",
+                    mt: 0.5,
+                  }}
+                >
+                  {entry.value}
+                </Typography>
+              </Box>
+            </Grid>
+          ))}
+        </Grid>
+        
         )
       )}
       {modalOpen && (
