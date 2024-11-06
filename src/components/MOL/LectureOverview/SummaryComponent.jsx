@@ -14,8 +14,6 @@ const SummaryComponent = ({ lectureId, isDarkMode, isEdit }) => {
   const [editedText, setEditedText] = useState("");
   const [loading, setLoading] = useState(true);
 
-  console.log("summary==>", summary);
-
   useEffect(() => {
     fetchSummary();
   }, [lectureId]);

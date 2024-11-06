@@ -26,7 +26,6 @@ const RecentLectures = () => {
     setIsLoading(true);
     try {
       const response = await getStudentLectures("COMPLETED");
-      console.log("API REsponse completed", response)
       if (response?.data?.success) {
         setAllLecture(response?.data?.data);
         setIsLoading(false);
@@ -36,8 +35,6 @@ const RecentLectures = () => {
       setIsLoading(false);
     }
   };
-
-  console.log("All Lecture is ", allLecture);
 
   return (
     <Box sx={{ flexGrow: 1, p: 2, height: "100%", maxHeight: 465 }}>

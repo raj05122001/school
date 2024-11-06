@@ -349,3 +349,7 @@ export const updateFeedback = async (teacherId,formData) => {
   return await apiInstance.updateFeedback(teacherId,formData);
 };
 
+export const getLectureDiscussion = async ( lectureId) => {
+  const apiInstance = new apiServices(axiosAPIInstance);
+  return await apiInstance.getLectureDiscussion( lectureId);
+};

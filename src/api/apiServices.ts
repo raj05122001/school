@@ -615,6 +615,17 @@ export default class apiServices {
       });
   };
 
+  public getLectureDiscussion = (lectureId) => {
+    return this.axiosInstance
+      .get(`/api/v1/lecture/${lectureId}/discussion/`)
+      .then((response) => {
+        return response;
+      })
+      .catch((error) => {
+        console.error(error);
+      });
+  };
+
   public updateCommentReply = (formData) => {
     return this.axiosInstance
       .post(`/api/v1/discussion_reply/`, formData)

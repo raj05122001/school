@@ -69,7 +69,6 @@ const EditDetailsPage = () => {
         profile_pic:`${BASE_URL_MEET}${fetchedData?.profile_pic}`,
       });
 
-      console.log("fetchTeacherDetails response", response);
     } catch (error) {
       console.error(error);
     }
@@ -118,11 +117,10 @@ const EditDetailsPage = () => {
     }
 
     try {
-      const response = await updateTeacherDetails(
+      await updateTeacherDetails(
         userDetails?.teacher_id,
         updateData
       );
-      console.log("Update response:", response);
       toast.success("Details updated successfully.")
     } catch (error) {
       console.error("Update error:", error);

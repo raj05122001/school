@@ -32,13 +32,10 @@ const RatingSection = ({ id, isShowRating = false }) => {
       );
       setData(response?.data);
 
-      console.log("response?.data=====",response?.data)
     } catch (error) {
       console.error(error);
     }
   };
-
-  console.log("data",data)
 
   const totalRatings = [1, 2, 3, 4, 5].reduce((sum, rating) => {
     return sum + (data?.feedback_index?.[`Rating${rating}`] || 0);

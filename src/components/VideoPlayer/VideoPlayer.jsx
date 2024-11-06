@@ -97,7 +97,6 @@ export const BreakpointPlayer = ({ markers, id }) => {
       const progressControl = playerRef.current.controlBar.progressControl;
 
       markers.forEach((marker) => {
-        console.log("marker====>", marker);
         const left = (marker.start / 1000 / total) * 100 + "%";
         const el = document.createElement("div");
         el.className = "vjs-marker";
