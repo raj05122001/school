@@ -1,5 +1,6 @@
 import React from "react";
 import { Box, Typography } from "@mui/material";
+import { useThemeContext } from "@/hooks/ThemeContext";
 import {
   BarChart,
   Bar,
@@ -21,11 +22,13 @@ function OverallClassPerformance() {
     { rating: "1 Star", count: 2 },
   ];
 
+  const { isDarkMode } = useThemeContext();
+
   return (
     <Box
       sx={{
         width: "100%",
-        height: 400, // ऊंचाई निर्धारित करें
+        height: 400,
         mt:5
       }}
       className="blur_effect_card"
@@ -35,6 +38,7 @@ function OverallClassPerformance() {
         textAlign={"center"}
         fontWeight={"bold"}
         p={2}
+        sx={{color: isDarkMode ? "#FFFFF0" : "#36454F"}}
       >
         Overall Rating
       </Typography>
@@ -44,8 +48,8 @@ function OverallClassPerformance() {
           margin={{ top: 20, right: 30, left: 20, bottom: 5 }}
         >
           <CartesianGrid strokeDasharray="3 3" />
-          <XAxis dataKey="rating" />
-          <YAxis />
+          <XAxis dataKey="rating" tick={{ fill: isDarkMode ? "#FFFFF0" : "#36454F" }}/>
+          <YAxis tick={{ fill: isDarkMode ? "#FFFFF0" : "#36454F" }}/>
           <Tooltip />
           <Legend />
           <Bar dataKey="count" fill="#8884d8" />
