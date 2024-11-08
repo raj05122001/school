@@ -43,29 +43,31 @@ const LectureAssignment = ({ id, isDarkMode, class_ID, isEdit }) => {
 
   const checker = Number(userDetails.teacher_id);
   const classID = class_ID;
+  const [editedAssignmentId, setEditedAssignmentId] = useState(null);
 
   const onChange = (e) => {
     setEditedText(e);
   };
 
   useEffect(() => {
-    const fetchAssignments = async () => {
-      try {
-        const response = await getLectureAssignment(id);
-        if (response.success && response?.data.success) {
-          setAssignments(response?.data?.data);
-        } else {
-          setError("Failed to fetch assignments.");
-        }
-      } catch (err) {
-        setError("An error occurred while fetching assignments.");
-      } finally {
-        setLoading(false);
-      }
-    };
 
     fetchAssignments();
   }, [id]);
+
+  const fetchAssignments = async () => {
+    try {
+      const response = await getLectureAssignment(id);
+      if (response.success && response?.data.success) {
+        setAssignments(response?.data?.data);
+      } else {
+        setError("Failed to fetch assignments.");
+      }
+    } catch (err) {
+      setError("An error occurred while fetching assignments.");
+    } finally {
+      setLoading(false);
+    }
+  };
 
   const handleMarkChange = (assignmentId, newMark) => {
     setAssignments((prevAssignments) =>
@@ -78,13 +80,14 @@ const LectureAssignment = ({ id, isDarkMode, class_ID, isEdit }) => {
   };
 
   const handleUpdateAssignment = async (assignment) => {
+    setEditedAssignmentId(null);
     setError(null); // Clear any previous error messages
     const { id: assignment_id, assignment_mark, assignment_text } = assignment;
     const formData = {
       assignment_mark,
       is_assigned: true,
       assignment_id,
-      assignment_text : JSON.stringify(editedText)
+      assignment_text: JSON.stringify(editedText),
     };
 
     try {
@@ -95,10 +98,13 @@ const LectureAssignment = ({ id, isDarkMode, class_ID, isEdit }) => {
       if (response.success) {
         setAssignments((prevAssignments) =>
           prevAssignments?.map((a) =>
-            a.id === assignment_id ? { ...a, assignment_text: editedText, is_assigned: true } : a
+            a.id === assignment_id
+              ? { ...a, assignment_text: editedText, is_assigned: true }
+              : a
           )
         );
         setIsEditData(false); // Close the editor after saving
+        fetchAssignments()
       } else {
         setError("Failed to update assignment.");
       }
@@ -220,7 +226,7 @@ const LectureAssignment = ({ id, isDarkMode, class_ID, isEdit }) => {
                 </Button>
               </Box>
               {assignments.map((assignment, index) =>
-                isEditData ? (
+                editedAssignmentId === assignment.id ? (
                   <Box sx={{ position: "relative" }} key={assignment.id}>
                     <Box
                       sx={{
@@ -256,7 +262,7 @@ const LectureAssignment = ({ id, isDarkMode, class_ID, isEdit }) => {
                       <Box sx={{ display: "flex", justifyContent: "flex-end" }}>
                         <FaEdit
                           size={24}
-                          onClick={() => setIsEditData(true)}
+                          onClick={() => setEditedAssignmentId(assignment.id)}
                           style={{ cursor: "pointer" }}
                         />
                       </Box>
@@ -265,7 +271,13 @@ const LectureAssignment = ({ id, isDarkMode, class_ID, isEdit }) => {
                       <Typography variant="body1" sx={{ mb: 1 }}>
                         {String.fromCharCode(65 + index)}.&nbsp;
                       </Typography>
-                      <MathJax.Text text={assignment.assignment_text} />
+                      <Typography
+                        variant="body1"
+                        dangerouslySetInnerHTML={{
+                          __html: assignment.assignment_text,
+                        }}
+                      />
+                      {/* <MathJax.Text text={assignment.assignment_text} /> */}
                     </Box>
                     <Box
                       sx={{
