@@ -29,7 +29,7 @@ import { PiExam } from "react-icons/pi";
 import { FaChalkboardTeacher } from "react-icons/fa";
 import { AiOutlinePlus } from "react-icons/ai";
 import Cookies from "js-cookie";
-import { useRouter } from "next/navigation";
+import { useRouter,usePathname } from "next/navigation";
 import { useThemeContext } from "@/hooks/ThemeContext";
 import { decodeToken } from "react-jwt";
 import UserImage from "@/commonComponents/UserImage/UserImage";
@@ -43,6 +43,7 @@ const Sidebar = ({ open, setOpen }) => {
   const { handleCreateLecture }=useContext(AppContextProvider)
   const userDetails = decodeToken(Cookies.get("ACCESS_TOKEN"));
   const router = useRouter();
+  const pathname=usePathname();
   const iconSize = open ? 22 : 26;
   const handleDrawerToggle = () => {
     setOpen(!open);
@@ -172,6 +173,8 @@ const Sidebar = ({ open, setOpen }) => {
                   <ListItem
                     button
                     sx={{
+                      boxShadow: pathname===item.href? "0 4px 30px rgba(0, 0, 0, 0.1)":"",
+                      backgroundColor:pathname===item.href? "rgba(255, 255, 255, 0.04)":"",
                       padding: open ? "10px 16px" : "5px 10px",
                       borderRadius: "8px",
                       "&:hover": {
@@ -312,6 +315,12 @@ export const sidebarLinks = {
       text: "Lecture Schedule",
       href: "/teacher/lecture-schedule",
       icon: <MdSchedule size={22} />,
+      show: "TEACHER",
+    },
+    {
+      text: "Assignment",
+      href: "/teacher/assignment",
+      icon: <MdAssignment size={22} />,
       show: "TEACHER",
     },
     // {
