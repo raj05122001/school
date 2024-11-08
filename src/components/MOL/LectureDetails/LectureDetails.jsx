@@ -72,7 +72,7 @@ const LectureDetails = ({
   );
   const memoizedLectureAssignment = useMemo(
     () => (
-      <LectureAssignment id={id} isDarkMode={isDarkMode} class_ID={class_ID} />
+      <LectureAssignment id={id} isDarkMode={isDarkMode} class_ID={class_ID} isEdit={true} />
     ),
     [id, isDarkMode, class_ID]
   );
