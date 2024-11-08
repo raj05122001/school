@@ -650,7 +650,7 @@ export default class apiServices {
 
   public getStudentLectures = async (type = "COMPLETED") => {
     return await this.axiosInstance
-      .get(`api/v1/dashboard/student/lectures/?status=${type}`)
+      .get(`/api/v1/dashboard/student/lectures/?status=${type}`)
       .then((Response) => Response)
       .catch((error) => console.error(error));
   };
@@ -665,6 +665,20 @@ export default class apiServices {
   public updateFeedback = async (teacherId, formData) => {
     return await this.axiosInstance
       .patch(`/api/v1/lecture_feedback/${teacherId}/`, formData)
+      .then((Response) => Response)
+      .catch((error) => console.error(error));
+  };
+
+  public getMolMarks = async (lecture_id,student_id) => {
+    return await this.axiosInstance
+      .get(`/api/v1/student/get_mol_marks/?lecture_id=${lecture_id}&student_id=${student_id}`)
+      .then((Response) => Response)
+      .catch((error) => console.error(error));
+  };
+
+  public updateMolMarks = async (marks_id, formData) => {
+    return await this.axiosInstance
+      .patch(`/api/v1/student/get_mol_marks/?lecture_marks_id=${marks_id}`, formData)
       .then((Response) => Response)
       .catch((error) => console.error(error));
   };

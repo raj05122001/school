@@ -1,4 +1,4 @@
-import React, { useState, useEffect , useMemo} from "react";
+import React, { useState, useEffect, useMemo } from "react";
 import { Box, Tabs, Tab, Typography } from "@mui/material";
 import { getLectureSummary, getLectureHighlights } from "@/api/apiHelper";
 import LectureNotes from "./LectureNotes";
@@ -11,7 +11,13 @@ import { decodeToken } from "react-jwt";
 import Cookies from "js-cookie";
 import StudentMCQ from "./StudentMCQ";
 
-const LectureDetails = ({id, classID }) => {
+const LectureDetails = ({
+  id,
+  classID,
+  marksData = {},
+  isStudent = false,
+  setMarksData,
+}) => {
   const { isDarkMode } = useThemeContext();
   const [value, setValue] = useState(0);
   const [loading, setLoading] = useState(true);
@@ -21,15 +27,21 @@ const LectureDetails = ({id, classID }) => {
 
   const class_ID = classID;
 
-
-
   const handleChange = (event, newValue) => {
     setValue(newValue);
   };
 
   const memoizedLectureNotes = useMemo(
-    () => <LectureNotes id={id} isDarkMode={isDarkMode} />,
-    [id, isDarkMode]
+    () => (
+      <LectureNotes
+        id={id}
+        isDarkMode={isDarkMode}
+        marksData={marksData}
+        isStudent={isStudent}
+        setMarksData={setMarksData}
+      />
+    ),
+    [id, isDarkMode, marksData]
   );
 
   const memoizedLectureMCQ = useMemo(
@@ -37,11 +49,25 @@ const LectureDetails = ({id, classID }) => {
     [id, isDarkMode]
   );
 
-  const memoizedStudentMCQ = useMemo(() => <StudentMCQ id={id} isDarkMode={isDarkMode} />, [id, isDarkMode])
+  const memoizedStudentMCQ = useMemo(
+    () => <StudentMCQ id={id} isDarkMode={isDarkMode} />,
+    [id, isDarkMode]
+  );
 
-  const memoizedLectureQuestions = useMemo(()=> <LectureQuestions id={id} isDarkMode = {isDarkMode} /> , [id, isDarkMode])
-  const memoizedLectureAssignment = useMemo(()=><LectureAssignment id={id} isDarkMode={isDarkMode} class_ID={class_ID} />, [id, isDarkMode, class_ID])
-  const memoizedLectureReferrence = useMemo(()=><LectureReferrence id={id} isDarkMode={isDarkMode} />, [id, isDarkMode])
+  const memoizedLectureQuestions = useMemo(
+    () => <LectureQuestions id={id} isDarkMode={isDarkMode} />,
+    [id, isDarkMode]
+  );
+  const memoizedLectureAssignment = useMemo(
+    () => (
+      <LectureAssignment id={id} isDarkMode={isDarkMode} class_ID={class_ID} />
+    ),
+    [id, isDarkMode, class_ID]
+  );
+  const memoizedLectureReferrence = useMemo(
+    () => <LectureReferrence id={id} isDarkMode={isDarkMode} />,
+    [id, isDarkMode]
+  );
 
   return (
     <Box sx={{ marginTop: "8px" }}>
@@ -77,8 +103,8 @@ const LectureDetails = ({id, classID }) => {
             backgroundSize: "cover", // Ensure the image covers the entire page
             backgroundPosition: "center", // Center the image
             padding: 1,
-            borderTopLeftRadius:"12px",
-            borderTopRightRadius:"12px",
+            borderTopLeftRadius: "12px",
+            borderTopRightRadius: "12px",
           },
           ".MuiTab-root": {
             color: "#333",
@@ -110,7 +136,10 @@ const LectureDetails = ({id, classID }) => {
 
       {/* Render tab content conditionally based on selected tab */}
       {value === 0 && memoizedLectureNotes}
-      {value === 1 && (userDetails?.role==="STUDENT" ? (memoizedStudentMCQ) : (memoizedLectureMCQ))}
+      {value === 1 &&
+        (userDetails?.role === "STUDENT"
+          ? memoizedStudentMCQ
+          : memoizedLectureMCQ)}
       {value === 2 && memoizedLectureQuestions}
       {value === 3 && memoizedLectureAssignment}
       {value === 4 && memoizedLectureReferrence}

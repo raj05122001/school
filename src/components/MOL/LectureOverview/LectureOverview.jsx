@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useMemo } from "react";
 import { Box, Tabs, Tab, Typography } from "@mui/material";
 import { getLectureSummary, getLectureHighlights } from "@/api/apiHelper";
 import TextWithMath from "@/commonComponents/TextWithMath/TextWithMath";
@@ -6,7 +6,13 @@ import SummaryComponent from "./SummaryComponent";
 import HighlightsComponent from "./HighlightsComponent";
 import { useThemeContext } from "@/hooks/ThemeContext";
 
-const LectureOverview = ({ lectureId, isEdit = false }) => {
+const LectureOverview = ({
+  lectureId,
+  isEdit = false,
+  marksData = {},
+  isStudent = false,
+  setMarksData,
+}) => {
   const [value, setValue] = useState(0);
   const [loading, setLoading] = useState(true);
   const [summary, setSummary] = useState({});
@@ -16,6 +22,33 @@ const LectureOverview = ({ lectureId, isEdit = false }) => {
   const handleChange = (event, newValue) => {
     setValue(newValue);
   };
+
+  const summaryComponent = useMemo(
+    () => (
+      <SummaryComponent
+        lectureId={lectureId}
+        isDarkMode={isDarkMode}
+        isEdit={isEdit}
+        marksData={marksData}
+        isStudent={isStudent}
+        setMarksData={setMarksData}
+      />
+    ),
+    [marksData, lectureId, isDarkMode]
+  );
+
+  const highlightsComponent = useMemo(
+    () => (
+      <HighlightsComponent
+        lectureId={lectureId}
+        isDarkMode={isDarkMode}
+        marksData={marksData}
+        isStudent={isStudent}
+        setMarksData={setMarksData}
+      />
+    ),
+    [marksData, lectureId, isDarkMode]
+  );
 
   return (
     <Box sx={{ marginTop: "8px" }}>
@@ -62,8 +95,8 @@ const LectureOverview = ({ lectureId, isEdit = false }) => {
             backgroundPosition: "center", // Center the image
             padding: 1,
             // borderRadius: "12px",
-            borderTopLeftRadius:"12px",
-            borderTopRightRadius:"12px",
+            borderTopLeftRadius: "12px",
+            borderTopRightRadius: "12px",
           },
           ".MuiTab-root": {
             color: "#333",
@@ -91,16 +124,8 @@ const LectureOverview = ({ lectureId, isEdit = false }) => {
       </Tabs>
 
       {/* Render tab content conditionally based on selected tab */}
-      {value === 0 && (
-        <SummaryComponent
-          lectureId={lectureId}
-          isDarkMode={isDarkMode}
-          isEdit={isEdit}
-        />
-      )}
-      {value === 1 && (
-        <HighlightsComponent lectureId={lectureId} isDarkMode={isDarkMode} />
-      )}
+      {value === 0 && summaryComponent}
+      {value === 1 && highlightsComponent}
     </Box>
   );
 };

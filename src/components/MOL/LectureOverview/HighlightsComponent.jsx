@@ -1,12 +1,69 @@
 import { Box, Typography, Skeleton } from "@mui/material";
-import { getLectureHighlights } from "@/api/apiHelper";
-import { useEffect, useState } from "react";
+import { getLectureHighlights, updateMolMarks } from "@/api/apiHelper";
+import { useEffect, useState, useRef } from "react";
 import { FaInfoCircle } from "react-icons/fa";
 import MathJax from "react-mathjax2";
 
-const HighlightsComponent = ({ lectureId, isDarkMode }) => {
+const HighlightsComponent = ({
+  lectureId,
+  isDarkMode,
+  marksData = {},
+  isStudent = false,
+  setMarksData,
+}) => {
   const [decisions, setDecisions] = useState("");
   const [loading, setLoading] = useState(true);
+  const highlightsBoxRef = useRef(null);
+  const updateCalled = useRef(false);
+
+  useEffect(() => {
+    const handleScrollAndUpdate = async () => {
+      if (!isStudent || marksData?.viewed_highlights || updateCalled.current) {
+        return;
+      }
+
+      if (highlightsBoxRef.current) {
+        const { scrollTop, scrollHeight, clientHeight } = highlightsBoxRef.current;
+        if (scrollHeight > clientHeight && scrollTop + clientHeight >= scrollHeight - 5) {
+          await updateMolMark();
+        } else if (scrollHeight === clientHeight) {
+          await updateMolMark();
+        }
+      }
+    };
+
+    highlightsBoxRef.current?.addEventListener("scroll", handleScrollAndUpdate);
+    highlightsBoxRef.current?.addEventListener('mouseenter', handleScrollAndUpdate);
+    highlightsBoxRef.current?.addEventListener('mouseleave', handleScrollAndUpdate);
+
+    return () => {
+      highlightsBoxRef.current?.removeEventListener("scroll", handleScrollAndUpdate);
+      highlightsBoxRef.current?.removeEventListener('mouseenter', handleScrollAndUpdate);
+      highlightsBoxRef.current?.removeEventListener('mouseleave', handleScrollAndUpdate);
+    };
+  }, [isStudent, marksData?.viewed_highlights]);
+
+  const updateMolMark = async () => {
+    if (!updateCalled.current) {
+      updateCalled.current = true;
+      try {
+        const formData = {
+          student_score: marksData.student_score + 1,
+          viewed_highlights: true,
+        };
+        await updateMolMarks(marksData.id, formData);
+
+        setMarksData((prev) => ({
+          ...prev,
+          viewed_highlights: true,
+          student_score: prev.student_score + 1,
+        }));
+        console.log("Updated Mol Marks successfully.");
+      } catch (error) {
+        console.error("Error updating Mol Marks:", error);
+      }
+    }
+  };
 
   const fetchHighlight = async () => {
     setLoading(true);
@@ -55,8 +112,8 @@ const HighlightsComponent = ({ lectureId, isDarkMode }) => {
       sx={{
         p: 3,
         width: "100%",
-        borderBottomLeftRadius:"8px",
-        borderBottomRightRadius:"8px",
+        borderBottomLeftRadius: "8px",
+        borderBottomRightRadius: "8px",
         color: isDarkMode ? "#F0EAD6" : "#36454F",
         background: isDarkMode
           ? "radial-gradient(circle at 10% 20%, rgb(90, 92, 106) 0%, rgb(32, 45, 58) 81.3%)"
@@ -66,6 +123,7 @@ const HighlightsComponent = ({ lectureId, isDarkMode }) => {
         minHeight: 400,
         maxHeight: 450,
       }}
+      ref={highlightsBoxRef}
     >
       {loading ? (
         <Box>
