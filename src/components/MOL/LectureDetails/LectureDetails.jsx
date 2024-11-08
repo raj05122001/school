@@ -10,6 +10,7 @@ import { useThemeContext } from "@/hooks/ThemeContext";
 import { decodeToken } from "react-jwt";
 import Cookies from "js-cookie";
 import StudentMCQ from "./StudentMCQ";
+import StudentMOLAssignment from "./StudentMOLAssignment";
 
 const LectureDetails = ({
   id,
@@ -52,6 +53,17 @@ const LectureDetails = ({
   const memoizedStudentMCQ = useMemo(
     () => <StudentMCQ id={id} isDarkMode={isDarkMode} />,
     [id, isDarkMode]
+  );
+
+  const memoizedStudentMOLAssignment = useMemo(
+    () => (
+      <StudentMOLAssignment
+        id={id}
+        isDarkMode={isDarkMode}
+        class_ID={class_ID}
+      />
+    ),
+    [id, isDarkMode, class_ID]
   );
 
   const memoizedLectureQuestions = useMemo(
@@ -141,7 +153,10 @@ const LectureDetails = ({
           ? memoizedStudentMCQ
           : memoizedLectureMCQ)}
       {value === 2 && memoizedLectureQuestions}
-      {value === 3 && memoizedLectureAssignment}
+      {value === 3 &&
+        (userDetails?.role === "STUDENT"
+          ? memoizedStudentMOLAssignment
+          : memoizedLectureAssignment)}
       {value === 4 && memoizedLectureReferrence}
     </Box>
   );

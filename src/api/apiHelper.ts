@@ -339,6 +339,15 @@ export const getStudentLectures = async (type) => {
   return await apiInstance.getStudentLectures(type);
 };
 
+export const submitQuiz = async (formData, lectureId) => {
+  const apiInstance = new apiServices(axiosAPIInstance);
+  return await apiInstance.submitQuiz(formData, lectureId);
+};
+
+export const getQuizResponse = async (lectureId) => {
+  const apiInstance = new apiServices(axiosAPIInstance);
+  return await apiInstance.getQuizResponse(lectureId);
+}
 export const updateTeacherDetails = async (teacherId,formData) => {
   const apiInstance = new apiServices(axiosAPIInstance);
   return await apiInstance.updateTeacherDetails(teacherId,formData);
@@ -354,6 +363,15 @@ export const getLectureDiscussion = async ( lectureId) => {
   return await apiInstance.getLectureDiscussion( lectureId);
 };
 
+export const submitMOLAssignment = async (formData) => {
+  const apiInstance = new apiServices(axiosAPIInstance);
+  return await apiInstance.submitMOLAssignment(formData);
+};
+
+export const getAssignmentAnswer = async (lecture_id, assignment_id) => {
+  const apiInstance = new apiServices(axiosAPIInstance);
+  return await apiInstance.getAssignmentAnswer(lecture_id, assignment_id);
+};
 export const getMolMarks = async ( lecture_id,student_id) => {
   const apiInstance = new apiServices(axiosAPIInstance);
   return await apiInstance.getMolMarks( lecture_id,student_id);

@@ -149,7 +149,7 @@ const LectureTabs = () => {
         label={
           <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
             <MdOutlineTrackChanges size={30} color={primaryColor} />
-            <Typography variant="h4" color={primaryColor}>
+            <Typography variant="h4" color={isDarkMode ? "#F9F6EE" : "#36454F"}>
               Lecture Tracking
             </Typography>
           </Box>
@@ -280,9 +280,10 @@ const LectureTabs = () => {
             background: isDarkMode
               ? ""
               : "linear-gradient(to top, #dfe9f3 0%, white 100%)",
+              
           }}
         >
-          <Table>
+          <Table className="blur_effect_card">
             <TableHead>
               <TableRow
                 className="blur_effect_card"
@@ -363,33 +364,33 @@ const LectureTabs = () => {
                 )}
               </TableRow>
             </TableHead>
-            <TableBody>
+            <TableBody sx={{color: isDarkMode ? "#36454F" : "#FFFFF0"}}>
               {lectureData?.data?.length > 0 &&
                 lectureData?.data?.map((lecture, index) => (
-                  <TableRow key={index} sx={{ color: secondaryColor }}>
-                    <TableCell sx={{ color: secondaryColor }}>
+                  <TableRow key={index} sx={{ color: isDarkMode ? "#36454F" : "#FFFFF0" }}>
+                    <TableCell sx={{  }}>
                       {lecture.title}
                     </TableCell>
-                    <TableCell sx={{ color: secondaryColor }}>
+                    <TableCell sx={{  }}>
                       <LectureType lectureType={lecture?.type} />
                     </TableCell>
-                    <TableCell sx={{ color: secondaryColor }}>
+                    <TableCell sx={{  }}>
                       {lecture.schedule_date}
                     </TableCell>
-                    <TableCell sx={{ color: secondaryColor }}>
+                    <TableCell sx={{  }}>
                       {lecture.schedule_time}
                     </TableCell>
-                    <TableCell sx={{ color: secondaryColor }}>
+                    <TableCell sx={{  }}>
                       {lecture?.lecture_class?.name}
                     </TableCell>
-                    <TableCell sx={{ color: secondaryColor }}>
+                    <TableCell sx={{  }}>
                       {lecture?.chapter?.subject?.name}
                     </TableCell>
-                    <TableCell sx={{ color: secondaryColor }}>
+                    <TableCell sx={{  }}>
                       {lecture?.chapter?.chapter}
                     </TableCell>
                     {status === "UPCOMMING" && (
-                      <TableCell sx={{ color: secondaryColor }}>
+                      <TableCell sx={{ }}>
                         <Box
                           sx={{ display: "flex", alignItems: "center", gap: 1 }}
                         >

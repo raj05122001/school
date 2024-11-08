@@ -655,6 +655,22 @@ export default class apiServices {
       .catch((error) => console.error(error));
   };
 
+  public submitQuiz = (formData, lectureId) => {
+    return this.axiosInstance
+      .post(`api/v1/student/answer_quiz/${lectureId}/`, formData)
+      .then((response) => {
+        return response;
+      })
+      .catch((error) => {
+        console.error(error);
+      });
+  };
+
+  public getQuizResponse = async (lectureId) => {
+    return await this.axiosInstance
+      .get(`/api/v1/student/answer_quiz/${lectureId}/`)
+      .then((Response) => Response.data)
+  }
   public updateTeacherDetails = async (teacherId, formData) => {
     return await this.axiosInstance
       .patch(`/api/v1/teacher/${teacherId}/`, formData)
@@ -669,6 +685,41 @@ export default class apiServices {
       .catch((error) => console.error(error));
   };
 
+  public submitMOLAssignment = (formData) => {
+    const toastInstance = toast.loading("Loading...");
+    return this.axiosInstance
+      .post(`/api/v1/lecture_assignmentAnswer/`, formData)
+      .then((response) => {
+        if (!response.data.success) {
+          toast.dismiss(toastInstance); // Dismiss the loading toast
+          toast.error(response.data.message, {
+            duration: Constants.toastTimer,
+          });
+          return response;
+        }
+        toast.dismiss(toastInstance); // Dismiss the loading toast
+        toast.success("Submitted", {
+          duration: Constants.toastTimer,
+        });
+        return response;
+      })
+      .catch((error) => {
+        toast.dismiss(toastInstance); // Dismiss the loading toast
+        const errorText = error.response?.data?.message || "An error occurred";
+        toast.error(errorText, {
+          duration: Constants.toastTimer,
+        });
+        console.error(error);
+        throw error;
+      });
+  };
+
+  public getAssignmentAnswer = async (lecture_id, assignment_id, classname="", subject="", lecture_topic="", size="10") => {
+    return await this.axiosInstance
+      .get(`/api/v1/get_assignment_answer/?class=${classname}&subject=${subject}&lecture_topic=${lecture_topic}&lecture_id=${lecture_id}&assignment_id=${assignment_id}&size=${size}`)
+      .then((Response) => Response)
+      .catch((error) => console.error(error));
+  }
   public getMolMarks = async (lecture_id,student_id) => {
     return await this.axiosInstance
       .get(`/api/v1/student/get_mol_marks/?lecture_id=${lecture_id}&student_id=${student_id}`)

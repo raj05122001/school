@@ -69,9 +69,10 @@ const LectureAnalytics = ({ lectureId }) => {
         x={x}
         y={y}
         className="text-sm"
-        fill="black"
+        fill= {isDarkMode ? "#FFFFF0" : "#36454F"}
         textAnchor="middle"
         dominantBaseline="middle"
+        fontSize={12}
       >
         {`${(percent * 100).toFixed(0)}%`}
       </text>
@@ -275,9 +276,9 @@ const LectureAnalytics = ({ lectureId }) => {
               <Typography variant="body2">Positive</Typography>
             </Box>
             <Box
-              sx={{ textAlign: "center", color: theme.palette.text.primary }}
+              sx={{ textAlign: "center", color: isDarkMode ? "#FFFFF0" : "#36454F" }}
             >
-              <Typography variant="h6" sx={{ fontWeight: "bold" }}>
+              <Typography variant="h6" sx={{ fontWeight: "bold"}}>
                 {sentimentAnalytics?.neutral
                   ? `${sentimentAnalytics.neutral.toFixed(0)}%`
                   : "0%"}
