@@ -1,7 +1,7 @@
 "use client";
 import React, { useEffect, useMemo, useState } from "react";
 import { Box, Paper, Grid } from "@mui/material";
-import { getLectureById } from "@/api/apiHelper";
+import { getLectureById, getMolMarks, updateMolMarks } from "@/api/apiHelper";
 import { useThemeContext } from "@/hooks/ThemeContext";
 import HeaderMOL from "@/components/MOL/Header/HeaderMOL";
 import VideoPlayer from "@/components/VideoPlayer/VideoPlayer";
@@ -11,15 +11,26 @@ import CommentsSection from "@/components/teacher/CommentsSection/CommentsSectio
 import Articles from "@/components/teacher/Articles/Articles";
 import RatingSection from "@/components/teacher/RatingSection/RatingSection";
 import LectureAnalytics from "@/components/teacher/LectureAnalytics/LectureAnalytics";
+import Cookies from "js-cookie";
+import { decodeToken } from "react-jwt";
 
 const LecturePage = ({ params }) => {
   const { id } = params;
   const { isDarkMode } = useThemeContext();
   const [lectureData, setLectureData] = useState({});
+  const userDetails = decodeToken(Cookies.get("ACCESS_TOKEN"));
+  const [marksData, setMarksData] = useState({
+    student_score: 0,
+    viewed_highlights: true,
+    viewed_notes: true,
+    viewed_summary: true,
+    viewed_video: true,
+  });
 
   useEffect(() => {
     if (id) {
       getMeetingByID();
+      fetchMolMarks();
     }
   }, [id]);
 
@@ -34,6 +45,21 @@ const LecturePage = ({ params }) => {
       console.error(e);
     }
   };
+
+  const fetchMolMarks = async () => {
+    try {
+      const response = await getMolMarks(id, userDetails?.student_id);
+      if (response?.data?.success) {
+        setMarksData(response?.data?.data);
+        console.log("getMolMarks", response?.data?.data);
+      }
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
+  console.log("marksData",marksData)
+
   const classID = lectureData?.lecture_class?.id;
 
   const videoPlayer = useMemo(() => <VideoPlayer id={id} />, [id]);
@@ -44,19 +70,34 @@ const LecturePage = ({ params }) => {
     [lectureData]
   );
   const lectureOverview = useMemo(
-    () => <LectureOverview lectureId={id} isEdit={false} />,
-    [id]
+    () => (
+      <LectureOverview
+        lectureId={id}
+        isEdit={false}
+        marksData={marksData}
+        isStudent={true}
+        setMarksData={setMarksData}
+      />
+    ),
+    [id,marksData]
   );
   const lectureDetails = useMemo(
-    () => <LectureDetails id={id} classID={classID} />,
-    [id, classID]
+    () => <LectureDetails id={id} classID={classID} 
+    marksData={marksData}
+    isStudent={true}
+    setMarksData={setMarksData}
+    />,
+    [id, classID,marksData]
   );
   const articles = useMemo(() => <Articles lectureId={id} />, [id]);
   const lectureAnalytics = useMemo(
     () => <LectureAnalytics lectureId={id} />,
     [id]
   );
-  const ratingSection = useMemo(() => <RatingSection id={id} isShowRating={true}/>, [id]);
+  const ratingSection = useMemo(
+    () => <RatingSection id={id} isShowRating={true} />,
+    [id]
+  );
   const commentSection = useMemo(() => <CommentsSection id={id} />, [id]);
 
   return (

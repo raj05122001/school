@@ -47,7 +47,7 @@ const StudentMOLAssignment = ({ id, isDarkMode, class_ID }) => {
   const uploadToS3 = async (
     chunk,
     key,
-    fileName = "document",
+    
     assignmentId
   ) => {
     return new Promise(async (resolve, reject) => {
@@ -78,7 +78,7 @@ const StudentMOLAssignment = ({ id, isDarkMode, class_ID }) => {
           };
         } else if (key === "document") {
           // Extract the file extension from fileName
-          const extension = fileName.split(".").pop();
+          const extension = chunk?.name.split(".").pop();
           let contentType;
 
           // Determine MIME type based on file extension
@@ -106,7 +106,7 @@ const StudentMOLAssignment = ({ id, isDarkMode, class_ID }) => {
 
           params = {
             Bucket: "vidya-ai-video",
-            Key: `assignment/lecture_${id}/${fileName}`,
+            Key: `assignment/lecture_${id}/${chunk?.name}`,
             Body: chunk,
             ContentType: contentType,
           };
@@ -133,6 +133,8 @@ const StudentMOLAssignment = ({ id, isDarkMode, class_ID }) => {
           ? [...fileLinks[assignmentId], result.Location]
           : [result.Location];
         setFileLinks((prev) => ({ ...prev, [assignmentId]: newLinks }));
+        console.log("New Links", newLinks)
+        console.log("Assign ID",assignmentId)
         console.log("Result location", result.Location);
         console.log("File uploaded successfully:", result);
         resolve(result);
@@ -146,22 +148,31 @@ const StudentMOLAssignment = ({ id, isDarkMode, class_ID }) => {
   const handleSubmit = async (assignmentId, answered_by, submissionData) => {
 
     if (!assignmentId || !answered_by) {
-      console.error("Invalid assignmentId or studentId:", { assignmentId, answered_by });
+      console.error("Invalid assignmentId or studentId:", {
+        assignmentId,
+        answered_by,
+      });
       alert("Error: Invalid assignment or student ID.");
       return;
-  } 
+    }
 
     try {
       // Fetch existing submissions
-      const response = await getAssignmentAnswer(assignmentID);
-      const existingSubmissions = response.data.data;
-      console.log("Assgn ID", existingSubmissions.assignment_que.id)
+      const response = await getAssignmentAnswer(id, assignmentId);
+      
+      const existingSubmissions = response?.data?.data?.data;
+      console.log("Exisiting Submisison", existingSubmissions);
       // Check for existing submission
       const alreadySubmitted = existingSubmissions.some(
         (submission) =>
-          submission.assignment_que.id === assignmentId &&
-          submission.answer_by.id === answered_by
+          submission?.assignment_que?.id === assignmentId &&
+          submission?.answer_by?.id === answered_by
       );
+
+      console.log("Already SUbmitted", alreadySubmitted);
+      console.log("FileLink", fileLinks)
+      console.log("New File",)
+      console.log("Answer Description", answerDescriptions)
 
       if (alreadySubmitted) {
         // Show error or update existing submission if needed
@@ -170,16 +181,18 @@ const StudentMOLAssignment = ({ id, isDarkMode, class_ID }) => {
         const formData = {
           assignment_que: assignmentId,
           answer_by: answered_by,
-          answer_link: fileLinks[assignmentId]?.join(", "), // join multiple links if uploaded
-          answer_description: answerDescriptions[assignmentId] || "",
+          answer_link: fileLinks[assignmentId]?.[0], // join multiple links if uploaded
+          answer_description: answerDescriptions[assignmentId] || null,
         };
         const response = await submitMOLAssignment(formData);
-        if (response.success) {
+        console.log("Response submission", response)
+        if (response.data.success) {
           setSubmitted((prev) => ({ ...prev, [assignmentId]: true }));
         } else {
           console.error("Error submitting assignment:", response.message);
         }
       }
+      
     } catch (err) {
       console.error("Submission error:", err);
     }

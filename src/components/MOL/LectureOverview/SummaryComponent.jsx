@@ -1,22 +1,82 @@
 import { Box, Typography, Skeleton, IconButton } from "@mui/material";
 import TextWithMath from "@/commonComponents/TextWithMath/TextWithMath";
-import { getLectureSummary, updateSummary } from "@/api/apiHelper";
-import { useEffect, useState } from "react";
+import {
+  getLectureSummary,
+  updateSummary,
+  updateMolMarks,
+} from "@/api/apiHelper";
+import { useEffect, useState, useRef } from "react";
 import TextEditor from "@/commonComponents/TextEditor/TextEditor";
 import { FaEdit } from "react-icons/fa";
 import { FaSave } from "react-icons/fa";
 import { FaInfoCircle } from "react-icons/fa";
 
-const SummaryComponent = ({ lectureId, isDarkMode, isEdit }) => {
+const SummaryComponent = ({
+  lectureId,
+  isDarkMode,
+  isEdit,
+  marksData = {},
+  isStudent = false,
+  setMarksData,
+}) => {
   const [summary, setSummary] = useState({});
   const [summaryId, setSummaryId] = useState("");
   const [isEditData, setIsEditData] = useState(false);
   const [editedText, setEditedText] = useState("");
   const [loading, setLoading] = useState(true);
+  const summaryBoxRef = useRef(null);
+  const updateCalled = useRef(false);
 
   useEffect(() => {
     fetchSummary();
   }, [lectureId]);
+
+  useEffect(() => {
+    const handleScrollAndUpdate = async () => {
+      if (!isStudent || marksData?.viewed_summary || updateCalled.current) {
+        return;
+      }
+
+      if (summaryBoxRef.current) {
+        const { scrollTop, scrollHeight, clientHeight } = summaryBoxRef.current;
+        if (scrollHeight > clientHeight && scrollTop + clientHeight >= scrollHeight - 5) {
+          await updateMolMark();
+        } else if (scrollHeight === clientHeight) {
+          await updateMolMark();
+        }
+      }
+    };
+
+    summaryBoxRef.current?.addEventListener("scroll", handleScrollAndUpdate);
+    summaryBoxRef.current?.addEventListener('mouseenter', handleScrollAndUpdate);
+    summaryBoxRef.current?.addEventListener('mouseleave', handleScrollAndUpdate);
+
+    return () => {
+      summaryBoxRef.current?.removeEventListener("scroll", handleScrollAndUpdate);
+      summaryBoxRef.current?.removeEventListener('mouseenter', handleScrollAndUpdate);
+      summaryBoxRef.current?.removeEventListener('mouseleave', handleScrollAndUpdate);
+    };
+  }, [isStudent, marksData?.viewed_summary]);
+
+  const updateMolMark = async () => {
+    updateCalled.current = true;
+    try {
+      const formData = {
+        student_score: marksData.student_score + 1,
+        viewed_summary: true,
+      };
+      await updateMolMarks(marksData.id, formData);
+
+      setMarksData((prev) => ({
+        ...prev,
+        viewed_summary: true,
+        student_score: prev.student_score + 1,
+      }));
+      console.log("Updated Mol Marks successfully.");
+    } catch (error) {
+      console.error("Error updating Mol Marks:", error);
+    }
+  };
 
   function safeParseJSON(data) {
     try {
@@ -109,6 +169,7 @@ const SummaryComponent = ({ lectureId, isDarkMode, isEdit }) => {
         minHeight: 400,
         maxHeight: 450,
       }}
+      ref={summaryBoxRef}
     >
       {loading ? (
         <Box>

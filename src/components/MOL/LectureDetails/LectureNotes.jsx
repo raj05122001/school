@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import {
   Box,
   Typography,
@@ -9,17 +9,29 @@ import {
   Skeleton,
 } from "@mui/material";
 import { IoMdSend } from "react-icons/io";
-import { getLectureNotes, regenrateNotes } from "@/api/apiHelper";
+import {
+  getLectureNotes,
+  regenrateNotes,
+  updateMolMarks,
+} from "@/api/apiHelper";
 import { toast } from "react-hot-toast";
 import MathJax from "react-mathjax2";
 
-const LectureNotes = ({ id, isDarkMode }) => {
+const LectureNotes = ({
+  id,
+  isDarkMode,
+  marksData = {},
+  isStudent = false,
+  setMarksData,
+}) => {
   const [notes, setNotes] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [visibleCount, setVisibleCount] = useState(5);
   const [insightInputs, setInsightInputs] = useState({});
   const [showTextFields, setShowTextFields] = useState({});
+  const notesBoxRef = useRef(null);
+  const updateCalled = useRef(false);
 
   useEffect(() => {
     const fetchLectureNotes = async () => {
@@ -90,6 +102,64 @@ const LectureNotes = ({ id, isDarkMode }) => {
   //   );
   // }
 
+  useEffect(() => {
+    const handleScrollAndUpdate = async () => {
+      if (!isStudent || marksData?.viewed_notes || updateCalled.current) {
+        return;
+      }
+
+      if (notesBoxRef.current) {
+        const { scrollTop, scrollHeight, clientHeight } = notesBoxRef.current;
+        if (
+          scrollHeight > clientHeight &&
+          scrollTop + clientHeight >= scrollHeight - 5
+        ) {
+          await updateMolMark();
+        } else if (scrollHeight === clientHeight) {
+          await updateMolMark();
+        }
+      }
+    };
+
+    notesBoxRef.current?.addEventListener("scroll", handleScrollAndUpdate);
+    notesBoxRef.current?.addEventListener("mouseenter", handleScrollAndUpdate);
+    notesBoxRef.current?.addEventListener("mouseleave", handleScrollAndUpdate);
+
+    return () => {
+      notesBoxRef.current?.removeEventListener("scroll", handleScrollAndUpdate);
+      notesBoxRef.current?.removeEventListener(
+        "mouseenter",
+        handleScrollAndUpdate
+      );
+      notesBoxRef.current?.removeEventListener(
+        "mouseleave",
+        handleScrollAndUpdate
+      );
+    };
+  }, [isStudent, marksData?.viewed_notes]);
+
+  const updateMolMark = async () => {
+    if (isStudent && !marksData?.viewed_notes && !updateCalled.current) {
+      updateCalled.current = true;
+      try {
+        const formData = {
+          student_score: marksData.student_score + 1,
+          viewed_notes: true,
+        };
+        await updateMolMarks(marksData.id, formData);
+
+        setMarksData((prev) => ({
+          ...prev,
+          viewed_notes: true,
+          student_score: prev.student_score + 1,
+        }));
+        console.log("update notes....");
+      } catch (error) {
+        console.error("Error updating Mol Marks:", error);
+      }
+    }
+  };
+
   return (
     <Box
       sx={{
@@ -107,6 +177,7 @@ const LectureNotes = ({ id, isDarkMode }) => {
         maxHeight: 450,
         width: "100%",
       }}
+      ref={notesBoxRef}
     >
       {loading ? (
         <Box>

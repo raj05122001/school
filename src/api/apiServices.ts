@@ -595,9 +595,9 @@ export default class apiServices {
       });
   };
 
-  public getComments = async () => {
+  public getComments = async (id) => {
     return await this.axiosInstance
-      .get(`/api/v1/discussion_reply/`)
+      .get(`/api/v1/discussion_reply/${id ? `?lecture_id=${id}` : ""}`)
       .then((Response) => Response.data)
       .catch((error) => console.error(error));
   };
@@ -650,7 +650,7 @@ export default class apiServices {
 
   public getStudentLectures = async (type = "COMPLETED") => {
     return await this.axiosInstance
-      .get(`api/v1/dashboard/student/lectures/?status=${type}`)
+      .get(`/api/v1/dashboard/student/lectures/?status=${type}`)
       .then((Response) => Response)
       .catch((error) => console.error(error));
   };
@@ -714,11 +714,23 @@ export default class apiServices {
       });
   };
 
-  public getAssignmentAnswer = async (classname, subject, lecture_topic, lecture_id, assignment_id, size="10") => {
+  public getAssignmentAnswer = async (lecture_id, assignment_id, classname="", subject="", lecture_topic="", size="10") => {
     return await this.axiosInstance
-      .get(`/api/v1/get_assignment_answer/?class=${classname}&subject=${subject}&lecture_topic=${lecture_topic}&lecture_id=${lecture_id}&assignment_id={assignment_id}&size=${size}`)
+      .get(`/api/v1/get_assignment_answer/?class=${classname}&subject=${subject}&lecture_topic=${lecture_topic}&lecture_id=${lecture_id}&assignment_id=${assignment_id}&size=${size}`)
+      .then((Response) => Response)
+      .catch((error) => console.error(error));
+  }
+  public getMolMarks = async (lecture_id,student_id) => {
+    return await this.axiosInstance
+      .get(`/api/v1/student/get_mol_marks/?lecture_id=${lecture_id}&student_id=${student_id}`)
       .then((Response) => Response)
       .catch((error) => console.error(error));
   };
 
+  public updateMolMarks = async (marks_id, formData) => {
+    return await this.axiosInstance
+      .patch(`/api/v1/student/get_mol_marks/?lecture_marks_id=${marks_id}`, formData)
+      .then((Response) => Response)
+      .catch((error) => console.error(error));
+  };
 }

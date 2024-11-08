@@ -234,8 +234,8 @@ const CommentsSection = ({ id }) => {
 
   const fetchComments = async () => {
     try {
-      const response = await getLectureDiscussion(id);
-      setCommentData(response?.data?.data || []);
+      const response = await getComments(id);
+      setCommentData(response?.data || []);
     } catch (error) {
       console.error(error);
       setLoading(false);

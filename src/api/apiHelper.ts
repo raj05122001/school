@@ -314,9 +314,9 @@ export const postFeedback = async (formData) => {
   return await apiInstance.postFeedback(formData);
 };
 
-export const getComments = async () => {
+export const getComments = async (id) => {
   const apiInstance = new apiServices(axiosAPIInstance);
-  return await apiInstance.getComments();
+  return await apiInstance.getComments(id);
 };
 
 export const updateLectureDiscussion = async (lectureId, formData) => {
@@ -368,7 +368,16 @@ export const submitMOLAssignment = async (formData) => {
   return await apiInstance.submitMOLAssignment(formData);
 };
 
-export const getAssignmentAnswer = async (classname, subject, lecture_topic, lecture_id, assignment_id, size) => {
+export const getAssignmentAnswer = async (lecture_id, assignment_id) => {
   const apiInstance = new apiServices(axiosAPIInstance);
-  return await apiInstance.getAssignmentAnswer(classname, subject, lecture_topic, lecture_id, assignment_id, size);
+  return await apiInstance.getAssignmentAnswer(lecture_id, assignment_id);
+};
+export const getMolMarks = async ( lecture_id,student_id) => {
+  const apiInstance = new apiServices(axiosAPIInstance);
+  return await apiInstance.getMolMarks( lecture_id,student_id);
+};
+
+export const updateMolMarks = async ( marks_id, formData) => {
+  const apiInstance = new apiServices(axiosAPIInstance);
+  return await apiInstance.updateMolMarks( marks_id, formData);
 };
