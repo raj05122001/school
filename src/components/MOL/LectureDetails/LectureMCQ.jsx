@@ -33,9 +33,15 @@ const LectureMCQ = ({ id, isDarkMode }) => {
   }, [id]);
 
   const parseOptions = (options) => {
-    // Replace single quotes with double quotes for valid JSON parsing
-    const validJson = options.replace(/'/g, '"');
-    return JSON.parse(validJson);
+    try {
+      // Replace single quotes with double quotes for valid JSON parsing
+      const validJson = options.replace(/'/g, '"').replace(/,\s*([}\]])/g, '$1'); // Remove trailing commas
+      console.log("Parsed JSON string:", validJson);
+      return JSON.parse(validJson);
+    } catch (error) {
+      console.error("Error parsing JSON:", error);
+      return null; // or handle the error as needed
+    }
   };
 
   // Function to generate alphabetical labels
