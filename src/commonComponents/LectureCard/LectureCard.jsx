@@ -87,7 +87,7 @@ const LectureCard = ({ lecture }) => {
   }
 
   return (
-    <Paper sx={lectureCardStyle} onClick={userDetails.role !== "STUDENT" ? () => handleLectureRecord(lecture) : () => handleRoute(lecture?.id)}>
+    <Paper sx={lectureCardStyle} onClick={userDetails?.role !== "STUDENT" ? () => handleLectureRecord(lecture) : () => handleRoute(lecture?.id)}>
       <Box sx={dateSectionStyle}>
         <Typography
           variant="h4"
