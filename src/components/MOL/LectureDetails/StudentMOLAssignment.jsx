@@ -7,6 +7,7 @@ import {
   Skeleton,
   IconButton,
   Stack,
+  Tooltip,
 } from "@mui/material";
 import {
   getAssignmentAnswer,
@@ -48,7 +49,7 @@ const StudentMOLAssignment = ({ id, isDarkMode, class_ID }) => {
   const uploadToS3 = async (
     chunk,
     key,
-    
+
     assignmentId
   ) => {
     return new Promise(async (resolve, reject) => {
@@ -134,8 +135,8 @@ const StudentMOLAssignment = ({ id, isDarkMode, class_ID }) => {
           ? [...fileLinks[assignmentId], result.Location]
           : [result.Location];
         setFileLinks((prev) => ({ ...prev, [assignmentId]: newLinks }));
-        console.log("New Links", newLinks)
-        console.log("Assign ID",assignmentId)
+        console.log("New Links", newLinks);
+        console.log("Assign ID", assignmentId);
         console.log("Result location", result.Location);
         console.log("File uploaded successfully:", result);
         resolve(result);
@@ -147,7 +148,6 @@ const StudentMOLAssignment = ({ id, isDarkMode, class_ID }) => {
   };
 
   const handleSubmit = async (assignmentId, answered_by, submissionData) => {
-
     if (!assignmentId || !answered_by) {
       console.error("Invalid assignmentId or studentId:", {
         assignmentId,
@@ -160,7 +160,7 @@ const StudentMOLAssignment = ({ id, isDarkMode, class_ID }) => {
     try {
       // Fetch existing submissions
       const response = await getAssignmentAnswer(id, assignmentId);
-      
+
       const existingSubmissions = response?.data?.data?.data;
       console.log("Exisiting Submisison", existingSubmissions);
       // Check for existing submission
@@ -171,9 +171,9 @@ const StudentMOLAssignment = ({ id, isDarkMode, class_ID }) => {
       );
 
       console.log("Already SUbmitted", alreadySubmitted);
-      console.log("FileLink", fileLinks)
-      console.log("New File",)
-      console.log("Answer Description", answerDescriptions)
+      console.log("FileLink", fileLinks);
+      console.log("New File");
+      console.log("Answer Description", answerDescriptions);
 
       if (alreadySubmitted) {
         // Show error or update existing submission if needed
@@ -186,14 +186,13 @@ const StudentMOLAssignment = ({ id, isDarkMode, class_ID }) => {
           answer_description: answerDescriptions[assignmentId] || null,
         };
         const response = await submitMOLAssignment(formData);
-        console.log("Response submission", response)
+        console.log("Response submission", response);
         if (response.data.success) {
           setSubmitted((prev) => ({ ...prev, [assignmentId]: true }));
         } else {
           console.error("Error submitting assignment:", response.message);
         }
       }
-      
     } catch (err) {
       console.error("Submission error:", err);
     }
@@ -268,12 +267,12 @@ const StudentMOLAssignment = ({ id, isDarkMode, class_ID }) => {
               sx={{ mb: 4, display: "flex", flexDirection: "column" }}
             >
               {/* <MathJax.Text text={assignment.assignment_text} /> */}
-              <Box sx={{display:'flex'}}>
-              <Typography variant="body1" >
-                {String.fromCharCode(65 + index)}.&nbsp;
-              </Typography>
+              <Box sx={{ display: "flex" }}>
+                <Typography variant="body1">
+                  {String.fromCharCode(65 + index)}.&nbsp;
+                </Typography>
                 <Box mt={0.3}>
-                <TextWithMath text={assignment.assignment_text}/>
+                  <TextWithMath text={assignment.assignment_text} />
                 </Box>
               </Box>
               <Typography variant="body2" sx={{ mt: 1, fontWeight: "bold" }}>
@@ -296,46 +295,54 @@ const StudentMOLAssignment = ({ id, isDarkMode, class_ID }) => {
 
               {!submitted[assignment.id] && (
                 <Stack direction="row" spacing={1}>
-                  <IconButton
-                    color="primary"
-                    component="label"
-                    onChange={(e) =>
-                      uploadToS3(e.target.files[0], "picture", assignment.id)
-                    }
-                  >
-                    <FaPhotoVideo />
-                    <input hidden accept="image/*" type="file" />
-                  </IconButton>
-                  <IconButton
-                    color="primary"
-                    component="label"
-                    onChange={(e) =>
-                      uploadToS3(e.target.files[0], "audio", assignment.id)
-                    }
-                  >
-                    <FaFileAudio />
-                    <input hidden accept="audio/*" type="file" />
-                  </IconButton>
-                  <IconButton
-                    color="primary"
-                    component="label"
-                    onChange={(e) =>
-                      uploadToS3(e.target.files[0], "video", assignment.id)
-                    }
-                  >
-                    <FaRegFileVideo />
-                    <input hidden accept="video/*" type="file" />
-                  </IconButton>
-                  <IconButton
-                    color="primary"
-                    component="label"
-                    onChange={(e) =>
-                      uploadToS3(e.target.files[0], "document", assignment.id)
-                    }
-                  >
-                    <MdDescription />
-                    <input hidden accept=".pdf,.doc,.docx,.txt" type="file" />
-                  </IconButton>
+                  <Tooltip title="image">
+                    <IconButton
+                      color="primary"
+                      component="label"
+                      onChange={(e) =>
+                        uploadToS3(e.target.files[0], "picture", assignment.id)
+                      }
+                    >
+                      <FaPhotoVideo />
+                      <input hidden accept="image/*" type="file" />
+                    </IconButton>
+                  </Tooltip>
+                  <Tooltip title="audio">
+                    <IconButton
+                      color="primary"
+                      component="label"
+                      onChange={(e) =>
+                        uploadToS3(e.target.files[0], "audio", assignment.id)
+                      }
+                    >
+                      <FaFileAudio />
+                      <input hidden accept="audio/*" type="file" />
+                    </IconButton>
+                  </Tooltip>
+                  <Tooltip title="video">
+                    <IconButton
+                      color="primary"
+                      component="label"
+                      onChange={(e) =>
+                        uploadToS3(e.target.files[0], "video", assignment.id)
+                      }
+                    >
+                      <FaRegFileVideo />
+                      <input hidden accept="video/*" type="file" />
+                    </IconButton>
+                  </Tooltip>
+                  <Tooltip title="document">
+                    <IconButton
+                      color="primary"
+                      component="label"
+                      onChange={(e) =>
+                        uploadToS3(e.target.files[0], "document", assignment.id)
+                      }
+                    >
+                      <MdDescription />
+                      <input hidden accept=".pdf,.doc,.docx,.txt" type="file" />
+                    </IconButton>
+                  </Tooltip>
                 </Stack>
               )}
 
