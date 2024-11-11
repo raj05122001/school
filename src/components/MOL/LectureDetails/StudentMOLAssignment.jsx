@@ -26,6 +26,7 @@ import {
   S3Client,
 } from "@aws-sdk/client-s3";
 import { Upload } from "@aws-sdk/lib-storage";
+import TextWithMath from "@/commonComponents/TextWithMath/TextWithMath";
 
 const userDetails = decodeToken(Cookies.get("ACCESS_TOKEN"));
 
@@ -266,10 +267,15 @@ const StudentMOLAssignment = ({ id, isDarkMode, class_ID }) => {
               key={assignment.id}
               sx={{ mb: 4, display: "flex", flexDirection: "column" }}
             >
-              <Typography variant="body1" sx={{ mb: 1 }}>
-                {String.fromCharCode(65 + index)}.{" "}
+              {/* <MathJax.Text text={assignment.assignment_text} /> */}
+              <Box sx={{display:'flex'}}>
+              <Typography variant="body1" >
+                {String.fromCharCode(65 + index)}.&nbsp;
               </Typography>
-              <MathJax.Text text={assignment.assignment_text} />
+                <Box mt={0.3}>
+                <TextWithMath text={assignment.assignment_text}/>
+                </Box>
+              </Box>
               <Typography variant="body2" sx={{ mt: 1, fontWeight: "bold" }}>
                 Marks: {assignment.assignment_mark}
               </Typography>
