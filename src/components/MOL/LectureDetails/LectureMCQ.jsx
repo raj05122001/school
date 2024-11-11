@@ -33,10 +33,25 @@ const LectureMCQ = ({ id, isDarkMode }) => {
   }, [id]);
 
   const parseOptions = (options) => {
-    // Replace single quotes with double quotes for valid JSON parsing
-    const validJson = options.replace(/'/g, '"');
-    return JSON.parse(validJson);
+    try {
+      // First, convert the single quotes around the array to double quotes
+      let validJson = options
+        .replace(/^\[|\]$/g, '') // Remove the surrounding brackets temporarily
+        .split(',') // Split each option by commas
+        .map(option => option.trim().replace(/^'/, '"').replace(/'$/, '"')) // Replace single quotes around each option with double quotes
+        .join(','); // Join the items back into a comma-separated string
+  
+      // Wrap the modified string back into an array format
+      validJson = `[${validJson}]`;
+  
+      console.log("Parsed JSON string:", validJson);
+      return JSON.parse(validJson);
+    } catch (error) {
+      console.error("Error parsing JSON:", error);
+      return [];
+    }
   };
+  
 
   // Function to generate alphabetical labels
   const getLabel = (index) => {
