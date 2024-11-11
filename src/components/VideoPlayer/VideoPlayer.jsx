@@ -76,7 +76,9 @@ const VideoPlayer = ({ id }) => {
           </Box>
         </Box>
       ) : (
-        breakpointPlayer
+        <Box sx={{width:'100%',height:"90%"}}>
+          {breakpointPlayer}
+        </Box>
       )}
 
       {suggestionData?.length > 0 && (
@@ -134,7 +136,7 @@ export const BreakpointPlayer = ({ markers, id }) => {
       className="video-js"
       controls
       preload="auto"
-      style={{ width: "100%", height: "90%", borderRadius: 10 }}
+      style={{ width: "100%",height:'100%', borderRadius: 10 }}
       data-setup='{ "html5": { "nativeTextTracks": true },"playbackRates" : [0.25, 0.5, 0.75, 1, 1.25, 1.5,1.75]}'
     >
       <source
