@@ -2,8 +2,11 @@ import React from "react";
 import { Box, Typography, Card, CardContent, Grid } from "@mui/material";
 import UserImage from "@/commonComponents/UserImage/UserImage";
 import { FaCheckCircle, FaTimesCircle } from "react-icons/fa";
+import { MdOutlineCreditScore, MdOutlineMail } from "react-icons/md";
+import { TbSquareRoundedPercentage } from "react-icons/tb";
+import { VscFeedback } from "react-icons/vsc";
 
-const StudentAssignments = ({ listData }) => {
+const StudentAssignments = ({ listData, isDarkMode }) => {
   return (
     <Box>
       <Grid container spacing={2}>
@@ -13,7 +16,9 @@ const StudentAssignments = ({ listData }) => {
               <Card
                 sx={{
                   backgroundColor: "rgba(255, 255, 255, 0.2)",
-                  color: "#fff",
+                  color: isDarkMode ? "#f1f1f1" : "#000", // Text color based on theme
+                  borderRadius: "12px",
+                  boxShadow: "0px 6px 10px #ADD8E6",
                 }}
               >
                 <CardContent>
@@ -43,30 +48,30 @@ const StudentAssignments = ({ listData }) => {
                       </Typography>
                     </Box>
                   </Box>
-                  <Box ml={6}>
+                  <Box ml={6} mt={2}>
                     <Grid container spacing={2}>
                       <Grid item xs={12} md={4}>
                         <Typography variant="body2">
-                          <strong>Marks Obtained:</strong>{" "}
+                          <MdOutlineCreditScore style={{marginRight:"4px"}} />Marks Obtained:{" "}
                           {assignment.marks_obtained} /{" "}
                           {assignment.assignment_que.assignment_mark}
                         </Typography>
                       </Grid>
                       <Grid item xs={12} md={4}>
                         <Typography variant="body2">
-                          <strong>Scored Percentage:</strong>{" "}
+                          <TbSquareRoundedPercentage style={{marginRight:"5px"}}/>Scored Percentage:{" "}
                           {assignment.scored_percentage}%
                         </Typography>
                       </Grid>
                       <Grid item xs={12} md={4}>
                         <Typography variant="body2">
-                          <strong>Email:</strong>{" "}
+                          <MdOutlineMail style={{marginRight:"4px"}}/>Email:{" "}
                           {assignment.answer_by.user.email}
                         </Typography>
                       </Grid>
                     </Grid>
-                    <Typography variant="body2">
-                      <strong>Teacher's Comment:</strong>{" "}
+                    <Typography variant="body2" marginTop={2}>
+                      <VscFeedback style={{marginRight: "4px"}}/>Teacher's Comment:{" "}
                       {assignment.comment_by_teacher || "No comment"}
                     </Typography>
                   </Box>

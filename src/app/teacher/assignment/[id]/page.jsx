@@ -9,6 +9,8 @@ import {
   CardContent,
   IconButton,
   Button,
+  Tabs,
+  Tab,
 } from "@mui/material";
 import {
   MdPlayArrow,
@@ -18,6 +20,13 @@ import {
 } from "react-icons/md";
 import { getLectureById, getAssignmentAnswer } from "@/api/apiHelper";
 import StudentAssignments from "@/components/teacher/Assignment/StudentAssignments";
+import { useThemeContext } from "@/hooks/ThemeContext";
+import { Varela_Round } from "next/font/google";
+import { MdOutlineTopic } from "react-icons/md";
+import { BsXDiamond } from "react-icons/bs";
+
+
+const varelaRound = Varela_Round({ weight: "400", subsets: ["latin"] });
 
 const courseDetails = {
   title: "C Language Tutorials In Hindi",
@@ -67,6 +76,13 @@ const CoursePlaylist = ({ params }) => {
   const [listData, setListData] = useState({});
   const [loading, setLoading] = useState(true);
   const [listLoading, setListLoading] = useState(true);
+  const { isDarkMode, primaryColor, secondaryColor } = useThemeContext();
+  const [selectedTab, setSelectedTab] = useState(0); // State to manage selected tab
+  
+
+  const handleTabChange = (event, newValue) => {
+    setSelectedTab(newValue);
+  };
 
   useEffect(() => {
     if (id) {
@@ -113,6 +129,60 @@ const CoursePlaylist = ({ params }) => {
         minHeight: "100vh",
       }}
     >
+    <Box
+        sx={{
+          display: "flex",
+          justifyContent: "space-between",
+          alignItems: "center",
+          mb: 2,
+        }}
+      >
+        {/* Tabs for Checked and Not Checked */}
+        <Tabs
+          value={selectedTab}
+          onChange={handleTabChange}
+          indicatorColor="none"
+          textColor="primary"
+          sx={{
+            alignSelf: "flex-end",
+          ".MuiTabs-flexContainer": {
+            gap: 2,
+            background:
+              isDarkMode &&
+              "linear-gradient(89.7deg, rgb(0, 0, 0) -10.7%, rgb(53, 92, 125) 88.8%)",
+            backgroundImage: isDarkMode ? "" : "url('/TabBG2.jpg')", // Add background image
+            backgroundSize: "cover", // Ensure the image covers the entire page
+            backgroundPosition: "center", // Center the image
+            padding: 1,
+            // borderRadius: "12px",
+            borderTopLeftRadius: "12px",
+            borderTopRightRadius: "12px",
+          },
+          ".MuiTab-root": {
+            color: "#333",
+            padding: "10px 20px",
+            minHeight: 0,
+            marginTop: "8px",
+            textAlign: "center",
+            color: isDarkMode && "#F0EAD6",
+            "&:hover": {
+              backgroundColor: "#e0e0e0",
+              boxShadow: "0px 2px 8px rgba(0, 0, 0, 0.1)",
+              borderRadius: "10px",
+            },
+            "&.Mui-selected": {
+              backgroundColor: "#fff",
+              color: "#000",
+              boxShadow: "0px 6px 15px rgba(0, 0, 0, 0.2)",
+              borderRadius: "10px",
+            },
+          },
+        }}
+        >
+          <Tab label="Checked" />
+          <Tab label="Not Checked" />
+        </Tabs>
+      </Box>
       <Box
         sx={{ display: "flex", flexDirection: "row", gap: 2, height: "100%" }}
       >
@@ -120,10 +190,12 @@ const CoursePlaylist = ({ params }) => {
         <Card
           sx={{
             width: 300,
-            backgroundColor: "rgba(255, 255, 255, 0.2)",
-            color: "#fff",
+            // backgroundColor: "rgba(255, 255, 255, 0.2)",
+            color: isDarkMode ? "#f1f1f1" : "#000", // Text color based on theme
             height: "100%",
             borderRadius: "16px",
+            fontFamily:varelaRound,
+            background: isDarkMode ? "rgba(255, 255, 255, 0.2)" : 'linear-gradient(130deg, white 55%, #6495ED 75%)' ,
           }}
         >
           <CardMedia
@@ -142,40 +214,40 @@ const CoursePlaylist = ({ params }) => {
             }}
           />
           <CardContent>
-            <Typography variant="h5" fontWeight="bold">
-              {lectureData.title}
+            <Typography variant="h5" fontWeight="bold" fontSize={"24px"} fontFamily={varelaRound}>
+              <MdOutlineTopic/> {lectureData.title}
             </Typography>
-
-            <Typography variant="subtitle1">
-              <strong>Class:</strong>{" "}
+            <hr />
+            <Typography variant="subtitle1" marginTop={4}>
+             <BsXDiamond /> <strong>Class:</strong>{" "}
               {lectureData?.lecture_class?.name || "N/A"}
             </Typography>
             <Typography variant="subtitle1">
-              <strong>Subject:</strong>{" "}
+            <BsXDiamond /> <strong>Subject:</strong>{" "}
               {lectureData?.chapter?.subject?.name || "N/A"}
             </Typography>
             <Typography variant="subtitle1">
-              <strong>Chapter:</strong> {lectureData?.chapter?.chapter || "N/A"}
+            <BsXDiamond /> <strong>Chapter:</strong> {lectureData?.chapter?.chapter || "N/A"}
             </Typography>
 
             <Typography variant="subtitle1">
-              <strong>Scheduled Date:</strong>{" "}
+            <BsXDiamond /> <strong>Scheduled Date:</strong>{" "}
               {lectureData?.schedule_date || "N/A"}
             </Typography>
             <Typography variant="subtitle1">
-              <strong>Scheduled Time:</strong>{" "}
+            <BsXDiamond /> <strong>Scheduled Time:</strong>{" "}
               {lectureData?.schedule_time || "N/A"}
             </Typography>
 
             <Typography variant="subtitle1">
-              <strong>Description:</strong> {lectureData?.description || "N/A"}
+            <BsXDiamond /> <strong>Description:</strong> {lectureData?.description || "N/A"}
             </Typography>
           </CardContent>
         </Card>
 
         {/* Video List */}
         <Box sx={{ flex: 1 }}>
-        <StudentAssignments listData={listData}/>
+        <StudentAssignments listData={listData} isDarkMode={isDarkMode}/>
         </Box>
       </Box>
     </Box>

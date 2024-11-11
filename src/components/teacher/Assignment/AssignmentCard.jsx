@@ -1,8 +1,14 @@
 import React, { useRef, useState } from "react";
 import { Box, Card, CardContent, Typography, Grid } from "@mui/material";
 import { useThemeContext } from "@/hooks/ThemeContext";
-import { MdOutlineDateRange,MdCheckCircle,MdPending } from "react-icons/md";
+import { MdOutlineDateRange,MdCheckCircle,MdPending, MdOutlineTopic, MdOutlinePending } from "react-icons/md";
 import LectureType from "@/commonComponents/LectureType/LectureType";
+import { Varela_Round } from "next/font/google";
+import { LuDot } from "react-icons/lu";
+import { IoMdCheckmarkCircleOutline } from "react-icons/io";
+
+const varelaRound = Varela_Round({ weight: "400", subsets: ["latin"] });
+
 
 const AssignmentCard = ({ data, onClick }) => {
   const { isDarkMode, primaryColor, secondaryColor } = useThemeContext();
@@ -10,17 +16,19 @@ const AssignmentCard = ({ data, onClick }) => {
   return (
     <Box
       p={2}
-      sx={{ width: "100%", height: "100%" }}
+      sx={{ width: "100%", height: "100%"}}
       onClick={() => onClick(data?.id)}
+      
     >
       <Card
-        className="blur_effect_card"
+        // className="blur_effect_card"
         sx={{
           display: "flex",
           flexDirection: "column",
           backdropFilter: "blur(10px)",
           backgroundColor: "rgba(255, 255, 255, 0.2)",
-          boxShadow: "0 4px 30px rgba(0, 0, 0, 0.1)",
+          boxShadow: "0px 6px 10px #ADD8E6",
+          borderColor: isDarkMode ? "#555" : "#ddd",
           borderRadius: "16px",
           "&:hover": {
             transform: "scale(1.02)",
@@ -48,37 +56,38 @@ const AssignmentCard = ({ data, onClick }) => {
           <Typography
             variant="h6"
             gutterBottom
-            sx={{ fontWeight: "bold", color: primaryColor }}
+            sx={{ fontWeight: "bold", color: primaryColor, textAlign:"center", fontFamily: varelaRound }}
           >
-            {data?.title}
+            <MdOutlineTopic style={{marginRight:"2px"}} />{data?.title}
+            <hr />
           </Typography>
           <Typography
-            variant="body1"
+            variant="subtitle1"
             gutterBottom
-            sx={{ color: isDarkMode ? primaryColor : "#555" }}
+            sx={{ color: isDarkMode ? primaryColor : "#555", fontSize:"14px"}}
           >
-            <strong>Class:</strong> {data?.lecture_class?.name}
+            <LuDot /><strong>Class:</strong> {data?.lecture_class?.name}
           </Typography>
           <Typography
-            variant="body1"
+            variant="subtitle1"
             gutterBottom
-            sx={{ color: isDarkMode ? primaryColor : "#555" }}
+            sx={{ color: isDarkMode ? primaryColor : "#555", fontSize:"14px" }}
           >
-            <strong>Subject:</strong> {data?.chapter?.subject?.name}
+           <LuDot /><strong>Subject:</strong> {data?.chapter?.subject?.name}
           </Typography>
           <Typography
-            variant="body1"
+            variant="subtitle1"
             gutterBottom
-            sx={{ color: isDarkMode ? primaryColor : "#555" }}
+            sx={{ color: isDarkMode ? primaryColor : "#555", fontSize:"14px" }}
           >
-            <strong>Chapter:</strong> {data?.chapter?.chapter}
+           <LuDot /><strong>Chapter:</strong> {data?.chapter?.chapter}
           </Typography>
           <Typography
-            variant="body1"
+            variant="subtitle1"
             gutterBottom
-            sx={{ color: isDarkMode ? primaryColor : "#555" }}
+            sx={{ color: isDarkMode ? primaryColor : "#555", fontSize:"14px" }}
           >
-            <strong>Description:</strong> {data?.description}
+           <LuDot /><strong>Description:</strong> {data?.description}
           </Typography>
 
           <Typography
@@ -86,13 +95,13 @@ const AssignmentCard = ({ data, onClick }) => {
             gutterBottom
             sx={{ color: isDarkMode ? primaryColor : "#555" }}
           >
-            <strong>Assignment:</strong>
+          <LuDot /><strong>Assignment:</strong>
           </Typography>
           <Grid container spacing={1}>
             <Grid item xs={12} sm={12}>
               <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
-                <MdCheckCircle
-                  size={22}
+                <IoMdCheckmarkCircleOutline
+                  size={20}
                   color={isDarkMode ? "green" : "green"}
                 />
                 <Typography variant="body1" sx={{ color: primaryColor }}>
@@ -102,7 +111,7 @@ const AssignmentCard = ({ data, onClick }) => {
             </Grid>
             <Grid item xs={12} sm={12}>
               <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
-                <MdPending size={22} color={isDarkMode ? "red" : "darkred"} />
+                <MdOutlinePending size={20} color={isDarkMode ? "red" : "darkred"} />
                 <Typography variant="body1" sx={{ color: primaryColor }}>
                   Pending: {data?.unchecked_count || 0}
                 </Typography>
