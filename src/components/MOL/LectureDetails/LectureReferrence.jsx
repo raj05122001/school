@@ -33,13 +33,13 @@ const LectureReferrence = ({ id, isDarkMode }) => {
     const link =
       resource?.research_papers?.link ||
       resource?.youtube_videos?.link ||
-      resource?.Google_Book_Links?.link;
+      resource?.Google_Book_Links?.thumbnail;
     return (
       self.findIndex((r) => {
         const rLink =
           r.research_papers?.link ||
           r.youtube_videos?.link ||
-          r.Google_Book_Links?.link;
+          r.Google_Book_Links?.thumbnail;
         return rLink === link;
       }) === index
     );

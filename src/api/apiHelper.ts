@@ -381,3 +381,13 @@ export const updateMolMarks = async ( marks_id, formData) => {
   const apiInstance = new apiServices(axiosAPIInstance);
   return await apiInstance.updateMolMarks( marks_id, formData);
 };
+
+export const getMyRank = async () => {
+  const apiInstance = new apiServices(axiosAPIInstance);
+  return await apiInstance.getMyRank();
+};
+
+export const getMyAssignmentAnalytics = async () => {
+  const apiInstance = new apiServices(axiosAPIInstance);
+  return await apiInstance.getMyAssignmentAnalytics();
+};
