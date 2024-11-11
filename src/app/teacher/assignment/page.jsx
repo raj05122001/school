@@ -1,7 +1,7 @@
 "use client";
-import React, { useMemo,useState, useEffect } from "react";
+import React, { useMemo, useState, useEffect } from "react";
 import TeacherFilters from "@/components/teacher/lecture-listings/Filters/TeacherFilters";
-import { Box, Typography, Grid } from "@mui/material";
+import { Box, Typography, Grid,Pagination } from "@mui/material";
 import { useSearchParams, useRouter, usePathname } from "next/navigation";
 import { useThemeContext } from "@/hooks/ThemeContext";
 import { MdAssignment } from "react-icons/md";
@@ -9,15 +9,10 @@ import AssignmentCard from "@/components/teacher/Assignment/AssignmentCard";
 import { getTeacherAllLecture } from "@/api/apiHelper";
 import LectureListingCardSkeleton from "@/commonComponents/Skeleton/LectureListingCardSkeleton/LectureListingCardSkeleton";
 import { FaChalkboardTeacher } from "react-icons/fa";
-import Pagination from "@mui/material";
 import { decodeToken } from "react-jwt";
 import Cookies from "js-cookie";
 
-const encodeURI = (value) => {
-  return encodeURIComponent(value);
-};
-
-const Page = () => {
+const Assignment = () => {
   const { isDarkMode, primaryColor, secondaryColor } = useThemeContext();
   const userDetails = decodeToken(Cookies.get("ACCESS_TOKEN"));
   const searchParams = useSearchParams();
@@ -33,6 +28,26 @@ const Page = () => {
 
   const [lectureList, setLectureList] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
+
+  const darkModeStyles = {
+    backgroundColor: "#1a1a1a",
+    paginationItemColor: "#ffffff",
+    paginationBg: "#333333",
+    paginationSelectedBg: "#005bb5",
+    paginationSelectedColor: "#ffffff",
+  };
+
+  const lightModeStyles = {
+    backgroundColor: "#ffffff",
+    paginationItemColor: "#000000",
+    paginationBg: "#f0f0f0",
+    paginationSelectedBg: "#005bb5",
+    paginationSelectedColor: "#ffffff",
+  };
+
+  const encodeURI = (value) => {
+    return encodeURIComponent(value);
+  };
 
   useEffect(() => {
     fetchData();
@@ -196,4 +211,4 @@ const Page = () => {
   );
 };
 
-export default Page;
+export default Assignment;
