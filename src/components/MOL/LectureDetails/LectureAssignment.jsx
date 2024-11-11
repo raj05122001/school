@@ -23,6 +23,7 @@ import { MdAssignmentAdd } from "react-icons/md";
 import TextEditor from "@/commonComponents/TextEditor/TextEditor";
 import { FaEdit } from "react-icons/fa";
 import { FaSave } from "react-icons/fa";
+import TextWithMath from "@/commonComponents/TextWithMath/TextWithMath";
 
 const userDetails = decodeToken(Cookies.get("ACCESS_TOKEN"));
 
@@ -50,7 +51,6 @@ const LectureAssignment = ({ id, isDarkMode, class_ID, isEdit }) => {
   };
 
   useEffect(() => {
-
     fetchAssignments();
   }, [id]);
 
@@ -87,7 +87,7 @@ const LectureAssignment = ({ id, isDarkMode, class_ID, isEdit }) => {
       assignment_mark,
       is_assigned: true,
       assignment_id,
-      assignment_text: JSON.stringify(editedText),
+      assignment_text: editedText,
     };
 
     try {
@@ -95,7 +95,8 @@ const LectureAssignment = ({ id, isDarkMode, class_ID, isEdit }) => {
         assignment.lecture.id,
         formData
       );
-      if (response.success) {
+      console.log("response handleUpdateAssignment", response);
+      if (response?.data.success) {
         setAssignments((prevAssignments) =>
           prevAssignments?.map((a) =>
             a.id === assignment_id
@@ -104,7 +105,7 @@ const LectureAssignment = ({ id, isDarkMode, class_ID, isEdit }) => {
           )
         );
         setIsEditData(false); // Close the editor after saving
-        fetchAssignments()
+        fetchAssignments();
       } else {
         setError("Failed to update assignment.");
       }
@@ -271,13 +272,15 @@ const LectureAssignment = ({ id, isDarkMode, class_ID, isEdit }) => {
                       <Typography variant="body1" sx={{ mb: 1 }}>
                         {String.fromCharCode(65 + index)}.&nbsp;
                       </Typography>
-                      <Typography
+                      {/* <Typography
                         variant="body1"
                         dangerouslySetInnerHTML={{
                           __html: assignment.assignment_text,
                         }}
-                      />
-                      {/* <MathJax.Text text={assignment.assignment_text} /> */}
+                      /> */}
+                      <Box>
+                        <TextWithMath text={assignment.assignment_text} />
+                      </Box>
                     </Box>
                     <Box
                       sx={{

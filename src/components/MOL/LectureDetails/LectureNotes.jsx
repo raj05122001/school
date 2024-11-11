@@ -16,6 +16,7 @@ import {
 } from "@/api/apiHelper";
 import { toast } from "react-hot-toast";
 import MathJax from "react-mathjax2";
+import TextWithMath from "@/commonComponents/TextWithMath/TextWithMath";
 
 const LectureNotes = ({
   id,
@@ -236,7 +237,7 @@ const LectureNotes = ({
                 </Box>
                 {/* Check and remove leading ** symbols from notes */}
                 <Typography variant="subtitle2">
-                  <MathJax.Text text={note.notes.replace(/^\*\*\s*/, "").replace(/\\n/g, "\n")} />
+                  <TextWithMath text={note.notes.replace(/^\*\*\s*/, "").replace(/\\n/g, "\n")}/>
                 </Typography>
               </Box>
             ))}
