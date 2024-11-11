@@ -3,7 +3,14 @@ import videojs from "video.js";
 import "video.js/dist/video-js.css";
 import "./VideoPlayer.css";
 import { getBreakpoint } from "@/api/apiHelper";
-import { Button, Box, Typography, IconButton, Skeleton } from "@mui/material";
+import {
+  Button,
+  Box,
+  Typography,
+  IconButton,
+  Skeleton,
+  Grid,
+} from "@mui/material";
 import { AppContextProvider } from "@/app/main";
 import { FaVideo } from "react-icons/fa";
 
@@ -156,119 +163,115 @@ export const Suggestion = ({ suggestionData }) => {
   };
 
   return (
-    <Box sx={{ position: "relative", display: "flex", alignItems: "center" }}>
-      {uniqueTitles.length > 0 && (
-        <Button
-          onClick={() => scrollContainer("left")}
-          sx={{
-            position: "absolute",
-            left: 0,
-            top: "50%",
-            transform: "translateY(-50%)",
-            bgcolor: "grey.300",
-            "&:hover": { bgcolor: "grey.400" },
-            p: 1,
-            width: 40,
-            height: 40,
-            minWidth: "unset",
-            borderRadius: "50%",
-            zIndex: 10,
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "center",
-          }}
-        >
-          ←
-        </Button>
-      )}
-      <Box
-        ref={containerRef}
+<Grid container sx={{ maxWidth: { xs: '100%', sm: '600px', md: '800px', lg: '1000px' }, mx: 'auto' }}>
+  <Grid item xs={12} sm={0.6} py={2}>
+    {uniqueTitles.length > 0 && (
+      <Button
+        onClick={() => scrollContainer("left")}
         sx={{
+          bgcolor: "grey.300",
+          "&:hover": { bgcolor: "grey.400" },
+          p: 1,
+          width: 40,
+          height: 40,
+          minWidth: "unset",
+          borderRadius: "50%",
+          zIndex: 10,
           display: "flex",
-          overflowX: "auto",
-          width: "100%",
-          py: 2,
-          mx: 5,
-          "&::-webkit-scrollbar": {
-            display: "none",
-          },
-          msOverflowStyle: "none", // For Internet Explorer and Edge
-          scrollbarWidth: "none", // For Firefox
+          alignItems: "center",
+          justifyContent: "center",
         }}
       >
-        {uniqueTitles.map((lowercaseTitle, index) => {
-          const originalTitle = suggestionData.find(
-            (s) => s.lowercaseTitle === lowercaseTitle
-          ).originalTitle;
-          return (
-            <IconButton
-              key={index}
-              onClick={() => handelChatBotText(originalTitle)}
-              sx={{
-                position: "relative",
-                overflow: "hidden",
-                bgcolor: "green.100",
-                "&:hover": {
-                  bgcolor: "green.200",
-                  ringColor: "green.400",
-                  boxShadow: "0 0 5px rgba(0, 128, 0, 0.2)",
-                },
-                py: 1,
-                borderRadius: 2,
-                transition: "all 0.3s ease-out",
-                "& .shine": {
-                  position: "absolute",
-                  right: 0,
-                  width: 24,
-                  height: 96,
-                  mt: -1,
-                  opacity: 0.1,
-                  bgcolor: "white",
-                  rotate: "12deg",
-                  transform: "translateX(8px)",
-                  transition: "transform 1s",
-                },
-                "&:hover .shine": {
-                  transform: "translateX(-100%)",
-                },
-              }}
-            >
-              <Box className="shine" />
-              <Typography
-                variant="body2"
-                sx={{ color: "primary.main", fontWeight: "bold" }}
-              >
-                ✦ {originalTitle}
-                {originalTitle.includes("?") ? "" : "?"}
-              </Typography>
-            </IconButton>
-          );
-        })}
-      </Box>
-      {uniqueTitles.length > 0 && (
-        <Button
-          onClick={() => scrollContainer("right")}
+        ←
+      </Button>
+    )}
+  </Grid>
+  <Grid
+    item
+    xs={12}
+    sm={10.8}
+    ref={containerRef}
+    sx={{
+      display: "flex",
+      overflowX: "auto",
+      maxWidth: '100%',
+      py: 2,
+      "&::-webkit-scrollbar": { display: "none" },
+      msOverflowStyle: "none",
+      scrollbarWidth: "none",
+    }}
+  >
+    {uniqueTitles.map((lowercaseTitle, index) => {
+      const originalTitle = suggestionData.find(
+        (s) => s.lowercaseTitle === lowercaseTitle
+      ).originalTitle;
+      return (
+        <IconButton
+          key={index}
+          onClick={() => handelChatBotText(originalTitle)}
           sx={{
-            position: "absolute",
-            right: 0,
-            top: "50%",
-            transform: "translateY(-50%)",
-            bgcolor: "grey.300",
-            "&:hover": { bgcolor: "grey.400" },
-            p: 1,
-            width: 40,
-            height: 40,
-            minWidth: "unset",
-            borderRadius: "50%",
-            zIndex: 10,
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "center",
+            overflow: "hidden",
+            bgcolor: "green.100",
+            "&:hover": {
+              bgcolor: "green.200",
+              ringColor: "green.400",
+              boxShadow: "0 0 5px rgba(0, 128, 0, 0.2)",
+            },
+            py: 1,
+            borderRadius: 2,
+            transition: "all 0.3s ease-out",
+            "& .shine": {
+              position: "absolute",
+              right: 0,
+              width: 24,
+              height: 96,
+              mt: -1,
+              opacity: 0.1,
+              bgcolor: "white",
+              rotate: "12deg",
+              transform: "translateX(8px)",
+              transition: "transform 1s",
+            },
+            "&:hover .shine": {
+              transform: "translateX(-100%)",
+            },
           }}
         >
-          →
-        </Button>
-      )}
-    </Box>
+          <Box className="shine" />
+          <Typography
+            variant="body2"
+            sx={{ color: "primary.main", fontWeight: "bold" }}
+          >
+            ✦ {originalTitle}
+            {originalTitle.includes("?") ? "" : "?"}
+          </Typography>
+        </IconButton>
+      );
+    })}
+  </Grid>
+  <Grid item xs={12} sm={0.6} py={2}>
+    {uniqueTitles.length > 0 && (
+      <Button
+        onClick={() => scrollContainer("right")}
+        sx={{
+          bgcolor: "grey.300",
+          "&:hover": { bgcolor: "grey.400" },
+          p: 1,
+          width: 40,
+          height: 40,
+          minWidth: "unset",
+          borderRadius: "50%",
+          zIndex: 10,
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
+        }}
+      >
+        →
+      </Button>
+    )}
+  </Grid>
+</Grid>
+
   );
 };
