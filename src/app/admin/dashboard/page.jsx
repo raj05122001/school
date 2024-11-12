@@ -9,23 +9,15 @@ import {
   Tabs,
   Tab,
 } from "@mui/material";
-// import OverviewSection from "@/components/teacher/dashboard/OverviewSection/OverviewSection";
-import AnalyticsReports from "@/components/teacher/dashboard/AnalyticsReports/AnalyticsReports";
-import CalendarComponent from "@/components/teacher/dashboard/CalendarComponent/CalendarComponent";
-import LectureAnalytics from "@/components/teacher/dashboard/LectureAnalytics/LectureAnalytics";
-import SubjectAnalytics from "@/components/teacher/dashboard/SubjectAnalytics/SubjectAnalytics";
+
 import StrugglingExcelling from "@/components/teacher/dashboard/StrugglingExcelling/StrugglingExcelling";
 import OverallClassPerformance from "@/components/teacher/dashboard/OverallClassPerformance/OverallClassPerformance";
-import ClassStatistics from "@/components/teacher/dashboard/ClassStatistics/ClassStatistics";
 import GreetingCard from "@/components/admin/dashboard/GreetingCard/GreetingCard";
 import ProfileCard from "@/components/teacher/dashboard/ProfileCard/ProfileCard";
-// import LectureDuration from "@/components/teacher/dashboard/LectureDuration/LectureDuration";
-// import SubjectCompletion from "@/components/teacher/dashboard/SubjectCompletion/SubjectCompletion";
-import StudentQueries from "@/components/teacher/dashboard/StudentQueries/StudentQueries";
 import ClassWiseStudentRanking from "@/components/admin/dashboard/ClassWiseStudentRanking/ClassWiseStudentRanking";
 import ClassAssignment from "@/components/admin/dashboard/ClassAssignment/ClassAssignment";
 import StudentAssignment from "@/components/admin/dashboard/StudentAssignment/StudentAssignment";
-import { getteacherClass } from "@/api/apiHelper";
+import { getteacherClass, getTeacherStudentCount } from "@/api/apiHelper";
 import { useThemeContext } from "@/hooks/ThemeContext";
 import StudentCount from "@/components/admin/dashboard/StudentCount/StudentCount";
 import TeacherCount from "@/components/admin/dashboard/TeacherCount/TeacherCount";
@@ -37,17 +29,30 @@ const Page = () => {
   const [averageDuration, setAverageDuration] = useState(0);
   const [selectedOptions, setSelectedOptions] = useState(null);
   const [tabValue, setTabValue] = useState(0);
+  const [countData, setCountData] = useState({});
 
   useEffect(() => {
     fetchClassOptions();
+    fetchCountData();
   }, []);
 
   const fetchClassOptions = async () => {
     try {
       const response = await getteacherClass();
       setClassOptions(response?.data?.data?.class_subject_list);
-      setSelectedOptions(response?.data?.data?.class_subject_list?.[0])
+      setSelectedOptions(response?.data?.data?.class_subject_list?.[0]);
       setAverageDuration(response?.data?.data?.avg_duration);
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
+  const fetchCountData = async () => {
+    try {
+      const response = await getTeacherStudentCount();
+      if (response?.success) {
+        setCountData(response?.data);
+      }
     } catch (error) {
       console.error(error);
     }
@@ -77,23 +82,10 @@ const Page = () => {
 
   const greetingCard = useMemo(() => <GreetingCard />, []);
   const profileCard = useMemo(() => <ProfileCard />, []);
-  const studentCount = useMemo(
-    () => <StudentCount />,
-    []
-  );
-  const teacherCount = useMemo(() => <TeacherCount />, []);
+  const studentCount = useMemo(() => <StudentCount countData={countData}/>, [countData]);
+  const teacherCount = useMemo(() => <TeacherCount countData={countData}/>, [countData]);
   const teacherRanking = useMemo(() => <TeacherRanking />, []);
-  const strugglingExcelling = useMemo(() => <StrugglingExcelling />, []);
-  const overallClassPerformance = useMemo(
-    () => <OverallClassPerformance />,
-    []
-  );
-  const studentQueries = useMemo(() => <StudentQueries />, []);
-  const analyticsReports = useMemo(() => <AnalyticsReports />, []);
-  const calendarComponent = useMemo(() => <CalendarComponent />, []);
-  const classStatistics = useMemo(() => <ClassStatistics />, []);
-  const lectureAnalytics = useMemo(() => <LectureAnalytics />, []);
-  const subjectAnalytics = useMemo(() => <SubjectAnalytics />, []);
+
   const classAssignment = useMemo(
     () => <ClassAssignment selectedOptions={selectedOptions} />,
     [selectedOptions]
@@ -129,27 +121,9 @@ const Page = () => {
           {teacherCount}
         </Grid>
       </Grid>
-
-      {/* Overview and Calendar */}
-
-        <Grid item xs={12} md={9} mt={2}>
-          {teacherRanking}
-          {/* <Box mt={4}>{calendarComponent}</Box> */}
-        </Grid>
-
-
-      {/* Student Queries, Analytics Reports, and Class Statistics */}
-      {/* <Grid container spacing={2} mt={4}>
-        <Grid item xs={12} md={4}>
-          {studentQueries}
-        </Grid>
-        <Grid item xs={12} md={4}>
-          {analyticsReports}
-        </Grid>
-        <Grid item xs={12} md={4}>
-          {classStatistics}
-        </Grid>
-      </Grid> */}
+      <Grid item xs={12} md={9} mt={2}>
+        {teacherRanking}
+      </Grid>
 
       <Box
         sx={{
@@ -264,16 +238,6 @@ const Page = () => {
           {classWiseStudentRanking}
         </Grid>
       </Grid>
-
-      {/* Lecture and Subject Analytics */}
-      {/* <Grid container spacing={2} mt={4}>
-        <Grid item xs={12} md={6}>
-          {lectureAnalytics}
-        </Grid>
-        <Grid item xs={12} md={6}>
-          {subjectAnalytics}
-        </Grid>
-      </Grid> */}
     </Box>
   );
 };

@@ -745,4 +745,16 @@ export default class apiServices {
       .get(`/api/v1/dashboard/student/my-assignment/`)
       .then((Response) => Response.data)
   }
+
+  public getTeacherStudentCount = async () => {
+    return await this.axiosInstance
+      .get(`/api/v1/dashboard/admin/total_teacher_student/`)
+      .then((Response) => Response.data)
+  }
+
+  public getTopTeachers = async () => {
+    return await this.axiosInstance
+      .get(`/api/v1/dashboard/admin/top_teachers/`)
+      .then((Response) => Response.data)
+  }
 }

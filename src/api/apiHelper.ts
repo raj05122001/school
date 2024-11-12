@@ -391,3 +391,13 @@ export const getMyAssignmentAnalytics = async () => {
   const apiInstance = new apiServices(axiosAPIInstance);
   return await apiInstance.getMyAssignmentAnalytics();
 };
+
+export const getTeacherStudentCount = async () => {
+  const apiInstance = new apiServices(axiosAPIInstance);
+  return await apiInstance.getTeacherStudentCount();
+};
+
+export const getTopTeachers = async () => {
+  const apiInstance = new apiServices(axiosAPIInstance);
+  return await apiInstance.getTopTeachers();
+};
