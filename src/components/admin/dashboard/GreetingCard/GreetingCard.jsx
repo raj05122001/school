@@ -30,10 +30,10 @@ function GreetingCard() {
   };
 
   const handleRoute = () => {
-    router.push(`/student/lecture-listings/`)
-  }
+    router.push(`/admin/lecture-listings/`);
+  };
 
-  console.log("User DEtails are", userDetails)
+  console.log("User DEtails are", userDetails);
 
   return (
     <Paper
@@ -73,77 +73,42 @@ function GreetingCard() {
               <FaBell size={24} color="#ffffff" />
             </Badge>
           </IconButton>
-          <UserImage width={40} height={40}/>
+          <UserImage width={40} height={40} />
         </Box>
       </Box>
       <Box sx={{ display: "flex", justifyContent: "flex-end" }}>
-        {userDetails?.role === "STUDENT" ? (
-          <Box sx={{ display: "flex", gap: 2 }}>
-            <Button
-              variant="contained"
-              sx={{
-                backgroundColor: "#FFD700", // Gold
-                transition: "all 150ms ease-in-out",
-                color: "#003366", // Dark blue for text
+        <Box sx={{ display: "flex", gap: 2 }}>
+          <Button
+            variant="contained"
+            sx={{
+              backgroundColor: "#FFD700", // Gold
+              transition: "all 150ms ease-in-out",
+              color: "#003366", // Dark blue for text
 
-                ":hover": {
-                  backgroundColor: "#FFC107", // Slightly darker gold on hover
-                  boxShadow: "0 0 10px 0 #FFC107 inset, 0 0 10px 4px #FFC107", // Matching hover color with gold shade
-                },
-              }}
-              onClick={userDetails?.role !== "STUDENT" ? () => handleCreateLecture("", false) :  () => handleRoute()}
-            >
-              Watch Lecture
-            </Button>
+              ":hover": {
+                backgroundColor: "#FFC107", // Slightly darker gold on hover
+                boxShadow: "0 0 10px 0 #FFC107 inset, 0 0 10px 4px #FFC107", // Matching hover color with gold shade
+              },
+            }}
+            onClick={() => handleRoute()}
+          >
+            Watch Lecture
+          </Button>
 
-            <Button
-              variant="contained"
-              sx={{
-                backgroundColor: "#90EE90",
-                ":hover": {
-                  backgroundColor: "#3CB371",
-                  boxShadow: "0 0 10px 0 #3CB371 inset, 0 0 10px 4px #3CB371",
-                },
-                color: "#006400",
-              }}
-            >
-              Attempt Quiz
-            </Button>
-          </Box>
-        ) : (
-          <Box sx={{ display: "flex", gap: 2 }}>
-            <Button
-              variant="contained"
-              sx={{
-                backgroundColor: "#FFD700", // Gold
-                transition: "all 150ms ease-in-out",
-                color: "#003366", // Dark blue for text
-
-                ":hover": {
-                  backgroundColor: "#FFC107", // Slightly darker gold on hover
-                  boxShadow: "0 0 10px 0 #FFC107 inset, 0 0 10px 4px #FFC107", // Matching hover color with gold shade
-                },
-              }}
-              onClick={() => handleCreateLecture("", false)}
-            >
-              Create Lecture
-            </Button>
-
-            <Button
-              variant="contained"
-              sx={{
-                backgroundColor: "#90EE90",
-                ":hover": {
-                  backgroundColor: "#3CB371",
-                  boxShadow: "0 0 10px 0 #3CB371 inset, 0 0 10px 4px #3CB371",
-                },
-                color: "#006400",
-              }}
-            >
-              Create Quiz
-            </Button>
-          </Box>
-        )}
+          <Button
+            variant="contained"
+            sx={{
+              backgroundColor: "#90EE90",
+              ":hover": {
+                backgroundColor: "#3CB371",
+                boxShadow: "0 0 10px 0 #3CB371 inset, 0 0 10px 4px #3CB371",
+              },
+              color: "#006400",
+            }}
+          >
+            Upload Syllabus
+          </Button>
+        </Box>
       </Box>
     </Paper>
   );
