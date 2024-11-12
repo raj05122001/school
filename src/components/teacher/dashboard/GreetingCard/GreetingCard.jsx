@@ -33,8 +33,6 @@ function GreetingCard() {
     router.push(`/student/lecture-listings/`)
   }
 
-  console.log("User DEtails are", userDetails)
-
   return (
     <Paper
       elevation={3}
