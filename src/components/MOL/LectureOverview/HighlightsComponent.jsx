@@ -58,7 +58,6 @@ const HighlightsComponent = ({
           viewed_highlights: true,
           student_score: prev.student_score + 1,
         }));
-        console.log("Updated Mol Marks successfully.");
       } catch (error) {
         console.error("Error updating Mol Marks:", error);
       }

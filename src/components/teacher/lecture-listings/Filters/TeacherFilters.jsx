@@ -46,6 +46,7 @@ const TeacherFilters = ({
   month = null,
   lectureType = "",
   label = "",
+  isAssignment = false,
 }) => {
   const { isDarkMode } = useThemeContext();
   const userDetails = decodeToken(Cookies.get("ACCESS_TOKEN"));
@@ -94,9 +95,9 @@ const TeacherFilters = ({
     setFilterState((prev) => {
       const newState = { ...prev, [key]: value };
       updateURL({
-        class: encodeURIComponent(newState.selectedClass) || "",
-        subject: encodeURIComponent(newState.selectedSubject) || "",
-        globalSearch: encodeURIComponent(newState.globalSearch) || "",
+        class: newState.selectedClass || "",
+        subject: newState.selectedSubject || "",
+        globalSearch: newState.globalSearch || "",
         month:
           key === "selectedMonth"
             ? newState.selectedMonth || month || ""
@@ -140,7 +141,7 @@ const TeacherFilters = ({
         >
           {label}
           <Box sx={{ display: "flex", alignItems: "center", gap: 3 }}>
-            {lectureTypeDropDown}
+            {!isAssignment && lectureTypeDropDown}
             <DarkMode />
             <IconButton color="inherit">
               <Badge badgeContent={4} color="error">
@@ -153,7 +154,7 @@ const TeacherFilters = ({
 
         <Grid container spacing={3}>
           {["class", "subject"].map((field, index) => (
-            <Grid item xs={12} sm={6} md={3} key={field}>
+            <Grid item xs={12} sm={6} md={isAssignment ? 4 : 3} key={field}>
               <Autocomplete
                 freeSolo
                 id={field}
@@ -222,11 +223,11 @@ const TeacherFilters = ({
             </Grid>
           ))}
 
-          <Grid item xs={12} sm={6} md={3}>
+          <Grid item xs={12} sm={6} md={isAssignment ? 4 : 3}>
             <TextField
               id="global-search"
               variant="outlined"
-              value={filterState.globalSearch}
+              value={decodeURIComponent(filterState.globalSearch)}
               placeholder="Global Search"
               onChange={(e) =>
                 handleChange(encodeURIComponent(e.target.value), "globalSearch")
@@ -257,22 +258,24 @@ const TeacherFilters = ({
             />
           </Grid>
 
-          <Grid item xs={12} sm={6} md={3}>
-            <DatePicker
-              views={["month"]}
-              placeholder="Select Month"
-              value={filterState.selectedMonth}
-              onChange={(newValue) =>
-                handleChange(newValue.format("YYYY-MM"), "selectedMonth")
-              }
-              sx={{
-                ...currentStyles,
-                width: "100%",
-                padding: 0,
-                "& .MuiOutlinedInput-notchedOutline": { border: "none" },
-              }}
-            />
-          </Grid>
+          {!isAssignment && (
+            <Grid item xs={12} sm={6} md={3}>
+              <DatePicker
+                views={["month"]}
+                placeholder="Select Month"
+                value={filterState.selectedMonth}
+                onChange={(newValue) =>
+                  handleChange(newValue.format("YYYY-MM"), "selectedMonth")
+                }
+                sx={{
+                  ...currentStyles,
+                  width: "100%",
+                  padding: 0,
+                  "& .MuiOutlinedInput-notchedOutline": { border: "none" },
+                }}
+              />
+            </Grid>
+          )}
         </Grid>
       </Box>
     </LocalizationProvider>

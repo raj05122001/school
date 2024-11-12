@@ -26,8 +26,6 @@ function MyRank() {
     fetchMyRank();
   }, []);
 
-  console.log("My grade is", myGrade);
-
   // Dummy data for funnel categories with specific colors
   const data = [
     { name: "A (80-100%)", value: 100, fill: "#228B22" }, // Green

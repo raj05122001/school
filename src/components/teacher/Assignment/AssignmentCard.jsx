@@ -1,7 +1,13 @@
 import React, { useRef, useState } from "react";
 import { Box, Card, CardContent, Typography, Grid } from "@mui/material";
 import { useThemeContext } from "@/hooks/ThemeContext";
-import { MdOutlineDateRange,MdCheckCircle,MdPending, MdOutlineTopic, MdOutlinePending } from "react-icons/md";
+import {
+  MdOutlineDateRange,
+  MdCheckCircle,
+  MdPending,
+  MdOutlineTopic,
+  MdOutlinePending,
+} from "react-icons/md";
 import LectureType from "@/commonComponents/LectureType/LectureType";
 import { Varela_Round } from "next/font/google";
 import { LuDot } from "react-icons/lu";
@@ -9,16 +15,14 @@ import { IoMdCheckmarkCircleOutline } from "react-icons/io";
 
 const varelaRound = Varela_Round({ weight: "400", subsets: ["latin"] });
 
-
 const AssignmentCard = ({ data, onClick }) => {
   const { isDarkMode, primaryColor, secondaryColor } = useThemeContext();
 
   return (
     <Box
       p={2}
-      sx={{ width: "100%", height: "100%"}}
+      sx={{ width: "100%", height: "100%" }}
       onClick={() => onClick(data?.id)}
-      
     >
       <Card
         // className="blur_effect_card"
@@ -53,44 +57,67 @@ const AssignmentCard = ({ data, onClick }) => {
             backgroundColor: "rgba(255, 255, 255, 0.2)",
           }}
         >
-          <Typography
-            variant="h6"
-            gutterBottom
-            sx={{ fontWeight: "bold", color: primaryColor, textAlign:"center", fontFamily: varelaRound }}
+          <Box
+            sx={{
+              display: "flex",
+              alignItems: "center",
+              gap: 1,
+              fontWeight: "bold",
+              color: primaryColor,
+              textAlign: "center",
+              fontFamily: varelaRound,
+              justifyContent:'center'
+            }}
           >
-            <MdOutlineTopic style={{marginRight:"2px"}} />{data?.title}
-            <hr />
+            <MdOutlineTopic size={24}/>
+            <Typography variant="h6" >
+              {data?.title}
+            </Typography>
+          </Box>
+          <hr />
+          <Typography
+            variant="subtitle1"
+            gutterBottom
+            sx={{ color: isDarkMode ? primaryColor : "#555", fontSize: "14px" }}
+          >
+            <LuDot />
+            <strong>Class:</strong> {data?.lecture_class?.name}
           </Typography>
           <Typography
             variant="subtitle1"
             gutterBottom
-            sx={{ color: isDarkMode ? primaryColor : "#555", fontSize:"14px"}}
+            sx={{ color: isDarkMode ? primaryColor : "#555", fontSize: "14px" }}
           >
-            <LuDot /><strong>Class:</strong> {data?.lecture_class?.name}
+            <LuDot />
+            <strong>Subject:</strong> {data?.chapter?.subject?.name}
           </Typography>
           <Typography
             variant="subtitle1"
             gutterBottom
-            sx={{ color: isDarkMode ? primaryColor : "#555", fontSize:"14px" }}
+            sx={{ color: isDarkMode ? primaryColor : "#555", fontSize: "14px" }}
           >
-           <LuDot /><strong>Subject:</strong> {data?.chapter?.subject?.name}
+            <LuDot />
+            <strong>Chapter:</strong> {data?.chapter?.chapter}
           </Typography>
           <Typography
             variant="subtitle1"
             gutterBottom
-            sx={{ color: isDarkMode ? primaryColor : "#555", fontSize:"14px" }}
+            sx={{ color: isDarkMode ? primaryColor : "#555", fontSize: "14px" }}
           >
-           <LuDot /><strong>Chapter:</strong> {data?.chapter?.chapter}
+            <LuDot />
+            <strong>Total Assignments:</strong>{" "}
+            {data?.total_submitted_assignments}
           </Typography>
           <Typography
             variant="subtitle1"
             gutterBottom
-            sx={{ color: isDarkMode ? primaryColor : "#555", fontSize:"14px" }}
+            sx={{ color: isDarkMode ? primaryColor : "#555", fontSize: "14px" }}
           >
-           <LuDot /><strong>Description:</strong> {data?.description}
+            <LuDot />
+            <strong>Checked Assignments:</strong> {data?.checked_assignments}
           </Typography>
 
-          <Typography
+          {/* <Typography
             variant="body1"
             gutterBottom
             sx={{ color: isDarkMode ? primaryColor : "#555" }}
@@ -117,7 +144,7 @@ const AssignmentCard = ({ data, onClick }) => {
                 </Typography>
               </Box>
             </Grid>
-          </Grid>
+          </Grid> */}
 
           <Grid container mt={"auto"} pt={2}>
             <Grid item xs={12} sm={8}>

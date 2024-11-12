@@ -72,7 +72,6 @@ const SummaryComponent = ({
         viewed_summary: true,
         student_score: prev.student_score + 1,
       }));
-      console.log("Updated Mol Marks successfully.");
     } catch (error) {
       console.error("Error updating Mol Marks:", error);
     }
@@ -196,7 +195,6 @@ const SummaryComponent = ({
           >
             <IconButton
               onClick={() => {
-                console.log("Save button clicked"); // Debugging line
                 onUpdateSummary();
               }}
               style={{ cursor: "pointer" }}
