@@ -41,17 +41,11 @@ const StudentMOLAssignment = ({ id, isDarkMode, class_ID }) => {
 
   const lectureID = id;
   const answered_by = Number(userDetails.student_id);
-  console.log("answered_by", answered_by);
   const classID = class_ID;
 
   const { s3 } = AwsSdk();
 
-  const uploadToS3 = async (
-    chunk,
-    key,
-
-    assignmentId
-  ) => {
+  const uploadToS3 = async (chunk, key, assignmentId, answer_type) => {
     return new Promise(async (resolve, reject) => {
       try {
         let params;
@@ -132,13 +126,9 @@ const StudentMOLAssignment = ({ id, isDarkMode, class_ID }) => {
 
         const result = await upload.done();
         const newLinks = fileLinks[assignmentId]
-          ? [...fileLinks[assignmentId], result.Location]
-          : [result.Location];
+          ? [...fileLinks[assignmentId], result.Location, answer_type]
+          : [result.Location, answer_type];
         setFileLinks((prev) => ({ ...prev, [assignmentId]: newLinks }));
-        console.log("New Links", newLinks);
-        console.log("Assign ID", assignmentId);
-        console.log("Result location", result.Location);
-        console.log("File uploaded successfully:", result);
         resolve(result);
       } catch (err) {
         console.error("Error uploading file:", err);
@@ -162,18 +152,12 @@ const StudentMOLAssignment = ({ id, isDarkMode, class_ID }) => {
       const response = await getAssignmentAnswer(id, assignmentId);
 
       const existingSubmissions = response?.data?.data?.data;
-      console.log("Exisiting Submisison", existingSubmissions);
       // Check for existing submission
       const alreadySubmitted = existingSubmissions.some(
         (submission) =>
           submission?.assignment_que?.id === assignmentId &&
           submission?.answer_by?.id === answered_by
       );
-
-      console.log("Already SUbmitted", alreadySubmitted);
-      console.log("FileLink", fileLinks);
-      console.log("New File");
-      console.log("Answer Description", answerDescriptions);
 
       if (alreadySubmitted) {
         // Show error or update existing submission if needed
@@ -184,9 +168,9 @@ const StudentMOLAssignment = ({ id, isDarkMode, class_ID }) => {
           answer_by: answered_by,
           answer_link: fileLinks[assignmentId]?.[0], // join multiple links if uploaded
           answer_description: answerDescriptions[assignmentId] || null,
+          answer_type: fileLinks[assignmentId]?.[1],
         };
         const response = await submitMOLAssignment(formData);
-        console.log("Response submission", response);
         if (response.data.success) {
           setSubmitted((prev) => ({ ...prev, [assignmentId]: true }));
         } else {
@@ -300,7 +284,12 @@ const StudentMOLAssignment = ({ id, isDarkMode, class_ID }) => {
                       color="primary"
                       component="label"
                       onChange={(e) =>
-                        uploadToS3(e.target.files[0], "picture", assignment.id)
+                        uploadToS3(
+                          e.target.files[0],
+                          "picture",
+                          assignment.id,
+                          "IMAGE"
+                        )
                       }
                     >
                       <FaPhotoVideo />
@@ -312,7 +301,12 @@ const StudentMOLAssignment = ({ id, isDarkMode, class_ID }) => {
                       color="primary"
                       component="label"
                       onChange={(e) =>
-                        uploadToS3(e.target.files[0], "audio", assignment.id)
+                        uploadToS3(
+                          e.target.files[0],
+                          "audio",
+                          assignment.id,
+                          "AUDIO"
+                        )
                       }
                     >
                       <FaFileAudio />
@@ -324,7 +318,12 @@ const StudentMOLAssignment = ({ id, isDarkMode, class_ID }) => {
                       color="primary"
                       component="label"
                       onChange={(e) =>
-                        uploadToS3(e.target.files[0], "video", assignment.id)
+                        uploadToS3(
+                          e.target.files[0],
+                          "video",
+                          assignment.id,
+                          "VIDEO"
+                        )
                       }
                     >
                       <FaRegFileVideo />
@@ -336,7 +335,12 @@ const StudentMOLAssignment = ({ id, isDarkMode, class_ID }) => {
                       color="primary"
                       component="label"
                       onChange={(e) =>
-                        uploadToS3(e.target.files[0], "document", assignment.id)
+                        uploadToS3(
+                          e.target.files[0],
+                          "document",
+                          assignment.id,
+                          "FILE"
+                        )
                       }
                     >
                       <MdDescription />
