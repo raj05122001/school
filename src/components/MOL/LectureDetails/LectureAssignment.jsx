@@ -9,6 +9,7 @@ import {
   DialogContent,
   DialogTitle,
   Skeleton,
+  IconButton,
 } from "@mui/material";
 import {
   getLectureAssignment,
@@ -19,10 +20,14 @@ import MathJax from "react-mathjax2";
 import { decodeToken } from "react-jwt";
 import Cookies from "js-cookie";
 import { MdAssignmentAdd } from "react-icons/md";
+import TextEditor from "@/commonComponents/TextEditor/TextEditor";
+import { FaEdit } from "react-icons/fa";
+import { FaSave } from "react-icons/fa";
+import TextWithMath from "@/commonComponents/TextWithMath/TextWithMath";
 
 const userDetails = decodeToken(Cookies.get("ACCESS_TOKEN"));
 
-const LectureAssignment = ({ id, isDarkMode, class_ID }) => {
+const LectureAssignment = ({ id, isDarkMode, class_ID, isEdit }) => {
   const [assignments, setAssignments] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -32,30 +37,37 @@ const LectureAssignment = ({ id, isDarkMode, class_ID }) => {
     assignment_mark: 0,
   });
   const [file, setFile] = useState(null); // New state for file
+  const [isEditData, setIsEditData] = useState(false);
+  const [editedText, setEditedText] = useState("");
 
   const lectureID = id;
 
   const checker = Number(userDetails.teacher_id);
   const classID = class_ID;
+  const [editedAssignmentId, setEditedAssignmentId] = useState(null);
+
+  const onChange = (e) => {
+    setEditedText(e);
+  };
 
   useEffect(() => {
-    const fetchAssignments = async () => {
-      try {
-        const response = await getLectureAssignment(id);
-        if (response.success && response?.data.success) {
-          setAssignments(response?.data?.data);
-        } else {
-          setError("Failed to fetch assignments.");
-        }
-      } catch (err) {
-        setError("An error occurred while fetching assignments.");
-      } finally {
-        setLoading(false);
-      }
-    };
-
     fetchAssignments();
   }, [id]);
+
+  const fetchAssignments = async () => {
+    try {
+      const response = await getLectureAssignment(id);
+      if (response.success && response?.data.success) {
+        setAssignments(response?.data?.data);
+      } else {
+        setError("Failed to fetch assignments.");
+      }
+    } catch (err) {
+      setError("An error occurred while fetching assignments.");
+    } finally {
+      setLoading(false);
+    }
+  };
 
   const handleMarkChange = (assignmentId, newMark) => {
     setAssignments((prevAssignments) =>
@@ -68,12 +80,14 @@ const LectureAssignment = ({ id, isDarkMode, class_ID }) => {
   };
 
   const handleUpdateAssignment = async (assignment) => {
+    setEditedAssignmentId(null);
     setError(null); // Clear any previous error messages
-    const { id: assignment_id, assignment_mark } = assignment;
+    const { id: assignment_id, assignment_mark, assignment_text } = assignment;
     const formData = {
       assignment_mark,
       is_assigned: true,
       assignment_id,
+      assignment_text: editedText,
     };
 
     try {
@@ -81,12 +95,17 @@ const LectureAssignment = ({ id, isDarkMode, class_ID }) => {
         assignment.lecture.id,
         formData
       );
-      if (response.success) {
+      console.log("response handleUpdateAssignment", response);
+      if (response?.data.success) {
         setAssignments((prevAssignments) =>
           prevAssignments?.map((a) =>
-            a.id === assignment_id ? { ...a, is_assigned: true } : a
+            a.id === assignment_id
+              ? { ...a, assignment_text: editedText, is_assigned: true }
+              : a
           )
         );
+        setIsEditData(false); // Close the editor after saving
+        fetchAssignments();
       } else {
         setError("Failed to update assignment.");
       }
@@ -129,17 +148,6 @@ const LectureAssignment = ({ id, isDarkMode, class_ID }) => {
 
   const lectureTitle =
     assignments.length > 0 ? assignments[0].lecture.title : "";
-
-  // if (loading) {
-  //   return (
-  //     <Box sx={{ p: 3, width: "100%" }}>
-  //       <Skeleton variant="rectangular" height={40} sx={{ mb: 2 }} />
-  //       {[...Array(7)].map((_, index) => (
-  //         <Skeleton key={index} variant="text" height={30} sx={{ mb: 1 }} />
-  //       ))}
-  //     </Box>
-  //   );
-  // }
 
   return (
     <>
@@ -218,64 +226,110 @@ const LectureAssignment = ({ id, isDarkMode, class_ID }) => {
                   Create
                 </Button>
               </Box>
-              {assignments.map((assignment, index) => (
-                <Box
-                  key={assignment.id}
-                  sx={{ mb: 2, display: "flex", flexDirection: "column" }}
-                >
-                  <Box 
-                  sx={{display:'flex'}}
-                  >
-                    
-                  <Typography variant="body1" sx={{ mb: 1 }}>
-                    {String.fromCharCode(65 + index)}.&nbsp;
-                  </Typography>
-                  <MathJax.Text text={assignment.assignment_text} />
-                  </Box>
-                  <Box
-                    sx={{
-                      display: "flex",
-                      alignItems: "center",
-                      justifyContent: "space-between",
-                      mt: "auto",
-                    }}
-                  >
-                    <TextField
-                      type="number"
-                      InputLabelProps={{
-                        style: { color: isDarkMode ? "#d7e4fc" : "" },
-                      }}
-                      InputProps={{
-                        sx: {
-                          backdropFilter: "blur(10px)",
-                          backgroundColor: "rgba(255, 255, 255, 0.5)",
-                          "& .MuiOutlinedInput-notchedOutline": {},
-                        },
-                      }}
-                      value={assignment.assignment_mark}
-                      onChange={(e) =>
-                        handleMarkChange(assignment.id, Number(e.target.value))
-                      }
-                      variant="outlined"
-                      size="small"
-                      sx={{ width: 80, mr: 2 }}
-                    />
-                    <Button
-                      variant="contained"
-                      onClick={() => handleUpdateAssignment(assignment)}
+              {assignments.map((assignment, index) =>
+                editedAssignmentId === assignment.id ? (
+                  <Box sx={{ position: "relative" }} key={assignment.id}>
+                    <Box
                       sx={{
-                        // backgroundColor: assignment.is_assigned
-                        //   ? "green"
-                        //   : "#89CFF0",
-                        backgroundColor: "#89CFF0",
-                        color: "white",
+                        display: "flex",
+                        justifyContent: "flex-end",
+                        position: "absolute",
+                        right: 4,
+                        top: 4,
+                        zIndex: 10, // Ensures the button is above other elements
                       }}
                     >
-                      {assignment.is_assigned ? "Assign" : "Assign"}
-                    </Button>
+                      <IconButton
+                        onClick={() => {
+                          console.log("Save button clicked"); // Debugging line
+                          handleUpdateAssignment(assignment);
+                        }}
+                        style={{ cursor: "pointer" }}
+                      >
+                        <FaSave size={24} />
+                      </IconButton>
+                    </Box>
+                    <TextEditor
+                      text={assignment.assignment_text}
+                      onChange={onChange}
+                    />
                   </Box>
-                </Box>
-              ))}
+                ) : (
+                  <Box
+                    key={assignment.id}
+                    sx={{ mb: 2, display: "flex", flexDirection: "column" }}
+                  >
+                    {isEdit && (
+                      <Box sx={{ display: "flex", justifyContent: "flex-end" }}>
+                        <FaEdit
+                          size={24}
+                          onClick={() => setEditedAssignmentId(assignment.id)}
+                          style={{ cursor: "pointer" }}
+                        />
+                      </Box>
+                    )}
+                    <Box sx={{ display: "flex" }}>
+                      <Typography variant="body1" sx={{ mb: 1 }}>
+                        {String.fromCharCode(65 + index)}.&nbsp;
+                      </Typography>
+                      {/* <Typography
+                        variant="body1"
+                        dangerouslySetInnerHTML={{
+                          __html: assignment.assignment_text,
+                        }}
+                      /> */}
+                      <Box>
+                        <TextWithMath text={assignment.assignment_text} />
+                      </Box>
+                    </Box>
+                    <Box
+                      sx={{
+                        display: "flex",
+                        alignItems: "center",
+                        justifyContent: "space-between",
+                        mt: "auto",
+                      }}
+                    >
+                      <TextField
+                        type="number"
+                        InputLabelProps={{
+                          style: { color: isDarkMode ? "#d7e4fc" : "" },
+                        }}
+                        InputProps={{
+                          sx: {
+                            backdropFilter: "blur(10px)",
+                            backgroundColor: "rgba(255, 255, 255, 0.5)",
+                            "& .MuiOutlinedInput-notchedOutline": {},
+                          },
+                        }}
+                        value={assignment.assignment_mark}
+                        onChange={(e) =>
+                          handleMarkChange(
+                            assignment.id,
+                            Number(e.target.value)
+                          )
+                        }
+                        variant="outlined"
+                        size="small"
+                        sx={{ width: 80, mr: 2 }}
+                      />
+                      <Button
+                        variant="contained"
+                        onClick={() => handleUpdateAssignment(assignment)}
+                        sx={{
+                          // backgroundColor: assignment.is_assigned
+                          //   ? "green"
+                          //   : "#89CFF0",
+                          backgroundColor: "#89CFF0",
+                          color: "white",
+                        }}
+                      >
+                        {assignment.is_assigned ? "Assign" : "Assign"}
+                      </Button>
+                    </Box>
+                  </Box>
+                )
+              )}
             </>
           </MathJax.Context>
 

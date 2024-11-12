@@ -733,4 +733,16 @@ export default class apiServices {
       .then((Response) => Response)
       .catch((error) => console.error(error));
   };
+
+  public getMyRank = async () => {
+    return await this.axiosInstance
+      .get(`/api/v1/dashboard/student/my-rank/`)
+      .then((Response) => Response.data)
+  }
+
+  public getMyAssignmentAnalytics = async () => {
+    return await this.axiosInstance
+      .get(`/api/v1/dashboard/student/my-assignment/`)
+      .then((Response) => Response.data)
+  }
 }
