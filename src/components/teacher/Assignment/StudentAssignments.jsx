@@ -71,7 +71,7 @@ const StudentAssignments = ({ listData, isDarkMode }) => {
                       </Grid>
                     </Grid>
                     <Typography variant="body2" marginTop={2}>
-                      <VscFeedback style={{marginRight: "4px"}}/>Teacher's Comment:{" "}
+                      <VscFeedback style={{marginRight: "4px"}}/>Teacher&apos;s Comment:{" "}
                       {assignment.comment_by_teacher || "No comment"}
                     </Typography>
                   </Box>
