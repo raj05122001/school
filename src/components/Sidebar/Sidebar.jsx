@@ -256,13 +256,13 @@ export const sidebarLinks = {
   overview: [
     {
       text: "Admin Directory",
-      href: "/administration",
+      href: "/admin/directory",
       icon: <MdPerson size={22} />,
       show: "ADMIN",
     },
     {
       text: "Admin Dashboard",
-      href: "/admin-dashboard",
+      href: "/admin/dashboard",
       icon: <MdDashboard size={22} />,
       show: "ADMIN",
     },
