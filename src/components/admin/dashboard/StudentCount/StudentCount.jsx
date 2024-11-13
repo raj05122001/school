@@ -1,34 +1,9 @@
-import React, { useState } from "react";
-import {
-  Box,
-  Typography,
-  MenuItem,
-  FormControl,
-  Select,
-  Card,
-  CardContent,
-} from "@mui/material";
+import React from "react";
+import { Box, Typography } from "@mui/material";
 import { PiStudentBold } from "react-icons/pi";
 
-const StudentCount = () => {
-  // Dummy data for classes and student counts
-  const classesData = [
-    { id: 1, name: "Class 1", count: 30 },
-    { id: 2, name: "Class 2", count: 25 },
-    { id: 3, name: "Class 3", count: 20 },
-    { id: 4, name: "Class 4", count: 28 },
-  ];
-
-  const [selectedClass, setSelectedClass] = useState(classesData[0].id);
-
-  // Handler for dropdown selection
-  const handleChange = (event) => {
-    setSelectedClass(event.target.value);
-  };
-
-  // Get the selected class data
-  const classData = classesData.find((cls) => cls.id === selectedClass);
-
+const StudentCount = ({ countData }) => {
+  const studentCount = countData?.total_students;
   return (
     <Box
       sx={{
@@ -46,20 +21,12 @@ const StudentCount = () => {
         borderRadius: "16px",
       }}
     >
-      {/* Dropdown for selecting class */}
-      {/* <FormControl fullWidth variant="outlined" sx={{ marginBottom: 2 }}>
-        <Select value={selectedClass} onChange={handleChange} displayEmpty>
-          {classesData.map((cls) => (
-            <MenuItem key={cls.id} value={cls.id}>
-              {cls.name}
-            </MenuItem>
-          ))}
-        </Select>
-      </FormControl> */}
-      <Typography variant="h6" sx={{color:"#708090"}}><PiStudentBold style={{marginRight:"2px"}}/><b>Students Count </b>
+      <Typography variant="h6" sx={{ color: "#708090" }}>
+        <PiStudentBold style={{ marginRight: "2px" }} />
+        <b>Students Count </b>
       </Typography>
-      <Typography variant="h2" sx={{color:"#36454F"}}>
-        {classData.count} 
+      <Typography variant="h2" sx={{ color: "#36454F" }}>
+        {studentCount}
       </Typography>
     </Box>
   );
