@@ -671,6 +671,7 @@ export default class apiServices {
       .get(`/api/v1/student/answer_quiz/${lectureId}/`)
       .then((Response) => Response.data)
   }
+  
   public updateTeacherDetails = async (teacherId, formData) => {
     return await this.axiosInstance
       .patch(`/api/v1/teacher/${teacherId}/`, formData)
@@ -764,4 +765,21 @@ export default class apiServices {
       .then((Response) => Response.data)
   }
 
+  public getStudentUpcommingMeetingByDate = (year, month) => {
+    return this.axiosInstance
+      .get(`/api/v1/student/upcomming_lectures/?date=${year}-${month}`)
+      .then((response) => {
+        return response;
+      })
+  };
+
+  public getAllUpcommingByDate = (year, month) => {
+    return this.axiosInstance
+      .get(
+        `/api/v1/dashboard/all_lectures/?status=UPCOMMING&date=${year}-${month}`
+      )
+      .then((response) => {
+        return response;
+      })
+  };
 }

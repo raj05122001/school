@@ -406,3 +406,13 @@ export const getMySubjectWatchtime = async (lectureId) => {
   const apiInstance = new apiServices(axiosAPIInstance);
   return await apiInstance.getMySubjectWatchtime(lectureId);
 };
+
+export const getStudentUpcommingMeetingByDate = async (year, month) => {
+  const apiInstance = new apiServices(axiosAPIInstance);
+  return await apiInstance.getStudentUpcommingMeetingByDate(year, month);
+};
+
+export const getAllUpcommingByDate = async (year, month) => {
+  const apiInstance = new apiServices(axiosAPIInstance);
+  return await apiInstance.getAllUpcommingByDate(year, month);
+};

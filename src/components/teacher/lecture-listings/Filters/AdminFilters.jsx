@@ -94,9 +94,9 @@ const AdminFilters = ({
     setFilterState((prev) => {
       const newState = { ...prev, [key]: value };
       updateURL({
-        class: encodeURIComponent(newState.selectedClass) || "",
-        subject: encodeURIComponent(newState.selectedSubject) || "",
-        globalSearch: encodeURIComponent(newState.globalSearch) || "",
+        class: newState.selectedClass || "",
+        subject: newState.selectedSubject || "",
+        globalSearch: newState.globalSearch || "",
         month:
           key === "selectedMonth"
             ? newState.selectedMonth || month || ""
@@ -128,7 +128,7 @@ const AdminFilters = ({
           display: "flex",
           flexDirection: "column",
           gap: 4,
-          mt: 4,
+          // mt: 4,
           p: 4,
           color: currentStyles.color,
         }}
@@ -227,7 +227,7 @@ const AdminFilters = ({
             <TextField
               id="global-search"
               variant="outlined"
-              value={filterState.globalSearch}
+              value={decodeURIComponent(filterState.globalSearch)}
               placeholder="Global Search"
               onChange={(e) =>
                 handleChange(encodeURIComponent(e.target.value), "globalSearch")
