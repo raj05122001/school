@@ -57,6 +57,7 @@ const Assignment = () => {
     setIsLoading(true);
     try {
       const apiResponse = await getTeacherAssignment("","",classValue,subject,searchQuery);
+      console.log("apiResponse",apiResponse)
       if (apiResponse?.success) {
         setLectureList(apiResponse?.data?.lectures);
       }
@@ -146,7 +147,7 @@ const Assignment = () => {
                 fontWeight: "bold",
               }}
             >
-              No lectures available at the moment
+              No lectures assignment available at the moment
             </Typography>
             <Typography
               variant="body1"
