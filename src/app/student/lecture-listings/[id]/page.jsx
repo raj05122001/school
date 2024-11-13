@@ -51,14 +51,11 @@ const LecturePage = ({ params }) => {
       const response = await getMolMarks(id, userDetails?.student_id);
       if (response?.data?.success) {
         setMarksData(response?.data?.data);
-        console.log("getMolMarks", response?.data?.data);
       }
     } catch (error) {
       console.error(error);
     }
   };
-
-  console.log("marksData",marksData)
 
   const classID = lectureData?.lecture_class?.id;
 

@@ -28,8 +28,6 @@ const MyAssignmentAnalytics = () => {
     fetchMyScores()
   }, [])
 
-  console.log("My Assignemnt score", myScores)
-
   const data = [
     { name: "Completed", value: myScores?.completed_assignment },
     { name: "Pending", value: myScores?.total_assignment - myScores?.completed_assignment },

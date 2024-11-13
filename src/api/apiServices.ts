@@ -745,4 +745,11 @@ export default class apiServices {
       .get(`/api/v1/dashboard/student/my-assignment/`)
       .then((Response) => Response.data)
   }
+
+  public getTeacherAssignment = async (lecture_id="",student_id="",classname="",subject="",search="",student_name="",assignment_id="") => {
+    return await this.axiosInstance
+      .get(`/api/v1/get_assignment_answer/?class=${classname}&subject=${subject}&search=${search}&lecture_id=${lecture_id}&student_id=${student_id}&student_name=${student_name}&assignment_id=${assignment_id}`)
+      .then((Response) => Response.data)
+  }
+
 }

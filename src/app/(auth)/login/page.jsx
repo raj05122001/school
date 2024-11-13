@@ -16,6 +16,7 @@ import { useRouter, useSearchParams } from "next/navigation";
 import Cookies from "js-cookie";
 import axios from "axios";
 import { loginApi } from "@/api/apiHelper";
+import { decodeToken } from "react-jwt";
 
 // Keyframes for the text animation
 const textAnimation = {
@@ -64,12 +65,18 @@ const LoginPage = () => {
 
         // Display success message
         setSuccess(message || "Logged in successfully!");
-
+        const accessToken = decodeToken(access);
         // Redirect user after successful login
         if (redirectTo) {
           router.replace(redirectTo);
         } else {
-          router.replace("/teacher/dashboard"); // Default redirect to dashboard or any other page
+          if (accessToken?.role === "TEACHER") {
+            router.replace("/teacher/dashboard");
+          } else if (accessToken?.role === "STUDENT") {
+            router.replace("/student/dashboard");
+          } else {
+            router.replace("/admin/dashboard");
+          }
         }
 
         // Display a toast notification for success

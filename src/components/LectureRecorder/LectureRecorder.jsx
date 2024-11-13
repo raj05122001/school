@@ -213,7 +213,6 @@ const LectureRecorder = ({ open, closeDrawer, recordingData }) => {
         });
 
         const result = await upload.done();
-        console.log("File uploaded successfully:", result);
         resolve(result);
       } catch (err) {
         console.error("Error uploading file:", err);

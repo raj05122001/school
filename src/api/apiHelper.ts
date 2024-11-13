@@ -391,3 +391,8 @@ export const getMyAssignmentAnalytics = async () => {
   const apiInstance = new apiServices(axiosAPIInstance);
   return await apiInstance.getMyAssignmentAnalytics();
 };
+
+export const getTeacherAssignment = async (lecture_id="",student_id="",classname="",subject="",search="",student_name="",assignment_id="") => {
+  const apiInstance = new apiServices(axiosAPIInstance);
+  return await apiInstance.getTeacherAssignment(lecture_id,student_id,classname,subject,search,student_name,assignment_id);
+};

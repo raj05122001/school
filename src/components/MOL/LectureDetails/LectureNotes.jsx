@@ -154,7 +154,6 @@ const LectureNotes = ({
           viewed_notes: true,
           student_score: prev.student_score + 1,
         }));
-        console.log("update notes....");
       } catch (error) {
         console.error("Error updating Mol Marks:", error);
       }
