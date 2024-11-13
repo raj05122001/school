@@ -10,10 +10,7 @@ import {
   Tab,
 } from "@mui/material";
 
-import StrugglingExcelling from "@/components/teacher/dashboard/StrugglingExcelling/StrugglingExcelling";
-import OverallClassPerformance from "@/components/teacher/dashboard/OverallClassPerformance/OverallClassPerformance";
 import GreetingCard from "@/components/admin/dashboard/GreetingCard/GreetingCard";
-import ProfileCard from "@/components/teacher/dashboard/ProfileCard/ProfileCard";
 import ClassWiseStudentRanking from "@/components/admin/dashboard/ClassWiseStudentRanking/ClassWiseStudentRanking";
 import ClassAssignment from "@/components/admin/dashboard/ClassAssignment/ClassAssignment";
 import StudentAssignment from "@/components/admin/dashboard/StudentAssignment/StudentAssignment";
@@ -22,6 +19,8 @@ import { useThemeContext } from "@/hooks/ThemeContext";
 import StudentCount from "@/components/admin/dashboard/StudentCount/StudentCount";
 import TeacherCount from "@/components/admin/dashboard/TeacherCount/TeacherCount";
 import TeacherRanking from "@/components/admin/dashboard/TeacherRanking/TeacherRanking";
+import TotalLectures from "@/components/admin/dashboard/TotalLectures/TotalLectures";
+import AverageLectureDuration from "@/components/admin/dashboard/AverageLectureDuration/AverageLectureDuration";
 
 const Page = () => {
   const { isDarkMode } = useThemeContext();
@@ -81,7 +80,8 @@ const Page = () => {
   const currentStyles = isDarkMode ? darkModeStyles : lightModeStyles;
 
   const greetingCard = useMemo(() => <GreetingCard />, []);
-  const profileCard = useMemo(() => <ProfileCard />, []);
+  const totalLectures = useMemo(() => <TotalLectures countData={countData}/>, [countData]);
+  const averageLectureDuration = useMemo(()=> <AverageLectureDuration countData={countData} />, [countData])
   const studentCount = useMemo(() => <StudentCount countData={countData}/>, [countData]);
   const teacherCount = useMemo(() => <TeacherCount countData={countData}/>, [countData]);
   const teacherRanking = useMemo(() => <TeacherRanking />, []);
@@ -111,13 +111,16 @@ const Page = () => {
 
       {/* Profile, Lecture Duration, Subject Completion */}
       <Grid container spacing={1} mt={3}>
-        <Grid item xs={12} sm={6} lg={5}>
-          {profileCard}
+        <Grid item xs={12} sm={6} lg={3}>
+          {totalLectures}
         </Grid>
-        <Grid item xs={12} sm={6} lg={3.5}>
+        <Grid item xs={12} sm={6} lg={3}>
+          {averageLectureDuration}
+        </Grid>
+        <Grid item xs={12} sm={6} lg={3}>
           {studentCount}
         </Grid>
-        <Grid item xs={12} lg={3.5}>
+        <Grid item xs={12} lg={3}>
           {teacherCount}
         </Grid>
       </Grid>
