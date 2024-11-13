@@ -133,8 +133,6 @@ const AssignmentItem = ({
     }
   };
 
-  // const isSubmitted = submittedAssignments.includes(assignment.id);
-
   return (
     <Box sx={{ mb: 4, display: "flex", flexDirection: "column" }}>
       <Box sx={{ display: "flex" }}>
