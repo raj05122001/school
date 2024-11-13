@@ -13,9 +13,11 @@ import {
   Pagination
 } from "@mui/material";
 import { useThemeContext } from "@/hooks/ThemeContext";
-import { getMyLectures } from "@/api/apiHelper";
+import { getMyLectures ,getLectureTracking} from "@/api/apiHelper";
 import { AiOutlineExclamationCircle } from "react-icons/ai";
 import { useSearchParams, useRouter } from "next/navigation";
+import { decodeToken } from "react-jwt";
+import Cookies from "js-cookie";
 
 const TABLE_HEAD = [
   "Title",
@@ -30,6 +32,7 @@ const TABLE_HEAD = [
 ];
 
 const LectureScheduleTable = () => {
+  const userDetails = decodeToken(Cookies.get("ACCESS_TOKEN"));
   const searchParams = useSearchParams();
   const router = useRouter();
   const { isDarkMode, primaryColor } = useThemeContext();
@@ -40,8 +43,13 @@ const LectureScheduleTable = () => {
   const fetchLectureData = async () => {
     try {
       setLoading(true); // Start loading
-      const response = await getMyLectures("UPCOMMING");
-      setLectureData(response?.data?.data?.lecture_data);
+      if(userDetails?.role==="TEACHER"){
+        const response = await getMyLectures("UPCOMMING");
+        setLectureData(response?.data?.data?.lecture_data);
+      }else{
+        const response = await getLectureTracking("UPCOMMING");
+        setLectureData(response?.data);
+      }
     } catch (error) {
       console.error(error);
     } finally {
@@ -81,7 +89,7 @@ const LectureScheduleTable = () => {
   };
 
   return (
-    <Box sx={{ p: 2 }}>
+    <Box sx={{ p: 2 }} height="100vh">
       {/* Show skeleton loader when loading */}
       {loading ? (
         <TableContainer component={Paper} className="blur_effect_card">
@@ -190,7 +198,9 @@ const LectureScheduleTable = () => {
           flexDirection="column"
           alignItems="center"
           justifyContent="center"
-          height="100vh"
+          // height="100vh"
+          width="100%"
+          height="60%"
         >
           <AiOutlineExclamationCircle
             style={{ fontSize: "48px", color: "#b0bec5" }}

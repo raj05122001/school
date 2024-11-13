@@ -391,3 +391,13 @@ export const getMyAssignmentAnalytics = async () => {
   const apiInstance = new apiServices(axiosAPIInstance);
   return await apiInstance.getMyAssignmentAnalytics();
 };
+
+export const getStudentUpcommingMeetingByDate = async (year, month) => {
+  const apiInstance = new apiServices(axiosAPIInstance);
+  return await apiInstance.getStudentUpcommingMeetingByDate(year, month);
+};
+
+export const getAllUpcommingByDate = async (year, month) => {
+  const apiInstance = new apiServices(axiosAPIInstance);
+  return await apiInstance.getAllUpcommingByDate(year, month);
+};

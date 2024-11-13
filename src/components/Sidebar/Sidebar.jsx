@@ -304,6 +304,12 @@ export const sidebarLinks = {
     },
     {
       text: "Lecture Tracking",
+      href: "/admin/lecture-tracking",
+      icon: <MdTask size={22} />,
+      show: "ADMIN",
+    },
+    {
+      text: "Lecture Tracking",
       href: "/teacher/lecture-tracking",
       icon: <MdTask size={22} />,
       show: "TEACHER",
@@ -313,6 +319,12 @@ export const sidebarLinks = {
       href: "/teacher/lecture-schedule",
       icon: <MdSchedule size={22} />,
       show: "TEACHER",
+    },
+    {
+      text: "Lecture Schedule",
+      href: "/admin/lecture-schedule",
+      icon: <MdSchedule size={22} />,
+      show: "ADMIN",
     },
     // {
     //   text: "Test Series",
