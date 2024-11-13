@@ -94,7 +94,7 @@ const handleRoute=async(id)=>{
                         fontWeight="bold"
                         color={isDarkMode ? primaryColor : "#555"}
                       >
-                        Teacher's Comment: {assignment?.comment_by_teacher || "No comment"}
+                        Teacher&apos;s Comment: {assignment?.comment_by_teacher || "No comment"}
                       </Typography>
                     </Grid>
                   </Grid>
