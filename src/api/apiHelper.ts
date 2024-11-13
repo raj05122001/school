@@ -392,6 +392,16 @@ export const getMyAssignmentAnalytics = async () => {
   return await apiInstance.getMyAssignmentAnalytics();
 };
 
+export const getTeacherStudentCount = async () => {
+  const apiInstance = new apiServices(axiosAPIInstance);
+  return await apiInstance.getTeacherStudentCount();
+};
+
+export const getTopTeachers = async () => {
+  const apiInstance = new apiServices(axiosAPIInstance);
+  return await apiInstance.getTopTeachers();
+};
+
 export const getTeacherAssignment = async (lecture_id="",student_id="",classname="",subject="",search="",student_name="",assignment_id="") => {
   const apiInstance = new apiServices(axiosAPIInstance);
   return await apiInstance.getTeacherAssignment(lecture_id,student_id,classname,subject,search,student_name,assignment_id);
@@ -400,4 +410,24 @@ export const getTeacherAssignment = async (lecture_id="",student_id="",classname
 export const updateAssignment = async (que_id, formData) => {
   const apiInstance = new apiServices(axiosAPIInstance);
   return await apiInstance.updateAssignment(que_id, formData);
+}
+
+export const getMySubject = async () => {
+  const apiInstance = new apiServices(axiosAPIInstance);
+  return await apiInstance.getMySubject();
+};
+
+export const getMySubjectWatchtime = async (lectureId) => {
+  const apiInstance = new apiServices(axiosAPIInstance);
+  return await apiInstance.getMySubjectWatchtime(lectureId);
+};
+
+export const getStudentUpcommingMeetingByDate = async (year, month) => {
+  const apiInstance = new apiServices(axiosAPIInstance);
+  return await apiInstance.getStudentUpcommingMeetingByDate(year, month);
+};
+
+export const getAllUpcommingByDate = async (year, month) => {
+  const apiInstance = new apiServices(axiosAPIInstance);
+  return await apiInstance.getAllUpcommingByDate(year, month);
 };

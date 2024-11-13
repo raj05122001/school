@@ -671,6 +671,7 @@ export default class apiServices {
       .get(`/api/v1/student/answer_quiz/${lectureId}/`)
       .then((Response) => Response.data)
   }
+  
   public updateTeacherDetails = async (teacherId, formData) => {
     return await this.axiosInstance
       .patch(`/api/v1/teacher/${teacherId}/`, formData)
@@ -746,6 +747,17 @@ export default class apiServices {
       .then((Response) => Response.data)
   }
 
+  public getTeacherStudentCount = async () => {
+    return await this.axiosInstance
+      .get(`/api/v1/dashboard/admin/total_teacher_student/`)
+      .then((Response) => Response.data)
+  }
+
+  public getTopTeachers = async () => {
+    return await this.axiosInstance
+      .get(`/api/v1/dashboard/admin/top_teachers/`)
+      .then((Response) => Response.data)
+  }
   public getTeacherAssignment = async (lecture_id="",student_id="",classname="",subject="",search="",student_name="",assignment_id="") => {
     return await this.axiosInstance
       .get(`/api/v1/get_assignment_answer/?class=${classname}&subject=${subject}&search=${search}&lecture_id=${lecture_id}&student_id=${student_id}&student_name=${student_name}&assignment_id=${assignment_id}`)
@@ -757,5 +769,35 @@ export default class apiServices {
       .patch(`/api/v1/lecture_assignmentAnswer/${que_id}/`, formData)
       .then((Response) => Response)
       .catch((error) => console.error(error));
+  }
+  
+  public getMySubject = async () => {
+    return await this.axiosInstance
+      .get(`/api/v1/dashboard/student/subject/`)
+      .then((Response) => Response.data)
+  }
+
+  public getMySubjectWatchtime = async (lectureId) => {
+    return await this.axiosInstance
+      .get(`/api/v1/dashboard/student/subject/${lectureId}/watchtime/`)
+      .then((Response) => Response.data)
+  }
+
+  public getStudentUpcommingMeetingByDate = (year, month) => {
+    return this.axiosInstance
+      .get(`/api/v1/student/upcomming_lectures/?date=${year}-${month}`)
+      .then((response) => {
+        return response;
+      })
+  };
+
+  public getAllUpcommingByDate = (year, month) => {
+    return this.axiosInstance
+      .get(
+        `/api/v1/dashboard/all_lectures/?status=UPCOMMING&date=${year}-${month}`
+      )
+      .then((response) => {
+        return response;
+      })
   };
 }
