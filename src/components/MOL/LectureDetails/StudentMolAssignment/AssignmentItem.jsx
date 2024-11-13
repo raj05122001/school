@@ -7,14 +7,13 @@ import {
   Stack,
   Tooltip,
   IconButton,
-  CircularProgress,
 } from "@mui/material";
 import { FaPhotoVideo, FaFileAudio, FaRegFileVideo } from "react-icons/fa";
 import { MdClose, MdDescription } from "react-icons/md";
 import { uploadToS3 } from "./uploadToS3";
 import TextWithMath from "@/commonComponents/TextWithMath/TextWithMath";
 import FilePreview from "./FilePreview";
-import { getAssignmentAnswer, submitMOLAssignment } from "@/api/apiHelper";
+import { submitMOLAssignment } from "@/api/apiHelper";
 import { styled } from "@mui/material/styles";
 import LinearProgress, {
   linearProgressClasses,
@@ -28,6 +27,7 @@ const AssignmentItem = ({
   dispatch,
   isDarkMode,
   isSubmitted,
+  fetchAssignmentAnswer,
 }) => {
   const [answerDescription, setAnswerDescription] = useState("");
   const [selectedFile, setSelectedFile] = useState(null);
@@ -69,55 +69,33 @@ const AssignmentItem = ({
   const handleSubmit = async () => {
     setSubmitting(true);
     try {
-      // Fetch existing submissions
-      const response = await getAssignmentAnswer(
-        assignment.lecture.id,
-        assignment.id
-      );
-      const existingSubmissions = response?.data?.data?.data;
-      // Check for existing submission
-      const alreadySubmitted = existingSubmissions.some(
-        (submission) =>
-          submission?.assignment_que?.id === assignment.id &&
-          submission?.answer_by?.id === answered_by
-      );
-
-      if (alreadySubmitted) {
+      const formData = {
+        assignment_que: assignment.id,
+        answer_by: answered_by,
+        answer_link: selectedFile ? selectedFile.s3Location : null,
+        answer_description: answerDescription || null,
+        answer_type: fileType,
+      };
+      const submitResponse = await submitMOLAssignment(formData);
+      if (submitResponse.data.success) {
+        dispatch({ type: "SET_SUBMITTED", payload: assignment.id });
         dispatch({
           type: "SHOW_SNACKBAR",
           payload: {
-            message: "This assignment has already been submitted.",
-            severity: "warning",
+            message: "Assignment submitted successfully!",
+            severity: "success",
           },
         });
+        fetchAssignmentAnswer();
       } else {
-        const formData = {
-          assignment_que: assignment.id,
-          answer_by: answered_by,
-          answer_link: selectedFile ? selectedFile.s3Location : null,
-          answer_description: answerDescription || null,
-          answer_type: fileType,
-        };
-        const submitResponse = await submitMOLAssignment(formData);
-        if (submitResponse.data.success) {
-          dispatch({ type: "SET_SUBMITTED", payload: assignment.id });
-          dispatch({
-            type: "SHOW_SNACKBAR",
-            payload: {
-              message: "Assignment submitted successfully!",
-              severity: "success",
-            },
-          });
-        } else {
-          console.error("Error submitting assignment:", submitResponse.message);
-          dispatch({
-            type: "SHOW_SNACKBAR",
-            payload: {
-              message: "Error submitting assignment. Please try again.",
-              severity: "error",
-            },
-          });
-        }
+        console.error("Error submitting assignment:", submitResponse.message);
+        dispatch({
+          type: "SHOW_SNACKBAR",
+          payload: {
+            message: "Error submitting assignment. Please try again.",
+            severity: "error",
+          },
+        });
       }
     } catch (err) {
       console.error("Submission error:", err);
@@ -250,7 +228,7 @@ const AssignmentItem = ({
       )}
 
       {!isSubmitted &&
-        (uploadProgress === 100 ? (
+        (uploadProgress === 100 || answerDescription ? (
           <Button
             variant="contained"
             color="primary"

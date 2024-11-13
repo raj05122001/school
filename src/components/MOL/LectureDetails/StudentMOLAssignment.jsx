@@ -110,6 +110,7 @@ const StudentMOLAssignment = ({ id, isDarkMode, class_ID }) => {
               answered_by={answered_by}
               dispatch={dispatch}
               isDarkMode={isDarkMode}
+              fetchAssignmentAnswer={fetchAssignmentAnswer}
             />
           ))}
         </>
