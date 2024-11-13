@@ -752,4 +752,16 @@ export default class apiServices {
       .then((Response) => Response.data)
   }
 
+  public getMySubject = async () => {
+    return await this.axiosInstance
+      .get(`/api/v1/dashboard/student/subject/`)
+      .then((Response) => Response.data)
+  }
+
+  public getMySubjectWatchtime = async (lectureId) => {
+    return await this.axiosInstance
+      .get(`/api/v1/dashboard/student/subject/${lectureId}/watchtime/`)
+      .then((Response) => Response.data)
+  }
+
 }

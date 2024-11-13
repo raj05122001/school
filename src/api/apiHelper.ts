@@ -396,3 +396,13 @@ export const getTeacherAssignment = async (lecture_id="",student_id="",classname
   const apiInstance = new apiServices(axiosAPIInstance);
   return await apiInstance.getTeacherAssignment(lecture_id,student_id,classname,subject,search,student_name,assignment_id);
 };
+
+export const getMySubject = async () => {
+  const apiInstance = new apiServices(axiosAPIInstance);
+  return await apiInstance.getMySubject();
+};
+
+export const getMySubjectWatchtime = async (lectureId) => {
+  const apiInstance = new apiServices(axiosAPIInstance);
+  return await apiInstance.getMySubjectWatchtime(lectureId);
+};
