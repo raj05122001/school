@@ -1,6 +1,6 @@
 import React, { useEffect, useState, useReducer, useCallback } from "react";
 import { Box, Typography, Skeleton, Snackbar, Alert } from "@mui/material";
-import { getLectureAssignment } from "@/api/apiHelper";
+import { getLectureAssignment,getAssignmentAnswer } from "@/api/apiHelper";
 import MathJax from "react-mathjax2";
 import Cookies from "js-cookie";
 import { decodeToken } from "react-jwt";
@@ -14,6 +14,7 @@ const userDetails = decodeToken(Cookies.get("ACCESS_TOKEN"));
 const StudentMOLAssignment = ({ id, isDarkMode, class_ID }) => {
   const [state, dispatch] = useReducer(reducer, initialState);
   const { assignments, loading, error, snackbar } = state;
+  const [submittedId,SetSubmittedId]=useState([])
 
   const { s3 } = AwsSdk();
   const answered_by = Number(userDetails.student_id);
@@ -41,8 +42,20 @@ const StudentMOLAssignment = ({ id, isDarkMode, class_ID }) => {
     }
   }, [id]);
 
+  const fetchAssignmentAnswer=async()=>{
+    try{
+      const response=await getAssignmentAnswer(id)
+      const data=response?.data?.data?.data
+      const newData=data?.map((val)=>val?.assignment_que?.id)
+      SetSubmittedId(newData)
+    }catch(error){
+      console.error(error);
+    }
+  }
+
   useEffect(() => {
     fetchAssignments();
+    fetchAssignmentAnswer()
   }, [fetchAssignments]);
 
   const lectureTitle =
@@ -89,6 +102,7 @@ const StudentMOLAssignment = ({ id, isDarkMode, class_ID }) => {
           </Box>
           {assignments.map((assignment, index) => (
             <AssignmentItem
+              isSubmitted={submittedId?.includes(assignment.id)}
               key={assignment.id}
               assignment={assignment}
               index={index}
@@ -96,7 +110,6 @@ const StudentMOLAssignment = ({ id, isDarkMode, class_ID }) => {
               answered_by={answered_by}
               dispatch={dispatch}
               isDarkMode={isDarkMode}
-              submittedAssignments={state.submittedAssignments} // Pass the submittedAssignments array
             />
           ))}
         </>

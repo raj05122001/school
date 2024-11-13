@@ -27,7 +27,7 @@ const AssignmentItem = ({
   answered_by,
   dispatch,
   isDarkMode,
-  submittedAssignments, // Receive the submittedAssignments prop
+  isSubmitted,
 }) => {
   const [answerDescription, setAnswerDescription] = useState("");
   const [selectedFile, setSelectedFile] = useState(null);
@@ -133,7 +133,7 @@ const AssignmentItem = ({
     }
   };
 
-  const isSubmitted = submittedAssignments.includes(assignment.id);
+  // const isSubmitted = submittedAssignments.includes(assignment.id);
 
   return (
     <Box sx={{ mb: 4, display: "flex", flexDirection: "column" }}>
@@ -149,15 +149,17 @@ const AssignmentItem = ({
         Marks: {assignment.assignment_mark}
       </Typography>
 
-      <TextField
-        fullWidth
-        variant="outlined"
-        placeholder="Describe your answer here..."
-        sx={{ mt: 2, mb: 2 }}
-        onChange={(e) => setAnswerDescription(e.target.value)}
-        disabled={isSubmitted}
-        value={answerDescription}
-      />
+      {!isSubmitted && (
+        <TextField
+          fullWidth
+          variant="outlined"
+          placeholder="Describe your answer here..."
+          sx={{ mt: 2, mb: 2 }}
+          onChange={(e) => setAnswerDescription(e.target.value)}
+          disabled={isSubmitted}
+          value={answerDescription}
+        />
+      )}
 
       {!isSubmitted && !selectedFile && (
         <Stack direction="row" spacing={1}>
@@ -249,39 +251,43 @@ const AssignmentItem = ({
         </Box>
       )}
 
-      {!isSubmitted && uploadProgress === 100 ? (
-        <Button
-          variant="contained"
-          color="primary"
-          onClick={handleSubmit}
-          sx={{ mt: 2 }}
-          disabled={submitting || (!answerDescription && !selectedFile)}
-        >
-          {submitting ? "Submitting..." : "Submit Assignment"}
-        </Button>
-      ) : (
-        <Box position="relative" width="100%" sx={{ mt: 2 }}>
-          <BorderLinearProgress variant="determinate" value={uploadProgress} />
-          <Box
-            position="absolute"
-            top={0}
-            left={0}
-            bottom={0}
-            right={0}
-            display="flex"
-            alignItems="center"
-            justifyContent="center"
+      {!isSubmitted &&
+        (uploadProgress === 100 ? (
+          <Button
+            variant="contained"
+            color="primary"
+            onClick={handleSubmit}
+            sx={{ mt: 2 }}
+            disabled={submitting || (!answerDescription && !selectedFile)}
           >
-            <Typography variant="body1" color="textPrimary">
-              {!selectedFile && !answerDescription
-                ? "Please upload a file or enter a description to proceed."
-                : uploadProgress < 100
-                ? `Uploading... ${Math.round(uploadProgress)}%`
-                : "Upload complete! You can now submit your assignment."}
-            </Typography>
+            {submitting ? "Submitting..." : "Submit Assignment"}
+          </Button>
+        ) : (
+          <Box position="relative" width="100%" sx={{ mt: 2 }}>
+            <BorderLinearProgress
+              variant="determinate"
+              value={uploadProgress}
+            />
+            <Box
+              position="absolute"
+              top={0}
+              left={0}
+              bottom={0}
+              right={0}
+              display="flex"
+              alignItems="center"
+              justifyContent="center"
+            >
+              <Typography variant="body1" color="textPrimary">
+                {!selectedFile && !answerDescription
+                  ? "Please upload a file or enter a description to proceed."
+                  : uploadProgress < 100
+                  ? `Uploading... ${Math.round(uploadProgress)}%`
+                  : "Upload complete! You can now submit your assignment."}
+              </Typography>
+            </Box>
           </Box>
-        </Box>
-      )}
+        ))}
     </Box>
   );
 };
