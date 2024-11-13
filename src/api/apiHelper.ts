@@ -407,6 +407,11 @@ export const getTeacherAssignment = async (lecture_id="",student_id="",classname
   return await apiInstance.getTeacherAssignment(lecture_id,student_id,classname,subject,search,student_name,assignment_id);
 };
 
+export const updateAssignment = async (que_id, formData) => {
+  const apiInstance = new apiServices(axiosAPIInstance);
+  return await apiInstance.updateAssignment(que_id, formData);
+}
+
 export const getMySubject = async () => {
   const apiInstance = new apiServices(axiosAPIInstance);
   return await apiInstance.getMySubject();

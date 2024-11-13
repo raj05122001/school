@@ -764,6 +764,13 @@ export default class apiServices {
       .then((Response) => Response.data)
   }
 
+  public updateAssignment = async (que_id, formData) => {
+    return await this.axiosInstance
+      .patch(`/api/v1/lecture_assignmentAnswer/${que_id}/`, formData)
+      .then((Response) => Response)
+      .catch((error) => console.error(error));
+  }
+  
   public getMySubject = async () => {
     return await this.axiosInstance
       .get(`/api/v1/dashboard/student/subject/`)

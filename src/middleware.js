@@ -1,13 +1,14 @@
 import { NextResponse } from "next/server";
 import { isExpired } from "react-jwt";
+import { decodeToken } from "react-jwt";
 
 export async function middleware(req) {
   const { pathname, searchParams } = req.nextUrl;
   let origin = req.nextUrl.origin;
   const token = req.cookies.get("REFRESH_TOKEN");
-
+  const userDetails = decodeToken(token?.value);
   const host = req.headers.get("host");
-  
+
   // Set origin dynamically based on the host (use care-insight domain in production)
   if (host.includes("vidya.ultimeet.io")) {
     origin = "https://vidya.ultimeet.io";
@@ -23,8 +24,30 @@ export async function middleware(req) {
       ) {
         return NextResponse.next();
       }
-      const redirectTo = encodeURIComponent(`${pathname}?${searchParams.toString()}`);
-      return NextResponse.redirect(new URL(`/login?redirectTo=${redirectTo}`, origin));
+      const redirectTo = encodeURIComponent(
+        `${pathname}?${searchParams.toString()}`
+      );
+      return NextResponse.redirect(
+        new URL(`/login?redirectTo=${redirectTo}`, origin)
+      );
+    } else if (
+      pathname === "/" ||
+      pathname.includes("/registration") ||
+      pathname.includes("/forget-password") ||
+      pathname.includes("/login") ||
+      pathname.includes("/invite-accept")
+    ) {
+      if (userDetails?.role === "STUDENT" && token?.value && userDetails) {
+        return NextResponse.redirect(new URL("/student/dashboard", origin));
+      } else if (
+        userDetails?.role === "TEACHER" &&
+        token?.value &&
+        userDetails
+      ) {
+        return NextResponse.redirect(new URL("/teacher/dashboard", origin));
+      } else if (userDetails?.role === "ADMIN" && token?.value && userDetails) {
+        return NextResponse.redirect(new URL("/admin/dashboard", origin));
+      }
     }
     if (
       pathname.includes("/registration") ||
