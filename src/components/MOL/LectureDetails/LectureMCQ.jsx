@@ -43,8 +43,7 @@ const LectureMCQ = ({ id, isDarkMode }) => {
   
       // Wrap the modified string back into an array format
       validJson = `[${validJson}]`;
-  
-      console.log("Parsed JSON string:", validJson);
+
       return JSON.parse(validJson);
     } catch (error) {
       console.error("Error parsing JSON:", error);

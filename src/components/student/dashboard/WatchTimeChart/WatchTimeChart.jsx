@@ -1,29 +1,65 @@
-import React, { useState } from "react";
+import React, { useState,  useEffect } from "react";
 import { Box, Typography, Select, MenuItem } from "@mui/material";
 import { PieChart, Pie, Cell, Tooltip, Legend } from "recharts";
 import { useThemeContext } from "@/hooks/ThemeContext";
 import { GiSandsOfTime } from "react-icons/gi";
+import { getMySubject, getMySubjectWatchtime } from "@/api/apiHelper";
 
 function WatchTimeChart() {
-  const [selectedSubject, setSelectedSubject] = useState("Math");
+  const [subjects, setSubjects] = useState([]);
+  const [selectedSubject, setSelectedSubject] = useState("");
+  const [watchtimeData, setWatchtimeData] = useState(null);
   const { isDarkMode, primaryColor, secondaryColor } = useThemeContext();
 
-  // Dummy data for watched and pending lectures per subject
-  const lectureData = {
-    Math: { watched: 15, pending: 5 },
-    Science: { watched: 10, pending: 10 },
-    English: { watched: 8, pending: 12 },
-  };
+    // Fetch subjects when the component mounts
+    useEffect(() => {
+      const fetchSubjects = async () => {
+        try {
+          const response = await getMySubject();
+          if (response.success) {
+            setSubjects(response.data);
+            // Optionally select the first subject by default
+            if (response.data.length > 0) {
+              setSelectedSubject(response.data[0].id);
+            }
+          }
+        } catch (error) {
+          console.error("Error fetching subjects:", error);
+        }
+      };
+      fetchSubjects();
+    }, []);
+  
+    // Fetch watchtime data when a subject is selected
+    useEffect(() => {
+      if (selectedSubject) {
+        const fetchWatchtime = async () => {
+          try {
+            const response = await getMySubjectWatchtime(selectedSubject);
+            if (response.success) {
+              setWatchtimeData(response.data);
+            }
+          } catch (error) {
+            console.error("Error fetching watchtime data:", error);
+          }
+        };
+        fetchWatchtime();
+      }
+    }, [selectedSubject]);
+  
 
   const handleChange = (event) => {
     setSelectedSubject(event.target.value);
   };
 
-  // Prepare data for the PieChart component
-  const data = [
-    { name: "Watched Lectures", value: lectureData[selectedSubject].watched, color: "#4caf50" },
-    { name: "Pending Lectures", value: lectureData[selectedSubject].pending, color: "#f44336" },
-  ];
+  // Prepare data for the PieChart component based on watchtimeData
+  const data = watchtimeData
+    ? [
+        { name: "Watched", value: watchtimeData.watched_minutes, color: "#4caf50" },
+        { name: "Pending", value: watchtimeData.pending_minutes, color: "#f44336" },
+      ]
+    : [];
+
 
   return (
     <Box
@@ -66,9 +102,9 @@ function WatchTimeChart() {
             },
           }}
         >
-          {Object.keys(lectureData).map((subject) => (
-            <MenuItem key={subject} value={subject}>
-              {subject}
+          {subjects.map((subject) => (
+            <MenuItem key={subject.id} value={subject.id}>
+              {subject.name.length > 20 ? `${subject.name.slice(0, 20)}...` : subject.name}
             </MenuItem>
           ))}
         </Select>
@@ -108,7 +144,7 @@ function WatchTimeChart() {
       </Box>
 
       {/* Donut Chart */}
-      <Box width="300px" height="200px">
+      <Box position="relative" width="300px" height="200px">
         <PieChart width={300} height={200}>
           <Pie
             data={data}
@@ -127,6 +163,20 @@ function WatchTimeChart() {
           </Pie>
           <Tooltip />
         </PieChart>
+        {watchtimeData && (
+          <Box
+            position="absolute"
+            top="50%"
+            left="50%"
+            sx={{
+              transform: "translate(-50%, -50%)",
+              fontSize: "18px",
+              color: isDarkMode ? "#d7e4fc" : "#000",
+            }}
+          >
+            {`${watchtimeData.progress_percentage.toFixed(2)}%`}
+          </Box>
+        )}
       </Box>
     </Box>
   );

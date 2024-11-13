@@ -11,6 +11,9 @@ import {
   Button,
   Tabs,
   Tab,
+  Badge,
+  TextField,
+  InputAdornment,
 } from "@mui/material";
 import {
   MdPlayArrow,
@@ -18,67 +21,51 @@ import {
   MdDownload,
   MdMoreVert,
 } from "react-icons/md";
-import { getLectureById, getAssignmentAnswer } from "@/api/apiHelper";
+import {
+  getLectureById,
+  getAssignmentAnswer,
+  getTeacherAssignment,
+} from "@/api/apiHelper";
 import StudentAssignments from "@/components/teacher/Assignment/StudentAssignments";
 import { useThemeContext } from "@/hooks/ThemeContext";
 import { Varela_Round } from "next/font/google";
 import { MdOutlineTopic } from "react-icons/md";
 import { BsXDiamond } from "react-icons/bs";
-
+import DarkMode from "@/components/DarkMode/DarkMode";
+import { FaBell, FaTimes } from "react-icons/fa";
+import UserImage from "@/commonComponents/UserImage/UserImage";
+import { usePathname, useSearchParams, useRouter } from "next/navigation";
 
 const varelaRound = Varela_Round({ weight: "400", subsets: ["latin"] });
 
-const courseDetails = {
-  title: "C Language Tutorials In Hindi",
-  instructor: "CodeWithHarry",
-  description:
-    "In this latest course on C language tutorials in 2019 in Hindi, we will learn how to write efficient and powerful C programs using modern tools. C programming is one of the most requested...",
-  videoCount: 76,
-  lastUpdated: "Dec 25, 2020",
+const darkModeStyles = {
+  backgroundColor: "#1a1a1a",
+  color: "#ffffff",
+  inputBackgroundColor: "#ffffff",
+  inputColor: "#ffffff",
+  boxShadow: "0px 2px 5px rgba(255, 255, 255, 0.1)",
 };
 
-const videos = [
-  {
-    title: "Why Learn C Programming Language?",
-    duration: "14:51",
-    views: "4.9M views",
-    updated: "5 years ago",
-  },
-  {
-    title: "What Is Coding & C Programming Language?",
-    duration: "14:23",
-    views: "2.2M views",
-    updated: "5 years ago",
-  },
-  {
-    title: "Install & Configure VS Code With C Compiler",
-    duration: "20:57",
-    views: "5M views",
-    updated: "5 years ago",
-  },
-  {
-    title: "Basic Structure of C Program in Hindi",
-    duration: "16:45",
-    views: "2.4M views",
-    updated: "5 years ago",
-  },
-  {
-    title: "Basic Syntax Of A C Program",
-    duration: "13:57",
-    views: "1.4M views",
-    updated: "5 years ago",
-  },
-];
+const lightModeStyles = {
+  backgroundColor: "#ffffff",
+  color: "#000000",
+  inputBackgroundColor: "#333333",
+  inputColor: "#000000",
+  boxShadow: "0px 2px 5px rgba(0, 0, 0, 0.1)",
+};
 
 const CoursePlaylist = ({ params }) => {
   const { id } = params;
-  const [lectureData, setLectureData] = useState({});
+  const searchParams = useSearchParams();
+  const router = useRouter();
+  const pathname = usePathname();
+  const searchQuery = searchParams.get("globalSearch") || "";
+  const [globalSearch, setGlobalSearch] = useState(searchQuery);
+
   const [listData, setListData] = useState({});
-  const [loading, setLoading] = useState(true);
   const [listLoading, setListLoading] = useState(true);
   const { isDarkMode, primaryColor, secondaryColor } = useThemeContext();
   const [selectedTab, setSelectedTab] = useState(0); // State to manage selected tab
-  
 
   const handleTabChange = (event, newValue) => {
     setSelectedTab(newValue);
@@ -86,32 +73,23 @@ const CoursePlaylist = ({ params }) => {
 
   useEffect(() => {
     if (id) {
-      getMeetingByID();
       fetchAssignmentAnswer();
     }
-  }, [id]);
-
-  const getMeetingByID = async () => {
-    setLoading(true);
-    try {
-      const apiResponse = await getLectureById(id);
-      if (apiResponse?.data?.success) {
-        setLectureData(apiResponse?.data?.data);
-      }
-      setLoading(false);
-    } catch (e) {
-      setLectureData({});
-      console.error(e);
-      setLoading(false);
-    }
-  };
+  }, [id, searchQuery]);
 
   const fetchAssignmentAnswer = async () => {
     setListLoading(true);
     try {
-      const apiResponse = await getAssignmentAnswer(id);
-      if (apiResponse?.data?.success) {
-        setListData(apiResponse?.data?.data);
+      const apiResponse = await getTeacherAssignment(
+        id,
+        "",
+        "",
+        "",
+        "",
+        searchQuery
+      );
+      if (apiResponse?.success) {
+        setListData(apiResponse?.data);
       }
       setListLoading(false);
     } catch (e) {
@@ -121,6 +99,20 @@ const CoursePlaylist = ({ params }) => {
     }
   };
 
+  useEffect(() => {
+    const delayDebounceFn = setTimeout(() => {
+      handleChange(globalSearch);
+    }, 500); 
+
+    return () => clearTimeout(delayDebounceFn); 
+  }, [globalSearch]);
+
+
+  const handleChange = (value) => {
+    router.push(`${pathname}?globalSearch=${value}`);
+  };
+
+  const currentStyles = isDarkMode ? darkModeStyles : lightModeStyles;
   return (
     <Box
       sx={{
@@ -129,60 +121,6 @@ const CoursePlaylist = ({ params }) => {
         minHeight: "100vh",
       }}
     >
-    <Box
-        sx={{
-          display: "flex",
-          justifyContent: "space-between",
-          alignItems: "center",
-          mb: 2,
-        }}
-      >
-        {/* Tabs for Checked and Not Checked */}
-        <Tabs
-          value={selectedTab}
-          onChange={handleTabChange}
-          indicatorColor="none"
-          textColor="primary"
-          sx={{
-            alignSelf: "flex-end",
-          ".MuiTabs-flexContainer": {
-            gap: 2,
-            background:
-              isDarkMode &&
-              "linear-gradient(89.7deg, rgb(0, 0, 0) -10.7%, rgb(53, 92, 125) 88.8%)",
-            backgroundImage: isDarkMode ? "" : "url('/TabBG2.jpg')", // Add background image
-            backgroundSize: "cover", // Ensure the image covers the entire page
-            backgroundPosition: "center", // Center the image
-            padding: 1,
-            // borderRadius: "12px",
-            borderTopLeftRadius: "12px",
-            borderTopRightRadius: "12px",
-          },
-          ".MuiTab-root": {
-            color: "#333",
-            padding: "10px 20px",
-            minHeight: 0,
-            marginTop: "8px",
-            textAlign: "center",
-            color: isDarkMode && "#F0EAD6",
-            "&:hover": {
-              backgroundColor: "#e0e0e0",
-              boxShadow: "0px 2px 8px rgba(0, 0, 0, 0.1)",
-              borderRadius: "10px",
-            },
-            "&.Mui-selected": {
-              backgroundColor: "#fff",
-              color: "#000",
-              boxShadow: "0px 6px 15px rgba(0, 0, 0, 0.2)",
-              borderRadius: "10px",
-            },
-          },
-        }}
-        >
-          <Tab label="Checked" />
-          <Tab label="Not Checked" />
-        </Tabs>
-      </Box>
       <Box
         sx={{ display: "flex", flexDirection: "row", gap: 2, height: "100%" }}
       >
@@ -194,8 +132,10 @@ const CoursePlaylist = ({ params }) => {
             color: isDarkMode ? "#f1f1f1" : "#000", // Text color based on theme
             height: "100%",
             borderRadius: "16px",
-            fontFamily:varelaRound,
-            background: isDarkMode ? "rgba(255, 255, 255, 0.2)" : 'linear-gradient(130deg, white 55%, #6495ED 75%)' ,
+            fontFamily: varelaRound,
+            background: isDarkMode
+              ? "rgba(255, 255, 255, 0.2)"
+              : "linear-gradient(130deg, white 55%, #6495ED 75%)",
           }}
         >
           <CardMedia
@@ -214,40 +154,134 @@ const CoursePlaylist = ({ params }) => {
             }}
           />
           <CardContent>
-            <Typography variant="h5" fontWeight="bold" fontSize={"24px"} fontFamily={varelaRound}>
-              <MdOutlineTopic/> {lectureData.title}
+            <Typography
+              variant="h5"
+              fontWeight="bold"
+              fontSize={"24px"}
+              fontFamily={varelaRound}
+            >
+              <MdOutlineTopic /> {listData?.lecture?.title}
             </Typography>
             <hr />
             <Typography variant="subtitle1" marginTop={4}>
-             <BsXDiamond /> <strong>Class:</strong>{" "}
-              {lectureData?.lecture_class?.name || "N/A"}
+              <BsXDiamond /> <strong>Class:</strong>{" "}
+              {listData?.lecture?.lecture_class?.name || "N/A"}
             </Typography>
             <Typography variant="subtitle1">
-            <BsXDiamond /> <strong>Subject:</strong>{" "}
-              {lectureData?.chapter?.subject?.name || "N/A"}
+              <BsXDiamond /> <strong>Subject:</strong>{" "}
+              {listData?.lecture?.chapter?.subject?.name || "N/A"}
             </Typography>
             <Typography variant="subtitle1">
-            <BsXDiamond /> <strong>Chapter:</strong> {lectureData?.chapter?.chapter || "N/A"}
-            </Typography>
-
-            <Typography variant="subtitle1">
-            <BsXDiamond /> <strong>Scheduled Date:</strong>{" "}
-              {lectureData?.schedule_date || "N/A"}
-            </Typography>
-            <Typography variant="subtitle1">
-            <BsXDiamond /> <strong>Scheduled Time:</strong>{" "}
-              {lectureData?.schedule_time || "N/A"}
+              <BsXDiamond /> <strong>Chapter:</strong>{" "}
+              {listData?.lecture?.chapter?.chapter || "N/A"}
             </Typography>
 
             <Typography variant="subtitle1">
-            <BsXDiamond /> <strong>Description:</strong> {lectureData?.description || "N/A"}
+              <BsXDiamond /> <strong>Scheduled Date:</strong>{" "}
+              {listData?.lecture?.schedule_date || "N/A"}
+            </Typography>
+            <Typography variant="subtitle1">
+              <BsXDiamond /> <strong>Scheduled Time:</strong>{" "}
+              {listData?.lecture?.schedule_time || "N/A"}
             </Typography>
           </CardContent>
         </Card>
 
         {/* Video List */}
         <Box sx={{ flex: 1 }}>
-        <StudentAssignments listData={listData} isDarkMode={isDarkMode}/>
+          {/* <Box
+            sx={{
+              display: "flex",
+              justifyContent: "space-between",
+              alignItems: "center",
+              mb: 2,
+            }}
+          >
+            <Tabs
+              value={selectedTab}
+              onChange={handleTabChange}
+              indicatorColor="none"
+              textColor="primary"
+              sx={{
+                alignSelf: "flex-end",
+                ".MuiTabs-flexContainer": {
+                  gap: 2,
+                  background:
+                    isDarkMode &&
+                    "linear-gradient(89.7deg, rgb(0, 0, 0) -10.7%, rgb(53, 92, 125) 88.8%)",
+                  backgroundImage: isDarkMode ? "" : "url('/TabBG2.jpg')", // Add background image
+                  backgroundSize: "cover", // Ensure the image covers the entire page
+                  backgroundPosition: "center", // Center the image
+                  padding: 1,
+                  // borderRadius: "12px",
+                  borderTopLeftRadius: "12px",
+                  borderTopRightRadius: "12px",
+                },
+                ".MuiTab-root": {
+                  color: "#333",
+                  padding: "10px 20px",
+                  minHeight: 0,
+                  marginTop: "8px",
+                  textAlign: "center",
+                  color: isDarkMode && "#F0EAD6",
+                  "&:hover": {
+                    backgroundColor: "#e0e0e0",
+                    boxShadow: "0px 2px 8px rgba(0, 0, 0, 0.1)",
+                    borderRadius: "10px",
+                  },
+                  "&.Mui-selected": {
+                    backgroundColor: "#fff",
+                    color: "#000",
+                    boxShadow: "0px 6px 15px rgba(0, 0, 0, 0.2)",
+                    borderRadius: "10px",
+                  },
+                },
+              }}
+            >
+              <Tab label="Checked" />
+              <Tab label="Not Checked" />
+            </Tabs>
+          </Box> */}
+          <Box sx={{ display: "flex", alignItems: "center", gap: 3 ,justifyContent:'flex-end'}}>
+            <TextField
+              id="global-search"
+              variant="outlined"
+              value={decodeURIComponent(globalSearch)}
+              placeholder="Global Search"
+              onChange={(e) =>
+                setGlobalSearch(encodeURIComponent(e.target.value))
+              }
+              InputProps={{
+                endAdornment: searchQuery && (
+                  <InputAdornment position="end">
+                    <IconButton
+                      onClick={() => {
+                        setGlobalSearch("");
+                      }}
+                    >
+                      <FaTimes size={18} />
+                    </IconButton>
+                  </InputAdornment>
+                ),
+                sx: {
+                  ...currentStyles,
+                  "& .MuiOutlinedInput-notchedOutline": { border: "none" },
+                  height:40
+                },
+              }}
+              sx={{
+                boxShadow: currentStyles.boxShadow,
+                borderRadius: 1,
+                width: "200px",
+              }}
+            />
+            <DarkMode />
+            <UserImage width={40} height={40} />
+          </Box>
+          <StudentAssignments
+            listData={listData?.students}
+            isDarkMode={isDarkMode}
+          />
         </Box>
       </Box>
     </Box>

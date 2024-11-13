@@ -31,7 +31,6 @@ const RatingSection = ({ id, isShowRating = false }) => {
         userDetails?.role === "STUDENT" ? userDetails?.student_id : 0
       );
       setData(response?.data);
-
     } catch (error) {
       console.error(error);
     }
@@ -48,7 +47,7 @@ const RatingSection = ({ id, isShowRating = false }) => {
       sx={{
         p: 3,
         color: isDarkMode ? "#fff" : "#000",
-        width:"100%"
+        width: "100%",
       }}
       className="blur_effect_card"
     >
@@ -72,7 +71,9 @@ const RatingSection = ({ id, isShowRating = false }) => {
             sx={{ fontWeight: "bold", mr: 1 }}
             color={isDarkMode ? "white" : "black"}
           >
-            {data?.average_feedback}
+            {data?.average_feedback === 0
+              ? 0
+              : data?.average_feedback?.toFixed(1)}
           </Typography>
           <MdStar size={44} color="yellow" />
         </Box>
@@ -128,7 +129,11 @@ const RatingSection = ({ id, isShowRating = false }) => {
       {isShowRating && (
         <>
           <Divider sx={{ borderBottomWidth: 2, my: 2 }} />
-          <Feedback lectureId={id} data={data} fetchgetFeedback={fetchgetFeedback}/>
+          <Feedback
+            lectureId={id}
+            data={data}
+            fetchgetFeedback={fetchgetFeedback}
+          />
         </>
       )}
     </Box>

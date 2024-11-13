@@ -29,7 +29,6 @@ const LectureReferrence = ({ id, isDarkMode }) => {
 
   // Filter unique resources
   const uniqueResources = resources?.filter((resource, index, self) => {
-    console.log("self",self)
     const link =
       resource?.research_papers?.link ||
       resource?.youtube_videos?.link ||

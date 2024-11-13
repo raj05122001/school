@@ -1,14 +1,19 @@
 import React, { useEffect, useState } from "react";
-import FullCalendar from "@fullcalendar/react"; 
-import dayGridPlugin from "@fullcalendar/daygrid"; 
-import timeGridPlugin from "@fullcalendar/timegrid"; 
-import interactionPlugin from "@fullcalendar/interaction"; 
+import FullCalendar from "@fullcalendar/react";
+import dayGridPlugin from "@fullcalendar/daygrid";
+import timeGridPlugin from "@fullcalendar/timegrid";
+import interactionPlugin from "@fullcalendar/interaction";
 import "./CalendarComponent.css";
 import { useThemeContext } from "@/hooks/ThemeContext";
-import { getUpcommingMeetingByDate } from "@/api/apiHelper";
+import {
+  getUpcommingMeetingByDate,
+  getStudentUpcommingMeetingByDate,
+} from "@/api/apiHelper";
 import LecturePopover from "./LecturePopover";
 import { formatTime, LectureTyps } from "@/helper/Helper";
 import { Skeleton } from "@mui/material";
+import { decodeToken } from "react-jwt";
+import Cookies from "js-cookie";
 
 // Helper to get current month and year
 const getCurrentMonthYear = () => {
@@ -18,7 +23,8 @@ const getCurrentMonthYear = () => {
   return [month.toString(), year.toString()];
 };
 
-const CalendarComponent = ({maxHeight="585px"}) => {
+const CalendarComponent = ({ maxHeight = "585px" }) => {
+  const userDetails = decodeToken(Cookies.get("ACCESS_TOKEN"));
   const { isDarkMode, primaryColor } = useThemeContext();
 
   // Default the current month to the current month and year
@@ -33,19 +39,35 @@ const CalendarComponent = ({maxHeight="585px"}) => {
 
   const fetchData = async () => {
     setIsLoading(true);
+    let apiResponse = null;
     try {
-      const response = await getUpcommingMeetingByDate(
-        currentMonth[1],
-        currentMonth[0]
-      );
-      const dataCalendar = response?.data?.data?.data || [];
+      if (userDetails?.role === "STUDENT") {
+        const response = await getStudentUpcommingMeetingByDate(
+          currentMonth[1],
+          currentMonth[0]
+        );
+        apiResponse = response?.data?.data?.data;
+      } else if (userDetails?.role === "TEACHER") {
+        const response = await getUpcommingMeetingByDate(
+          currentMonth[1],
+          currentMonth[0]
+        );
+        apiResponse = response?.data?.data?.data;
+      } else {
+        const response = await getAllUpcommingByDate(
+          currentMonth[1],
+          currentMonth[0]
+        );
+        apiResponse = response?.data?.data;
+      }
+      const dataCalendar = apiResponse || [];
 
       const formattedData = dataCalendar?.map((obj) => ({
         ...obj,
         id: obj.id,
         title: obj.title || "Untitled Event",
         date: obj.schedule_date,
-        start: obj.schedule_date, 
+        start: obj.schedule_date,
         type: obj.type,
         start_time: obj.start_time,
         organizer: obj.organizer?.name,
@@ -61,8 +83,18 @@ const CalendarComponent = ({maxHeight="585px"}) => {
 
   const monthStringToNumber = (monthString) => {
     const months = [
-      "January", "February", "March", "April", "May", "June", 
-      "July", "August", "September", "October", "November", "December"
+      "January",
+      "February",
+      "March",
+      "April",
+      "May",
+      "June",
+      "July",
+      "August",
+      "September",
+      "October",
+      "November",
+      "December",
     ];
     return months.indexOf(monthString) + 1;
   };
@@ -70,12 +102,7 @@ const CalendarComponent = ({maxHeight="585px"}) => {
   const eventContent = (info) => {
     const { schedule_time, end_time, type } = info.event.extendedProps;
     const formattedStartTime = formatTime(schedule_time);
-    return (
-      <LecturePopover
-        data={info}
-        isOrganizer={true}
-      />
-    );
+    return <LecturePopover data={info} isOrganizer={true} />;
   };
 
   return (
@@ -111,7 +138,6 @@ const CalendarComponent = ({maxHeight="585px"}) => {
 };
 
 export default CalendarComponent;
-
 
 export const CalendarSkeleton = () => (
   <div>

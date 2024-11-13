@@ -6,7 +6,7 @@ import { useSearchParams, useRouter, usePathname } from "next/navigation";
 import { useThemeContext } from "@/hooks/ThemeContext";
 import { MdAssignment } from "react-icons/md";
 import AssignmentCard from "@/components/teacher/Assignment/AssignmentCard";
-import { getTeacherAllLecture } from "@/api/apiHelper";
+import { getTeacherAllLecture,getTeacherAssignment } from "@/api/apiHelper";
 import LectureListingCardSkeleton from "@/commonComponents/Skeleton/LectureListingCardSkeleton/LectureListingCardSkeleton";
 import { FaChalkboardTeacher } from "react-icons/fa";
 import { decodeToken } from "react-jwt";
@@ -51,23 +51,14 @@ const Assignment = () => {
 
   useEffect(() => {
     fetchData();
-  }, [activePage, classValue, subject, searchQuery, month, lectureType]);
+  }, [activePage, classValue, subject, searchQuery]);
 
   const fetchData = async () => {
     setIsLoading(true);
     try {
-      const apiResponse = await getTeacherAllLecture(
-        userDetails?.teacher_id,
-        encodeURI(searchQuery),
-        month,
-        lectureType,
-        activePage,
-        9,
-        encodeURI(subject),
-        encodeURI(classValue)
-      );
-      if (apiResponse?.data?.success) {
-        setLectureList(apiResponse?.data);
+      const apiResponse = await getTeacherAssignment("","",classValue,subject,searchQuery);
+      if (apiResponse?.success) {
+        setLectureList(apiResponse?.data?.lectures);
       }
     } catch (error) {
       console.error(error);
@@ -94,6 +85,7 @@ const Assignment = () => {
         searchQuery={searchQuery}
         month={month}
         lectureType={lectureType}
+        isAssignment={true}
         label={
           <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
             <MdAssignment size={30} color={primaryColor} />

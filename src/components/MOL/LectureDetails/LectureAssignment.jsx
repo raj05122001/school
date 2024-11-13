@@ -95,7 +95,6 @@ const LectureAssignment = ({ id, isDarkMode, class_ID, isEdit }) => {
         assignment.lecture.id,
         formData
       );
-      console.log("response handleUpdateAssignment", response);
       if (response?.data.success) {
         setAssignments((prevAssignments) =>
           prevAssignments?.map((a) =>
@@ -241,7 +240,6 @@ const LectureAssignment = ({ id, isDarkMode, class_ID, isEdit }) => {
                     >
                       <IconButton
                         onClick={() => {
-                          console.log("Save button clicked"); // Debugging line
                           handleUpdateAssignment(assignment);
                         }}
                         style={{ cursor: "pointer" }}

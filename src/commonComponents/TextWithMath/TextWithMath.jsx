@@ -20,7 +20,6 @@ const TextWithMath = ({ text }) => {
   // Function to process and render text with LaTeX expressions
   const processText = (part) => {
     const chunks = part.split(latexRegex).filter(Boolean);
-    console.log("chunks", chunks);
     return chunks?.map((chunk, i) => {
       if (i % 2 === 1) {
         const cleanedLatex = chunk.replace(/\n/g, " "); // Replace newlines inside LaTeX with spaces
