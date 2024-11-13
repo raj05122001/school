@@ -19,11 +19,11 @@ import DarkMode from "@/components/DarkMode/DarkMode";
 
 const Page = () => {
   const [tabValue, setTabValue] = useState(0); // Track the selected tab (0 for Student, 1 for Teacher)
-  const [academicYear, setAcademicYear] = useState("");
-  const [department, setDepartment] = useState("");
+  const [dropdownValue, setDropdownValue] = useState("");
 
   const handleTabChange = (event, newValue) => {
     setTabValue(newValue);
+    setDropdownValue(""); // Clear dropdown value when switching tabs
   };
 
   const { isDarkMode } = useThemeContext();
@@ -48,118 +48,97 @@ const Page = () => {
   ];
 
   // Options for dropdowns
-  const academicYearOptions = ["2023", "2024", "2025"];
+  const classOptions = ["MCA", "B.Tech", "BCA"];
   const departmentOptions = ["Science", "Arts", "Commerce"];
+  const dropdownOptions = tabValue === 0 ? classOptions : departmentOptions;
 
   return (
     <Box padding={3}>
-      {/* Tabs for switching between Student and Teacher Table */}
-      <Tabs
-        value={tabValue}
-        onChange={handleTabChange}
-        indicatorColor="none"
-        textColor="primary"
-        centered
-        sx={{
-          ".MuiTabs-flexContainer": {
-            gap: 2,
-            background:
-              isDarkMode &&
-              "linear-gradient(89.7deg, rgb(0, 0, 0) -10.7%, rgb(53, 92, 125) 88.8%)",
-            backgroundImage: isDarkMode ? "" : "url('/TabBG2.jpg')", // Add background image
-            backgroundSize: "cover", // Ensure the image covers the entire page
-            backgroundPosition: "center", // Center the image
-            padding: 1,
-            // borderRadius: "12px",
-            borderTopLeftRadius: "12px",
-            borderTopRightRadius: "12px",
-          },
-          ".MuiTab-root": {
-            color: "#333",
-            padding: "10px 20px",
-            minHeight: 0,
-            marginTop: "8px",
-            textAlign: "center",
-            color: isDarkMode && "#F0EAD6",
-            "&:hover": {
-              backgroundColor: "#e0e0e0",
-              boxShadow: "0px 2px 8px rgba(0, 0, 0, 0.1)",
-              borderRadius: "10px",
-              color: "black",
-            },
-            "&.Mui-selected": {
-              backgroundColor: "#fff",
-              color: "#000",
-              boxShadow: "0px 6px 15px rgba(0, 0, 0, 0.2)",
-              borderRadius: "10px",
-            },
-          },
-        }}
+      {/* Tabs and Dropdown Section */}
+      <Box
+        display="flex"
+        alignItems="center"
+        justifyContent="space-between"
+        marginBottom={2}
       >
-        <Tab label="Student" />
-        <Tab label="Teacher" />
-        <DarkMode />
-      </Tabs>
+        <Tabs
+          value={tabValue}
+          onChange={handleTabChange}
+          indicatorColor="none"
+          textColor="primary"
+          centered
+          sx={{
+            ".MuiTabs-flexContainer": {
+              gap: 2,
+              background: isDarkMode
+                ? "linear-gradient(89.7deg, rgb(0, 0, 0) -10.7%, rgb(53, 92, 125) 88.8%)"
+                : "radial-gradient(circle at 10% 20%, rgb(239, 246, 249) 0%, rgb(206, 239, 253) 90%)",
+              // backgroundImage: isDarkMode ? "" : "url('/TabBG2.jpg')",
+              backgroundSize: "cover",
+              backgroundPosition: "center",
+              padding: 1,
+              borderTopLeftRadius: "12px",
+              borderTopRightRadius: "12px",
+            },
+            ".MuiTab-root": {
+              color: "#333",
+              padding: "10px 20px",
+              minHeight: 0,
+              marginTop: "8px",
+              textAlign: "center",
+              color: isDarkMode && "#F0EAD6",
+              "&:hover": {
+                backgroundColor: "#e0e0e0",
+                boxShadow: "0px 2px 8px rgba(0, 0, 0, 0.1)",
+                borderRadius: "10px",
+                color: "black",
+              },
+              "&.Mui-selected": {
+                backgroundColor: "#fff",
+                color: "#000",
+                boxShadow: "0px 6px 15px rgba(0, 0, 0, 0.2)",
+                borderRadius: "10px",
+              },
+            },
+          }}
+        >
+          <Tab label="Student" />
+          <Tab label="Teacher" />
+        </Tabs>
 
-      {/* Dropdowns for Academic Year and Department */}
-      <Box display="flex" gap={2} marginBottom={3} marginTop={2}>
-        <Autocomplete
-          freeSolo
-          options={academicYearOptions}
-          value={academicYear}
-          onChange={(event, newValue) => setAcademicYear(newValue)}
-          onInputChange={(event, newInputValue) =>
-            setAcademicYear(newInputValue)
-          }
-          renderInput={(params) => (
-            <TextField
-              {...params}
-              label="Academic Year"
-              variant="outlined"
-              InputLabelProps={{
-                style: { color: isDarkMode ? "#d7e4fc" : "" },
-              }}
-              InputProps={{
-                ...params.InputProps,
-                type: "search",
-                sx: {
-                  backdropFilter: "blur(10px)",
-                  backgroundColor: "rgba(255, 255, 255, 0.5)",
-                  "& .MuiOutlinedInput-notchedOutline": {},
-                },
-              }}
-            />
-          )}
-          fullWidth
-        />
-
-        <Autocomplete
-          freeSolo
-          options={departmentOptions}
-          value={department}
-          onChange={(event, newValue) => setDepartment(newValue)}
-          onInputChange={(event, newInputValue) => setDepartment(newInputValue)}
-          renderInput={(params) => (
-            <TextField
-              {...params}
-              label="Department"
-              variant="outlined"
-              InputLabelProps={{
-                style: { color: isDarkMode ? "#d7e4fc" : "" },
-              }}
-              InputProps={{
-                ...params.InputProps,
-                type: "search",
-                sx: {
-                  backdropFilter: "blur(10px)",
-                  backgroundColor: "rgba(255, 255, 255, 0.5)",
-                  "& .MuiOutlinedInput-notchedOutline": {},
-                },
-              }}
-            />
-          )}
-          fullWidth
-        />
+        {/* Dropdown and Dark Mode Toggle */}
+        <Box display="flex" alignItems="center" gap={2}>
+          <Autocomplete
+            freeSolo
+            options={dropdownOptions}
+            value={dropdownValue}
+            onChange={(event, newValue) => setDropdownValue(newValue)}
+            onInputChange={(event, newInputValue) =>
+              setDropdownValue(newInputValue)
+            }
+            renderInput={(params) => (
+              <TextField
+                {...params}
+                label={tabValue === 0 ? "Class" : "Department"}
+                variant="outlined"
+                InputLabelProps={{
+                  style: { color: isDarkMode ? "#d7e4fc" : "" },
+                }}
+                InputProps={{
+                  ...params.InputProps,
+                  type: "search",
+                  sx: {
+                    backdropFilter: "blur(10px)",
+                    backgroundColor: "rgba(255, 255, 255, 0.5)",
+                    "& .MuiOutlinedInput-notchedOutline": {},
+                  },
+                }}
+              />
+            )}
+            sx={{ minWidth: 200 }}
+          />
+          <DarkMode />
+        </Box>
       </Box>
 
       {/* Table */}
@@ -186,9 +165,7 @@ const Page = () => {
             </TableRow>
           </TableHead>
           <TableBody>
-            {/* Sample data rows */}
             {tabValue === 0 ? (
-              // Student data row
               <TableRow>
                 <TableCell sx={{ color: isDarkMode ? "#F0EAD6" : "#36454F" }}>
                   John Doe
@@ -213,7 +190,6 @@ const Page = () => {
                 </TableCell>
               </TableRow>
             ) : (
-              // Teacher data row
               <TableRow>
                 <TableCell sx={{ color: isDarkMode ? "#F0EAD6" : "#36454F" }}>
                   Jane Smith

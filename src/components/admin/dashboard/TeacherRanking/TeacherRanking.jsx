@@ -215,88 +215,94 @@ const TeacherRanking = () => {
       }}
       className="blur_effect_card"
     >
-      <Typography variant="h4" align="left" gutterBottom>
-        <TbTrendingUp style={{ marginRight: "2px", marginTop: "2px" }} />
-        Trending Teachers
-      </Typography>
-
       <Box sx={{ display: "flex" }}>
-        {/* Top 3 Teachers on the Left */}
-        <Box
-          sx={{
-            display: "flex",
-            flexDirection: "column",
-            alignItems: "center",
-            width: "30%",
-            marginRight: "16px",
-          }}
-        >
-          {topTeachersArray?.map((teacher, index) => (
-            <Box
-              key={index}
-              sx={{
-                backgroundColor: "rgba(255, 255, 255, 0.2)",
-                backdropFilter: "blur(10px)",
-                borderRadius: "10px",
-                padding: "16px",
-                display: "flex",
-                flexDirection: "column",
-                alignItems: "center",
-                boxShadow: isDarkMode
-                  ? "0 6px 10px #D3D3D3"
-                  : "0 6px 10px #FBCEB1",
-                margin: "8px 0",
-                width: "100%",
-                textAlign: "center",
-              }}
-            >
-              {/* <Avatar sx={{ width: 56, height: 56, marginBottom: "8px" }}>
+        <Box sx={{ width:"50%"}}>
+          <Typography variant="h4" align="left" gutterBottom>
+            <TbTrendingUp style={{ marginRight: "2px", marginTop: "2px" }} />
+            Trending Teachers
+          </Typography>
+          {/* Top 3 Teachers on the Left */}
+          <Box
+            sx={{
+              display: "flex",
+              flexDirection: "column",
+              justifyContent:"center",
+              alignItems: "center",
+              width: "50%",
+              marginLeft:"16px"             
+            }}
+          >
+            {topTeachersArray?.map((teacher, index) => (
+              <Box
+                key={index}
+                sx={{
+                  backgroundColor: "rgba(255, 255, 255, 0.2)",
+                  backdropFilter: "blur(10px)",
+                  borderRadius: "10px",
+                  padding: "16px",
+                  display: "flex",
+                  flexDirection: "column",
+                  alignItems: "center",
+                  boxShadow: isDarkMode
+                    ? "0 6px 10px #D3D3D3"
+                    : "0 6px 10px #FBCEB1",
+                  margin: "8px 0",
+                  width: "100%",
+                  textAlign: "center",
+                }}
+              >
+                {/* <Avatar sx={{ width: 56, height: 56, marginBottom: "8px" }}>
                 {teacher?.Name[0]}
               </Avatar> */}
-              <img
-                src={
-                  teacher?.["Profile Pic"]
-                    ? `${BASE_URL_MEET}/media/${teacher?.["Profile Pic"]}`
-                    : "/TopTeachers.png"
-                }
-                width={100}
-                height={100}
-                style={{ borderRadius: "100%" }}
-              />
-              <Typography variant="h6" mt={2}>
-                {teacher?.Name}
-              </Typography>
-              <Typography variant="subtitle2" color="textSecondary">
-                Total Lectures {teacher["Total Lectures"] || 0}
-              </Typography>
-              <Typography variant="subtitle2" color="textSecondary">
-                Completed Lectures {teacher["Completed Lectures"] || 0}
-              </Typography>
-              <Box
-                sx={{ display: "flex", alignItems: "center", marginTop: "8px" }}
-              >
-                <StarRating />
-                <Typography variant="body2">
-                  {parseFloat(teacher["Average Feedback"]).toFixed(2) || 0}
+                <img
+                  src={
+                    teacher?.["Profile Pic"]
+                      ? `${BASE_URL_MEET}/media/${teacher?.["Profile Pic"]}`
+                      : "/TopTeachers.png"
+                  }
+                  width={100}
+                  height={100}
+                  style={{ borderRadius: "100%" }}
+                />
+                <Typography variant="h6" mt={2}>
+                  {teacher?.Name}
                 </Typography>
+                <Typography variant="subtitle2" color="textSecondary">
+                  Total Lectures {teacher["Total Lectures"] || 0}
+                </Typography>
+                <Typography variant="subtitle2" color="textSecondary">
+                  Completed Lectures {teacher["Completed Lectures"] || 0}
+                </Typography>
+                <Box
+                  sx={{
+                    display: "flex",
+                    alignItems: "center",
+                    marginTop: "8px",
+                  }}
+                >
+                  <StarRating />
+                  <Typography variant="body2">
+                    {parseFloat(teacher["Average Feedback"]).toFixed(2) || 0}
+                  </Typography>
+                </Box>
               </Box>
-            </Box>
-          ))}
+            ))}
+          </Box>
         </Box>
 
         {/* Teachers Table on the Right */}
         <Box sx={{ width: "70%" }}>
-          <Typography variant="h5" align="center" gutterBottom>
+          <Typography variant="h4" align="center" gutterBottom>
             <FaChalkboardTeacher /> All Teachers
           </Typography>
 
           <TableContainer
             component={Paper}
             className="blur_effect_card"
-            sx={{ margin: "0 auto"}}
+            sx={{ margin: "0 auto", maxHeight: 600 }}
           >
             <Table>
-              <TableHead>
+              <TableHead stickyHeader>
                 <TableRow>
                   <TableCell>Profile</TableCell>
                   <TableCell>Teacher</TableCell>
@@ -325,7 +331,9 @@ const TeacherRanking = () => {
                     <TableCell>{teacher?.Name}</TableCell>
                     <TableCell>{teacher["Total Lectures"] || 0}</TableCell>
                     <TableCell>{teacher["Completed Lectures"] || 0}</TableCell>
-                    <TableCell>{parseFloat(teacher["Average Feedback"]).toFixed(2) || 0}</TableCell>
+                    <TableCell>
+                      {parseFloat(teacher["Average Feedback"]).toFixed(2) || 0}
+                    </TableCell>
                   </TableRow>
                 ))}
               </TableBody>
