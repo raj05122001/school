@@ -17,9 +17,9 @@ const Footer = () => {
         padding: "40px 20px",
       }}
     >
-      <Grid container spacing={3}>
+      <Grid container spacing={3} display={"flex"} justifyContent={"space-between"}>
         {/* Headquarters Section */}
-        <Grid item xs={12} sm={4}>
+        {/* <Grid item xs={12} sm={4}>
           <Typography
             variant="h6"
             sx={{ fontWeight: "bold", marginBottom: "10px" }}
@@ -43,7 +43,7 @@ const Footer = () => {
               GET DIRECTIONS <MdArrowForward style={{ marginLeft: "5px" }} />
             </Box>
           </a>
-        </Grid>
+        </Grid> */}
 
         {/* Social Community Section */}
         <Grid item xs={12} sm={4}>

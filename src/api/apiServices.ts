@@ -800,4 +800,17 @@ export default class apiServices {
         return response;
       })
   };
+
+  public getTeacherLectureCompletion = async (lectureId) => {
+    return await this.axiosInstance
+      .get(`/api/v1/dashboard/teacher_completed_graph/?teacher_id=${lectureId}`)
+      .then((Response) => Response.data)
+  }
+
+  public getWatchtimeComparison = async (lectureId) => {
+    return await this.axiosInstance
+      .get(`/api/v1/dashboard/teacher_watchtime_graph/?teacher_id=${lectureId}`)
+      .then((Response) => Response.data)
+  }
+
 }

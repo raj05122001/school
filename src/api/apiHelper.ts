@@ -431,3 +431,13 @@ export const getAllUpcommingByDate = async (year, month) => {
   const apiInstance = new apiServices(axiosAPIInstance);
   return await apiInstance.getAllUpcommingByDate(year, month);
 };
+
+export const getTeacherLectureCompletion = async (teacherId) => {
+  const apiInstance = new apiServices(axiosAPIInstance);
+  return await apiInstance.getTeacherLectureCompletion(teacherId);
+};
+
+export const getWatchtimeComparison = async (teacherId) => {
+  const apiInstance = new apiServices(axiosAPIInstance);
+  return await apiInstance.getWatchtimeComparison(teacherId);
+};
