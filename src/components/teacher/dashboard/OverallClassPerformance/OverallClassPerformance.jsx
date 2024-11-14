@@ -15,11 +15,11 @@ import {
 function OverallClassPerformance() {
   // Dummy data for ratings
   const data = [
-    { rating: "5 Stars", count: 12 },
-    { rating: "4 Stars", count: 8 },
-    { rating: "3 Stars", count: 5 },
-    { rating: "2 Stars", count: 3 },
-    { rating: "1 Star", count: 2 },
+    { rating: "5 Stars", count: 5 },
+    { rating: "4 Stars", count: 2},
+    { rating: "3 Stars", count: 2 },
+    { rating: "2 Stars", count: 1 },
+    { rating: "1 Star", count: 0 },
   ];
 
   const { isDarkMode } = useThemeContext();

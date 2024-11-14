@@ -17,12 +17,12 @@ import { light } from "@mui/material/styles/createPalette";
 
 // Sample data
 const data = [
-  { subject: "English", time: 40 },
-  { subject: "Maths", time: 36 },
-  { subject: "Science", time: 87 },
-  { subject: "Hindi", time: 42 },
-  { subject: "Physics", time: 49 },
-  { subject: "Visual arts", time: 90 },
+  { subject: "Data Mining", time: 40 },
+  { subject: "Network Security", time: 36 },
+  { subject: "DBMS", time: 87 },
+  { subject: "Deep learning", time: 42 },
+  { subject: "DSA", time: 49 },
+  { subject: "Automata", time: 90 },
 ];
 
 const SubjectAnalytics = () => {
