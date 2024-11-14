@@ -87,7 +87,7 @@ const LectureAssignment = ({ id, isDarkMode, class_ID, isEdit }) => {
       assignment_mark,
       is_assigned: true,
       assignment_id,
-      assignment_text: editedText,
+      assignment_text: editedText === "" ? assignment_text : editedText,
     };
 
     try {
