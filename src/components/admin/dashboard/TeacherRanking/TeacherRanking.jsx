@@ -16,158 +16,22 @@ import { CiStar } from "react-icons/ci";
 import { TbTrendingUp } from "react-icons/tb";
 import { FaChalkboardTeacher } from "react-icons/fa";
 import { useThemeContext } from "@/hooks/ThemeContext";
-import { getTopTeachers } from "@/api/apiHelper";
+import {
+  LineChart,
+  Line,
+  XAxis,
+  YAxis,
+  Tooltip,
+  Legend,
+  ResponsiveContainer,
+  CartesianGrid,
+} from "recharts";
+import {
+  getTeacherLectureCompletion,
+  getTopTeachers,
+  getWatchtimeComparison,
+} from "@/api/apiHelper";
 import { BASE_URL_MEET } from "@/constants/apiconfig";
-
-// Sample data for illustration
-const topTeachers = [
-  { name: "John Doe", subject: "Mathematics", rating: 4.9 },
-  { name: "Jane Smith", subject: "Physics", rating: 4.8 },
-  { name: "Mark Johnson", subject: "Chemistry", rating: 4.7 },
-];
-
-const otherTeachers = [
-  {
-    name: "Alice Brown",
-    subject: "Biology",
-    rating: 4.5,
-    department: "Science",
-    experience: "5 years",
-  },
-  {
-    name: "Michael Lee",
-    subject: "English",
-    rating: 4.4,
-    department: "Languages",
-    experience: "4 years",
-  },
-  {
-    name: "Emily Davis",
-    subject: "History",
-    rating: 4.3,
-    department: "Social Studies",
-    experience: "3 years",
-  },
-  {
-    name: "David Smith",
-    subject: "Mathematics",
-    rating: 4.2,
-    department: "Math",
-    experience: "2 years",
-  },
-  {
-    name: "Sarah Johnson",
-    subject: "Chemistry",
-    rating: 4.1,
-    department: "Science",
-    experience: "1 year",
-  },
-  {
-    name: "Thomas Miller",
-    subject: "Physics",
-    rating: 4.0,
-    department: "Science",
-    experience: "6 years",
-  },
-  {
-    name: "Olivia Wilson",
-    subject: "Art",
-    rating: 4.9,
-    department: "Arts",
-    experience: "7 years",
-  },
-  {
-    name: "Benjamin Carter",
-    subject: "Music",
-    rating: 4.8,
-    department: "Arts",
-    experience: "8 years",
-  },
-  {
-    name: "Sophia Taylor",
-    subject: "Geography",
-    rating: 4.7,
-    department: "Social Studies",
-    experience: "9 years",
-  },
-  {
-    name: "William Anderson",
-    subject: "Computer Science",
-    rating: 4.6,
-    department: "Technology",
-    experience: "10 years",
-  },
-  {
-    name: "Ava Clark",
-    subject: "Spanish",
-    rating: 4.5,
-    department: "Languages",
-    experience: "5 years",
-  },
-  {
-    name: "Ethan Mitchell",
-    subject: "French",
-    rating: 4.4,
-    department: "Languages",
-    experience: "4 years",
-  },
-  {
-    name: "Mia Rose",
-    subject: "Psychology",
-    rating: 4.3,
-    department: "Social Studies",
-    experience: "3 years",
-  },
-  {
-    name: "Noah James",
-    subject: "Sociology",
-    rating: 4.2,
-    department: "Social Studies",
-    experience: "2 years",
-  },
-  {
-    name: "Ella Bennett",
-    subject: "Economics",
-    rating: 4.1,
-    department: "Social Studies",
-    experience: "1 year",
-  },
-  {
-    name: "Liam Cooper",
-    subject: "Philosophy",
-    rating: 4.0,
-    department: "Humanities",
-    experience: "6 years",
-  },
-  {
-    name: "Charlotte King",
-    subject: "Religion",
-    rating: 4.9,
-    department: "Humanities",
-    experience: "7 years",
-  },
-  {
-    name: "Oliver Harris",
-    subject: "Literature",
-    rating: 4.8,
-    department: "Humanities",
-    experience: "8 years",
-  },
-  {
-    name: "Amelia Scott",
-    subject: "Drama",
-    rating: 4.7,
-    department: "Arts",
-    experience: "9 years",
-  },
-  {
-    name: "Jacob Thompson",
-    subject: "Dance",
-    rating: 4.6,
-    department: "Arts",
-    experience: "10 years",
-  },
-];
 
 const StarRating = styled(CiStar)({
   color: "#FFD700",
@@ -177,6 +41,9 @@ const StarRating = styled(CiStar)({
 const TeacherRanking = () => {
   const { isDarkMode } = useThemeContext();
   const [topTeacher, setTopTeachers] = useState({});
+  const [teacherID, setTeacherID] = useState(1);
+  const [countData, setCountData] = useState([]);
+  const [watchData, setWatchData] = useState([]);
 
   const fetchTopTeachers = async () => {
     try {
@@ -189,17 +56,43 @@ const TeacherRanking = () => {
     }
   };
 
+  const fetchTeacherLectureCount = async (teacherID) => {
+    try {
+      const response = await getTeacherLectureCompletion(teacherID);
+      if (response?.success) {
+        setCountData(response?.data);
+      }
+    } catch (error) {
+      console.error("Error fetching response", error);
+    }
+  };
+
+  useEffect(() => {
+    fetchTopTeachers();
+  }, []);
+
+  const fetchWatchtimeComparison = async (teacherID) => {
+    try {
+      const response = await getWatchtimeComparison(teacherID);
+      if (response?.success) {
+        setWatchData(response?.data);
+      }
+    } catch (error) {
+      console.error("Error fetching response", error);
+    }
+  };
+
   useEffect(() => {
     fetchTopTeachers();
   }, []);
 
   const topTeachersArray = Object.values(topTeacher);
-  console.log("Top Teacher data", topTeacher);
-  {
-    topTeachersArray.map((teacher, index = 1) => {
-      console.log("Teacher num 1 is", teacher);
-    });
-  }
+
+  const handleRowClick = (id) => {
+    setTeacherID(id);
+    fetchTeacherLectureCount(id);
+    fetchWatchtimeComparison(id);
+  };
 
   return (
     <Box
@@ -216,7 +109,7 @@ const TeacherRanking = () => {
       className="blur_effect_card"
     >
       <Box sx={{ display: "flex" }}>
-        <Box sx={{ width:"50%"}}>
+        <Box sx={{ width: "50%" }}>
           <Typography variant="h4" align="left" gutterBottom>
             <TbTrendingUp style={{ marginRight: "2px", marginTop: "2px" }} />
             Trending Teachers
@@ -226,10 +119,10 @@ const TeacherRanking = () => {
             sx={{
               display: "flex",
               flexDirection: "column",
-              justifyContent:"center",
+              justifyContent: "center",
               alignItems: "center",
               width: "50%",
-              marginLeft:"16px"             
+              marginLeft: "16px",
             }}
           >
             {topTeachersArray?.map((teacher, index) => (
@@ -313,7 +206,10 @@ const TeacherRanking = () => {
               </TableHead>
               <TableBody>
                 {topTeachersArray.map((teacher, index) => (
-                  <TableRow key={index}>
+                  <TableRow
+                    key={index}
+                    onClick={() => handleRowClick(teacher?.["Organizer ID"])}
+                  >
                     <TableCell>
                       <Box sx={{ display: "flex", alignItems: "center" }}>
                         <img
@@ -329,7 +225,7 @@ const TeacherRanking = () => {
                       </Box>
                     </TableCell>
                     <TableCell>{teacher?.Name}</TableCell>
-                    <TableCell>{teacher["Total Lectures"] || 0}</TableCell>
+                    <TableCell>{teacher?.["Organizer ID"]}</TableCell>
                     <TableCell>{teacher["Completed Lectures"] || 0}</TableCell>
                     <TableCell>
                       {parseFloat(teacher["Average Feedback"]).toFixed(2) || 0}
@@ -339,6 +235,96 @@ const TeacherRanking = () => {
               </TableBody>
             </Table>
           </TableContainer>
+
+          <Box display={"flex"} gap={8}>
+            {/* Line Chart for Lecture Completion Data */}
+            {teacherID && countData?.length > 0 && (
+              <Box sx={{ marginTop: 4, width: "80%", height: "20%" }} className="blur_effect_card">
+                <Typography mt={3} variant="h6" align="center" gutterBottom>
+                  Lecture Completion Analytics
+                </Typography>
+                <ResponsiveContainer width="100%" height={400}>
+                  <LineChart
+                    data={countData}
+                    margin={{ top: 20, right: 30, left: 0, bottom: 50 }}
+                  >
+                    <CartesianGrid strokeDasharray="3 3" />
+                    <XAxis
+                      dataKey="date"
+                      tick={{ fontSize: 10 }}
+                      angle={-45}
+                      dy={10}
+                      textAnchor="end"
+                      interval="preserveStartEnd"
+                    />
+                    <YAxis tick={{ fontSize: 10 }} />
+                    <Tooltip />
+                    <Legend
+                      layout="horizontal"
+                      verticalAlign="top"
+                      align="center"
+                    />
+                    <Line
+                      type="monotone"
+                      dataKey="teacher_data"
+                      stroke="#8884d8"
+                      name="Teacher Lecture Count"
+                    />
+                    <Line
+                      type="monotone"
+                      dataKey="avg_data"
+                      stroke="#82ca9d"
+                      name="Average Lecture Count"
+                    />
+                  </LineChart>
+                </ResponsiveContainer>
+              </Box>
+            )}
+
+            {/* Line Chart for Lecture Watchime Data Comparison */}
+            {teacherID && watchData?.length > 0 && (
+              <Box sx={{ marginTop: 4, width: "80%", height: "20%" }} className="blur_effect_card">
+                <Typography mt={3} variant="h6" align="center" gutterBottom>
+                  Lecture Watchtime Analytics
+                </Typography>
+                <ResponsiveContainer width="100%" height={400}>
+                  <LineChart
+                    data={watchData}
+                    margin={{ top: 20, right: 30, left: 0, bottom: 50 }}
+                  >
+                    <CartesianGrid strokeDasharray="3 3" />
+                    <XAxis
+                      dataKey="date"
+                      tick={{ fontSize: 10 }}
+                      angle={-45}
+                      dy={10}
+                      textAnchor="end"
+                      interval="preserveStartEnd"
+                    />
+                    <YAxis tick={{ fontSize: 10 }} />
+                    <Tooltip />
+                    <Legend
+                      layout="horizontal"
+                      verticalAlign="top"
+                      align="center"
+                    />
+                    <Line
+                      type="monotone"
+                      dataKey="teacher_data"
+                      stroke="#8884d8"
+                      name="Watchtime"
+                    />
+                    <Line
+                      type="monotone"
+                      dataKey="avg_data"
+                      stroke="#82ca9d"
+                      name="Average Lecture Watchtime"
+                    />
+                  </LineChart>
+                </ResponsiveContainer>
+              </Box>
+            )}
+          </Box>
         </Box>
       </Box>
     </Box>
