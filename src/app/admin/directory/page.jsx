@@ -168,22 +168,22 @@ const Page = () => {
             {tabValue === 0 ? (
               <TableRow>
                 <TableCell sx={{ color: isDarkMode ? "#F0EAD6" : "#36454F" }}>
-                  John Doe
+                  Vinayak Patel
                 </TableCell>
                 <TableCell sx={{ color: isDarkMode ? "#F0EAD6" : "#36454F" }}>
                   12345
                 </TableCell>
                 <TableCell sx={{ color: isDarkMode ? "#F0EAD6" : "#36454F" }}>
-                  BSc
+                  MCA-II
                 </TableCell>
                 <TableCell sx={{ color: isDarkMode ? "#F0EAD6" : "#36454F" }}>
-                  Science
+                  CS
                 </TableCell>
                 <TableCell sx={{ color: isDarkMode ? "#F0EAD6" : "#36454F" }}>
                   12
                 </TableCell>
                 <TableCell sx={{ color: isDarkMode ? "#F0EAD6" : "#36454F" }}>
-                  johndoe@example.com
+                  vinayakpatel@gmail.com
                 </TableCell>
                 <TableCell sx={{ color: isDarkMode ? "#F0EAD6" : "#36454F" }}>
                   2023
@@ -192,19 +192,19 @@ const Page = () => {
             ) : (
               <TableRow>
                 <TableCell sx={{ color: isDarkMode ? "#F0EAD6" : "#36454F" }}>
-                  Jane Smith
+                Mitesh Dansena
+                </TableCell>
+                <TableCell sx={{ color: isDarkMode ? "#F0EAD6" : "#36454F" }}>
+                  12
+                </TableCell>
+                <TableCell sx={{ color: isDarkMode ? "#F0EAD6" : "#36454F" }}>
+                  20
                 </TableCell>
                 <TableCell sx={{ color: isDarkMode ? "#F0EAD6" : "#36454F" }}>
                   30
                 </TableCell>
                 <TableCell sx={{ color: isDarkMode ? "#F0EAD6" : "#36454F" }}>
-                  40
-                </TableCell>
-                <TableCell sx={{ color: isDarkMode ? "#F0EAD6" : "#36454F" }}>
-                  70
-                </TableCell>
-                <TableCell sx={{ color: isDarkMode ? "#F0EAD6" : "#36454F" }}>
-                  janesmith@example.com
+                mitesh@gmail.com
                 </TableCell>
                 <TableCell sx={{ color: isDarkMode ? "#F0EAD6" : "#36454F" }}>
                   5 Years
