@@ -17,6 +17,9 @@ import {
 import { AiOutlineDownload } from "react-icons/ai";
 import { useThemeContext } from "@/hooks/ThemeContext";
 import { updateAssignment } from "@/api/apiHelper";
+import { BiSolidRightArrowCircle } from "react-icons/bi";
+import { FaPenNib } from "react-icons/fa";
+
 
 const CheckAssignment = ({ assignment, index }) => {
   const { isDarkMode, primaryColor, secondaryColor } = useThemeContext();
@@ -95,10 +98,19 @@ const CheckAssignment = ({ assignment, index }) => {
       sx={{
         boxShadow: 3,
         borderRadius: 2,
+        boxShadow: isDarkMode
+                    ? "0px 6px 15px rgba(0, 0, 0, 0.4)"
+                    : "0px 4px 10px #ADD8E6",
         backgroundColor: isDarkMode ? "rgba(255, 255, 255, 0.1)" : "white",
         mb: 3,
       }}
     >
+      <Typography mt={4} ml={2} variant="h6" fontWeight={"bold"}>
+        <BiSolidRightArrowCircle
+          style={{ marginRight: "2px", marginTop: "2px" }}
+        />
+        Question {index + 1}:
+      </Typography>
       <CardContent>
         <Box
           sx={{
@@ -108,7 +120,7 @@ const CheckAssignment = ({ assignment, index }) => {
           }}
         >
           <Typography variant="h6" gutterBottom color={primaryColor}>
-            {index + 1}. {assignment.assignment_que.assignment_text}
+            {assignment.assignment_que.assignment_text}
           </Typography>
           <Box
             sx={{
@@ -127,7 +139,9 @@ const CheckAssignment = ({ assignment, index }) => {
             </Typography>
           </Box>
         </Box>
-
+        <Typography variant="h6" fontWeight={"bold"} mt={4}>
+          <FaPenNib style={{marginRight:"4px"}}/>Submission :
+        </Typography>
         {assignment?.answer_description && (
           <Typography variant="body1" color={secondaryColor} sx={{ mt: 2 }}>
             <strong style={{ color: primaryColor }}>Answer: </strong>

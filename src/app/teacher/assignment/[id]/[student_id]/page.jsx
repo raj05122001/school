@@ -92,31 +92,31 @@ const Page = ({ params }) => {
                   borderRadius: "16px",
                   boxShadow: isDarkMode
                     ? "0px 6px 15px rgba(0, 0, 0, 0.4)"
-                    : "0px 6px 15px rgba(200, 200, 200, 0.4)",
+                    : "0px 4px 10px #ADD8E6",
                   // padding: "10px",
-                  paddingX:4,
-                  paddingY:1
+                  paddingX: 4,
+                  paddingY: 1,
                 }}
               >
                 <CardContent>
                   <Box display="flex" justifyContent="space-between">
-                  <Box display="flex" alignItems="center" gap={2}>
-                    <UserImage
-                      profilePic={userData?.user?.profile_pic}
-                      name={userData?.user?.full_name}
-                      width={40}
-                      height={40}
-                    />
-                    <Box flex="1">
-                      <Typography variant="h6" fontWeight="bold">
-                        {userData?.user?.full_name}
-                      </Typography>
-                      <Typography variant="body2" color={secondaryColor}>
-                        Email: {userData?.user?.email}
-                      </Typography>
+                    <Box display="flex" alignItems="center" gap={2}>
+                      <UserImage
+                        profilePic={userData?.user?.profile_pic}
+                        name={userData?.user?.full_name}
+                        width={40}
+                        height={40}
+                      />
+                      <Box flex="1">
+                        <Typography variant="h6" fontWeight="bold">
+                          {userData?.user?.full_name}
+                        </Typography>
+                        <Typography variant="body2" color={secondaryColor}>
+                          Email: {userData?.user?.email}
+                        </Typography>
+                      </Box>
                     </Box>
-                  </Box>
-                  <DarkMode />
+                    <DarkMode />
                   </Box>
                   <Divider sx={{ my: 2 }} />
                   <Box sx={{ display: "flex", gap: 4 }}>
@@ -160,7 +160,7 @@ const Page = ({ params }) => {
                         Checked Assignments: {listData?.data?.length}
                       </Typography>
                     </Box>
-                                    </Box>
+                  </Box>
                 </CardContent>
               </Card>
             </Grid>
