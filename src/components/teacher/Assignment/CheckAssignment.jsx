@@ -134,11 +134,12 @@ const CheckAssignment = ({ assignment, index }) => {
               alignItems: "center",
             }}
           >
-            <Typography variant="body2" color="textSecondary">
-              {assignment.assignment_que.assignment_mark}
-            </Typography>
+            
           </Box>
         </Box>
+        <Typography variant="h6" color="textPrimary">
+             <i>Total Marks:</i> {assignment.assignment_que.assignment_mark}
+        </Typography>
         <Typography variant="h6" fontWeight={"bold"} mt={4}>
           <FaPenNib style={{marginRight:"4px"}}/>Submission :
         </Typography>
