@@ -6,9 +6,10 @@ import {
   CardContent,
   Grid,
   Divider,
+  Button,
 } from "@mui/material";
 import UserImage from "@/commonComponents/UserImage/UserImage";
-import { FaCheckCircle, FaTimesCircle } from "react-icons/fa";
+import { FaCheckCircle, FaTimesCircle, FaArrowRight } from "react-icons/fa";
 import { MdOutlineCreditScore, MdOutlineMail } from "react-icons/md";
 import { TbSquareRoundedPercentage } from "react-icons/tb";
 import { VscFeedback } from "react-icons/vsc";
@@ -25,7 +26,7 @@ const StudentAssignments = ({ listData }) => {
   };
   return (
     <Box mt={4} px={2}>
-      <Typography variant="h6" color={"black"} mb={4} fontFamily={"monospace"} fontWeight={"bold"} fontSize={"24px"}>
+      <Typography variant="h6" color={isDarkMode ? "#f1f1f1" : "#000"} mb={4} fontFamily={"monospace"} fontWeight={"bold"} fontSize={"24px"}>
         Students Assignment Submission Details -
       </Typography>
       <Grid container spacing={3}>
@@ -45,6 +46,7 @@ const StudentAssignments = ({ listData }) => {
                 onClick={() => handleRoute(assignment?.id)}
               >
                 <CardContent>
+                
                 <Box display={"flex"} justifyContent={"space-between"}>
                 <Typography variant="h6"><FaDiamond style={{fontSize:"12px", marginRight:"4px"}}/>Submitted by</Typography>
                 <Typography variant="h6"><FaDiamond style={{fontSize:"12px", marginRight:"4px"}}/>Checked Status</Typography>
@@ -128,8 +130,9 @@ const StudentAssignments = ({ listData }) => {
                       md={5}
                       display="flex"
                       alignItems="center"
+                      justifyContent={"flex-end"}
                     >
-                      <VscFeedback style={{ marginRight: "8px" }} size={20} />
+                      {/* <VscFeedback style={{ marginRight: "8px" }} size={20} />
                       <Typography
                         variant="subtitle2"
                         fontWeight="bold"
@@ -137,7 +140,8 @@ const StudentAssignments = ({ listData }) => {
                       >
                         Teacher&apos;s Comment:{" "}
                         {assignment?.comment_by_teacher || "No comment"}
-                      </Typography>
+                      </Typography> */}
+                      <Button variant="outlined">View Submissions <FaArrowRight style={{marginLeft:"2px", opacity:0.7}}/></Button>
                     </Grid>
                   </Grid>
                 </CardContent>
