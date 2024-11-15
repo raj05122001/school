@@ -34,9 +34,13 @@ const SubjectAnalytics = () => {
   };
 
   // Prepare the data for the Radar Chart
-  const radarData = data.map((item) => ({
-    subject: item.subject_name,
-    watchtime: item.watchtime,
+  const radarData = data?.map((item) => ({
+    subject: item.subject_name, // Full name for tooltip and internal use
+    truncatedSubject:
+      item.subject_name.length > 10
+        ? `${item?.subject_name?.slice(0, 10)}...`
+        : item?.subject_name, // Truncated name for the chart
+    watchtime: item?.watchtime,
     fullMark: 5000,
   }));
 
@@ -46,13 +50,13 @@ const SubjectAnalytics = () => {
     const { value } = payload;
 
     const maxCharsPerLine = isSmallScreen ? 8 : 12;
-    const words = value.split(' ');
+    const words = value?.split(" ");
     let lines = [];
-    let currentLine = '';
+    let currentLine = "";
 
     words.forEach((word) => {
       if ((currentLine + word).trim().length <= maxCharsPerLine) {
-        currentLine = (currentLine + ' ' + word).trim();
+        currentLine = (currentLine + " " + word).trim();
       } else {
         lines.push(currentLine);
         currentLine = word;
@@ -117,24 +121,36 @@ const SubjectAnalytics = () => {
       </Box>
       <Box sx={{ width: "100%", height: "300px" }}>
         <ResponsiveContainer width="100%" height="100%">
-          <RadarChart
-            cx="50%"
-            cy="50%"
-            outerRadius={"80%"}
-            data={radarData}
-          >
+          <RadarChart cx="50%" cy="50%" outerRadius="80%" data={radarData}>
             <PolarGrid />
-            <PolarAngleAxis dataKey="subject" tick={renderCustomizedTick} />
+            <PolarAngleAxis
+              dataKey="truncatedSubject"
+              tick={renderCustomizedTick}
+            />
             <PolarRadiusAxis
               angle={30}
-              domain={[0, 'auto']}
+              domain={[0, "auto"]}
               tick={{ fill: isDarkMode ? "#fff" : "#000" }}
               style={{ fontSize: "12px" }}
             />
-            <Tooltip />
+            <Tooltip
+              formatter={(value, name, props) => {
+                if (name === "Watchtime") {
+                  return [`${value?.toFixed(2)}`, "Watchtime"]; // Format watchtime with 2 decimal places
+                }
+                return null; // Skip other data keys
+              }}
+              labelFormatter={(label, props) => {
+                // Map the truncated subject back to the full subject name
+                const payload = props.find(
+                  (p) => p?.payload?.truncatedSubject === label
+                );
+                return payload ? payload?.payload?.subject : label;
+              }}
+            />
             <Radar
-              name="Watch Time"
-              dataKey="watchtime"
+              name="Watchtime"
+              dataKey="watchtime" // Ensure this matches the field in `radarData`
               stroke={isDarkMode ? "#8884d8" : "#82ca9d"}
               fill={isDarkMode ? "#8884d8" : "#82ca9d"}
               fillOpacity={0.6}
@@ -142,8 +158,8 @@ const SubjectAnalytics = () => {
           </RadarChart>
         </ResponsiveContainer>
       </Box>
-       {/* Add caption below the chart */}
-       <Typography
+      {/* Add caption below the chart */}
+      <Typography
         sx={{
           // mt: 2,
           textAlign: "center",
@@ -151,7 +167,10 @@ const SubjectAnalytics = () => {
           color: isDarkMode ? "#f0f0f0" : "#2b2b2b",
         }}
       >
-        This radar chart displays the watch time for each subject. Each axis represents a subject, and the distance from the center indicates the total watch time. Higher values mean more time spent watching that subject.
+        This radar chart displays the watch time for each subject. Each axis
+        represents a subject, and the distance from the center indicates the
+        total watch time. Higher values mean more time spent watching that
+        subject.
       </Typography>
     </Box>
   );

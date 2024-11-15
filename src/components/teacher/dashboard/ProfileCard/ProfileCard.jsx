@@ -75,12 +75,12 @@ function ProfileCard() {
         </Typography>
         <Box sx={{ display: "flex", gap: 2 }}>
           {/* Class and Department */}
+          {/* <Typography variant="body2" color={"white"}>
+            Experience: {userDetails?.exp}
+          </Typography> */}
+          
           <Typography variant="body2" color={"white"}>
-            Class: M.Tech
-          </Typography>
-          🔹
-          <Typography variant="body2" color={"white"}>
-            Department: Mathematics
+          🔹  Department: {userDetails?.department}
           </Typography>
         </Box>
       </CardContent>
