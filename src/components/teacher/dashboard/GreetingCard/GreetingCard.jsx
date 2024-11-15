@@ -94,7 +94,7 @@ function GreetingCard() {
               Watch Lecture
             </Button>
 
-            <Button
+            {/* <Button
               variant="contained"
               sx={{
                 backgroundColor: "#90EE90",
@@ -106,7 +106,7 @@ function GreetingCard() {
               }}
             >
               Attempt Quiz
-            </Button>
+            </Button> */}
           </Box>
         ) : (
           <Box sx={{ display: "flex", gap: 2 }}>
@@ -127,7 +127,7 @@ function GreetingCard() {
               Create Lecture
             </Button>
 
-            <Button
+            {/* <Button
               variant="contained"
               sx={{
                 backgroundColor: "#90EE90",
@@ -139,7 +139,7 @@ function GreetingCard() {
               }}
             >
               Create Quiz
-            </Button>
+            </Button> */}
           </Box>
         )}
       </Box>

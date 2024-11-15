@@ -138,6 +138,10 @@ const LectureTabs = () => {
     router.push(`${pathname}?${newSearchParams.toString()}`);
   };
 
+  const handleRowClick = (id) => { 
+    router.push(`/teacher/lecture-listings/${id}`);
+  };
+
   const filters = useMemo(
     () => (
       <TeacherFilters
@@ -280,7 +284,6 @@ const LectureTabs = () => {
             background: isDarkMode
               ? ""
               : "linear-gradient(to top, #dfe9f3 0%, white 100%)",
-              
           }}
         >
           <Table className="blur_effect_card">
@@ -364,33 +367,33 @@ const LectureTabs = () => {
                 )}
               </TableRow>
             </TableHead>
-            <TableBody sx={{color: isDarkMode ? "#36454F" : "#FFFFF0"}}>
+            <TableBody sx={{ color: isDarkMode ? "#36454F" : "#FFFFF0" }}>
               {lectureData?.data?.length > 0 &&
                 lectureData?.data?.map((lecture, index) => (
-                  <TableRow key={index} sx={{ color: isDarkMode ? "#36454F" : "#FFFFF0" }}>
-                    <TableCell sx={{  }}>
-                      {lecture.title}
-                    </TableCell>
-                    <TableCell sx={{  }}>
+                  <TableRow
+                    key={index}
+                    sx={{ color: isDarkMode ? "#36454F" : "#FFFFF0" }}
+                    onClick={() =>
+                      status === "COMPLETED" &&
+                      handleRowClick(lectureData?.data[index]?.id)
+                    }
+                  >
+                    {console.log("Lecture Data is", lectureData.data[index].id)}
+                    <TableCell sx={{}}>{lecture.title}</TableCell>
+                    <TableCell sx={{}}>
                       <LectureType lectureType={lecture?.type} />
                     </TableCell>
-                    <TableCell sx={{  }}>
-                      {lecture.schedule_date}
-                    </TableCell>
-                    <TableCell sx={{  }}>
-                      {lecture.schedule_time}
-                    </TableCell>
-                    <TableCell sx={{  }}>
+                    <TableCell sx={{}}>{lecture.schedule_date}</TableCell>
+                    <TableCell sx={{}}>{lecture.schedule_time}</TableCell>
+                    <TableCell sx={{}}>
                       {lecture?.lecture_class?.name}
                     </TableCell>
-                    <TableCell sx={{  }}>
+                    <TableCell sx={{}}>
                       {lecture?.chapter?.subject?.name}
                     </TableCell>
-                    <TableCell sx={{  }}>
-                      {lecture?.chapter?.chapter}
-                    </TableCell>
+                    <TableCell sx={{}}>{lecture?.chapter?.chapter}</TableCell>
                     {status === "UPCOMMING" && (
-                      <TableCell sx={{ }}>
+                      <TableCell sx={{}}>
                         <Box
                           sx={{ display: "flex", alignItems: "center", gap: 1 }}
                         >
