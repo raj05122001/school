@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   Box,
   Select,
@@ -19,60 +19,28 @@ import {
 } from "recharts";
 import { FaVideo, FaEye, FaCommentDots } from "react-icons/fa"; // Import icons
 import { useThemeContext } from "@/hooks/ThemeContext";
-
-const data = [
-  {
-    name: "1",
-    view: 40,
-    comments: 24,
-    upload: 9,
-  },
-  {
-    name: "2",
-    view: 30,
-    comments: 13,
-    upload: 7,
-  },
-  {
-    name: "3",
-    view: 20,
-    comments: 98,
-    upload: 15,
-  },
-  {
-    name: "4",
-    view: 27,
-    comments: 39,
-    upload: 10,
-  },
-  {
-    name: "5",
-    view: 18,
-    comments: 48,
-    upload: 3,
-  },
-  {
-    name: "6",
-    view: 23,
-    comments: 38,
-    upload: 2,
-  },
-  {
-    name: "7",
-    view: 34,
-    comments: 43,
-    upload: 2,
-  },
-];
+import { commentWatchtimeGraph } from "@/api/apiHelper";
 
 const LectureAnalytics = () => {
   const { isDarkMode } = useThemeContext();
   const [timePeriod, setTimePeriod] = useState("week");
+  const [data, setData] = useState([]);
+console.log("data data",data)
+  useEffect(() => {
+    fetchCommentWatchtimeGraph();
+  }, []);
 
-  // Handle the time period change
-  const handleTimePeriodChange = (event) => {
-    setTimePeriod(event.target.value);
-    // Update your data or call API here based on the selected time period
+  const fetchCommentWatchtimeGraph = async () => {
+    try {
+      const response = await commentWatchtimeGraph("");
+      const transformedData = response?.data?.data.map((item) => ({
+        ...item,
+        watchtime_count: (item.watchtime_count / 60).toFixed(2), // Convert to minutes
+      }));
+      setData(transformedData);
+    } catch (error) {
+      console.error(error);
+    }
   };
 
   return (
@@ -113,7 +81,7 @@ const LectureAnalytics = () => {
               strokeDasharray="3 3"
               stroke={isDarkMode ? "#555" : "#ccc"}
             />
-            <XAxis dataKey="name" stroke={isDarkMode ? "#FFF" : "#000"} />
+            <XAxis dataKey="x_data" stroke={isDarkMode ? "#FFF" : "#000"} />
             <YAxis stroke={isDarkMode ? "#FFF" : "#000"} />
             <Tooltip
               contentStyle={{
@@ -131,12 +99,13 @@ const LectureAnalytics = () => {
 
             {/* Adding icons to bars */}
             <Bar
-              dataKey="comments"
+              dataKey="comments_count"
+              name="Comments"
               fill="#8884d8"
               background={{ fill: "#eee" }}
             />
-            <Bar dataKey="view" fill="#82ca9d" />
-            <Bar dataKey="upload" fill="#ffc658" />
+            <Bar dataKey="watchtime_count" name="Watchtime (Minutes)" fill="#82ca9d" />
+            <Bar dataKey="upload_count" name="Upload" fill="#ffc658" />
           </BarChart>
         </ResponsiveContainer>
       </Box>
