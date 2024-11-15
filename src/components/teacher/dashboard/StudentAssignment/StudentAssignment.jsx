@@ -134,6 +134,8 @@ const StudentAssignment = ({ selectedOptions }) => {
         component={Paper}
         sx={{
           maxHeight: 420,
+          minHeight: 290,
+          height:'100%',
           borderRadius: "8px",
           overflow: "hidden",
           backdropFilter: "blur(10px)",

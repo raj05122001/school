@@ -441,3 +441,22 @@ export const getWatchtimeComparison = async (teacherId) => {
   const apiInstance = new apiServices(axiosAPIInstance);
   return await apiInstance.getWatchtimeComparison(teacherId);
 };
+export const updateWatchtime = async (formData) => {
+  const apiInstance = new apiServices(axiosAPIInstance);
+  return await apiInstance.updateWatchtime(formData);
+}
+
+export const commentWatchtimeGraph = async (filter_by="") => {
+  const apiInstance = new apiServices(axiosAPIInstance);
+  return await apiInstance.commentWatchtimeGraph(filter_by);
+}
+
+export const watchtimeBySubject = async () => {
+  const apiInstance = new apiServices(axiosAPIInstance);
+  return await apiInstance.watchtimeBySubject();
+}
+
+export const getRatingsCount = async () => {
+  const apiInstance = new apiServices(axiosAPIInstance);
+  return await apiInstance.getRatingsCount();
+}

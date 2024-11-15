@@ -812,5 +812,40 @@ export default class apiServices {
       .get(`/api/v1/dashboard/teacher_watchtime_graph/?teacher_id=${lectureId}`)
       .then((Response) => Response.data)
   }
+  public updateWatchtime = async (formData) => {
+    return await this.axiosInstance
+      .post(`/api/v1/dashboard/watchtime_data/`, formData)
+      .then((Response) => Response)
+  }
+
+  public commentWatchtimeGraph = (filter_by="") => {
+    return this.axiosInstance
+      .get(
+        `/api/v1/dashboard/teacher/upload-comment-watchtime-graph/?filter_by=${filter_by}`
+      )
+      .then((response) => {
+        return response;
+      })
+  };
+
+  public watchtimeBySubject = () => {
+    return this.axiosInstance
+      .get(
+        `/api/v1/dashboard/teacher/watchtime_by_subject/`
+      )
+      .then((response) => {
+        return response;
+      })
+  };
+
+  public getRatingsCount = () => {
+    return this.axiosInstance
+      .get(
+        `/api/v1/dashboard/teacher/ratings_count/`
+      )
+      .then((response) => {
+        return response;
+      })
+  };
 
 }

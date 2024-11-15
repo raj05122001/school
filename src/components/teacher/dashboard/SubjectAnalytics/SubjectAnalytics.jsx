@@ -1,32 +1,84 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import {
-  ComposedChart,
-  Bar,
-  XAxis,
-  YAxis,
-  CartesianGrid,
-  Tooltip,
-  Legend,
   ResponsiveContainer,
+  RadarChart,
+  PolarGrid,
+  PolarAngleAxis,
+  PolarRadiusAxis,
+  Radar,
+  Tooltip,
 } from "recharts";
-import { Box, Typography } from "@mui/material";
+import { Box, Typography, useMediaQuery } from "@mui/material";
 import { useThemeContext } from "@/hooks/ThemeContext";
-import { FiBarChart2 } from "react-icons/fi"; // Bar chart icon from react-icons
-import { MdDarkMode, MdLightMode } from "react-icons/md"; // Icons for dark and light mode
-import { light } from "@mui/material/styles/createPalette";
-
-// Sample data
-const data = [
-  { subject: "Data Mining", time: 40 },
-  { subject: "Network Security", time: 36 },
-  { subject: "DBMS", time: 87 },
-  { subject: "Deep learning", time: 42 },
-  { subject: "DSA", time: 49 },
-  { subject: "Automata", time: 90 },
-];
+import { FiBarChart2 } from "react-icons/fi";
+import { MdDarkMode, MdLightMode } from "react-icons/md";
+import { watchtimeBySubject } from "@/api/apiHelper";
 
 const SubjectAnalytics = () => {
   const { isDarkMode } = useThemeContext();
+  const [data, setData] = useState([]);
+  const isSmallScreen = useMediaQuery("(max-width:600px)");
+
+  useEffect(() => {
+    fetchWatchtimeBySubject();
+  }, []);
+
+  const fetchWatchtimeBySubject = async () => {
+    try {
+      const response = await watchtimeBySubject();
+      setData(response?.data?.data);
+      console.log("response fetchwatchtimeBySubject", response);
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
+  // Prepare the data for the Radar Chart
+  const radarData = data.map((item) => ({
+    subject: item.subject_name,
+    watchtime: item.watchtime,
+    fullMark: 5000,
+  }));
+
+  // Custom tick component for wrapping text
+  const renderCustomizedTick = (props) => {
+    const { x, y, payload, textAnchor } = props;
+    const { value } = payload;
+
+    const maxCharsPerLine = isSmallScreen ? 8 : 12;
+    const words = value.split(' ');
+    let lines = [];
+    let currentLine = '';
+
+    words.forEach((word) => {
+      if ((currentLine + word).trim().length <= maxCharsPerLine) {
+        currentLine = (currentLine + ' ' + word).trim();
+      } else {
+        lines.push(currentLine);
+        currentLine = word;
+      }
+    });
+
+    if (currentLine) {
+      lines.push(currentLine);
+    }
+
+    return (
+      <text
+        x={x}
+        y={y}
+        textAnchor={textAnchor}
+        fill={isDarkMode ? "#fff" : "#000"}
+        style={{ fontSize: isSmallScreen ? "10px" : "12px" }}
+      >
+        {lines.map((line, index) => (
+          <tspan key={index} x={x} dy={index * 12}>
+            {line}
+          </tspan>
+        ))}
+      </text>
+    );
+  };
 
   return (
     <Box
@@ -63,39 +115,44 @@ const SubjectAnalytics = () => {
           <MdLightMode style={{ fontSize: "24px", color: "#2b2b2b" }} />
         )}
       </Box>
-      <Box sx={{ width: "100%", height: "100%" }}>
+      <Box sx={{ width: "100%", height: "300px" }}>
         <ResponsiveContainer width="100%" height="100%">
-          <ComposedChart
-            layout="vertical"
-            data={data}
-            margin={{
-              top: 20,
-              right: 20,
-              bottom: 20,
-              left: 20,
-            }}
+          <RadarChart
+            cx="50%"
+            cy="50%"
+            outerRadius={"80%"}
+            data={radarData}
           >
-            <CartesianGrid stroke={isDarkMode ? "#444444" : "#e0e0e0"} />
-            <XAxis type="number" stroke={isDarkMode ? "#f0f0f0" : "#2b2b2b"} />
-            <YAxis
-              dataKey="subject"
-              type="category"
-              scale="band"
-              stroke={isDarkMode ? "#f0f0f0" : "#2b2b2b"}
+            <PolarGrid />
+            <PolarAngleAxis dataKey="subject" tick={renderCustomizedTick} />
+            <PolarRadiusAxis
+              angle={30}
+              domain={[0, 'auto']}
+              tick={{ fill: isDarkMode ? "#fff" : "#000" }}
+              style={{ fontSize: "12px" }}
             />
-            <Tooltip
-              contentStyle={{
-                backgroundColor: isDarkMode ? "#444444" : "#fff",
-                color: isDarkMode ? "#f0f0f0" : "#2b2b2b",
-              }}
+            <Tooltip />
+            <Radar
+              name="Watch Time"
+              dataKey="watchtime"
+              stroke={isDarkMode ? "#8884d8" : "#82ca9d"}
+              fill={isDarkMode ? "#8884d8" : "#82ca9d"}
+              fillOpacity={0.6}
             />
-            <Legend
-              wrapperStyle={{ color: isDarkMode ? "#f0f0f0" : "#2b2b2b" }}
-            />
-            <Bar dataKey="time" fill={isDarkMode ? "#82ca9d" : "#413ea0"} />
-          </ComposedChart>
+          </RadarChart>
         </ResponsiveContainer>
       </Box>
+       {/* Add caption below the chart */}
+       <Typography
+        sx={{
+          // mt: 2,
+          textAlign: "center",
+          fontSize: isSmallScreen ? "8px" : "10px",
+          color: isDarkMode ? "#f0f0f0" : "#2b2b2b",
+        }}
+      >
+        This radar chart displays the watch time for each subject. Each axis represents a subject, and the distance from the center indicates the total watch time. Higher values mean more time spent watching that subject.
+      </Typography>
     </Box>
   );
 };
