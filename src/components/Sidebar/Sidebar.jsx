@@ -324,7 +324,7 @@ export const sidebarLinks = {
       show: "TEACHER",
     },
     {
-      text: "Assignment Assessment",
+      text: "Assessment",
       href: "/teacher/assignment",
       icon: <MdAssignment size={22} />,
       show: "TEACHER",
