@@ -1,5 +1,5 @@
 "use client";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   Box,
   Table,
@@ -16,26 +16,86 @@ import {
 } from "@mui/material";
 import { useThemeContext } from "@/hooks/ThemeContext";
 import DarkMode from "@/components/DarkMode/DarkMode";
+import { getAllTeachers, getAllStudent } from "@/api/apiHelper";
 
 const Page = () => {
   const [tabValue, setTabValue] = useState(0); // Track the selected tab (0 for Student, 1 for Teacher)
   const [dropdownValue, setDropdownValue] = useState("");
+  const [teacherData, setTeacherData] = useState([]);
+  const [filteredTeacherData, setFilteredTeacherData] = useState([]);
+  const [departmentOptions, setDepartmentOptions] = useState([]);
+  const [studentData, setStudentData] = useState([]);
+  const [filteredStudentData, setFilteredStudentData] = useState([]);
+  const [classOptions, setClassOptions] = useState([]);
 
-  const handleTabChange = (event, newValue) => {
-    setTabValue(newValue);
-    setDropdownValue(""); // Clear dropdown value when switching tabs
+  // Fetch Teacher Data
+  const fetchTeacherData = async () => {
+    try {
+      const response = await getAllTeachers("", "", "", "", "", 1, 10);
+      const teacherList = response?.data?.data?.data || [];
+      setTeacherData(teacherList);
+      setFilteredTeacherData(teacherList);
+
+      const uniqueDepartments = Array.from(
+        new Set(teacherList.map((item) => item.department?.name || ""))
+      );
+      setDepartmentOptions(uniqueDepartments);
+    } catch (error) {
+      console.error(error);
+    }
   };
+
+  // Fetch Student Data
+  const fetchStudentData = async () => {
+    try {
+      const response = await getAllStudent("", "", "", "", "", 1, 10);
+      console.log("Student API Response:", response);
+      const studentList = response?.data?.data?.data || [];
+      setStudentData(studentList);
+      setFilteredStudentData(studentList);
+
+      const uniqueClasses = Array.from(
+        new Set(studentList.map((item) => item.user_class?.name || ""))
+      );
+      setClassOptions(uniqueClasses);
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
+  const handleDropdownChange = (event, newValue) => {
+    setDropdownValue(newValue);
+
+    if (tabValue === 0) {
+      // Filter Student Data
+      const filteredData = studentData.filter(
+        (student) => student.user_class?.name === newValue
+      );
+      setFilteredStudentData(newValue ? filteredData : studentData);
+    } else {
+      // Filter Teacher Data
+      const filteredData = teacherData.filter(
+        (teacher) => teacher.department?.name === newValue
+      );
+      setFilteredTeacherData(newValue ? filteredData : teacherData);
+    }
+  };
+
+  useEffect(() => {
+    if (tabValue === 0) {
+      fetchStudentData();
+    } else {
+      fetchTeacherData();
+    }
+  }, [tabValue]);
 
   const { isDarkMode } = useThemeContext();
 
   const studentHeaders = [
     "Student",
-    "Roll No",
-    "Course",
-    "Department",
     "Class",
     "Email",
-    "Batch_year",
+    "Batch Year",
   ];
   const teacherHeaders = [
     "Teacher",
@@ -47,23 +107,14 @@ const Page = () => {
     "Rating",
   ];
 
-  // Options for dropdowns
-  const classOptions = ["MCA", "B.Tech", "BCA"];
-  const departmentOptions = ["Science", "Arts", "Commerce"];
   const dropdownOptions = tabValue === 0 ? classOptions : departmentOptions;
 
   return (
     <Box padding={3}>
-      {/* Tabs and Dropdown Section */}
-      <Box
-        display="flex"
-        alignItems="center"
-        justifyContent="space-between"
-        marginBottom={2}
-      >
+      <Box display="flex" alignItems="center" justifyContent="space-between" marginBottom={2}>
         <Tabs
           value={tabValue}
-          onChange={handleTabChange}
+          onChange={(event, newValue) => setTabValue(newValue)}
           indicatorColor="none"
           textColor="primary"
           centered
@@ -73,7 +124,6 @@ const Page = () => {
               background: isDarkMode
                 ? "linear-gradient(89.7deg, rgb(0, 0, 0) -10.7%, rgb(53, 92, 125) 88.8%)"
                 : "radial-gradient(circle at 10% 20%, rgb(239, 246, 249) 0%, rgb(206, 239, 253) 90%)",
-              // backgroundImage: isDarkMode ? "" : "url('/TabBG2.jpg')",
               backgroundSize: "cover",
               backgroundPosition: "center",
               padding: 1,
@@ -85,13 +135,10 @@ const Page = () => {
               padding: "10px 20px",
               minHeight: 0,
               marginTop: "8px",
-              textAlign: "center",
-              color: isDarkMode && "#F0EAD6",
               "&:hover": {
                 backgroundColor: "#e0e0e0",
                 boxShadow: "0px 2px 8px rgba(0, 0, 0, 0.1)",
                 borderRadius: "10px",
-                color: "black",
               },
               "&.Mui-selected": {
                 backgroundColor: "#fff",
@@ -106,16 +153,13 @@ const Page = () => {
           <Tab label="Teacher" />
         </Tabs>
 
-        {/* Dropdown and Dark Mode Toggle */}
         <Box display="flex" alignItems="center" gap={2}>
           <Autocomplete
             freeSolo
             options={dropdownOptions}
             value={dropdownValue}
-            onChange={(event, newValue) => setDropdownValue(newValue)}
-            onInputChange={(event, newInputValue) =>
-              setDropdownValue(newInputValue)
-            }
+            onChange={handleDropdownChange}
+            onInputChange={(event, newInputValue) => handleDropdownChange(null, newInputValue)}
             renderInput={(params) => (
               <TextField
                 {...params}
@@ -126,11 +170,9 @@ const Page = () => {
                 }}
                 InputProps={{
                   ...params.InputProps,
-                  type: "search",
                   sx: {
                     backdropFilter: "blur(10px)",
                     backgroundColor: "rgba(255, 255, 255, 0.5)",
-                    "& .MuiOutlinedInput-notchedOutline": {},
                   },
                 }}
               />
@@ -141,79 +183,62 @@ const Page = () => {
         </Box>
       </Box>
 
-      {/* Table */}
-      <TableContainer
-        component={Box}
-        borderRadius={1}
-        className="blur_effect_card"
-      >
+      <TableContainer component={Box} borderRadius={1} className="blur_effect_card">
         <Table>
           <TableHead>
             <TableRow>
-              {(tabValue === 0 ? studentHeaders : teacherHeaders).map(
-                (header) => (
-                  <TableCell
-                    key={header}
-                    sx={{ color: isDarkMode ? "#F0EAD6" : "#36454F" }}
-                  >
-                    <Typography variant="subtitle1" fontWeight="bold">
-                      {header}
-                    </Typography>
-                  </TableCell>
-                )
-              )}
+              {(tabValue === 0 ? studentHeaders : teacherHeaders).map((header) => (
+                <TableCell key={header} sx={{ color: isDarkMode ? "#F0EAD6" : "#36454F" }}>
+                  <Typography variant="subtitle1" fontWeight="bold">
+                    {header}
+                  </Typography>
+                </TableCell>
+              ))}
             </TableRow>
           </TableHead>
-          <TableBody>
-            {tabValue === 0 ? (
-              <TableRow>
-                <TableCell sx={{ color: isDarkMode ? "#F0EAD6" : "#36454F" }}>
-                  Vinayak Patel
-                </TableCell>
-                <TableCell sx={{ color: isDarkMode ? "#F0EAD6" : "#36454F" }}>
-                  12345
-                </TableCell>
-                <TableCell sx={{ color: isDarkMode ? "#F0EAD6" : "#36454F" }}>
-                  MCA-II
-                </TableCell>
-                <TableCell sx={{ color: isDarkMode ? "#F0EAD6" : "#36454F" }}>
-                  CS
-                </TableCell>
-                <TableCell sx={{ color: isDarkMode ? "#F0EAD6" : "#36454F" }}>
-                  12
-                </TableCell>
-                <TableCell sx={{ color: isDarkMode ? "#F0EAD6" : "#36454F" }}>
-                  vinayakpatel@gmail.com
-                </TableCell>
-                <TableCell sx={{ color: isDarkMode ? "#F0EAD6" : "#36454F" }}>
-                  2023
-                </TableCell>
-              </TableRow>
-            ) : (
-              <TableRow>
-                <TableCell sx={{ color: isDarkMode ? "#F0EAD6" : "#36454F" }}>
-                Mitesh Dansena
-                </TableCell>
-                <TableCell sx={{ color: isDarkMode ? "#F0EAD6" : "#36454F" }}>
-                  12
-                </TableCell>
-                <TableCell sx={{ color: isDarkMode ? "#F0EAD6" : "#36454F" }}>
-                  20
-                </TableCell>
-                <TableCell sx={{ color: isDarkMode ? "#F0EAD6" : "#36454F" }}>
-                  30
-                </TableCell>
-                <TableCell sx={{ color: isDarkMode ? "#F0EAD6" : "#36454F" }}>
-                mitesh@gmail.com
-                </TableCell>
-                <TableCell sx={{ color: isDarkMode ? "#F0EAD6" : "#36454F" }}>
-                  5 Years
-                </TableCell>
-                <TableCell sx={{ color: isDarkMode ? "#F0EAD6" : "#36454F" }}>
-                  4.5
-                </TableCell>
-              </TableRow>
-            )}
+          <TableBody>{tabValue === 0 &&
+              filteredStudentData?.map((student) => (
+                <TableRow key={student?.id}>
+                  <TableCell sx={{ color: isDarkMode ? "#F0EAD6" : "#36454F" }}>
+                    {student?.user?.full_name}
+                  </TableCell>
+                  <TableCell sx={{ color: isDarkMode ? "#F0EAD6" : "#36454F" }}>
+                    {student?.user_class?.name}
+                  </TableCell>
+                  <TableCell sx={{ color: isDarkMode ? "#F0EAD6" : "#36454F" }}>
+                    {student.user.email}
+                  </TableCell>
+                  <TableCell sx={{ color: isDarkMode ? "#F0EAD6" : "#36454F" }}>
+                    {student.batch_year}
+                  </TableCell>
+                </TableRow>
+              ))}
+            {tabValue === 1 &&
+              filteredTeacherData.map((teacher) => (
+                <TableRow key={teacher.user.id}>
+                  <TableCell sx={{ color: isDarkMode ? "#F0EAD6" : "#36454F" }}>
+                    {teacher.user.full_name}
+                  </TableCell>
+                  <TableCell sx={{ color: isDarkMode ? "#F0EAD6" : "#36454F" }}>
+                    {teacher.lectures_done}
+                  </TableCell>
+                  <TableCell sx={{ color: isDarkMode ? "#F0EAD6" : "#36454F" }}>
+                    {teacher.alloted_lecturehour}
+                  </TableCell>
+                  <TableCell sx={{ color: isDarkMode ? "#F0EAD6" : "#36454F" }}>
+                    {teacher.total_lectures}
+                  </TableCell>
+                  <TableCell sx={{ color: isDarkMode ? "#F0EAD6" : "#36454F" }}>
+                    {teacher.user.email}
+                  </TableCell>
+                  <TableCell sx={{ color: isDarkMode ? "#F0EAD6" : "#36454F" }}>
+                    {teacher.experience}
+                  </TableCell>
+                  <TableCell sx={{ color: isDarkMode ? "#F0EAD6" : "#36454F" }}>
+                    {teacher.avg_feedback.toFixed(1)}
+                  </TableCell>
+                </TableRow>
+              ))}
           </TableBody>
         </Table>
       </TableContainer>
