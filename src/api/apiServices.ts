@@ -848,4 +848,38 @@ export default class apiServices {
       })
   };
 
+  public getAllTeachers = async (
+    academicYearParam,
+    courseParam,
+    classListParam,
+    departmentsParam,
+    search,
+    page,
+    pageSize
+  ) => {
+    return await this.axiosInstance
+      .get(
+        `/api/v1/dashboard/admin/academic/teachers/?academic_year=${academicYearParam}&course=${courseParam}&class=${classListParam}&department=${departmentsParam}&search=${search}&page=${page}&size=${pageSize}`
+      )
+      .then((Response) => Response)
+      .catch((error) => console.error(error));
+  };
+
+  public getAllStudent = async (
+    academicYearParam,
+    courseParam,
+    classListParam,
+    departmentsParam,
+    search,
+    page,
+    pageSize
+  ) => {
+    return await this.axiosInstance
+      .get(
+        `/api/v1/dashboard/admin/academic/students/?academic_year=${academicYearParam}&department=${departmentsParam}&course=${courseParam}&class=${classListParam}&search=${search}&page=${page}&size=${pageSize}`
+      )
+      .then((Response) => Response)
+      .catch((error) => console.error(error));
+  };
+
 }

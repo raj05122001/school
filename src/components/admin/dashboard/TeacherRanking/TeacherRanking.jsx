@@ -100,7 +100,7 @@ const TeacherRanking = () => {
         padding: 2,
         width: "100%",
         margin: "0 auto",
-        height: "800px",
+        height: "1000px",
         color: isDarkMode ? "#FFF8DC" : "#36454F",
         background: isDarkMode
           ? ""

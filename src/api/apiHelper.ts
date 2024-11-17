@@ -460,3 +460,45 @@ export const getRatingsCount = async () => {
   const apiInstance = new apiServices(axiosAPIInstance);
   return await apiInstance.getRatingsCount();
 }
+
+export const getAllTeachers = async (
+  academicYearParam,
+  courseParam,
+  classListParam,
+  departmentsParam,
+  search,
+  page,
+  pageSize
+) => {
+  const apiInstance = new apiServices(axiosAPIInstance);
+  return await apiInstance.getAllTeachers(
+    academicYearParam,
+    courseParam,
+    classListParam,
+    departmentsParam,
+    search,
+    page,
+    pageSize
+  );
+};
+
+export const getAllStudent = async (
+  academicYearParam,
+  courseParam,
+  classListParam,
+  departmentsParam,
+  search,
+  page,
+  pageSize
+) => {
+  const apiInstance = new apiServices(axiosAPIInstance);
+  return await apiInstance.getAllStudent(
+    academicYearParam,
+    courseParam,
+    classListParam,
+    departmentsParam,
+    search,
+    page,
+    pageSize
+  );
+};
