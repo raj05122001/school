@@ -323,6 +323,7 @@ const CreatingLecture = ({
                 onChange={setSelectedClassName}
                 label={"Lecture Class"}
                 value={selectedClass}
+                disabled={isEditMode} // Disable in edit mode
               />
             </Grid>
 
@@ -334,6 +335,7 @@ const CreatingLecture = ({
                 onChange={setSubjectName}
                 label={"Lecture Subject"}
                 value={lectureSubject}
+                disabled={isEditMode} // Disable in edit mode
               />
             </Grid>
 
@@ -345,6 +347,7 @@ const CreatingLecture = ({
                 onChange={setChapterName}
                 label={"Lecture Chapter"}
                 value={lectureChapter}
+                disabled={isEditMode} // Disable in edit mode
               />
             </Grid>
 

@@ -1,7 +1,7 @@
 import { Autocomplete, TextField } from "@mui/material";
 import { useThemeContext } from "@/hooks/ThemeContext";
 
-const CustomAutocomplete = ({ options, onSelect, onChange, label, value }) => {
+const CustomAutocomplete = ({ options, onSelect, onChange, label, value, disabled }) => {
   const { isDarkMode } = useThemeContext();
 
   const lowerCase = (value) => {
@@ -32,6 +32,7 @@ const CustomAutocomplete = ({ options, onSelect, onChange, label, value }) => {
       options={options}
       value={value}
       getOptionLabel={(option) => option.name}
+      disabled = {disabled}
       onChange={(event, newValue) => {
         handleSelect(newValue);
       }}
