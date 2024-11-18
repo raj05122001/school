@@ -20,6 +20,7 @@ import { updateAssignment } from "@/api/apiHelper";
 import { BiSolidRightArrowCircle } from "react-icons/bi";
 import { FaPenNib } from "react-icons/fa";
 import MathJax from "react-mathjax2";
+import TextWithMath from "@/commonComponents/TextWithMath/TextWithMath";
 
 const CheckAssignment = ({ assignment, index }) => {
   const { isDarkMode, primaryColor, secondaryColor } = useThemeContext();
@@ -122,10 +123,7 @@ const CheckAssignment = ({ assignment, index }) => {
               }}
             >
               <Typography variant="h6" gutterBottom color={primaryColor}>
-                <MathJax.Text
-                  text={assignment.assignment_que.assignment_text}
-                  inline
-                />
+                <TextWithMath text={assignment.assignment_que.assignment_text} />
               </Typography>
               <Box
                 sx={{

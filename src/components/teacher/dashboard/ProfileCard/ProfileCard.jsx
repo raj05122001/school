@@ -78,10 +78,15 @@ function ProfileCard() {
           {/* <Typography variant="body2" color={"white"}>
             Experience: {userDetails?.exp}
           </Typography> */}
-          
+
+          {userDetails?.role === "STUDENT" ?<Typography variant="body2" color={"white"}>
+          🔹  Class: {userDetails?.class_name}
+          </Typography>:
           <Typography variant="body2" color={"white"}>
           🔹  Department: {userDetails?.department}
           </Typography>
+          }
+             
         </Box>
       </CardContent>
     </Card>

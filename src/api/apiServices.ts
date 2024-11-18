@@ -882,4 +882,25 @@ export default class apiServices {
       .catch((error) => console.error(error));
   };
 
+  public postRewriteAI = (formData) => {
+    return this.axiosInstance
+      .post(`/api/v1/rewrite_question/`, formData)
+      .then((response) => {
+        return response;
+      })
+      .catch((error) => {
+        console.error(error);
+      });
+  };
+
+  public getSubjectCompletion = () => {
+    return this.axiosInstance
+      .get(
+        `/api/v1/dashboard/teacher/syllabus_completion/`
+      )
+      .then((response) => {
+        return response;
+      })
+  };
+
 }

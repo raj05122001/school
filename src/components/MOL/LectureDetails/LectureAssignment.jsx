@@ -10,11 +10,13 @@ import {
   DialogTitle,
   Skeleton,
   IconButton,
+  CircularProgress,
 } from "@mui/material";
 import {
   getLectureAssignment,
   updateLectureAssignment,
   createAssignment,
+  postRewriteAI,
 } from "@/api/apiHelper";
 import MathJax from "react-mathjax2";
 import { decodeToken } from "react-jwt";
@@ -39,6 +41,7 @@ const LectureAssignment = ({ id, isDarkMode, class_ID, isEdit }) => {
   const [file, setFile] = useState(null); // New state for file
   const [isEditData, setIsEditData] = useState(false);
   const [editedText, setEditedText] = useState("");
+  const [isLoadingRewrite, setIsLoadingRewrite] = useState(false);
 
   const lectureID = id;
 
@@ -95,6 +98,8 @@ const LectureAssignment = ({ id, isDarkMode, class_ID, isEdit }) => {
         assignment.lecture.id,
         formData
       );
+
+      console.log("Assign response", response);
       if (response?.data.success) {
         setAssignments((prevAssignments) =>
           prevAssignments?.map((a) =>
@@ -130,11 +135,13 @@ const LectureAssignment = ({ id, isDarkMode, class_ID, isEdit }) => {
 
     try {
       const response = await createAssignment(formData);
-      if (response.success) {
+      console.log("Create Assign response", response);
+      if (response?.data?.success) {
         setAssignments((prevAssignments) => [
           ...prevAssignments,
           { ...formData, id: response.data.id, is_assigned: true },
         ]);
+        fetchAssignments();
         setOpenDialog(false);
       } else {
         setError("Failed to create assignment.");
@@ -147,6 +154,26 @@ const LectureAssignment = ({ id, isDarkMode, class_ID, isEdit }) => {
 
   const lectureTitle =
     assignments.length > 0 ? assignments[0].lecture.title : "";
+
+  const handleRewriteWithAI = async (text) => {
+    setIsLoadingRewrite(true); // Start loader
+    try {
+      const formData = { text };
+      const response = await postRewriteAI(formData);
+      if (response.data.success) {
+        setNewAssignment((prevState) => ({
+          ...prevState,
+          assignment_text: response.data.data.assignment_question,
+        }));
+      } else {
+        console.error("Failed to rewrite with AI:", response.message);
+      }
+    } catch (error) {
+      console.error("Error rewriting with AI:", error);
+    } finally {
+      setIsLoadingRewrite(false); // Stop loader
+    }
+  };
 
   return (
     <>
@@ -406,6 +433,28 @@ const LectureAssignment = ({ id, isDarkMode, class_ID, isEdit }) => {
                   })
                 }
               />
+              <Box display="flex" justifyContent="flex-end" mt={2}>
+                <Button
+                  variant="outlined"
+                  disabled={isLoadingRewrite} // Disable button while loading
+                  onClick={async () => {
+                    await handleRewriteWithAI(newAssignment.assignment_text);
+                  }}
+                  sx={{
+                    backgroundColor: "#6a0dad",
+                    color: "white",
+                    ":hover": {
+                      backgroundColor: "#5a00c1",
+                    },
+                  }}
+                >
+                  {isLoadingRewrite ? (
+                    <CircularProgress size={24} sx={{color:"#fff", width:"100%"}} />
+                  ) : (
+                    "◇ Rewrite with AI "
+                  )}
+                </Button>
+              </Box>
               <TextField
                 margin="dense"
                 label="Assignment Marks"

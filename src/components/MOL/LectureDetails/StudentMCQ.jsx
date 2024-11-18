@@ -4,6 +4,7 @@ import { getLectureQuiz, submitQuiz, getQuizResponse } from "@/api/apiHelper";
 import MathJax from "react-mathjax2";
 import { decodeToken } from "react-jwt";
 import Cookies from "js-cookie";
+import TextWithMath from "@/commonComponents/TextWithMath/TextWithMath";
 
 const StudentMCQ = ({ id, isDarkMode }) => {
   const [quizData, setQuizData] = useState([]);
@@ -48,10 +49,19 @@ const StudentMCQ = ({ id, isDarkMode }) => {
 
   const parseOptions = (options) => {
     try {
-      const validJson = options.replace(/'/g, '"');
+      // First, convert the single quotes around the array to double quotes
+      let validJson = options
+        .replace(/^\[|\]$/g, '') // Remove the surrounding brackets temporarily
+        .split(',') // Split each option by commas
+        .map(option => option.trim().replace(/^'/, '"').replace(/'$/, '"')) // Replace single quotes around each option with double quotes
+        .join(','); // Join the items back into a comma-separated string
+  
+      // Wrap the modified string back into an array format
+      validJson = `[${validJson}]`;
+
       return JSON.parse(validJson);
     } catch (error) {
-      console.error("Error parsing options:", error);
+      console.error("Error parsing JSON:", error);
       return [];
     }
   };
@@ -143,7 +153,7 @@ const StudentMCQ = ({ id, isDarkMode }) => {
                   <Typography sx={{ textAlign: "left", marginRight: 1 }}>
                     {questionIndex + 1}.
                   </Typography>
-                  <MathJax.Text text={item.question} />
+                  <TextWithMath text={item.question} />
                 </Box>
                 <RadioGroup
                   value={selectedAnswers[item.id] || ""}

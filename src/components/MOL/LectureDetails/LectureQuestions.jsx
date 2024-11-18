@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { Box, Typography, Button, Skeleton } from "@mui/material";
 import { getLectureQuestion } from "@/api/apiHelper";
 import MathJax from "react-mathjax2";
+import TextWithMath from "@/commonComponents/TextWithMath/TextWithMath";
 
 const LectureQuestions = ({ id, isDarkMode }) => {
   const [questionsData, setQuestionsData] = useState([]);
@@ -84,7 +85,7 @@ const LectureQuestions = ({ id, isDarkMode }) => {
                   {item.questions.map((question, qIndex) => (
                     <li key={qIndex}>
                       <Typography variant="body2">
-                        <MathJax.Text text={question} />
+                        <TextWithMath text={question} />
                       </Typography>
                     </li>
                   ))}
