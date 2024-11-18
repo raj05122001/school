@@ -236,7 +236,7 @@ const TeacherRanking = () => {
                           </Box>
                         </TableCell>
                         <TableCell>{teacher?.Name}</TableCell>
-                        <TableCell>{teacher?.["Organizer ID"]}</TableCell>
+                        <TableCell>{teacher?.["Total Lectures"]}</TableCell>
                         <TableCell>
                           {teacher["Completed Lectures"] || 0}
                         </TableCell>
