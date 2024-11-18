@@ -4,7 +4,7 @@ import { FaChalkboardTeacher } from "react-icons/fa";
 import React, { useEffect, useMemo, useState } from "react";
 import ListingCard from "@/commonComponents/ListingCard/ListingCard";
 import AdminFilters from "@/components/teacher/lecture-listings/Filters/AdminFilters";
-import { getTeacherAllLecture } from "@/api/apiHelper";
+import { getLectureTracking } from "@/api/apiHelper";
 import { decodeToken } from "react-jwt";
 import Cookies from "js-cookie";
 import { useSearchParams, useRouter, usePathname } from "next/navigation";
@@ -65,6 +65,8 @@ const Page = () => {
         encodeURI(subject),
         encodeURI(classValue)
       );
+
+      console.log("apiResponse?.data==>",apiResponse)
 
       if (apiResponse?.data?.success) {
         setLectureList(apiResponse?.data);
