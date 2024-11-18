@@ -1,20 +1,11 @@
 "use client";
 import React, { useState, useEffect, useMemo } from "react";
-import {
-  Box,
-  Grid,
-  Autocomplete,
-  TextField,
-  Typography,
-  Tabs,
-  Tab,
-} from "@mui/material";
-
+import { Box, Grid, Autocomplete, TextField, Typography } from "@mui/material";
 import GreetingCard from "@/components/admin/dashboard/GreetingCard/GreetingCard";
 import ClassWiseStudentRanking from "@/components/admin/dashboard/ClassWiseStudentRanking/ClassWiseStudentRanking";
 import ClassAssignment from "@/components/admin/dashboard/ClassAssignment/ClassAssignment";
 import StudentAssignment from "@/components/admin/dashboard/StudentAssignment/StudentAssignment";
-import { getteacherClass, getTeacherStudentCount ,getAllSubject} from "@/api/apiHelper";
+import { getTeacherStudentCount, getAllSubject } from "@/api/apiHelper";
 import { useThemeContext } from "@/hooks/ThemeContext";
 import StudentCount from "@/components/admin/dashboard/StudentCount/StudentCount";
 import TeacherCount from "@/components/admin/dashboard/TeacherCount/TeacherCount";
@@ -25,9 +16,7 @@ import AverageLectureDuration from "@/components/admin/dashboard/AverageLectureD
 const Page = () => {
   const { isDarkMode } = useThemeContext();
   const [classOptions, setClassOptions] = useState([]);
-  const [averageDuration, setAverageDuration] = useState(0);
   const [selectedOptions, setSelectedOptions] = useState(null);
-  const [tabValue, setTabValue] = useState(0);
   const [countData, setCountData] = useState({});
 
   useEffect(() => {
@@ -37,12 +26,10 @@ const Page = () => {
 
   const fetchClassOptions = async () => {
     try {
-      const response = await getteacherClass();
-      const subjectResponse=await getAllSubject()
-      console.log("subjectResponse",subjectResponse)
+      const subjectResponse = await getAllSubject();
+      console.log("subjectResponse", subjectResponse);
       setClassOptions(subjectResponse?.data?.data);
       setSelectedOptions(subjectResponse?.data?.data?.[0]);
-      setAverageDuration(response?.data?.data?.avg_duration);
     } catch (error) {
       console.error(error);
     }
@@ -57,10 +44,6 @@ const Page = () => {
     } catch (error) {
       console.error(error);
     }
-  };
-
-  const handleTabChange = (event, newValue) => {
-    setTabValue(newValue);
   };
 
   const darkModeStyles = {
@@ -82,10 +65,22 @@ const Page = () => {
   const currentStyles = isDarkMode ? darkModeStyles : lightModeStyles;
 
   const greetingCard = useMemo(() => <GreetingCard />, []);
-  const totalLectures = useMemo(() => <TotalLectures countData={countData}/>, [countData]);
-  const averageLectureDuration = useMemo(()=> <AverageLectureDuration countData={countData} />, [countData])
-  const studentCount = useMemo(() => <StudentCount countData={countData}/>, [countData]);
-  const teacherCount = useMemo(() => <TeacherCount countData={countData}/>, [countData]);
+  const totalLectures = useMemo(
+    () => <TotalLectures countData={countData} />,
+    [countData]
+  );
+  const averageLectureDuration = useMemo(
+    () => <AverageLectureDuration countData={countData} />,
+    [countData]
+  );
+  const studentCount = useMemo(
+    () => <StudentCount countData={countData} />,
+    [countData]
+  );
+  const teacherCount = useMemo(
+    () => <TeacherCount countData={countData} />,
+    [countData]
+  );
   const teacherRanking = useMemo(() => <TeacherRanking />, []);
 
   const classAssignment = useMemo(
@@ -97,13 +92,8 @@ const Page = () => {
     [selectedOptions]
   );
   const classWiseStudentRanking = useMemo(
-    () => (
-      <ClassWiseStudentRanking
-        selectedOptions={selectedOptions}
-        isMyClass={tabValue}
-      />
-    ),
-    [selectedOptions, tabValue]
+    () => <ClassWiseStudentRanking selectedOptions={selectedOptions} />,
+    [selectedOptions]
   );
 
   return (
@@ -189,45 +179,6 @@ const Page = () => {
               />
             )}
           />
-
-          <Tabs
-            value={tabValue}
-            onChange={handleTabChange}
-            aria-label="lecture overview tabs"
-            indicatorColor="none"
-            sx={{
-              boxShadow: "0 4px 30px rgba(0, 0, 0, 0.1)",
-              backdropFilter: "blur(10px)",
-              backgroundColor: "rgba(255, 255, 255, 0.2)",
-              borderRadius: "10px",
-              display: "flex",
-              justifyContent: "center",
-              alignItems: "center",
-              ".MuiTabs-flexContainer": {
-                padding: "1px 10px",
-              },
-              ".MuiTab-root": {
-                color: "#333",
-                padding: "10px 10px",
-                minHeight: 0,
-                textAlign: "center",
-                color: isDarkMode && "#F0EAD6",
-                "&:hover": {
-                  backgroundColor: "#e0e0e0",
-                  borderRadius: "10px",
-                  color: "black",
-                },
-                "&.Mui-selected": {
-                  backgroundColor: "#e0e0e0",
-                  color: "#000",
-                  borderRadius: "10px",
-                },
-              },
-            }}
-          >
-            <Tab label={`Overall Class`} />
-            <Tab label={`My Class`} />
-          </Tabs>
         </Box>
       </Box>
       <Grid container direction="row" spacing={2} mt={1}>

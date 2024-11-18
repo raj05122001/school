@@ -280,7 +280,7 @@ const CommentsSection = ({ id }) => {
   return (
     <Card
       sx={{
-        maxWidth: 450,
+        // maxWidth: 450,
         height: "100%",
         minHeight: 450,
         display: "flex",

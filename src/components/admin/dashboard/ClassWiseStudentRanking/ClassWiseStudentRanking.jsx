@@ -69,7 +69,7 @@ import {
     );
   };
   
-  const ClassWiseStudentRanking = ({ selectedOptions, isMyClass }) => {
+  const ClassWiseStudentRanking = ({ selectedOptions }) => {
     const userDetails = decodeToken(Cookies.get("ACCESS_TOKEN"));
   
     const { isDarkMode, primaryColor, secondaryColor } = useThemeContext();
@@ -92,14 +92,13 @@ import {
       if (selectedOptions?.class_id) {
         fetchCountByCategory();
       }
-    }, [selectedOptions, isMyClass]);
+    }, [selectedOptions]);
   
     const fetchCountByCategory = async () => {
       setLoading(true);
       try {
         const response = await getCountByCategory(
-          selectedOptions?.class_id,
-          isMyClass !== 0 ? userDetails?.teacher_id : 0
+          selectedOptions?.class_id,0
         );
         setData(response?.data?.data || {});
       } catch (error) {
@@ -347,7 +346,6 @@ import {
             data={data}
             selectedGrad={selectedGrad}
             selectedOptions={selectedOptions}
-            isMyClass={isMyClass}
             userDetails={userDetails}
           />
         )}
@@ -363,7 +361,6 @@ import {
     data,
     selectedGrad,
     selectedOptions,
-    isMyClass,
     userDetails
   }) => {
     const [studentData, setStudentData] = useState([]);
@@ -378,8 +375,7 @@ import {
       try {
         const response = await getStudentByGrade(
           selectedOptions?.class_id,
-          selectedGrad,
-          isMyClass !== 0 ? userDetails?.teacher_id : 0
+          selectedGrad, 0
         );
         setStudentData(response?.data?.data);
       } catch (error) {
