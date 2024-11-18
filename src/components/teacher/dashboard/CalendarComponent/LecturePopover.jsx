@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect ,useContext} from "react";
 import {
   Popover,
   Tooltip,
@@ -9,8 +9,9 @@ import {
   IconButton,
   Avatar,
   Box,
+  Grow,
 } from "@mui/material";
-import { formatTime } from "@/helper/Helper";
+import { formatTime, getInitials } from "@/helper/Helper";
 import { format } from "date-fns";
 import {
   AiOutlineCalendar,
@@ -19,33 +20,46 @@ import {
 } from "react-icons/ai";
 import { FaGraduationCap, FaBook } from "react-icons/fa";
 import { RiBookOpenLine } from "react-icons/ri";
-import UserImage from "@/commonComponents/UserImage/UserImage";
 import stc from "string-to-color";
-import { getInitials } from "@/helper/Helper";
-import { Fade, Grow } from "@mui/material";
+import { AppContextProvider } from "@/app/main";
 
 const LecturePopover = ({ data, isOrganizer }) => {
-  const [containerEl, setContainerEl] = useState(null);
-  const [isPopoverOpen, setIsPopoverOpen] = useState(false);
+  const {
+    openRecordingDrawer,
+    openCreateLecture,
+    handleCreateLecture,
+    handleLectureRecord,
+  } = useContext(AppContextProvider);
+  const [anchorEl, setAnchorEl] = useState(null);
+  const [isHovered, setIsHovered] = useState(false);
 
-  const handleOpen = (e) => {
-    setContainerEl(e.currentTarget);
+  const handleTriggerMouseEnter = (event) => {
+    setAnchorEl(event.currentTarget);
+    setIsHovered(true);
   };
 
-  const handleClose = () => {
-    if (isPopoverOpen) return;
-    setContainerEl(null);
+  const handleTriggerMouseLeave = () => {
+    setIsHovered(false);
   };
 
-  const handlePopoverEnter = () => {
-    setIsPopoverOpen(true);
+  const handlePopoverMouseEnter = () => {
+    setIsHovered(true);
   };
 
-  const handlePopoverLeave = () => {
-    setIsPopoverOpen(false);
+  const handlePopoverMouseLeave = () => {
+    setIsHovered(false);
   };
 
-  const open = Boolean(containerEl);
+  useEffect(() => {
+    if (!isHovered) {
+      const timer = setTimeout(() => {
+        setAnchorEl(null);
+      }, 100); // Small delay to prevent flickering
+      return () => clearTimeout(timer);
+    }
+  }, [isHovered]);
+
+  const open = Boolean(anchorEl);
 
   const {
     schedule_date,
@@ -65,8 +79,8 @@ const LecturePopover = ({ data, isOrganizer }) => {
   return (
     <>
       <Box
-        onMouseEnter={handleOpen}
-        onMouseLeave={handleClose}
+        onMouseEnter={handleTriggerMouseEnter}
+        onMouseLeave={handleTriggerMouseLeave}
         elevation={2}
         sx={{
           padding: "12px",
@@ -83,24 +97,24 @@ const LecturePopover = ({ data, isOrganizer }) => {
         }}
       >
         <h2
-          style={{
-            color: "var(--primary-color)", // Replace with your primary color
-            margin: 0, // Equivalent to my-0
-            fontWeight: 600, // Equivalent to font-semibold
-            fontSize: "0.75rem", // Equivalent to text-xs
-            whiteSpace: "nowrap", // Prevent text wrapping
-            overflow: "hidden", // Hide overflowing text
-            textOverflow: "ellipsis", // Show ellipsis for overflowing text
-          }}
+   style={{
+    color: "var(--primary-color)", // Replace with your primary color
+    margin: 0, // Equivalent to my-0
+    fontWeight: 600, // Equivalent to font-semibold
+    fontSize: "0.75rem", // Equivalent to text-xs
+    whiteSpace: "nowrap", // Prevent text wrapping
+    overflow: "hidden", // Hide overflowing text
+    textOverflow: "ellipsis", // Show ellipsis for overflowing text
+  }}
         >
           {data.event.title}
         </h2>
         <p
-          style={{
-            color: "var(--primary-color)", // Replace with your primary color
-            fontSize: "0.75rem", // Equivalent to text-xs
-            fontWeight: 400, // Equivalent to font-normal
-          }}
+            style={{
+              color: "var(--primary-color)", // Replace with your primary color
+              fontSize: "0.75rem", // Equivalent to text-xs
+              fontWeight: 400, // Equivalent to font-normal
+            }}
         >
           {formattedStartTime}
         </p>
@@ -108,21 +122,23 @@ const LecturePopover = ({ data, isOrganizer }) => {
 
       <Popover
         open={open}
-        anchorEl={containerEl}
-        anchorOrigin={{
-          vertical: "bottom",
-          horizontal: "left",
+        anchorEl={anchorEl}
+        // anchorOrigin={{
+        //   vertical: "bottom",
+        //   horizontal: "left",
+        // }}
+        // transformOrigin={{
+        //   vertical: "top",
+        //   horizontal: "left",
+        // }}
+        disableRestoreFocus
+        PaperProps={{
+          onMouseEnter: handlePopoverMouseEnter,
+          onMouseLeave: handlePopoverMouseLeave,
         }}
-        transformOrigin={{
-          vertical: "top",
-          horizontal: "left",
-        }}
-        // onClose={handleClose}
-        sx={{ pointerEvents: "none" }}
-        // disableRestoreFocus
       >
         <Grow in={open} timeout={400}>
-          <Card sx={{ width: "320px", padding: "16px" }}>
+          <Card sx={{ width: "360px", padding: "16px" }}>
             <CardContent>
               <Grid container spacing={2}>
                 <Grid item xs={8}>
@@ -248,7 +264,7 @@ const LecturePopover = ({ data, isOrganizer }) => {
                     size="small"
                     color="primary"
                     // Uncomment and pass relevant function
-                    // onClick={(event) => openMeetingDrawerRight(event, data)}
+                    onClick={(event) => handleCreateLecture(data.event.extendedProps, true)}
                   >
                     <AiOutlineEdit size={20} />
                   </IconButton>

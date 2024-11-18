@@ -367,7 +367,7 @@ const TeacherRanking = () => {
                   Select a teacher to view detailed analytics. The charts will
                   display trends over time, including the number of lectures
                   completed and watch time analytics, allowing a comparison
-                  between the selected teacher's performance and the overall
+                  between the selected teacher&apos;s performance and the overall
                   average.
                 </Typography>
               </Box>
