@@ -434,16 +434,23 @@ export default class apiServices {
       .catch((error) => console.error(error));
   };
 
-  public getClassAssignment = async (class_ids) => {
+  public getClassAssignment = async (class_ids,isTeacher=false) => {
     return await this.axiosInstance
-      .get(`/api/v1/dashboard/assignment-class-details/${class_ids}/`)
+      .get(`/api/v1/dashboard/assignment-class-details/${class_ids}/${isTeacher? "?teacher=True" : ""}`)
       .then((Response) => Response)
       .catch((error) => console.error(error));
   };
 
-  public getStudentAssignment = async (class_ids) => {
+  public getStudentAssignment = async (class_ids,isTeacher=false) => {
     return await this.axiosInstance
-      .get(`/api/v1/dashboard/assignment-student-details/${class_ids}/`)
+      .get(`/api/v1/dashboard/assignment-student-details/${class_ids}/${isTeacher? "?teacher=True" : ""}`)
+      .then((Response) => Response)
+      .catch((error) => console.error(error));
+  };
+
+  public getAllSubject = async () => {
+    return await this.axiosInstance
+      .get(`/api/v1/dashboard/admin/class_list/`)
       .then((Response) => Response)
       .catch((error) => console.error(error));
   };

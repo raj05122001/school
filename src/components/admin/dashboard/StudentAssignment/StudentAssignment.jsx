@@ -24,7 +24,7 @@ const StudentAssignment = ({ selectedOptions }) => {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    if (selectedOptions?.class_id) {
+    if (selectedOptions?.id) {
       fetchStudentAssignment();
     }
   }, [selectedOptions]);
@@ -32,7 +32,8 @@ const StudentAssignment = ({ selectedOptions }) => {
   const fetchStudentAssignment = async () => {
     setLoading(true);
     try {
-      const response = await getStudentAssignment(selectedOptions?.class_id);
+      const response = await getStudentAssignment(selectedOptions?.id);
+      console.log("response student table",response)
       setData(response?.data?.data?.data);
     } catch (error) {
       console.error(error);

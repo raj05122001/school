@@ -18,7 +18,8 @@ const ClassAssignment = ({selectedOptions}) => {
   const fetchClassAssignment = async () => {
     setLoading(true);
     try {
-      const response = await getClassAssignment(selectedOptions?.class_id);
+      const response = await getClassAssignment(selectedOptions?.class_id,true);
+      console.log("response fetchClassAssignment teacher",response)
       setData(response?.data?.data);
     } catch (error) {
       console.error(error);
@@ -174,10 +175,10 @@ const ClassAssignment = ({selectedOptions}) => {
               )}
               <Typography variant="body2">
                 {index === 0
-                  ? "Range 0 To 50"
+                  ? "Assignment Range 0 To 50"
                   : index === 1
-                  ? "Range 50 To 80"
-                  : "Range 80 To 100"}
+                  ? "Assignment Range 50 To 80"
+                  : "Assignment Range 80 To 100"}
               </Typography>
             </Box>
           </Grid>

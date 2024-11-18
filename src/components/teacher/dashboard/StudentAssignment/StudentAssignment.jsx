@@ -32,7 +32,7 @@ const StudentAssignment = ({ selectedOptions }) => {
   const fetchStudentAssignment = async () => {
     setLoading(true);
     try {
-      const response = await getStudentAssignment(selectedOptions?.class_id);
+      const response = await getStudentAssignment(selectedOptions?.class_id,true);
       setData(response?.data?.data?.data);
     } catch (error) {
       console.error(error);
@@ -134,7 +134,7 @@ const StudentAssignment = ({ selectedOptions }) => {
         component={Paper}
         sx={{
           maxHeight: 420,
-          minHeight: 290,
+          minHeight: 380,
           height:'100%',
           borderRadius: "8px",
           overflow: "hidden",

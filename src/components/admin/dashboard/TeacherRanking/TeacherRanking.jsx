@@ -10,6 +10,7 @@ import {
   TableRow,
   Paper,
   Avatar,
+  Grid,
 } from "@mui/material";
 import { borderRadius, styled } from "@mui/system";
 import { CiStar } from "react-icons/ci";
@@ -50,6 +51,8 @@ const TeacherRanking = () => {
       const response = await getTopTeachers();
       if (response?.success) {
         setTopTeachers(response?.data);
+        const topTeachersArray = Object.values(response?.data);
+        handleRowClick(topTeachersArray?.[0]?.["Organizer ID"]);
       }
     } catch (error) {
       console.error("Error fetching data", error);
@@ -100,7 +103,7 @@ const TeacherRanking = () => {
         padding: 2,
         width: "100%",
         margin: "0 auto",
-        height: "1000px",
+        height: "100%",
         color: isDarkMode ? "#FFF8DC" : "#36454F",
         background: isDarkMode
           ? ""
@@ -109,223 +112,268 @@ const TeacherRanking = () => {
       className="blur_effect_card"
     >
       <Box sx={{ display: "flex" }}>
-        <Box sx={{ width: "50%" }}>
-          <Typography variant="h4" align="left" gutterBottom>
-            <TbTrendingUp style={{ marginRight: "2px", marginTop: "2px" }} />
-            Trending Teachers
-          </Typography>
-          {/* Top 3 Teachers on the Left */}
-          <Box
-            sx={{
-              display: "flex",
-              flexDirection: "column",
-              justifyContent: "center",
-              alignItems: "center",
-              width: "50%",
-              marginLeft: "16px",
-            }}
-          >
-            {topTeachersArray?.map((teacher, index) => (
+        <Grid container spacing={2}>
+          <Grid item xs={12} sm={3}>
+            <Box>
+              <Typography variant="h4" align="left" gutterBottom>
+                <TbTrendingUp
+                  style={{ marginRight: "2px", marginTop: "2px" }}
+                />
+                Trending Teachers
+              </Typography>
+              {/* Top 3 Teachers on the Left */}
               <Box
-                key={index}
                 sx={{
-                  backgroundColor: "rgba(255, 255, 255, 0.2)",
-                  backdropFilter: "blur(10px)",
-                  borderRadius: "10px",
-                  padding: "16px",
                   display: "flex",
                   flexDirection: "column",
+                  justifyContent: "center",
                   alignItems: "center",
-                  boxShadow: isDarkMode
-                    ? "0 6px 10px #D3D3D3"
-                    : "0 6px 10px #FBCEB1",
-                  margin: "8px 0",
                   width: "100%",
-                  textAlign: "center",
+                  // marginLeft: "16px",
                 }}
               >
-                {/* <Avatar sx={{ width: 56, height: 56, marginBottom: "8px" }}>
+                {topTeachersArray?.map((teacher, index) => (
+                  <Box
+                    key={index}
+                    sx={{
+                      backgroundColor: "rgba(255, 255, 255, 0.2)",
+                      backdropFilter: "blur(10px)",
+                      borderRadius: "10px",
+                      padding: "16px",
+                      display: "flex",
+                      flexDirection: "column",
+                      alignItems: "center",
+                      boxShadow: isDarkMode
+                        ? "0 6px 10px #D3D3D3"
+                        : "0 6px 10px #FBCEB1",
+                      margin: "8px 0",
+                      width: "100%",
+                      textAlign: "center",
+                    }}
+                  >
+                    {/* <Avatar sx={{ width: 56, height: 56, marginBottom: "8px" }}>
                 {teacher?.Name[0]}
               </Avatar> */}
-                <img
-                  src={
-                    teacher?.["Profile Pic"]
-                      ? `${BASE_URL_MEET}/media/${teacher?.["Profile Pic"]}`
-                      : "/TopTeachers.png"
-                  }
-                  width={100}
-                  height={100}
-                  style={{ borderRadius: "100%" }}
-                />
-                <Typography variant="h6" mt={2}>
-                  {teacher?.Name}
-                </Typography>
-                <Typography variant="subtitle2" color="textSecondary">
-                  Total Lectures {teacher["Total Lectures"] || 0}
-                </Typography>
-                <Typography variant="subtitle2" color="textSecondary">
-                  Completed Lectures {teacher["Completed Lectures"] || 0}
-                </Typography>
-                <Box
+                    <img
+                      src={
+                        teacher?.["Profile Pic"]
+                          ? `${BASE_URL_MEET}/media/${teacher?.["Profile Pic"]}`
+                          : "/TopTeachers.png"
+                      }
+                      width={100}
+                      height={100}
+                      style={{ borderRadius: "100%" }}
+                    />
+                    <Typography variant="h6" mt={2}>
+                      {teacher?.Name}
+                    </Typography>
+                    <Typography variant="subtitle2" color="textSecondary">
+                      Total Lectures {teacher["Total Lectures"] || 0}
+                    </Typography>
+                    <Typography variant="subtitle2" color="textSecondary">
+                      Completed Lectures {teacher["Completed Lectures"] || 0}
+                    </Typography>
+                    <Box
+                      sx={{
+                        display: "flex",
+                        alignItems: "center",
+                        marginTop: "8px",
+                      }}
+                    >
+                      <StarRating />
+                      <Typography variant="body2">
+                        {parseFloat(teacher["Average Feedback"]).toFixed(2) ||
+                          0}
+                      </Typography>
+                    </Box>
+                  </Box>
+                ))}
+              </Box>
+            </Box>
+          </Grid>
+          <Grid item xs={12} sm={9}>
+            {/* Teachers Table on the Right */}
+            <Box>
+              <Typography variant="h4" align="center" gutterBottom>
+                <FaChalkboardTeacher /> All Teachers
+              </Typography>
+
+              <TableContainer
+                component={Paper}
+                className="blur_effect_card"
+                sx={{ margin: "0 auto", maxHeight: 600 }}
+              >
+                <Table>
+                  <TableHead stickyHeader>
+                    <TableRow>
+                      <TableCell>Profile</TableCell>
+                      <TableCell>Teacher</TableCell>
+                      <TableCell>Total Lectures</TableCell>
+                      <TableCell>Completed Lectures</TableCell>
+                      <TableCell>Average Rating</TableCell>
+                    </TableRow>
+                  </TableHead>
+                  <TableBody>
+                    {topTeachersArray.map((teacher, index) => (
+                      <TableRow
+                        key={index}
+                        onClick={() =>
+                          handleRowClick(teacher?.["Organizer ID"])
+                        }
+                      >
+                        <TableCell>
+                          <Box sx={{ display: "flex", alignItems: "center" }}>
+                            <img
+                              src={
+                                teacher?.["Profile Pic"]
+                                  ? `${BASE_URL_MEET}/media/${teacher?.["Profile Pic"]}`
+                                  : "/TopTeachers.png"
+                              }
+                              width={50}
+                              height={50}
+                              style={{ borderRadius: "100%" }}
+                            />
+                          </Box>
+                        </TableCell>
+                        <TableCell>{teacher?.Name}</TableCell>
+                        <TableCell>{teacher?.["Organizer ID"]}</TableCell>
+                        <TableCell>
+                          {teacher["Completed Lectures"] || 0}
+                        </TableCell>
+                        <TableCell>
+                          {parseFloat(teacher["Average Feedback"]).toFixed(2) ||
+                            0}
+                        </TableCell>
+                      </TableRow>
+                    ))}
+                  </TableBody>
+                </Table>
+              </TableContainer>
+
+              <Box>
+                <Box display={"flex"} gap={2}>
+                  {/* Line Chart for Lecture Completion Data */}
+                  {teacherID && countData?.length > 0 && (
+                    <Box
+                      sx={{ marginTop: 4, width: "100%", height: "20%" }}
+                      className="blur_effect_card"
+                    >
+                      <Typography
+                        mt={3}
+                        variant="h6"
+                        align="center"
+                        gutterBottom
+                      >
+                        Lecture Completion Analytics
+                      </Typography>
+                      <ResponsiveContainer width="100%" height={400}>
+                        <LineChart
+                          data={countData}
+                          margin={{ top: 20, right: 30, left: 0, bottom: 50 }}
+                        >
+                          <CartesianGrid strokeDasharray="3 3" />
+                          <XAxis
+                            dataKey="date"
+                            tick={{ fontSize: 10 }}
+                            angle={-45}
+                            dy={10}
+                            textAnchor="end"
+                            interval="preserveStartEnd"
+                          />
+                          <YAxis tick={{ fontSize: 10 }} />
+                          <Tooltip />
+                          <Legend
+                            layout="horizontal"
+                            verticalAlign="top"
+                            align="center"
+                          />
+                          <Line
+                            type="monotone"
+                            dataKey="teacher_data"
+                            stroke="#8884d8"
+                            name="Teacher Lecture Count"
+                          />
+                          <Line
+                            type="monotone"
+                            dataKey="avg_data"
+                            stroke="#82ca9d"
+                            name="Average Lecture Count"
+                          />
+                        </LineChart>
+                      </ResponsiveContainer>
+                    </Box>
+                  )}
+
+                  {/* Line Chart for Lecture Watchime Data Comparison */}
+                  {teacherID && watchData?.length > 0 && (
+                    <Box
+                      sx={{ marginTop: 4, width: "100%", height: "20%" }}
+                      className="blur_effect_card"
+                    >
+                      <Typography
+                        mt={3}
+                        variant="h6"
+                        align="center"
+                        gutterBottom
+                      >
+                        Lecture Watchtime Analytics
+                      </Typography>
+                      <ResponsiveContainer width="100%" height={400}>
+                        <LineChart
+                          data={watchData}
+                          margin={{ top: 20, right: 30, left: 0, bottom: 50 }}
+                        >
+                          <CartesianGrid strokeDasharray="3 3" />
+                          <XAxis
+                            dataKey="date"
+                            tick={{ fontSize: 10 }}
+                            angle={-45}
+                            dy={10}
+                            textAnchor="end"
+                            interval="preserveStartEnd"
+                          />
+                          <YAxis tick={{ fontSize: 10 }} />
+                          <Tooltip />
+                          <Legend
+                            layout="horizontal"
+                            verticalAlign="top"
+                            align="center"
+                          />
+                          <Line
+                            type="monotone"
+                            dataKey="teacher_data"
+                            stroke="#8884d8"
+                            name="Watchtime"
+                          />
+                          <Line
+                            type="monotone"
+                            dataKey="avg_data"
+                            stroke="#82ca9d"
+                            name="Average Lecture Watchtime"
+                          />
+                        </LineChart>
+                      </ResponsiveContainer>
+                    </Box>
+                  )}
+                </Box>
+                <Typography
                   sx={{
-                    display: "flex",
-                    alignItems: "center",
-                    marginTop: "8px",
+                    // mt: 2,
+                    textAlign: "center",
+                    fontSize: "12px",
+                    color: isDarkMode ? "#f0f0f0" : "#2b2b2b",
                   }}
                 >
-                  <StarRating />
-                  <Typography variant="body2">
-                    {parseFloat(teacher["Average Feedback"]).toFixed(2) || 0}
-                  </Typography>
-                </Box>
-              </Box>
-            ))}
-          </Box>
-        </Box>
-
-        {/* Teachers Table on the Right */}
-        <Box sx={{ width: "70%" }}>
-          <Typography variant="h4" align="center" gutterBottom>
-            <FaChalkboardTeacher /> All Teachers
-          </Typography>
-
-          <TableContainer
-            component={Paper}
-            className="blur_effect_card"
-            sx={{ margin: "0 auto", maxHeight: 600 }}
-          >
-            <Table>
-              <TableHead stickyHeader>
-                <TableRow>
-                  <TableCell>Profile</TableCell>
-                  <TableCell>Teacher</TableCell>
-                  <TableCell>Total Lectures</TableCell>
-                  <TableCell>Completed Lectures</TableCell>
-                  <TableCell>Average Rating</TableCell>
-                </TableRow>
-              </TableHead>
-              <TableBody>
-                {topTeachersArray.map((teacher, index) => (
-                  <TableRow
-                    key={index}
-                    onClick={() => handleRowClick(teacher?.["Organizer ID"])}
-                  >
-                    <TableCell>
-                      <Box sx={{ display: "flex", alignItems: "center" }}>
-                        <img
-                          src={
-                            teacher?.["Profile Pic"]
-                              ? `${BASE_URL_MEET}/media/${teacher?.["Profile Pic"]}`
-                              : "/TopTeachers.png"
-                          }
-                          width={50}
-                          height={50}
-                          style={{ borderRadius: "100%" }}
-                        />
-                      </Box>
-                    </TableCell>
-                    <TableCell>{teacher?.Name}</TableCell>
-                    <TableCell>{teacher?.["Organizer ID"]}</TableCell>
-                    <TableCell>{teacher["Completed Lectures"] || 0}</TableCell>
-                    <TableCell>
-                      {parseFloat(teacher["Average Feedback"]).toFixed(2) || 0}
-                    </TableCell>
-                  </TableRow>
-                ))}
-              </TableBody>
-            </Table>
-          </TableContainer>
-
-          <Box display={"flex"} gap={8}>
-            {/* Line Chart for Lecture Completion Data */}
-            {teacherID && countData?.length > 0 && (
-              <Box sx={{ marginTop: 4, width: "80%", height: "20%" }} className="blur_effect_card">
-                <Typography mt={3} variant="h6" align="center" gutterBottom>
-                  Lecture Completion Analytics
+                  Select a teacher to view detailed analytics. The charts will
+                  display trends over time, including the number of lectures
+                  completed and watch time analytics, allowing a comparison
+                  between the selected teacher's performance and the overall
+                  average.
                 </Typography>
-                <ResponsiveContainer width="100%" height={400}>
-                  <LineChart
-                    data={countData}
-                    margin={{ top: 20, right: 30, left: 0, bottom: 50 }}
-                  >
-                    <CartesianGrid strokeDasharray="3 3" />
-                    <XAxis
-                      dataKey="date"
-                      tick={{ fontSize: 10 }}
-                      angle={-45}
-                      dy={10}
-                      textAnchor="end"
-                      interval="preserveStartEnd"
-                    />
-                    <YAxis tick={{ fontSize: 10 }} />
-                    <Tooltip />
-                    <Legend
-                      layout="horizontal"
-                      verticalAlign="top"
-                      align="center"
-                    />
-                    <Line
-                      type="monotone"
-                      dataKey="teacher_data"
-                      stroke="#8884d8"
-                      name="Teacher Lecture Count"
-                    />
-                    <Line
-                      type="monotone"
-                      dataKey="avg_data"
-                      stroke="#82ca9d"
-                      name="Average Lecture Count"
-                    />
-                  </LineChart>
-                </ResponsiveContainer>
               </Box>
-            )}
-
-            {/* Line Chart for Lecture Watchime Data Comparison */}
-            {teacherID && watchData?.length > 0 && (
-              <Box sx={{ marginTop: 4, width: "80%", height: "20%" }} className="blur_effect_card">
-                <Typography mt={3} variant="h6" align="center" gutterBottom>
-                  Lecture Watchtime Analytics
-                </Typography>
-                <ResponsiveContainer width="100%" height={400}>
-                  <LineChart
-                    data={watchData}
-                    margin={{ top: 20, right: 30, left: 0, bottom: 50 }}
-                  >
-                    <CartesianGrid strokeDasharray="3 3" />
-                    <XAxis
-                      dataKey="date"
-                      tick={{ fontSize: 10 }}
-                      angle={-45}
-                      dy={10}
-                      textAnchor="end"
-                      interval="preserveStartEnd"
-                    />
-                    <YAxis tick={{ fontSize: 10 }} />
-                    <Tooltip />
-                    <Legend
-                      layout="horizontal"
-                      verticalAlign="top"
-                      align="center"
-                    />
-                    <Line
-                      type="monotone"
-                      dataKey="teacher_data"
-                      stroke="#8884d8"
-                      name="Watchtime"
-                    />
-                    <Line
-                      type="monotone"
-                      dataKey="avg_data"
-                      stroke="#82ca9d"
-                      name="Average Lecture Watchtime"
-                    />
-                  </LineChart>
-                </ResponsiveContainer>
-              </Box>
-            )}
-          </Box>
-        </Box>
+            </Box>
+          </Grid>
+        </Grid>
       </Box>
     </Box>
   );

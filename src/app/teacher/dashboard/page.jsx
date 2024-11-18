@@ -33,7 +33,6 @@ const Page = () => {
   const [classOptions, setClassOptions] = useState([]);
   const [averageDuration, setAverageDuration] = useState(0);
   const [selectedOptions, setSelectedOptions] = useState(null);
-  const [tabValue, setTabValue] = useState(0);
 
   useEffect(() => {
     fetchClassOptions();
@@ -48,10 +47,6 @@ const Page = () => {
     } catch (error) {
       console.error(error);
     }
-  };
-
-  const handleTabChange = (event, newValue) => {
-    setTabValue(newValue);
   };
 
   const darkModeStyles = {
@@ -103,10 +98,9 @@ const Page = () => {
     () => (
       <ClassWiseStudentRanking
         selectedOptions={selectedOptions}
-        isMyClass={tabValue}
       />
     ),
-    [selectedOptions, tabValue]
+    [selectedOptions]
   );
 
   return (
@@ -213,7 +207,7 @@ const Page = () => {
             )}
           />
 
-          <Tabs
+          {/* <Tabs
             value={tabValue}
             onChange={handleTabChange}
             aria-label="lecture overview tabs"
@@ -250,7 +244,7 @@ const Page = () => {
           >
             <Tab label={`Overall Class`} />
             <Tab label={`My Class`} />
-          </Tabs>
+          </Tabs> */}
         </Box>
       </Box>
       <Grid container direction="row" spacing={2} mt={1}>

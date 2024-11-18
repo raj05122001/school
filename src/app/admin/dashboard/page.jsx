@@ -14,7 +14,7 @@ import GreetingCard from "@/components/admin/dashboard/GreetingCard/GreetingCard
 import ClassWiseStudentRanking from "@/components/admin/dashboard/ClassWiseStudentRanking/ClassWiseStudentRanking";
 import ClassAssignment from "@/components/admin/dashboard/ClassAssignment/ClassAssignment";
 import StudentAssignment from "@/components/admin/dashboard/StudentAssignment/StudentAssignment";
-import { getteacherClass, getTeacherStudentCount } from "@/api/apiHelper";
+import { getteacherClass, getTeacherStudentCount ,getAllSubject} from "@/api/apiHelper";
 import { useThemeContext } from "@/hooks/ThemeContext";
 import StudentCount from "@/components/admin/dashboard/StudentCount/StudentCount";
 import TeacherCount from "@/components/admin/dashboard/TeacherCount/TeacherCount";
@@ -38,8 +38,10 @@ const Page = () => {
   const fetchClassOptions = async () => {
     try {
       const response = await getteacherClass();
-      setClassOptions(response?.data?.data?.class_subject_list);
-      setSelectedOptions(response?.data?.data?.class_subject_list?.[0]);
+      const subjectResponse=await getAllSubject()
+      console.log("subjectResponse",subjectResponse)
+      setClassOptions(subjectResponse?.data?.data);
+      setSelectedOptions(subjectResponse?.data?.data?.[0]);
       setAverageDuration(response?.data?.data?.avg_duration);
     } catch (error) {
       console.error(error);
@@ -124,7 +126,7 @@ const Page = () => {
           {teacherCount}
         </Grid>
       </Grid>
-      <Grid item xs={12} md={9} mt={2}>
+      <Grid item xs={12} md={9} mt={4}>
         {teacherRanking}
       </Grid>
 
@@ -153,11 +155,11 @@ const Page = () => {
             freeSolo
             id="class"
             disableClearable
-            options={classOptions?.map((option) => option.class_name)}
-            value={selectedOptions?.class_name || ""} // Set value to the class name only
+            options={classOptions?.map((option) => option.name)}
+            value={selectedOptions?.name || ""} // Set value to the class name only
             onChange={(event, newValue) => {
               const selected = classOptions.find(
-                (option) => option.class_name === newValue
+                (option) => option.name === newValue
               );
               setSelectedOptions(selected || null); // Set selected option object
             }}

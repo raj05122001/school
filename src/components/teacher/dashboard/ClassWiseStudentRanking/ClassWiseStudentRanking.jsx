@@ -1,10 +1,6 @@
-import {
-  getCountByCategory,
-  getStudentByGrade,
-  getteacherClass,
-} from "@/api/apiHelper";
-import { useEffect, useState } from "react";
-import { PieChart, Pie, Cell, ResponsiveContainer } from "recharts";
+import React, { useEffect, useState } from "react";
+import { getCountByCategory, getStudentByGrade } from "@/api/apiHelper";
+import { PieChart, Pie, Cell, ResponsiveContainer, Tooltip } from "recharts";
 import { useThemeContext } from "@/hooks/ThemeContext";
 import {
   Box,
@@ -21,26 +17,25 @@ import {
   TableHead,
   TableRow,
   Paper,
-  Collapse,
-  Button,
+  Skeleton,
   Tabs,
   Tab,
-  Skeleton,
-  Autocomplete,
-  TextField,
+  Card,
+  ToggleButtonGroup,
+  ToggleButton,
 } from "@mui/material";
-import { AiOutlineClose, AiOutlineUp, AiOutlineDown } from "react-icons/ai";
+import { AiOutlineClose } from "react-icons/ai";
 import { decodeToken } from "react-jwt";
 import Cookies from "js-cookie";
 
 const RADIAN = Math.PI / 180;
 
 const mapData = {
-  A: { name: "Advanced", color: "#00b894",grade:"A" },
-  B: { name: "Intermediate", color: "#ff7675",grade:"B" },
-  C: { name: "Proficient", color: "#0984e3",grade:"C" },
-  D: { name: "Basic", color: "#fdcb6e" ,grade:"D"},
-  E: { name: "Beginner", color: "#e17055" ,grade:"E"},
+  A: { name: "Advanced", color: "#00b894", grade: "A" },
+  B: { name: "Intermediate", color: "#ff7675", grade: "B" },
+  C: { name: "Proficient", color: "#0984e3", grade: "C" },
+  D: { name: "Basic", color: "#fdcb6e", grade: "D" },
+  E: { name: "Beginner", color: "#e17055", grade: "E" },
 };
 
 // Custom label for pie chart slices
@@ -52,7 +47,7 @@ const renderCustomizedLabel = ({
   outerRadius,
   percent,
 }) => {
-  const radius = innerRadius + (outerRadius - innerRadius) * 0.1;
+  const radius = innerRadius + (outerRadius - innerRadius) * 0.5;
   const x = cx + radius * Math.cos(-midAngle * RADIAN);
   const y = cy + radius * Math.sin(-midAngle * RADIAN);
 
@@ -60,24 +55,28 @@ const renderCustomizedLabel = ({
     <text
       x={x}
       y={y}
-      fill="white"
+      fill="#fff"
       textAnchor={x > cx ? "start" : "end"}
       dominantBaseline="central"
+      fontSize={14}
+      fontWeight={600}
     >
       {`${(percent * 100).toFixed(0)}%`}
     </text>
   );
 };
 
-const ClassWiseStudentRanking = ({ selectedOptions, isMyClass }) => {
+const ClassWiseStudentRanking = ({ selectedOptions }) => {
   const userDetails = decodeToken(Cookies.get("ACCESS_TOKEN"));
-
   const { isDarkMode, primaryColor, secondaryColor } = useThemeContext();
   const [data, setData] = useState({});
-  const [loading, setLoading] = useState(true); // Add loading state
-  const [tabValue, setTabValue] = useState(0);
+  const [loading, setLoading] = useState(true);
+  const [statusTabValue, setStatusTabValue] = useState(0);
+  const [classTabValue, setClassTabValue] = useState("Overall");
   const [modalOpen, setModalOpen] = useState(false);
   const [selectedGrad, setSelectedGrad] = useState("");
+
+  const isMyClass = classTabValue === "MyClass";
 
   const handleOpenModal = (grade) => {
     setSelectedGrad(grade);
@@ -92,14 +91,15 @@ const ClassWiseStudentRanking = ({ selectedOptions, isMyClass }) => {
     if (selectedOptions?.class_id) {
       fetchCountByCategory();
     }
-  }, [selectedOptions, isMyClass]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [selectedOptions, classTabValue]);
 
   const fetchCountByCategory = async () => {
     setLoading(true);
     try {
       const response = await getCountByCategory(
         selectedOptions?.class_id,
-        isMyClass !== 0 ? userDetails?.teacher_id : 0
+        isMyClass ? userDetails?.teacher_id : 0
       );
       setData(response?.data?.data || {});
     } catch (error) {
@@ -109,42 +109,29 @@ const ClassWiseStudentRanking = ({ selectedOptions, isMyClass }) => {
     }
   };
 
-  const handleTabChange = (event, newValue) => {
-    setTabValue(newValue);
+  const handleStatusTabChange = (event, newValue) => {
+    setStatusTabValue(newValue);
+  };
+
+  const handleClassTabChange = (event, newValue) => {
+    if (newValue !== null) {
+      setClassTabValue(newValue);
+    }
   };
 
   const getChartData = () => {
     const gradewiseData =
-      tabValue === 0
+      statusTabValue === 0
         ? data.active_students_gradewise
         : data.inactive_students_gradewise;
-    return Object?.entries(gradewiseData)?.map(([key, value]) => ({
+    return Object.entries(gradewiseData || {}).map(([key, value]) => ({
       name: key,
       value,
     }));
   };
 
-  // Define light and dark mode styles
-  const darkModeStyles = {
-    backgroundColor: "#1a1a1a",
-    color: "#ffffff",
-    inputBackgroundColor: "#ffffff",
-    inputColor: "#ffffff",
-    boxShadow: "0px 2px 5px rgba(255, 255, 255, 0.1)",
-  };
-
-  const lightModeStyles = {
-    backgroundColor: "#ffffff",
-    color: "#000000",
-    inputBackgroundColor: "#333333",
-    inputColor: "#000000",
-    boxShadow: "0px 2px 5px rgba(0, 0, 0, 0.1)",
-  };
-
-  const currentStyles = isDarkMode ? darkModeStyles : lightModeStyles;
-
   return (
-    <Box
+    <Card
       sx={{
         width: "100%",
         p: 3,
@@ -156,53 +143,65 @@ const ClassWiseStudentRanking = ({ selectedOptions, isMyClass }) => {
     >
       <Box sx={{ display: "flex", justifyContent: "space-between", mb: 2 }}>
         <Typography
-          variant="h6"
-          className={`${isDarkMode ? "dark-heading" : "light-heading"}`}
-          whiteSpace="nowrap"
+          variant="h5"
+          sx={{
+            color: isDarkMode ? "#fff" : "#000",
+            fontWeight: 600,
+          }}
         >
           Student Ranking
         </Typography>
       </Box>
 
-      <Tabs
-        value={tabValue}
-        onChange={handleTabChange}
-        aria-label="lecture overview tabs"
-        indicatorColor="none"
-        sx={{
-          // mt: 2,
-          ".MuiTabs-flexContainer": {
-            // gap: 2,
-            background:
-              isDarkMode &&
-              "linear-gradient(89.7deg, rgb(0, 0, 0) -10.7%, rgb(53, 92, 125) 88.8%)",
-            backgroundImage: isDarkMode ? "" : "url('/TabBG2.jpg')", // Add background image
-            backgroundSize: "cover", // Ensure the image covers the entire page
-            backgroundPosition: "center", // Center the image
-            padding: 1,
-            borderRadius: "12px",
-            display: "flex",
-            justifyContent: "center",
-            alignItems: "center",
-            gap: 1,
-          },
-          ".MuiTab-root": {
-            color: "#333",
-            padding: "10px 10px",
-            minHeight: 0,
-            // marginTop: "8px",
-            textAlign: "center",
-            color: isDarkMode && "#F0EAD6",
-            "&:hover": {
-              backgroundColor: "#e0e0e0",
-              boxShadow: "0px 2px 8px rgba(0, 0, 0, 0.1)",
-              borderRadius: "10px",
+      {/* Class Selection Toggle */}
+      <Box sx={{ display: "flex", justifyContent: "center" }}>
+        <ToggleButtonGroup
+          value={classTabValue}
+          exclusive
+          onChange={handleClassTabChange}
+          aria-label="Class Selection"
+          sx={{
+            mb: 3,
+            width: "100%", // Ensure the ToggleButtonGroup takes full width
+            "& .MuiToggleButtonGroup-grouped": {
+              flex: 1, // Make each ToggleButton take equal space
             },
+            "& .MuiToggleButton-root": {
+              color: isDarkMode ? "#fff" : "#000",
+              borderColor: isDarkMode ? "#555" : "#ccc",
+              "&.Mui-selected": {
+                backgroundColor: primaryColor,
+                color: isDarkMode ? "black" : "white",
+              },
+            },
+          }}
+        >
+          <ToggleButton value="Overall" aria-label="Overall Class">
+            Overall Class
+          </ToggleButton>
+          <ToggleButton value="MyClass" aria-label="My Class">
+            My Class
+          </ToggleButton>
+        </ToggleButtonGroup>
+      </Box>
+
+      {/* Active/Inactive Tabs */}
+      <Tabs
+        value={statusTabValue}
+        onChange={handleStatusTabChange}
+        aria-label="Status Tabs"
+        // indicatorColor="primary"
+        // textColor="primary"
+        sx={{
+          mb: 2,
+          "& .MuiTabs-flexContainer": {
+            justifyContent: "center",
+          },
+          "& .MuiTab-root": {
+            color: primaryColor,
+            fontWeight: 600,
             "&.Mui-selected": {
-              backgroundColor: "#fff",
-              color: "#000",
-              boxShadow: "0px 6px 15px rgba(0, 0, 0, 0.2)",
-              borderRadius: "10px",
+              color: "#0984e3",
             },
           },
         }}
@@ -210,6 +209,8 @@ const ClassWiseStudentRanking = ({ selectedOptions, isMyClass }) => {
         <Tab label={`Active (${data.active_students || 0})`} />
         <Tab label={`Inactive (${data.inactive_students || 0})`} />
       </Tabs>
+
+      {/* Pie Chart */}
       {loading ? (
         <Box
           sx={{
@@ -223,135 +224,141 @@ const ClassWiseStudentRanking = ({ selectedOptions, isMyClass }) => {
         >
           <Skeleton variant="circular" width={240} height={240} />
         </Box>
-      ) : (
-        Object.entries(data)?.length > 0 &&
-        (getChartData().every((item) => Number(item.value) === 0) ? (
-          <Box
+      ) : Object.entries(data)?.length > 0 &&
+        getChartData().every((item) => Number(item.value) === 0) ? (
+        <Box
+          sx={{
+            width: "100%",
+            height: 240,
+            mt: 0,
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
+            position: "relative",
+          }}
+        >
+          <Typography
             sx={{
-              width: "100%",
-              height: 240,
-              mt: 0,
-              display: "flex",
-              justifyContent: "center",
-              alignItems: "center",
-              position: "relative",
+              textAlign: "center",
+              position: "absolute",
+              fontSize: 24,
+              fontWeight: 600,
+              color: isDarkMode ? "#fff" : "#000",
             }}
           >
-            <Skeleton variant="circular" width={240} height={240} />
-            <Typography
-              sx={{
-                textAlign: "center",
-                position: "absolute",
-                top: "50%",
-                left: "50%",
-                transform: "translate(-50%, -50%)",
-                zIndex: 10,
-              }}
-            >
-              0%
-            </Typography>
-          </Box>
-        ) : (
-          <Box sx={{ width: "100%", height: 240, mt: 4 }}>
-            <ResponsiveContainer width="100%" height="100%">
-              <PieChart>
-                <Pie
-                  data={getChartData()}
-                  cx="50%"
-                  cy="50%"
-                  labelLine={false}
-                  innerRadius={50}
-                  outerRadius={100}
-                  label={renderCustomizedLabel}
-                  dataKey="value"
-                >
-                  {getChartData()?.map((entry, index) => (
-                    <Cell
-                      key={`cell-${index}`}
-                      fill={mapData[entry.name]?.color}
-                    />
-                  ))}
-                </Pie>
-              </PieChart>
-            </ResponsiveContainer>
-          </Box>
-        ))
+            No Data Available
+          </Typography>
+        </Box>
+      ) : (
+        <Box sx={{ width: "100%", height: 300, mt: 2 }}>
+          <ResponsiveContainer width="100%" height="100%">
+            <PieChart>
+              <Pie
+                data={getChartData()}
+                cx="50%"
+                cy="50%"
+                labelLine={false}
+                innerRadius={60}
+                outerRadius={100}
+                label={renderCustomizedLabel}
+                dataKey="value"
+              >
+                {getChartData().map((entry, index) => (
+                  <Cell
+                    key={`cell-${index}`}
+                    fill={mapData[entry.name]?.color}
+                  />
+                ))}
+              </Pie>
+              <Tooltip
+                contentStyle={{
+                  backgroundColor: isDarkMode ? "#333" : "#fff",
+                  borderRadius: 8,
+                }}
+                labelStyle={{
+                  color: isDarkMode ? "#fff" : "#000",
+                }}
+                itemStyle={{
+                  color: isDarkMode ? "#fff" : "#000",
+                }}
+              />
+            </PieChart>
+          </ResponsiveContainer>
+        </Box>
       )}
 
+      {/* Grade Details */}
       {loading ? (
         <Skeleton
           variant="rectangular"
           width="100%"
           height={100}
-          sx={{ mt: 0 }}
+          sx={{ mt: 2 }}
         />
       ) : (
         Object.entries(data)?.length > 0 && (
-          <Grid container spacing={2} mt={0}>
-          {getChartData()?.map((entry) => (
-            <Grid
-              item
-              xs={12}
-              sm={6}
-              md={6}
-              key={entry.name}
-              onClick={() => handleOpenModal(entry.name)}
-              sx={{
-                display: "flex",
-                alignItems: "center",
-                cursor: "pointer",
-                padding: 2,
-              }}
-            >
-              <Box
+          <Grid container spacing={2} mt={2}>
+            {getChartData().map((entry) => (
+              <Grid
+                item
+                xs={12}
+                sm={6}
+                md={statusTabValue === 0? 4:6}
+                key={entry.name}
+                onClick={() => handleOpenModal(entry.name)}
                 sx={{
-                  width: 14,
-                  height: 14,
-                  bgcolor: mapData[entry.name]?.color,
-                  borderRadius: "50%",
-                  mr: 2,
-                  boxShadow: "0px 2px 4px rgba(0, 0, 0, 0.2)",
+                  display: "flex",
+                  alignItems: "center",
+                  cursor: "pointer",
+                  padding: 2,
                 }}
-              />
-              <Box>
-                <Typography
-                  variant="body1"
+              >
+                <Box
                   sx={{
-                    color: primaryColor,
-                    fontWeight: 600,
+                    width: 24,
+                    height: 24,
+                    bgcolor: mapData[entry.name]?.color,
+                    borderRadius: "50%",
+                    mr: 2,
+                    boxShadow: "0px 2px 4px rgba(0, 0, 0, 0.2)",
                   }}
-                >
-                  Grade: {mapData[entry.name]?.grade}
-                </Typography>
-                <Typography
-                  variant="h6"
-                  sx={{
-                    color: secondaryColor,
-                    fontWeight: "bold",
-                    mt: 0.5,
-                  }}
-                >
-                  {entry.value}
-                </Typography>
-              </Box>
-            </Grid>
-          ))}
-        </Grid>
-        
+                />
+                <Box>
+                  <Typography
+                    variant="subtitle1"
+                    sx={{
+                      color: isDarkMode ? "#fff" : "#000",
+                      fontWeight: 600,
+                    }}
+                  >
+                    Grade:{mapData[entry.name]?.grade}
+                  </Typography>
+                  <Typography
+                    variant="body2"
+                    sx={{
+                      color: isDarkMode ? "#ccc" : "#666",
+                      mt: 0.5,
+                    }}
+                  >
+                   {entry.value}
+                  </Typography>
+                </Box>
+              </Grid>
+            ))}
+          </Grid>
         )
       )}
       {modalOpen && (
         <StudentModal
           open={modalOpen}
           handleClose={handleCloseModal}
-          data={data}
           selectedGrad={selectedGrad}
           selectedOptions={selectedOptions}
           isMyClass={isMyClass}
           userDetails={userDetails}
         />
       )}
-    </Box>
+    </Card>
   );
 };
 
@@ -360,17 +367,18 @@ export default ClassWiseStudentRanking;
 export const StudentModal = ({
   open,
   handleClose,
-  data,
   selectedGrad,
   selectedOptions,
   isMyClass,
-  userDetails
+  userDetails,
 }) => {
   const [studentData, setStudentData] = useState([]);
-  const [loading, setLoading] = useState(true); // Add loading state
+  const [loading, setLoading] = useState(true);
+  const { isDarkMode } = useThemeContext();
 
   useEffect(() => {
     fetchStudentByGrade();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [selectedGrad]);
 
   const fetchStudentByGrade = async () => {
@@ -379,7 +387,7 @@ export const StudentModal = ({
       const response = await getStudentByGrade(
         selectedOptions?.class_id,
         selectedGrad,
-        isMyClass !== 0 ? userDetails?.teacher_id : 0
+        isMyClass ? userDetails?.teacher_id : 0
       );
       setStudentData(response?.data?.data);
     } catch (error) {
@@ -462,7 +470,7 @@ export const StudentModal = ({
                         key={index}
                         sx={{ "&:hover": { backgroundColor: "#f5f5f5" } }}
                       >
-                        <TableCell component="th" scope="row">
+                        <TableCell sx={{ color: isDarkMode ? "#fff" : "#000" }}>
                           {row.student__user__full_name}
                         </TableCell>
                         <TableCell>{row.student__user__email}</TableCell>

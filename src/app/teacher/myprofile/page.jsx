@@ -265,6 +265,7 @@ const EditDetailsPage = () => {
             <TextField
               fullWidth
               variant="outlined"
+              disabled={true}
               size="small"
               {...register("department", {
                 required: "Department is required",
@@ -286,6 +287,7 @@ const EditDetailsPage = () => {
             <TextField
               fullWidth
               variant="outlined"
+              disabled={true}
               size="small"
               type="email"
               {...register("email", {
