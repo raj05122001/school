@@ -1,4 +1,4 @@
-import React, { useState, useEffect ,useContext} from "react";
+import React, { useState, useEffect, useContext } from "react";
 import {
   Popover,
   Tooltip,
@@ -97,24 +97,24 @@ const LecturePopover = ({ data, isOrganizer }) => {
         }}
       >
         <h2
-   style={{
-    color: "var(--primary-color)", // Replace with your primary color
-    margin: 0, // Equivalent to my-0
-    fontWeight: 600, // Equivalent to font-semibold
-    fontSize: "0.75rem", // Equivalent to text-xs
-    whiteSpace: "nowrap", // Prevent text wrapping
-    overflow: "hidden", // Hide overflowing text
-    textOverflow: "ellipsis", // Show ellipsis for overflowing text
-  }}
+          style={{
+            color: "var(--primary-color)", // Replace with your primary color
+            margin: 0, // Equivalent to my-0
+            fontWeight: 600, // Equivalent to font-semibold
+            fontSize: "0.75rem", // Equivalent to text-xs
+            whiteSpace: "nowrap", // Prevent text wrapping
+            overflow: "hidden", // Hide overflowing text
+            textOverflow: "ellipsis", // Show ellipsis for overflowing text
+          }}
         >
           {data.event.title}
         </h2>
         <p
-            style={{
-              color: "var(--primary-color)", // Replace with your primary color
-              fontSize: "0.75rem", // Equivalent to text-xs
-              fontWeight: 400, // Equivalent to font-normal
-            }}
+          style={{
+            color: "var(--primary-color)", // Replace with your primary color
+            fontSize: "0.75rem", // Equivalent to text-xs
+            fontWeight: 400, // Equivalent to font-normal
+          }}
         >
           {formattedStartTime}
         </p>
@@ -141,7 +141,7 @@ const LecturePopover = ({ data, isOrganizer }) => {
           <Card sx={{ width: "360px", padding: "16px" }}>
             <CardContent>
               <Grid container spacing={2}>
-                <Grid item xs={8}>
+                <Grid item xs={11}>
                   <Typography variant="h6" fontWeight={600} gutterBottom>
                     {data.event.title}
                   </Typography>
@@ -235,7 +235,21 @@ const LecturePopover = ({ data, isOrganizer }) => {
                     )}
                   </Grid>
                 </Grid>
-                <Grid item xs={4}>
+                {isOrganizer && (
+                  <Grid item xs={1}>
+                    <IconButton
+                      size="small"
+                      color="primary"
+                      // Uncomment and pass relevant function
+                      onClick={(event) =>
+                        handleCreateLecture(data.event.extendedProps, true)
+                      }
+                    >
+                      <AiOutlineEdit size={20} />
+                    </IconButton>
+                  </Grid>
+                )}
+                {/* <Grid item xs={4}>
                   {organizer && (
                     <Grid container direction="column" alignItems="center">
                       <Typography variant="caption" color="text.secondary">
@@ -255,21 +269,8 @@ const LecturePopover = ({ data, isOrganizer }) => {
                       </Typography>
                     </Grid>
                   )}
-                </Grid>
+                </Grid> */}
               </Grid>
-
-              {isOrganizer && (
-                <Grid container justifyContent="flex-end" sx={{ marginTop: 2 }}>
-                  <IconButton
-                    size="small"
-                    color="primary"
-                    // Uncomment and pass relevant function
-                    onClick={(event) => handleCreateLecture(data.event.extendedProps, true)}
-                  >
-                    <AiOutlineEdit size={20} />
-                  </IconButton>
-                </Grid>
-              )}
             </CardContent>
           </Card>
         </Grow>
