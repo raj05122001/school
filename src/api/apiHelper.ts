@@ -502,3 +502,13 @@ export const getAllStudent = async (
     pageSize
   );
 };
+
+export const postRewriteAI = async (formData) => {
+  const apiInstance = new apiServices(axiosAPIInstance);
+  return await apiInstance.postRewriteAI(formData);
+};
+
+export const getSubjectCompletion = async () => {
+  const apiInstance = new apiServices(axiosAPIInstance);
+  return await apiInstance.getSubjectCompletion();
+}
