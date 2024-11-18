@@ -322,7 +322,7 @@ const LectureAssignment = ({ id, isDarkMode, class_ID, isEdit }) => {
                           color: "white",
                         }}
                       >
-                        {assignment.is_assigned ? "Assign" : "Assign"}
+                        {assignment.is_assigned ? "Assigned" : "Assign"}
                       </Button>
                     </Box>
                   </Box>
