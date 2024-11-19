@@ -25,7 +25,6 @@ const LectureAnalytics = () => {
   const { isDarkMode } = useThemeContext();
   const [timePeriod, setTimePeriod] = useState("week");
   const [data, setData] = useState([]);
-console.log("data data",data)
   useEffect(() => {
     fetchCommentWatchtimeGraph();
   }, []);

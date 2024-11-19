@@ -57,6 +57,8 @@ const LecturePage = ({ params }) => {
     }
   };
 
+  console.log("marksData : ",marksData)
+
   const classID = lectureData?.lecture_class?.id;
 
   const videoPlayer = useMemo(() => <VideoPlayer id={id} />, [id]);

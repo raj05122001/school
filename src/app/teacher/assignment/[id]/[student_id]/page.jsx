@@ -38,7 +38,6 @@ const Page = ({ params }) => {
       const apiResponse = await getTeacherAssignment(id, student_id);
       if (apiResponse?.success) {
         setListData(apiResponse?.data?.assignments || []);
-        console.log("Assignments:", apiResponse?.data?.assignments);
       } else {
         setListData([]);
         setError("Failed to load assignments.");

@@ -101,7 +101,6 @@ const Page = () => {
         subject,
         classValue
       );
-  console.log("response?.data",response?.data)
       setLectureData(response?.data);
       setLoading(false);
     } catch (error) {

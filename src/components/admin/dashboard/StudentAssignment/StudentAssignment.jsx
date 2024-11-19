@@ -33,7 +33,6 @@ const StudentAssignment = ({ selectedOptions }) => {
     setLoading(true);
     try {
       const response = await getStudentAssignment(selectedOptions?.id);
-      console.log("response student table",response)
       setData(response?.data?.data?.data);
     } catch (error) {
       console.error(error);

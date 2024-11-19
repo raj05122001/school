@@ -13,17 +13,53 @@ import {
 } from "@mui/material";
 import { AppContextProvider } from "@/app/main";
 import { FaVideo } from "react-icons/fa";
+import { decodeToken } from "react-jwt";
+import Cookies from "js-cookie";
+import axios from "axios";
 
 const VideoPlayer = ({ id }) => {
+  const userDetails = decodeToken(Cookies.get("ACCESS_TOKEN"));
   const [markers, setMarkers] = useState([]);
   const [suggestionData, setSuggestionData] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
+  const playerRef = useRef(null); // Ref to store the Video.js player
+
+  console.log("userDetails", userDetails);
 
   useEffect(() => {
     if (id) {
       fetchBreakPoint();
     }
   }, [id]);
+
+  useEffect(()=>{
+    updateVideoWatchtime(435.34)
+  },[])
+
+  const updateVideoWatchtime = async (time) => {
+    if (time !== 0) {
+      try {
+        const formData = {
+          lecture_id: id,
+          timestamp: time,
+          student_id: userDetails?.student_id,
+        };
+
+        // await axios.post("https://dev-vidyaai.ultimeet.io/api/v1/dashboard/watchtime_data/",formData)
+
+        // Use navigator.sendBeacon for unload events
+        // const beaconData = new Blob([JSON.stringify(formData)]);
+        navigator.sendBeacon(
+          "https://dev-vidyaai.ultimeet.io/api/v1/dashboard/watchtime_data/",
+          JSON.stringify(formData)
+        );
+
+        console.log("successful uploade watch time : ", JSON.stringify(formData));
+      } catch (error) {
+        console.error(error);
+      }
+    }
+  };
 
   const fetchBreakPoint = async () => {
     setIsLoading(true);
@@ -48,9 +84,42 @@ const VideoPlayer = ({ id }) => {
     }
   };
 
+  const handleBeforeUnload = () => {
+    if (playerRef.current) {
+      const currentTime = playerRef.current.currentTime();
+      updateVideoWatchtime(currentTime);
+    }
+  };
+
+  useEffect(() => {
+    // pagehide
+    // unload
+    // visibilitychange
+    // document.addEventListener("visibilitychange", function logData() {
+    //   if (document.visibilityState === "hidden") {
+    //     navigator.sendBeacon("/log", analyticsData);
+    //   }
+    // });
+    window.addEventListener("beforeunload", handleBeforeUnload);
+
+    return () => {
+      window.removeEventListener("beforeunload", handleBeforeUnload);
+      // Optionally, update watch time when component unmounts
+      handleBeforeUnload();
+    };
+  }, [playerRef.current, id, playerRef.current?.currentTime()]);
+
   const breakpointPlayer = useMemo(
-    () => <BreakpointPlayer markers={markers} id={id} />,
-    [markers, id, markers?.length]
+    () => (
+      <BreakpointPlayer
+        markers={markers}
+        id={id}
+        onPlayerReady={(player) => {
+          playerRef.current = player;
+        }}
+      />
+    ),
+    [markers, id]
   );
 
   return (
@@ -90,7 +159,7 @@ const VideoPlayer = ({ id }) => {
 
 export default VideoPlayer;
 
-export const BreakpointPlayer = ({ markers, id }) => {
+export const BreakpointPlayer = ({ markers, id, onPlayerReady }) => {
   const videoRef = useRef(null);
   const playerRef = useRef(null);
 
@@ -98,6 +167,11 @@ export const BreakpointPlayer = ({ markers, id }) => {
     // Initialize Video.js
     const videoElement = videoRef.current;
     playerRef.current = videojs(videoElement);
+
+    // Notify parent that the player is ready
+    if (onPlayerReady) {
+      onPlayerReady(playerRef.current);
+    }
 
     playerRef.current.on("loadedmetadata", function () {
       const total = playerRef.current.duration();
@@ -109,25 +183,26 @@ export const BreakpointPlayer = ({ markers, id }) => {
         el.className = "vjs-marker";
         el.style.left = left;
         el.dataset.time = marker.start / 1000;
-        el.innerHTML = `<span style={{backgroundColor:'red'}}>
-        ${marker.headline}
+       el.innerHTML = `<span style={{backgroundColor:'red'}}>
+          ${marker.headline}
         </span>`;
 
         el.onclick = function () {
           playerRef.current.currentTime(marker.start / 1000);
         };
 
-        progressControl.children_[0].el_.appendChild(el);
+        progressControl.el().appendChild(el);
+        // progressControl.children_[0].el_.appendChild(el);
       });
     });
 
     // return () => {
-    //   // Clean up Video.js player
-    //     if (playerRef.current) {
-    //       playerRef.current=null
-    //     }
+    //   if (playerRef.current) {
+    //     playerRef.current.dispose();
+    //   }
     // };
-  }, [markers?.length, markers]);
+  }, [markers, onPlayerReady]);
+
   return (
     <video
       ref={videoRef}
@@ -135,7 +210,7 @@ export const BreakpointPlayer = ({ markers, id }) => {
       controls
       preload="auto"
       style={{ width: "100%", height: "100%", borderRadius: 10 }}
-      data-setup='{ "html5": { "nativeTextTracks": true },"playbackRates" : [0.25, 0.5, 0.75, 1, 1.25, 1.5,1.75]}'
+      data-setup='{ "html5": { "nativeTextTracks": true }, "playbackRates": [0.25, 0.5, 0.75, 1, 1.25, 1.5, 1.75] }'
     >
       <source
         src={`https://d3515ggloh2j4b.cloudfront.net/videos/${id}.mp4`}
@@ -218,7 +293,7 @@ export const Suggestion = ({ suggestionData }) => {
               sx={{
                 overflow: "hidden",
                 bgcolor: "grey.300",
-                marginRight:"4px",
+                marginRight: "4px",
                 "&:hover": {
                   bgcolor: "grey.400",
                   ringColor: "green.400",

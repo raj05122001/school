@@ -378,7 +378,6 @@ const LectureTabs = () => {
                       handleRowClick(lectureData?.data[index]?.id)
                     }
                   >
-                    {console.log("Lecture Data is", lectureData.data[index].id)}
                     <TableCell sx={{}}>{lecture.title}</TableCell>
                     <TableCell sx={{}}>
                       <LectureType lectureType={lecture?.type} />

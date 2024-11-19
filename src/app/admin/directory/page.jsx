@@ -49,7 +49,6 @@ const Page = () => {
   const fetchStudentData = async () => {
     try {
       const response = await getAllStudent("", "", "", "", "", 1, 10);
-      console.log("Student API Response:", response);
       const studentList = response?.data?.data?.data || [];
       setStudentData(studentList);
       setFilteredStudentData(studentList);

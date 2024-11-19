@@ -27,7 +27,6 @@ const SubjectAnalytics = () => {
     try {
       const response = await watchtimeBySubject();
       setData(response?.data?.data);
-      console.log("response fetchwatchtimeBySubject", response);
     } catch (error) {
       console.error(error);
     }

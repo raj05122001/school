@@ -19,7 +19,6 @@ const ClassAssignment = ({selectedOptions}) => {
     setLoading(true);
     try {
       const response = await getClassAssignment(selectedOptions?.class_id,true);
-      console.log("response fetchClassAssignment teacher",response)
       setData(response?.data?.data);
     } catch (error) {
       console.error(error);

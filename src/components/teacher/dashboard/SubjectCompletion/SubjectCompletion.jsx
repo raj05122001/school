@@ -17,7 +17,7 @@ function SubjectCompletion() {
         setCompletionData(response?.data?.data[0]);
       }
     } catch (error) {
-      console.log("Error fetching response", error);
+      console.error("Error fetching response", error);
     }
   };
 
@@ -26,9 +26,6 @@ function SubjectCompletion() {
     setIsClient(true);
     fetchSubjectCompletion();
   }, []);
-
-  console.log("Subject completion", completionData);
-  console.log("Subject pending", completionData?.pending_count);
 
   const data = [
     { name: "Completed", value: completionData?.Completion_percentage },
