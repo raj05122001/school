@@ -80,6 +80,7 @@ const Main = ({ children }) => {
       {pathname === "/login" ||
       pathname === "/forget-password" ||
       pathname === "/registration" ||
+      pathname === "/signup" ||
       pathname === "/vipsbot" ||
       pathname === "/invite-accept" ? (
         <>{children}</>

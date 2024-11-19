@@ -1,23 +1,11 @@
 "use client";
-import React, { useState } from "react";
-import {
-  Box,
-  TextField,
-  Button,
-  Checkbox,
-  FormControlLabel,
-  Typography,
-  Link,
-  Grid,
-  Slide,
-} from "@mui/material";
-import toast from "react-hot-toast";
-import { useRouter, useSearchParams } from "next/navigation";
-import Cookies from "js-cookie";
-import axios from "axios";
-import { loginApi } from "@/api/apiHelper";
-import { decodeToken } from "react-jwt";
+import React from "react";
+import { Box, Typography, Grid } from "@mui/material";
+import { useSearchParams } from "next/navigation";
 import Image from "next/image";
+import AccessKey from "@/components/Registration/AccessKey";
+import VerifyOtp from "@/components/Registration/VerifyOtp";
+import UserData from "@/components/Registration/UserData";
 
 // Keyframes for the text animation
 const textAnimation = {
@@ -34,63 +22,10 @@ const textAnimation = {
 };
 
 const RegistationPage = () => {
-  const router = useRouter();
   const searchParams = useSearchParams();
-  const redirectTo = searchParams.get("redirectTo");
-  const [formData, setFormData] = useState({
-    email: "",
-    password: "",
-  });
-
-  const [error, setError] = useState(null);
-  const [success, setSuccess] = useState(null);
-
-  const handleChange = (e) => {
-    setFormData({
-      ...formData,
-      [e.target.name]: e.target.value,
-    });
-  };
-
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    setError(null);
-    setSuccess(null);
-
-    try {
-      const response = await loginApi(formData);
-      if (response.status === 200) {
-        const { access, refresh, username, message } = response.data;
-        Cookies.set("ACCESS_TOKEN", access, { expires: 7 }); // Store access token in cookies
-        Cookies.set("REFRESH_TOKEN", refresh, { expires: 30 }); // Store refresh token in cookies
-
-        // Display success message
-        setSuccess(message || "Logged in successfully!");
-        const accessToken = decodeToken(access);
-        // Redirect user after successful login
-        if (redirectTo) {
-          router.replace(redirectTo);
-        } else {
-          if (accessToken?.role === "TEACHER") {
-            router.replace("/teacher/dashboard");
-          } else if (accessToken?.role === "STUDENT") {
-            router.replace("/student/dashboard");
-          } else {
-            router.replace("/admin/dashboard");
-          }
-        }
-
-        // Display a toast notification for success
-        toast.success("Login successful!");
-      }
-    } catch (error) {
-      // Handle error response
-      setError(
-        error.response?.data?.message || "An error occurred. Please try again."
-      );
-      toast.error("Login failed. Please check your credentials.");
-    }
-  };
+  const email = searchParams.get("email");
+  const accesskey = searchParams.get("accesskey");
+  const verifyotp = searchParams.get("verifyotp");
 
   return (
     <Grid
@@ -149,177 +84,13 @@ const RegistationPage = () => {
       </Grid>
 
       {/* Right Side Login Form */}
-      <Grid
-        item
-        xs={12}
-        sm={8}
-        md={6}
-        component={Box}
-        sx={{
-          display: "flex",
-          flexDirection: "column",
-          alignItems: "center",
-          justifyContent: "center",
-          // backgroundColor: "#f7f9fc",
-          // background: "radial-gradient(circle at 10% 20%, rgba(216, 241, 230, 0.46) 0.1%, rgba(233, 226, 226, 0.28) 90.1%)",
-          background: "linear-gradient(135deg, #fdfcfb 0%, #e2d1c3 100%)",
-          padding: 4,
-          animation: "slideFade 1s ease-in-out",
-          ...textAnimation,
-        }}
-      >
-        {/* Logo */}
-        <Typography
-          variant="h5"
-          sx={{
-            color: "#1976d2",
-            fontWeight: "bold",
-            letterSpacing: "0.5px",
-            mb: 2,
-          }}
-        >
-          VidyaAI
-          <Typography
-            variant="h5"
-            component="span"
-            sx={{
-              color: "#00c853",
-              ml: 0.2,
-              fontWeight: "bold",
-            }}
-          >
-            ►
-          </Typography>
-        </Typography>
-
-        {/* Login Form */}
-        <Box
-          sx={{
-            mt: 1,
-            width: "100%",
-            maxWidth: 400,
-            // border: "1px solid black",
-            p: 5,
-          }}
-        >
-          <Typography component="h1" variant="h5" sx={{ textAlign: "center" }}>
-            Signup to create account
-          </Typography>
-          <Box
-            component="form"
-            noValidate
-            sx={{ mt: 2 }}
-            onSubmit={handleSubmit}
-          >
-            <TextField
-              margin="normal"
-              required
-              fullWidth
-              id="email"
-              label="Email Address"
-              name="email"
-              value={formData.email}
-              onChange={handleChange}
-              InputLabelProps={{
-                shrink: true, // Ensures the label shrinks when value is present
-                style: { color: "#555" },
-              }}
-              InputProps={{
-                style: { color: "#000" },
-              }}
-              sx={{
-                backgroundColor: "#fff",
-                borderRadius: "5px",
-              }}
-              variant="outlined" // Optionally use "filled" for a different style
-            />
-            <TextField
-              margin="normal"
-              required
-              fullWidth
-              name="accessKey"
-              label="Access Key"
-              type="text"
-              id="password"
-              value={formData.password}
-              onChange={handleChange}
-              InputLabelProps={{
-                shrink: true, // Ensures the label shrinks when value is present
-                style: { color: "#555" },
-              }}
-              InputProps={{
-                style: { color: "#000" },
-              }}
-              sx={{ backgroundColor: "#fff", borderRadius: "5px" }}
-              variant="outlined"
-            />
-            <Grid
-              container
-              sx={{
-                mt: 1,
-                alignItems: "center",
-                justifyContent: "space-between",
-              }}
-            >
-              {/* <Grid item xs={6}>
-                <FormControlLabel
-                  control={<Checkbox value="remember" color="primary" />}
-                  label="Remember me"
-                  sx={{ color: "#555" }}
-                />
-              </Grid> */}
-              {/* <Grid
-                item
-                xs={6}
-                sx={{
-                  display: "flex",
-                  justifyContent: "flex-end",
-                }}
-              >
-                <Link href="#" variant="body2" sx={{ color: "#1976d2" }}>
-                  Forgot password?
-                </Link>
-              </Grid> */}
-            </Grid>
-            {error && (
-              <Typography color="error" sx={{ mt: 1 }}>
-                {error}
-              </Typography>
-            )}
-            {success && (
-              <Typography color="primary" sx={{ mt: 1 }}>
-                {success}
-              </Typography>
-            )}
-            <Button
-              type="submit"
-              fullWidth
-              variant="contained"
-              sx={{
-                mt: 3,
-                mb: 2,
-                backgroundColor: "#1976d2",
-                ":hover": { backgroundColor: "#115293" },
-              }}
-            >
-              Get OTP
-            </Button>
-            <Grid container justifyContent="center">
-              <Grid item>
-                <Typography variant="body2">
-                  Already have an account?{" "}
-                  <Link
-                    onClick={() => router.push("/login")}
-                    sx={{ color: "#1976d2", cursor: "pointer" }}
-                  >
-                    Log In
-                  </Link>
-                </Typography>
-              </Grid>
-            </Grid>
-          </Box>
-        </Box>
-      </Grid>
+      {accesskey && email && verifyotp ? (
+        <UserData />
+      ) : accesskey && email ? (
+        <VerifyOtp />
+      ) : (
+        <AccessKey />
+      )}
     </Grid>
   );
 };

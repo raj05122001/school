@@ -382,9 +382,24 @@ export const updateMolMarks = async ( marks_id, formData) => {
   return await apiInstance.updateMolMarks( marks_id, formData);
 };
 
+export const verifyOneTimePassword = async (data) => {
+  const apiInstance = new apiServices(axiosAPIInstance);
+  return await apiInstance.verifyOneTimePassword(data);
+};
+
+export const resendOneTimePassword = async (data) => {
+  const apiInstance = new apiServices(axiosAPIInstance);
+  return await apiInstance.resendOneTimePassword(data);
+};
+
 export const getMyRank = async () => {
   const apiInstance = new apiServices(axiosAPIInstance);
   return await apiInstance.getMyRank();
+};
+
+export const getOneTimePassword = async (data) => {
+  const apiInstance = new apiServices(axiosAPIInstance);
+  return await apiInstance.getOneTimePassword(data);
 };
 
 export const getMyAssignmentAnalytics = async () => {
