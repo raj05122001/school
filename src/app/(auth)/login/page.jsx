@@ -17,6 +17,7 @@ import Cookies from "js-cookie";
 import axios from "axios";
 import { loginApi } from "@/api/apiHelper";
 import { decodeToken } from "react-jwt";
+import Image from "next/image";
 
 // Keyframes for the text animation
 const textAnimation = {
@@ -106,7 +107,10 @@ const LoginPage = () => {
         sm={4}
         md={6}
         sx={{
-          background: "linear-gradient(to bottom right, #1976d2, #00c853)",
+          // background: "linear-gradient(to bottom right, #1976d2, #00c853)",
+          backgroundImage: "url('/loginBG3.jpg')", // Add background image
+          backgroundSize: "cover", // Ensure the image covers the entire page
+          backgroundPosition: "center", // Center the image
           position: "relative", // Ensures the overlay text is positioned correctly
         }}
       >
@@ -114,19 +118,31 @@ const LoginPage = () => {
         <Box
           sx={{
             position: "absolute",
-            top: "50%",
-            left: "50%",
-            transform: "translate(-50%, -50%)",
+            top: "25%",
+            left: "25%",
+            // transform: "translate(-50%, -50%)",
             color: "#fff",
-            textAlign: "center",
+            textAlign: "left",
             animation: "slideFade 1s ease-in-out",
             ...textAnimation,
           }}
         >
-          <Typography variant="h3" sx={{ fontWeight: "bold" }}>
-            Welcome to VidyaAI
+          <Typography
+            variant="h3"
+            sx={{ fontWeight: "bold", color: "#EDEADE" }}
+          >
+            Welcome to
+            <br />
+            <Image
+              src="/vidyaAIlogo.png"
+              alt="VidyaAI Logo"
+              width={40} // Adjust width as needed
+              height={40} // Adjust height as needed
+              style={{ display: "inline-block" }} // Optional: to align properly
+            />
+            <span style={{ color: "#454B1B" }}> VidyaAI</span>
           </Typography>
-          <Typography variant="h5" sx={{ mt: 2 }}>
+          <Typography variant="h5" sx={{ mt: 2, color: "#191970" }}>
             Your AI-powered Learning Companion
           </Typography>
         </Box>
@@ -144,8 +160,12 @@ const LoginPage = () => {
           flexDirection: "column",
           alignItems: "center",
           justifyContent: "center",
-          backgroundColor: "#f7f9fc",
+          // backgroundColor: "#f7f9fc",
+          // background: "radial-gradient(circle at 10% 20%, rgba(216, 241, 230, 0.46) 0.1%, rgba(233, 226, 226, 0.28) 90.1%)",
+          background: "linear-gradient(135deg, #fdfcfb 0%, #e2d1c3 100%)",
           padding: 4,
+          animation: "slideFade 1s ease-in-out",
+          ...textAnimation,
         }}
       >
         {/* Logo */}
@@ -178,6 +198,8 @@ const LoginPage = () => {
             mt: 1,
             width: "100%",
             maxWidth: 400,
+            // border: "1px solid black",
+            p: 5,
           }}
         >
           <Typography component="h1" variant="h5" sx={{ textAlign: "center" }}>
@@ -199,6 +221,7 @@ const LoginPage = () => {
               value={formData.email}
               onChange={handleChange}
               InputLabelProps={{
+                shrink: true, // Ensures the label shrinks when value is present
                 style: { color: "#555" },
               }}
               InputProps={{
@@ -208,6 +231,7 @@ const LoginPage = () => {
                 backgroundColor: "#fff",
                 borderRadius: "5px",
               }}
+              variant="outlined" // Optionally use "filled" for a different style
             />
             <TextField
               margin="normal"
@@ -220,12 +244,14 @@ const LoginPage = () => {
               value={formData.password}
               onChange={handleChange}
               InputLabelProps={{
+                shrink: true, // Ensures the label shrinks when value is present
                 style: { color: "#555" },
               }}
               InputProps={{
                 style: { color: "#000" },
               }}
               sx={{ backgroundColor: "#fff", borderRadius: "5px" }}
+              variant="outlined"
             />
             <Grid
               container
