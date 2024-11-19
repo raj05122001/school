@@ -97,6 +97,7 @@ function GreetingCard() {
 
           <Button
             variant="contained"
+            onClick={()=>router.push(`/admin/lecture-schedule`)}
             sx={{
               backgroundColor: "#90EE90",
               ":hover": {
@@ -104,6 +105,7 @@ function GreetingCard() {
                 boxShadow: "0 0 10px 0 #3CB371 inset, 0 0 10px 4px #3CB371",
               },
               color: "#006400",
+              
             }}
           >
             Upload Syllabus
