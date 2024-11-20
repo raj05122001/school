@@ -3,7 +3,7 @@ import { useEffect, useRef } from "react";
 import { decodeToken } from "react-jwt";
 import Cookies from "js-cookie";
 
-const personalisedRecommendations = (id, section, useref, comment = "") => {
+const usePersonalisedRecommendations = (id, section, useref, comment = "") => {
   const userDetails = decodeToken(Cookies.get("ACCESS_TOKEN"));
   const updateCalled = useRef(false);
 
@@ -53,4 +53,4 @@ const personalisedRecommendations = (id, section, useref, comment = "") => {
   }, [useref, userDetails, section, comment, id]);
 };
 
-export default personalisedRecommendations;
+export default usePersonalisedRecommendations;

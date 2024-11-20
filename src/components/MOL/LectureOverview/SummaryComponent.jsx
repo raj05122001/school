@@ -10,7 +10,7 @@ import TextEditor from "@/commonComponents/TextEditor/TextEditor";
 import { FaEdit } from "react-icons/fa";
 import { FaSave } from "react-icons/fa";
 import { FaInfoCircle } from "react-icons/fa";
-import personalisedRecommendations from "@/components/student/MOL/personalisedRecommendations";
+import usePersonalisedRecommendations from "@/components/student/MOL/usePersonalisedRecommendations";
 
 const SummaryComponent = ({
   lectureId,
@@ -32,7 +32,7 @@ const SummaryComponent = ({
     fetchSummary();
   }, [lectureId]);
 
-  personalisedRecommendations(lectureId, "SUMMARY", summaryBoxRef, "");
+  usePersonalisedRecommendations(lectureId, "SUMMARY", summaryBoxRef, "");
 
   useEffect(() => {
     const handleScrollAndUpdate = async () => {

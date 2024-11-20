@@ -17,7 +17,7 @@ import {
 import { toast } from "react-hot-toast";
 import MathJax from "react-mathjax2";
 import TextWithMath from "@/commonComponents/TextWithMath/TextWithMath";
-import personalisedRecommendations from "@/components/student/MOL/personalisedRecommendations";
+import usePersonalisedRecommendations from "@/components/student/MOL/usePersonalisedRecommendations";
 
 const LectureNotes = ({
   id,
@@ -35,7 +35,7 @@ const LectureNotes = ({
   const notesBoxRef = useRef(null);
   const updateCalled = useRef(false);
 
-  personalisedRecommendations(id, "NOTES", notesBoxRef, "");
+  usePersonalisedRecommendations(id, "NOTES", notesBoxRef, "");
 
   useEffect(() => {
     const fetchLectureNotes = async () => {
