@@ -11,6 +11,7 @@ import {
   Paper,
   Avatar,
   Grid,
+  Skeleton,
 } from "@mui/material";
 import { borderRadius, styled } from "@mui/system";
 import { CiStar } from "react-icons/ci";
@@ -33,6 +34,7 @@ import {
   getWatchtimeComparison,
 } from "@/api/apiHelper";
 import { BASE_URL_MEET } from "@/constants/apiconfig";
+import Image from "next/image";
 
 const StarRating = styled(CiStar)({
   color: "#FFD700",
@@ -45,8 +47,16 @@ const TeacherRanking = () => {
   const [teacherID, setTeacherID] = useState(1);
   const [countData, setCountData] = useState([]);
   const [watchData, setWatchData] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [loading2, setLoading2] = useState(true);
+  const [loading3, setLoading3] = useState(true);
+
+  useEffect(() => {
+    fetchTopTeachers();
+  },[]);
 
   const fetchTopTeachers = async () => {
+    setLoading(true);
     try {
       const response = await getTopTeachers();
       if (response?.success) {
@@ -56,10 +66,13 @@ const TeacherRanking = () => {
       }
     } catch (error) {
       console.error("Error fetching data", error);
+    } finally {
+      setLoading(false);
     }
   };
 
   const fetchTeacherLectureCount = async (teacherID) => {
+    setLoading2(true);
     try {
       const response = await getTeacherLectureCompletion(teacherID);
       if (response?.success) {
@@ -67,14 +80,13 @@ const TeacherRanking = () => {
       }
     } catch (error) {
       console.error("Error fetching response", error);
+    } finally {
+      setLoading2(false);
     }
   };
 
-  useEffect(() => {
-    fetchTopTeachers();
-  }, []);
-
   const fetchWatchtimeComparison = async (teacherID) => {
+    setLoading3(true);
     try {
       const response = await getWatchtimeComparison(teacherID);
       if (response?.success) {
@@ -82,12 +94,10 @@ const TeacherRanking = () => {
       }
     } catch (error) {
       console.error("Error fetching response", error);
+    } finally {
+      setLoading3(false);
     }
   };
-
-  useEffect(() => {
-    fetchTopTeachers();
-  }, []);
 
   const topTeachersArray = Object.values(topTeacher);
 
@@ -96,7 +106,6 @@ const TeacherRanking = () => {
     fetchTeacherLectureCount(id);
     fetchWatchtimeComparison(id);
   };
-
   return (
     <Box
       sx={{
@@ -154,38 +163,58 @@ const TeacherRanking = () => {
                     {/* <Avatar sx={{ width: 56, height: 56, marginBottom: "8px" }}>
                 {teacher?.Name[0]}
               </Avatar> */}
-                    <img
-                      src={
-                        teacher?.["Profile Pic"]
-                          ? `${BASE_URL_MEET}/media/${teacher?.["Profile Pic"]}`
-                          : "/TopTeachers.png"
-                      }
-                      width={100}
-                      height={100}
-                      style={{ borderRadius: "100%" }}
-                    />
-                    <Typography variant="h6" mt={2}>
-                      {teacher?.Name}
-                    </Typography>
-                    <Typography variant="subtitle2" color="textSecondary">
-                      Total Lectures {teacher["Total Lectures"] || 0}
-                    </Typography>
-                    <Typography variant="subtitle2" color="textSecondary">
-                      Completed Lectures {teacher["Completed Lectures"] || 0}
-                    </Typography>
-                    <Box
-                      sx={{
-                        display: "flex",
-                        alignItems: "center",
-                        marginTop: "8px",
-                      }}
-                    >
-                      <StarRating />
-                      <Typography variant="body2">
-                        {parseFloat(teacher["Average Feedback"]).toFixed(2) ||
-                          0}
+                    {loading ? (
+                      <Typography variant="h2" sx={{ color: "#36454F" }}>
+                        <Skeleton variant="circular" width={100} height={100} />
                       </Typography>
-                    </Box>
+                    ) : (
+                      <Image
+                        src={
+                          teacher?.["Profile Pic"]
+                            ? `${BASE_URL_MEET}/media/${teacher?.["Profile Pic"]}`
+                            : "/TopTeachers.png"
+                        }
+                        alt="Teacher pic"
+                        width={100}
+                        height={100}
+                        style={{ borderRadius: "100%" }}
+                      />
+                    )}
+
+                    {loading ? (
+                      <>
+                        <Skeleton variant="text" width={80} height={40} />
+                        <Skeleton variant="text" width={80} height={20} />
+                        <Skeleton variant="text" width={80} height={20} />
+                      </>
+                    ) : (
+                      <>
+                        <Typography variant="h6" mt={2}>
+                          {teacher?.Name}
+                        </Typography>
+                        <Typography variant="subtitle2" color="textSecondary">
+                          Total Lectures {teacher["Total Lectures"] || 0}
+                        </Typography>
+                        <Typography variant="subtitle2" color="textSecondary">
+                          Completed Lectures{" "}
+                          {teacher["Completed Lectures"] || 0}
+                        </Typography>
+                        <Box
+                          sx={{
+                            display: "flex",
+                            alignItems: "center",
+                            marginTop: "8px",
+                          }}
+                        >
+                          <StarRating />
+                          <Typography variant="body2">
+                            {parseFloat(teacher["Average Feedback"]).toFixed(
+                              2
+                            ) || 0}
+                          </Typography>
+                        </Box>
+                      </>
+                    )}
                   </Box>
                 ))}
               </Box>
@@ -223,26 +252,63 @@ const TeacherRanking = () => {
                       >
                         <TableCell>
                           <Box sx={{ display: "flex", alignItems: "center" }}>
-                            <img
-                              src={
-                                teacher?.["Profile Pic"]
-                                  ? `${BASE_URL_MEET}/media/${teacher?.["Profile Pic"]}`
-                                  : "/TopTeachers.png"
-                              }
-                              width={50}
-                              height={50}
-                              style={{ borderRadius: "100%" }}
-                            />
+                            {loading ? (
+                              <Typography
+                                variant="h2"
+                                sx={{ color: "#36454F" }}
+                              >
+                                <Skeleton
+                                  variant="circular"
+                                  width={100}
+                                  height={100}
+                                />
+                              </Typography>
+                            ) : (
+                              <Image
+                                src={
+                                  teacher?.["Profile Pic"]
+                                    ? `${BASE_URL_MEET}/media/${teacher?.["Profile Pic"]}`
+                                    : "/TopTeachers.png"
+                                }
+                                width={50}
+                                height={50}
+                                style={{ borderRadius: "100%" }}
+                                alt="Teacher pic"
+                              />
+                            )}
                           </Box>
                         </TableCell>
-                        <TableCell>{teacher?.Name}</TableCell>
-                        <TableCell>{teacher?.["Total Lectures"]}</TableCell>
+
                         <TableCell>
-                          {teacher["Completed Lectures"] || 0}
+                          {loading ? (
+                            <Skeleton variant="text" width={80} height={40} />
+                          ) : (
+                            teacher?.Name
+                          )}
+                        </TableCell>
+
+                        <TableCell>
+                          {loading ? (
+                            <Skeleton variant="text" width={80} height={40} />
+                          ) : (
+                            teacher?.["Total Lectures"]
+                          )}
                         </TableCell>
                         <TableCell>
-                          {parseFloat(teacher["Average Feedback"]).toFixed(2) ||
-                            0}
+                          {loading ? (
+                            <Skeleton variant="text" width={80} height={40} />
+                          ) : (
+                            teacher["Completed Lectures"] || 0
+                          )}
+                        </TableCell>
+                        <TableCell>
+                          {loading ? (
+                            <Skeleton variant="text" width={80} height={40} />
+                          ) : (
+                            parseFloat(teacher["Average Feedback"]).toFixed(
+                              2
+                            ) || 0
+                          )}
                         </TableCell>
                       </TableRow>
                     ))}
@@ -367,8 +433,8 @@ const TeacherRanking = () => {
                   Select a teacher to view detailed analytics. The charts will
                   display trends over time, including the number of lectures
                   completed and watch time analytics, allowing a comparison
-                  between the selected teacher&apos;s performance and the overall
-                  average.
+                  between the selected teacher&apos;s performance and the
+                  overall average.
                 </Typography>
               </Box>
             </Box>

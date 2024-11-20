@@ -5,7 +5,7 @@ import { useForm } from "react-hook-form";
 import { useRouter, useSearchParams } from "next/navigation";
 import { verifyOneTimePassword, resendOneTimePassword } from "@/api/apiHelper";
 import toast from "react-hot-toast";
-import CircularProgress from "@mui/material";
+import {CircularProgress} from "@mui/material";
 
 const textAnimation = {
   "@keyframes slideFade": {
