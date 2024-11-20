@@ -1,8 +1,8 @@
 import React from "react";
-import { Box, Typography } from "@mui/material";
+import { Box, Typography, Skeleton } from "@mui/material";
 import { PiStudentBold } from "react-icons/pi";
 
-const AverageLectureDuration = ({ countData }) => {
+const AverageLectureDuration = ({ countData, loading }) => {
   const durationCount = countData?.Average_lecture_duration;
   return (
     <Box
@@ -25,9 +25,15 @@ const AverageLectureDuration = ({ countData }) => {
         <PiStudentBold style={{ marginRight: "2px" }} />
         <b>Average Duration</b>
       </Typography>
-      <Typography variant="h2" sx={{ color: "#36454F" }}>
-        {durationCount}
-      </Typography>
+      {loading ? (
+        <Typography variant="h2" sx={{ color: "#36454F" }}>
+          <Skeleton variant="circular" width={100} height={100} />
+        </Typography>
+      ) : (
+        <Typography variant="h2" sx={{ color: "#36454F" }}>
+          {durationCount}
+        </Typography>
+      )}
     </Box>
   );
 };

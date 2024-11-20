@@ -1,8 +1,8 @@
 import React from "react";
-import { Box, Typography } from "@mui/material";
+import { Box, Typography, Skeleton } from "@mui/material";
 import { PiStudentBold } from "react-icons/pi";
 
-const TotalLectures = ({ countData }) => {
+const TotalLectures = ({ countData, loading }) => {
   const lectureCount = countData?.total_lectures;
   return (
     <Box
@@ -25,9 +25,15 @@ const TotalLectures = ({ countData }) => {
         <PiStudentBold style={{ marginRight: "2px" }} />
         <b>Total Lectures </b>
       </Typography>
-      <Typography variant="h2" sx={{ color: "#36454F" }}>
+      {loading ? (
+        <Typography variant="h2" sx={{ color: "#36454F" }}>
+        <Skeleton variant="circular" width={100} height={100} />
+      </Typography>
+      ):(
+        <Typography variant="h2" sx={{ color: "#36454F" }}>
         {lectureCount}
       </Typography>
+      )}    
     </Box>
   );
 };

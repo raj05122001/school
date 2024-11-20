@@ -1,8 +1,8 @@
 import React from "react";
-import { Box, Typography } from "@mui/material";
+import { Box, Typography, Skeleton } from "@mui/material";
 import { GiTeacher } from "react-icons/gi";
 
-const TeacherCount = ({ countData }) => {
+const TeacherCount = ({ countData, loading }) => {
   const teacherCount = countData?.total_teachers;
   return (
     <Box
@@ -25,9 +25,15 @@ const TeacherCount = ({ countData }) => {
         <GiTeacher style={{ marginRight: "2px" }} />
         <b>Teachers Count</b>
       </Typography>
-      <Typography variant="h2" sx={{ color: "#36454F" }}>
-        {teacherCount}
-      </Typography>
+      {loading ? (
+        <Typography variant="h2" sx={{ color: "#36454F" }}>
+          <Skeleton variant="circular" width={100} height={100} />
+        </Typography>
+      ) : (
+        <Typography variant="h2" sx={{ color: "#36454F" }}>
+          {teacherCount}
+        </Typography>
+      )}
     </Box>
   );
 };
