@@ -18,6 +18,7 @@ const Page = () => {
   const [classOptions, setClassOptions] = useState([]);
   const [selectedOptions, setSelectedOptions] = useState(null);
   const [countData, setCountData] = useState({});
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     fetchClassOptions();
@@ -36,6 +37,7 @@ const Page = () => {
   };
 
   const fetchCountData = async () => {
+    setLoading(true)
     try {
       const response = await getTeacherStudentCount();
       if (response?.success) {
@@ -43,6 +45,8 @@ const Page = () => {
       }
     } catch (error) {
       console.error(error);
+    } finally{
+      setLoading(false)
     }
   };
 
@@ -66,20 +70,20 @@ const Page = () => {
 
   const greetingCard = useMemo(() => <GreetingCard />, []);
   const totalLectures = useMemo(
-    () => <TotalLectures countData={countData} />,
-    [countData]
+    () => <TotalLectures countData={countData} loading={loading}/>,
+    [countData, loading]
   );
   const averageLectureDuration = useMemo(
-    () => <AverageLectureDuration countData={countData} />,
-    [countData]
+    () => <AverageLectureDuration countData={countData} loading={loading} />,
+    [countData, loading]
   );
   const studentCount = useMemo(
-    () => <StudentCount countData={countData} />,
-    [countData]
+    () => <StudentCount countData={countData} loading={loading} />,
+    [countData, loading]
   );
   const teacherCount = useMemo(
-    () => <TeacherCount countData={countData} />,
-    [countData]
+    () => <TeacherCount countData={countData} loading={loading} />,
+    [countData, loading]
   );
   const teacherRanking = useMemo(() => <TeacherRanking />, []);
 

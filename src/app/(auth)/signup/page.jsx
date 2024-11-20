@@ -12,6 +12,7 @@ import {
 import toast from "react-hot-toast";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
+import { RiAccountCircleLine } from "react-icons/ri";
 
 const SignupPage = () => {
   const router = useRouter();
@@ -22,6 +23,9 @@ const SignupPage = () => {
     phone: "",
     role: "",
     department: "",
+    subject: "",
+    newPassword:"",
+    confirmPassword:"",
   });
 
   const [error, setError] = useState(null);
@@ -141,18 +145,23 @@ const SignupPage = () => {
         <Box
           sx={{
             width: "100%",
-            maxWidth: 400,
+            maxWidth: 600,
             backgroundColor: "#fff",
             padding: 4,
             borderRadius: 2,
             boxShadow: "0 4px 10px rgba(0,0,0,0.1)",
           }}
         >
-          <Typography component="h1" variant="h5" sx={{ textAlign: "center" }}>
-            Create an Account
+        <Box sx={{display:"flex", justifyContent:"center"}}>
+        <Typography component="h1" variant="h5" sx={{ textAlign: "center" }}>
+            Create Account 
           </Typography>
+        <RiAccountCircleLine style={{paddingTop:"4px", fontSize:"28px"}}/>
+        </Box>
+          
           <Box component="form" noValidate onSubmit={handleSubmit} sx={{ mt: 3 }}>
-            <TextField
+          <Box sx={{ display: "flex", gap: 2 }}>
+          <TextField
               name="name"
               label="Name"
               fullWidth
@@ -160,6 +169,10 @@ const SignupPage = () => {
               value={formData.name}
               onChange={handleChange}
               margin="normal"
+              InputLabelProps={{
+                shrink: true, // Ensures the label shrinks when value is present
+                style: { color: "#555" },
+              }}
             />
             <TextField
               name="email"
@@ -169,8 +182,57 @@ const SignupPage = () => {
               value={formData.email}
               onChange={handleChange}
               margin="normal"
+              InputLabelProps={{
+                shrink: true, // Ensures the label shrinks when value is present
+                style: { color: "#555" },
+              }}
+            />
+          </Box>
+          <Box sx={{ display: "flex", gap: 2 }}>
+          <TextField
+              margin="normal"
+              required
+              fullWidth
+              name="newPassword"
+              label="Password"
+              type="password"
+              id="password"
+              value={formData.newPassword}
+              onChange={handleChange}
+              InputLabelProps={{
+                shrink: true, // Ensures the label shrinks when value is present
+                style: { color: "#555" },
+              }}
+              InputProps={{
+                style: { color: "#000" },
+              }}
+              sx={{ backgroundColor: "#fff", borderRadius: "5px" }}
+              variant="outlined"
+              autoComplete="new-password"
             />
             <TextField
+              margin="normal"
+              required
+              fullWidth
+              name="confirmPassword"
+              label="Confirm Password"
+              type="password"
+              id="password"
+              value={formData.confirmPassword}
+              onChange={handleChange}
+              InputLabelProps={{
+                shrink: true, // Ensures the label shrinks when value is present
+                style: { color: "#555" },
+              }}
+              InputProps={{
+                style: { color: "#000" },
+              }}
+              sx={{ backgroundColor: "#fff", borderRadius: "5px" }}
+              variant="outlined"
+            />
+          </Box>
+          <Box sx={{ display: "flex", gap: 2 }}>
+          <TextField
               name="phone"
               label="Phone Number"
               fullWidth
@@ -178,6 +240,10 @@ const SignupPage = () => {
               value={formData.phone}
               onChange={handleChange}
               margin="normal"
+              InputLabelProps={{
+                shrink: true, // Ensures the label shrinks when value is present
+                style: { color: "#555" },
+              }}
             />
             <TextField
               name="role"
@@ -187,8 +253,14 @@ const SignupPage = () => {
               value={formData.role}
               onChange={handleChange}
               margin="normal"
+              InputLabelProps={{
+                shrink: true, // Ensures the label shrinks when value is present
+                style: { color: "#555" },
+              }}
             />
-            <TextField
+          </Box>
+          <Box sx={{ display: "flex", gap: 2 }}>
+          <TextField
               select
               name="department"
               label="Department"
@@ -197,6 +269,10 @@ const SignupPage = () => {
               value={formData.department}
               onChange={handleChange}
               margin="normal"
+              InputLabelProps={{
+                shrink: true, // Ensures the label shrinks when value is present
+                style: { color: "#555" },
+              }}
             >
               <MenuItem value="CSE">CSE</MenuItem>
               <MenuItem value="ME">ME</MenuItem>
@@ -213,6 +289,21 @@ const SignupPage = () => {
                 {success}
               </Typography>
             )}
+            <TextField
+              name="Subject"
+              label="Subject"
+              fullWidth
+              required
+              value={formData.subject}
+              onChange={handleChange}
+              margin="normal"
+              InputLabelProps={{
+                shrink: true, // Ensures the label shrinks when value is present
+                style: { color: "#555" },
+              }}
+            />
+          </Box>  
+            
             <Button
               type="submit"
               fullWidth
