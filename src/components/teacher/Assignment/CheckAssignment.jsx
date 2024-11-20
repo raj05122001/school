@@ -108,7 +108,13 @@ const CheckAssignment = ({ assignment, index }) => {
     >
       <MathJax.Context input="tex">
         <>
-          <Typography mt={4} ml={2} variant="h6" fontWeight={"bold"}>
+          <Typography
+            mt={4}
+            ml={2}
+            variant="h6"
+            fontWeight={"bold"}
+            sx={{ color: isDarkMode ? "#F9F6EE" : "#353935" }}
+          >
             <BiSolidRightArrowCircle
               style={{ marginRight: "2px", marginTop: "2px" }}
             />
@@ -123,7 +129,9 @@ const CheckAssignment = ({ assignment, index }) => {
               }}
             >
               <Typography variant="h6" gutterBottom color={primaryColor}>
-                <TextWithMath text={assignment.assignment_que.assignment_text} />
+                <TextWithMath
+                  text={assignment.assignment_que.assignment_text}
+                />
               </Typography>
               <Box
                 sx={{
@@ -138,10 +146,18 @@ const CheckAssignment = ({ assignment, index }) => {
                 }}
               ></Box>
             </Box>
-            <Typography variant="h6" color="textPrimary">
+            <Typography
+              variant="h6"
+              sx={{ color: isDarkMode ? "#F9F6EE" : "#353935" }}
+            >
               <i>Total Marks:</i> {assignment.assignment_que.assignment_mark}
             </Typography>
-            <Typography variant="h6" fontWeight={"bold"} mt={4}>
+            <Typography
+              variant="h6"
+              fontWeight={"bold"}
+              mt={4}
+              sx={{ color: isDarkMode ? "#F9F6EE" : "#353935" }}
+            >
               <FaPenNib style={{ marginRight: "4px" }} />
               Submission :
             </Typography>
@@ -174,6 +190,16 @@ const CheckAssignment = ({ assignment, index }) => {
                     value={grades}
                     onChange={(e) => setGrades(e.target.value)}
                     // disabled={isChecked}
+                    InputLabelProps={{
+                      style: { color: isDarkMode ? "#d7e4fc" : "" },
+                    }}
+                    InputProps={{
+                      sx: {
+                        backdropFilter: "blur(10px)",
+                        backgroundColor: "rgba(255, 255, 255, 0.3)",
+                        "& .MuiOutlinedInput-notchedOutline": {},
+                      },
+                    }}
                   />
                 </Grid>
                 <Grid item xs={12} sm={9}>
@@ -185,6 +211,16 @@ const CheckAssignment = ({ assignment, index }) => {
                     value={comment}
                     onChange={(e) => setComment(e.target.value)}
                     // disabled={isChecked}
+                    InputLabelProps={{
+                      style: { color: isDarkMode ? "#d7e4fc" : "" },
+                    }}
+                    InputProps={{
+                      sx: {
+                        backdropFilter: "blur(10px)",
+                        backgroundColor: "rgba(255, 255, 255, 0.3)",
+                        "& .MuiOutlinedInput-notchedOutline": {},
+                      },
+                    }}
                   />
                 </Grid>
               </Grid>
