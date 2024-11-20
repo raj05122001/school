@@ -935,4 +935,13 @@ export default class apiServices {
       })
   };
 
+  public updatePersonalised = (formData) => {
+    return this.axiosInstance
+      .post(
+        `/api/v1/student/get-personalised-recommendations/`,formData
+      )
+      .then((response) => {
+        return response;
+      })
+  };
 }

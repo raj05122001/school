@@ -2,8 +2,10 @@
 import React, { useState } from "react";
 import { Box, TextField, Button, Typography, Link, Grid } from "@mui/material";
 import { useForm } from "react-hook-form";
-import { usePathname, useRouter, useSearchParams } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { verifyOneTimePassword, resendOneTimePassword } from "@/api/apiHelper";
+import toast from "react-hot-toast";
+import CircularProgress from "@mui/material";
 
 const textAnimation = {
   "@keyframes slideFade": {
@@ -20,16 +22,12 @@ const textAnimation = {
 
 const VerifyOtp = () => {
   const router = useRouter();
-  const searchParams= useSearchParams()
-  const pathname=usePathname()
+  const searchParams = useSearchParams();
   const email = searchParams.get("email");
   const accesskey = searchParams.get("accesskey");
-  
+  const [loading, setLoading] = useState(false);
+
   const [otp, setOtp] = useState("");
-  const [error, setError] = useState("");
-  const [isTeacher, setIsTeacher] = useState(false); // Teacher/student role handling
-  const [role, setRole] = useState(""); // User role
-  const [otpVerified, setOtpVerified] = useState(false);
 
   const { handleSubmit } = useForm();
 
@@ -37,10 +35,8 @@ const VerifyOtp = () => {
     setOtp(e.target.value);
   };
 
-
   const verifyOtp = async () => {
-    setError("");
-
+    setLoading(true);
     try {
       const payload = {
         username: email,
@@ -49,38 +45,32 @@ const VerifyOtp = () => {
       const apiResponse = await verifyOneTimePassword(payload);
 
       if (apiResponse?.data?.success && !apiResponse?.data?.errors) {
-        setRole(apiResponse?.data?.data?.generated_for);
-        setOtpVerified(true);
-
-        if (apiResponse?.data?.data?.generated_for === "STUDENT") {
-          setIsTeacher(false);
-        } else {
-          setIsTeacher(true);
-        }
+        toast.success(apiResponse?.data?.message);
+        setLoading(false);
+        router.push(
+          `/signup/?accesskey=${accesskey}&email=${email}&verifyotp=true&role=${apiResponse?.data?.data?.generated_for}`
+        );
       } else {
-        setError(apiResponse?.data?.message || "Failed to verify OTP.");
+        toast.error(apiResponse?.data?.message || "Failed to verify OTP.");
       }
     } catch (err) {
-      setError("An error occurred while verifying the OTP.");
+      toast.error("An error occurred while verifying the OTP.");
+      setLoading(false);
     }
   };
 
   const resendOtp = async () => {
-    setError("");
-
     try {
       const payload = { username: email };
       const apiResponse = await resendOneTimePassword(payload);
 
       if (apiResponse?.data?.success) {
-        router.push(
-            `${pathname}?accesskey=${accesskey}&email=${email}&verifyotp=true`
-          );
+        toast.success(apiResponse?.data?.message);
       } else {
-        setError(apiResponse?.data?.message || "Failed to resend OTP.");
+        toast.error(apiResponse?.data?.message || "Failed to resend OTP.");
       }
     } catch (err) {
-      setError("An error occurred while resending the OTP.");
+      toast.error("An error occurred while resending the OTP.");
     }
   };
 
@@ -185,11 +175,6 @@ const VerifyOtp = () => {
             sx={{ backgroundColor: "#fff", borderRadius: "5px" }}
             variant="outlined"
           />
-          {error && (
-            <Typography color="error" sx={{ mt: 1 }}>
-              {error}
-            </Typography>
-          )}
           <Button
             type="submit"
             fullWidth
@@ -200,8 +185,13 @@ const VerifyOtp = () => {
               backgroundColor: "#1976d2",
               ":hover": { backgroundColor: "#115293" },
             }}
+            disabled={loading} // Disable button when loading
           >
-            Verify OTP
+            {loading ? (
+              <CircularProgress size={24} color="inherit" />
+            ) : (
+              "Verify OTP"
+            )}
           </Button>
           <Button
             fullWidth

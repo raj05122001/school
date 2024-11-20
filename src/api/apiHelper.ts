@@ -532,3 +532,8 @@ export const getAllSubject = async () => {
   const apiInstance = new apiServices(axiosAPIInstance);
   return await apiInstance.getAllSubject();
 }
+
+export const updatePersonalised = async (formData) => {
+  const apiInstance = new apiServices(axiosAPIInstance);
+  return await apiInstance.updatePersonalised(formData);
+};

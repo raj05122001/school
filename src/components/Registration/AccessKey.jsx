@@ -4,6 +4,7 @@ import { Box, TextField, Button, Typography, Link, Grid,CircularProgress } from 
 import { useForm } from "react-hook-form";
 import { useSearchParams, useRouter, usePathname } from "next/navigation";
 import { getOneTimePassword } from "@/api/apiHelper";
+import toast from "react-hot-toast";
 
 const textAnimation = {
   "@keyframes slideFade": {
@@ -29,7 +30,6 @@ const AccessKey = () => {
     email: "",
     accessKey: accessKeyUrl || "",
   });
-  const [error, setError] = useState("");
 
   const { handleSubmit } = useForm();
 
@@ -39,7 +39,6 @@ const AccessKey = () => {
   };
 
   const fetchOtp = async () => {
-    setError("");
     setLoading(true)
 
     try {
@@ -57,11 +56,11 @@ const AccessKey = () => {
           `${pathname}?accesskey=${formData?.accessKey}&email=${formData?.email}`
         );
       } else {
-        setError(apiResponse?.data?.message || "Something went wrong.");
+        toast.error(apiResponse?.data?.message || "Something went wrong.")
       }
       setLoading(false)
     } catch (err) {
-      setError("Failed to send OTP. Please try again.");
+      toast.error("Failed to send OTP. Please try again.")
       setLoading(false)
     }
   };
@@ -167,11 +166,6 @@ const AccessKey = () => {
             sx={{ backgroundColor: "#fff", borderRadius: "5px" }}
             variant="outlined"
           />
-          {error && (
-            <Typography color="error" sx={{ mt: 1 }}>
-              {error}
-            </Typography>
-          )}
 
           <Button
             type="submit"
