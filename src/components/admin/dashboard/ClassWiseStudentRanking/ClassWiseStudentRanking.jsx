@@ -89,7 +89,7 @@ import {
     };
   
     useEffect(() => {
-      if (selectedOptions?.class_id) {
+      if (selectedOptions?.id) {
         fetchCountByCategory();
       }
     }, [selectedOptions]);
@@ -98,7 +98,7 @@ import {
       setLoading(true);
       try {
         const response = await getCountByCategory(
-          selectedOptions?.class_id,0
+          selectedOptions?.id,0
         );
         setData(response?.data?.data || {});
       } catch (error) {
@@ -374,7 +374,7 @@ import {
       setLoading(true);
       try {
         const response = await getStudentByGrade(
-          selectedOptions?.class_id,
+          selectedOptions?.id,
           selectedGrad, 0
         );
         setStudentData(response?.data?.data);
