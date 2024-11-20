@@ -2,7 +2,7 @@ import React, { useEffect, useState, useRef, useContext, useMemo } from "react";
 import videojs from "video.js";
 import "video.js/dist/video-js.css";
 import "./VideoPlayer.css";
-import { getBreakpoint } from "@/api/apiHelper";
+import { getBreakpoint, updatePersonalised } from "@/api/apiHelper";
 import {
   Button,
   Box,
@@ -16,13 +16,14 @@ import { FaVideo } from "react-icons/fa";
 import { decodeToken } from "react-jwt";
 import Cookies from "js-cookie";
 import axios from "axios";
+import personalisedRecommendations from "../student/MOL/personalisedRecommendations";
 
 const VideoPlayer = ({ id }) => {
   const userDetails = decodeToken(Cookies.get("ACCESS_TOKEN"));
   const [markers, setMarkers] = useState([]);
   const [suggestionData, setSuggestionData] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
-  const playerRef = useRef(null); // Ref to store the Video.js player
+  const playerRef = useRef(null);
 
   console.log("userDetails", userDetails);
 
@@ -32,9 +33,9 @@ const VideoPlayer = ({ id }) => {
     }
   }, [id]);
 
-  useEffect(()=>{
-    updateVideoWatchtime(435.34)
-  },[])
+  useEffect(() => {
+    updateVideoWatchtime(435.34);
+  }, []);
 
   const updateVideoWatchtime = async (time) => {
     if (time !== 0) {
@@ -54,7 +55,10 @@ const VideoPlayer = ({ id }) => {
           JSON.stringify(formData)
         );
 
-        console.log("successful uploade watch time : ", JSON.stringify(formData));
+        console.log(
+          "successful uploade watch time : ",
+          JSON.stringify(formData)
+        );
       } catch (error) {
         console.error(error);
       }
@@ -160,8 +164,24 @@ const VideoPlayer = ({ id }) => {
 export default VideoPlayer;
 
 export const BreakpointPlayer = ({ markers, id, onPlayerReady }) => {
+  const userDetails = decodeToken(Cookies.get("ACCESS_TOKEN"));
   const videoRef = useRef(null);
   const playerRef = useRef(null);
+  const updateDataTriggered = useRef(false);
+
+  const updateData = async () => {
+    try {
+      const formData = {
+        student: userDetails?.student_id,
+        lecture: id,
+        section: "VIDEO",
+        comment: "",
+      };
+      await updatePersonalised(formData);
+    } catch (error) {
+      console.error(error);
+    }
+  };
 
   useEffect(() => {
     // Initialize Video.js
@@ -183,7 +203,7 @@ export const BreakpointPlayer = ({ markers, id, onPlayerReady }) => {
         el.className = "vjs-marker";
         el.style.left = left;
         el.dataset.time = marker.start / 1000;
-       el.innerHTML = `<span style={{backgroundColor:'red'}}>
+        el.innerHTML = `<span style={{backgroundColor:'red'}}>
           ${marker.headline}
         </span>`;
 
@@ -191,9 +211,20 @@ export const BreakpointPlayer = ({ markers, id, onPlayerReady }) => {
           playerRef.current.currentTime(marker.start / 1000);
         };
 
-        progressControl.el().appendChild(el);
-        // progressControl.children_[0].el_.appendChild(el);
+        // progressControl.el().appendChild(el);
+        progressControl.children_[0].el_.appendChild(el);
       });
+    });
+
+    // Add event listener to track playtime
+    playerRef.current.on("timeupdate", () => {
+      const currentTime = playerRef.current.currentTime();
+
+      // Trigger updateData when playtime exceeds 5 minutes (300 seconds)
+      if (currentTime >= 600 && !updateDataTriggered.current && userDetails?.role==="STUDENT") {
+        updateDataTriggered.current = true; // Prevent multiple triggers
+        updateData();
+      }
     });
 
     // return () => {
