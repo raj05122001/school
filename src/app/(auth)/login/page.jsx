@@ -43,7 +43,6 @@ const LoginPage = () => {
   });
 
   const [error, setError] = useState(null);
-  const [success, setSuccess] = useState(null);
 
   const handleChange = (e) => {
     setFormData({
@@ -55,7 +54,6 @@ const LoginPage = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError(null);
-    setSuccess(null);
 
     try {
       const response = await loginApi(formData);
@@ -63,9 +61,6 @@ const LoginPage = () => {
         const { access, refresh, username, message } = response.data;
         Cookies.set("ACCESS_TOKEN", access, { expires: 7 }); // Store access token in cookies
         Cookies.set("REFRESH_TOKEN", refresh, { expires: 30 }); // Store refresh token in cookies
-
-        // Display success message
-        setSuccess(message || "Logged in successfully!");
         const accessToken = decodeToken(access);
         // Redirect user after successful login
         if (redirectTo) {
@@ -284,11 +279,6 @@ const LoginPage = () => {
             {error && (
               <Typography color="error" sx={{ mt: 1 }}>
                 {error}
-              </Typography>
-            )}
-            {success && (
-              <Typography color="primary" sx={{ mt: 1 }}>
-                {success}
               </Typography>
             )}
             <Button
