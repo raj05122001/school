@@ -3,6 +3,7 @@ import { getLectureHighlights, updateMolMarks } from "@/api/apiHelper";
 import { useEffect, useState, useRef } from "react";
 import { FaInfoCircle } from "react-icons/fa";
 import MathJax from "react-mathjax2";
+import personalisedRecommendations from "@/components/student/MOL/personalisedRecommendations";
 
 const HighlightsComponent = ({
   lectureId,
@@ -15,6 +16,8 @@ const HighlightsComponent = ({
   const [loading, setLoading] = useState(true);
   const highlightsBoxRef = useRef(null);
   const updateCalled = useRef(false);
+
+  personalisedRecommendations(lectureId, "HIGHLIGHTS", highlightsBoxRef, "");
 
   useEffect(() => {
     const handleScrollAndUpdate = async () => {

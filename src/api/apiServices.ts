@@ -835,6 +835,31 @@ export default class apiServices {
       })
   };
 
+  public getOneTimePassword = (data) => {
+    return this.authAxiosInstance
+      .post("api/v1/account/send-otp/", data)
+      .then((response) => {
+          return response;
+      })
+  };
+
+  public verifyOneTimePassword = (data) => {
+    return this.authAxiosInstance
+      .post("api/v1/account/verify-otp/", data)
+      .then((response) => {
+        return response;
+      })
+  };
+
+  public resendOneTimePassword = (data) => {
+    const toastInstance = toast.loading("Loading...");
+    return this.authAxiosInstance
+      .post("api/v1/account/resend-otp/", data)
+      .then((response) => {
+        return response;
+      })
+  };
+
   public watchtimeBySubject = () => {
     return this.axiosInstance
       .get(
@@ -910,4 +935,13 @@ export default class apiServices {
       })
   };
 
+  public updatePersonalised = (formData) => {
+    return this.axiosInstance
+      .post(
+        `/api/v1/student/get-personalised-recommendations/`,formData
+      )
+      .then((response) => {
+        return response;
+      })
+  };
 }
