@@ -81,7 +81,7 @@ const StudentAssignments = ({ listData }) => {
                     </Box>
                   </Box>
 
-                  <Divider sx={{ my: 2 }} />
+                  <Divider sx={{ my: 2, borderColor: isDarkMode ? "#fff" : "" }} />
 
                   <Grid container spacing={2}>
                     <Grid

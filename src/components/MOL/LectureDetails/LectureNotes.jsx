@@ -210,6 +210,12 @@ const LectureNotes = ({
                     <Button
                       variant="outlined"
                       onClick={() => handleMoreInsightClick(note.id)}
+                      sx={{
+                        whiteSpace: "nowrap", // Prevent text wrapping
+                        minHeight: "36px", // Set a consistent button height
+                        lineHeight: "1.5", // Ensure proper vertical alignment
+                        textTransform: "none", // Optional: Keep text casing as it is
+                      }}
                     >
                       More Insights
                     </Button>
@@ -239,7 +245,11 @@ const LectureNotes = ({
                 </Box>
                 {/* Check and remove leading ** symbols from notes */}
                 <Typography variant="subtitle2">
-                  <TextWithMath text={note.notes.replace(/^\*\*\s*/, "").replace(/\\n/g, "\n")}/>
+                  <TextWithMath
+                    text={note.notes
+                      .replace(/^\*\*\s*/, "")
+                      .replace(/\\n/g, "\n")}
+                  />
                 </Typography>
               </Box>
             ))}

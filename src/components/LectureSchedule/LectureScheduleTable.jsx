@@ -147,7 +147,7 @@ const LectureScheduleTable = () => {
                 {TABLE_HEAD?.map((head) => (
                   <TableCell
                     key={head}
-                    sx={{ color: isDarkMode ? "white" : "black" }}
+                    sx={{ color: isDarkMode ? "white" : "#B2BEB5" }}
                     className="px-6 py-3 text-left text-base font-medium uppercase tracking-wider"
                   >
                     {head}

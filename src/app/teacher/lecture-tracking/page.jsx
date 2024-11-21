@@ -138,7 +138,7 @@ const LectureTabs = () => {
     router.push(`${pathname}?${newSearchParams.toString()}`);
   };
 
-  const handleRowClick = (id) => { 
+  const handleRowClick = (id) => {
     router.push(`/teacher/lecture-listings/${id}`);
   };
 
@@ -153,7 +153,7 @@ const LectureTabs = () => {
         label={
           <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
             <MdOutlineTrackChanges size={30} color={primaryColor} />
-            <Typography variant="h4" color={isDarkMode ? "#F9F6EE" : "#36454F"}>
+            <Typography variant="h4" color={isDarkMode ? "#E5E4E2" : "#36454F"}>
               Lecture Tracking
             </Typography>
           </Box>
@@ -368,7 +368,7 @@ const LectureTabs = () => {
               </TableRow>
             </TableHead>
             <TableBody sx={{ color: isDarkMode ? "#36454F" : "#FFFFF0" }}>
-              {lectureData?.data?.length > 0 &&
+              {lectureData?.data?.length > 0 ? (
                 lectureData?.data?.map((lecture, index) => (
                   <TableRow
                     key={index}
@@ -411,7 +411,14 @@ const LectureTabs = () => {
                       </TableCell>
                     )}
                   </TableRow>
-                ))}
+                ))
+              ) : (
+                <TableRow>
+                  <TableCell colSpan={7} sx={{ textAlign: "center" }}>
+                    No Data Available
+                  </TableCell>
+                </TableRow>
+              )}
             </TableBody>
           </Table>
         </TableContainer>

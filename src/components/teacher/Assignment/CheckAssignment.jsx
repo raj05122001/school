@@ -133,18 +133,6 @@ const CheckAssignment = ({ assignment, index }) => {
                   text={assignment.assignment_que.assignment_text}
                 />
               </Typography>
-              <Box
-                sx={{
-                  width: 30,
-                  height: 30,
-                  p: 0.8,
-                  borderRadius: "50%",
-                  backgroundColor: "white",
-                  textAlign: "center",
-                  justifyContent: "center",
-                  alignItems: "center",
-                }}
-              ></Box>
             </Box>
             <Typography
               variant="h6"

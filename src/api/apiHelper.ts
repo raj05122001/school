@@ -537,3 +537,14 @@ export const updatePersonalised = async (formData) => {
   const apiInstance = new apiServices(axiosAPIInstance);
   return await apiInstance.updatePersonalised(formData);
 };
+
+export const getLecAttachment = async (lectureId) => {
+  const apiInstance = new apiServices(axiosAPIInstance);
+  return await apiInstance.getLecAttachment(lectureId);
+};
+
+export const deleteAttachment = async (deleteId) => {
+  const apiInstance = new apiServices(axiosAPIInstance);
+  return await apiInstance.deleteAttachment(deleteId);
+};
+
