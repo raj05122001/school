@@ -944,4 +944,41 @@ export default class apiServices {
         return response;
       })
   };
+
+  public getLecAttachment = async (lectureId) => {
+    return await this.axiosInstance
+      .get(`/api/v1/lecture/${lectureId}/attachment/`)
+      .then((Response) => Response)
+      .catch((error) => console.error(error));
+  };
+
+  public deleteAttachment = async (deleteId) => {
+    const toastInstance = toast.loading("Deleting attachment...");
+    try {
+      const response = await this.axiosInstance.delete(`/api/v1/delete/attachment/${deleteId}/`);
+      if (!response.data.success) {
+        toast.error(response.data.message, {
+          id: toastInstance,
+          duration: Constants.toastTimer,
+        });
+        return response;
+      }
+      toast.success(response.data.message, {
+        id: toastInstance,
+        duration: Constants.toastTimer,
+      });
+      return response;
+    } catch (error) {
+      const errorText = error.response?.data?.errors
+        ? error.response.data.errors.username[0]
+        : error.response?.data?.message || "Something went wrong";
+      toast.error(errorText, {
+        id: toastInstance,
+        duration: Constants.toastTimer,
+      });
+      console.error(error);
+    }
+  };
+  
+
 }

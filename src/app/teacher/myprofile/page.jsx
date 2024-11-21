@@ -20,6 +20,7 @@ import { BASE_URL_MEET } from "@/constants/apiconfig";
 import Cookies from "js-cookie";
 import { getTeacherDetails, updateTeacherDetails } from "@/api/apiHelper";
 import toast from "react-hot-toast";
+import { useThemeContext } from "@/hooks/ThemeContext";
 
 const EditDetailsPage = () => {
   const userDetails = decodeToken(Cookies.get("ACCESS_TOKEN"));
@@ -32,6 +33,8 @@ const EditDetailsPage = () => {
   const fileInputRef = useRef(null);
   const [subject, setSubject] = useState([]);
   const [initialData, setInitialData] = useState({});
+
+  const { isDarkMode } = useThemeContext();
 
   const {
     register,
@@ -196,7 +199,7 @@ const EditDetailsPage = () => {
           <Grid item xs={12} sm={6}>
             <Typography
               variant="subtitle2"
-              color="textSecondary"
+              color= {isDarkMode ? "#E5E4E2" : "#B2BEB5"}
               sx={{ fontWeight: "bold" }}
             >
               Full Name*
@@ -209,13 +212,14 @@ const EditDetailsPage = () => {
               error={!!errors.full_name}
               helperText={errors.full_name?.message}
               sx={{ marginTop: 1 }}
+              className="blur_effect_card"
             />
           </Grid>
 
           <Grid item xs={12} sm={6}>
             <Typography
               variant="subtitle2"
-              color="textSecondary"
+              color= {isDarkMode ? "#E5E4E2" : "#B2BEB5"}
               sx={{ fontWeight: "bold" }}
             >
               Designation*
@@ -230,13 +234,14 @@ const EditDetailsPage = () => {
               error={!!errors.designation}
               helperText={errors.designation?.message}
               sx={{ marginTop: 1 }}
+              className="blur_effect_card"
             />
           </Grid>
 
           <Grid item xs={12} sm={6}>
             <Typography
               variant="subtitle2"
-              color="textSecondary"
+              color= {isDarkMode ? "#E5E4E2" : "#B2BEB5"}
               sx={{ fontWeight: "bold" }}
             >
               Experience*
@@ -251,13 +256,14 @@ const EditDetailsPage = () => {
               error={!!errors.experience}
               helperText={errors.experience?.message}
               sx={{ marginTop: 1 }}
+              className="blur_effect_card"
             />
           </Grid>
 
           <Grid item xs={12} sm={6}>
             <Typography
               variant="subtitle2"
-              color="textSecondary"
+              color= {isDarkMode ? "#E5E4E2" : "#B2BEB5"}
               sx={{ fontWeight: "bold" }}
             >
               Department*
@@ -273,13 +279,14 @@ const EditDetailsPage = () => {
               error={!!errors.department}
               helperText={errors.department?.message}
               sx={{ marginTop: 1 }}
+              className="blur_effect_card"
             />
           </Grid>
 
           <Grid item xs={12} sm={12}>
             <Typography
               variant="subtitle2"
-              color="textSecondary"
+              color= {isDarkMode ? "#E5E4E2" : "#B2BEB5"}
               sx={{ fontWeight: "bold" }}
             >
               Email*
@@ -300,13 +307,14 @@ const EditDetailsPage = () => {
               error={!!errors.email}
               helperText={errors.email?.message}
               sx={{ marginTop: 1 }}
+              className="blur_effect_card"
             />
           </Grid>
 
           <Grid item xs={12} sm={12}>
             <Typography
               variant="subtitle2"
-              color="textSecondary"
+              color= {isDarkMode ? "#E5E4E2" : "#B2BEB5"}
               sx={{ fontWeight: "bold" }}
             >
               Subjects*

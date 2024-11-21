@@ -150,7 +150,7 @@ const Page = () => {
         label={
           <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
             <MdOutlineTrackChanges size={30} color={primaryColor} />
-            <Typography variant="h4" color={isDarkMode ? "#F9F6EE" : "#36454F"}>
+            <Typography variant="h4" color={isDarkMode ? "#E5E4E2" : "#36454F"}>
               Lecture Tracking
             </Typography>
           </Box>
