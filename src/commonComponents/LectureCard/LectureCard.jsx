@@ -1,6 +1,6 @@
 "use client";
 import React, { useState, useContext } from "react";
-import { Box, Paper, Typography, Avatar } from "@mui/material";
+import { Box, Paper, Typography, Avatar, Tooltip } from "@mui/material";
 import {
   FaCalendarAlt,
   FaClock,
@@ -84,10 +84,17 @@ const LectureCard = ({ lecture }) => {
 
   const handleRoute = (id) => {
     router.push(`/student/lecture-listings/${id}`);
-  }
+  };
 
   return (
-    <Paper sx={lectureCardStyle} onClick={userDetails?.role !== "STUDENT" ? () => handleLectureRecord(lecture) : () => handleRoute(lecture?.id)}>
+    <Paper
+      sx={lectureCardStyle}
+      onClick={
+        userDetails?.role !== "STUDENT"
+          ? () => handleLectureRecord(lecture)
+          : () => handleRoute(lecture?.id)
+      }
+    >
       <Box sx={dateSectionStyle}>
         <Typography
           variant="h4"
@@ -103,13 +110,15 @@ const LectureCard = ({ lecture }) => {
         </Typography>
       </Box>
       <Box sx={lectureInfoStyle}>
-        <Typography
-          variant="h6"
-          sx={{ fontWeight: "bold", mb: 1, color: textStyle.color }}
-          noWrap
-        >
-          {lecture?.title?.slice(0, 24)}...
-        </Typography>
+        <Tooltip title={lecture?.title || ""} arrow placement="top-start">
+          <Typography
+            variant="h6"
+            sx={{ fontWeight: "bold", mb: 1, color: textStyle.color }}
+            noWrap
+          >
+            {lecture?.title?.length > 24 ? `${lecture?.title?.slice(0, 24)}...`: lecture?.title}
+          </Typography>
+        </Tooltip>
 
         <Box display="flex" alignItems="center" mb={1}>
           <FaCalendarAlt style={iconStyle} />
@@ -134,12 +143,15 @@ const LectureCard = ({ lecture }) => {
             {lecture?.chapter?.subject?.name}
           </Typography>
         </Box>
-        <Box display="flex" alignItems="center" mb={1}>
-          <FaBookOpen style={iconStyle} />
-          <Typography variant="body2" sx={{ color: textStyle.color }}>
-            {lecture?.chapter?.chapter}
-          </Typography>
-        </Box>
+        <Tooltip title={lecture?.chapter?.chapter || ""} arrow placement="top-start">
+          <Box display="flex" alignItems="center" mb={1}>
+            <FaBookOpen style={iconStyle} />
+            <Typography variant="body2" sx={{ color: textStyle.color }}>
+              {lecture?.chapter?.chapter}
+            </Typography>
+          </Box>
+        </Tooltip>
+
         {/* <Box display="flex" alignItems="center">
           <Avatar
             src={lecture?.organizer?.user?.profile_pic}
