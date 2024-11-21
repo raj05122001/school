@@ -34,7 +34,7 @@ const LectureAttachments = ({ lectureId, isDarkMode }) => {
   }, [lectureId]);
 
   const handleFileSelect = (e) => {
-    onSaveAttachment(e.target.files[0]);
+    onSaveAttachment(e?.target.files[0]);
   };
 
   const onSaveAttachment = async (files) => {
@@ -79,7 +79,7 @@ const LectureAttachments = ({ lectureId, isDarkMode }) => {
     const downloadPath = path.startsWith("http")
       ? path
       : `${BASE_URL_MEET}${path}`;
-    const link = document.createElement("a");
+    const link = document?.createElement("a");
     link.href = downloadPath;
     link.target = "_blank";
     link.download = getFileName(path);
@@ -124,8 +124,8 @@ const LectureAttachments = ({ lectureId, isDarkMode }) => {
           onChange={handleFileSelect}
         />
       </Box>
-      {attachments.length > 0 ? (
-        attachments.map((item) => (
+      {attachments?.length > 0 ? (
+        attachments?.map((item) => (
           <Box
             key={item.name}
             sx={{
