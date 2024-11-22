@@ -98,8 +98,7 @@ const LectureAssignment = ({ id, isDarkMode, class_ID, isEdit }) => {
         assignment.lecture.id,
         formData
       );
-
-      console.log("Assign response", response);
+      
       if (response?.data.success) {
         setAssignments((prevAssignments) =>
           prevAssignments?.map((a) =>
@@ -135,7 +134,6 @@ const LectureAssignment = ({ id, isDarkMode, class_ID, isEdit }) => {
 
     try {
       const response = await createAssignment(formData);
-      console.log("Create Assign response", response);
       if (response?.data?.success) {
         setAssignments((prevAssignments) => [
           ...prevAssignments,

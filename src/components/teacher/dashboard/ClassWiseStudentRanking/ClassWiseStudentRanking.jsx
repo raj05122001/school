@@ -47,7 +47,7 @@ const renderCustomizedLabel = ({
   outerRadius,
   percent,
 }) => {
-  const radius = innerRadius + (outerRadius - innerRadius) * 0.5;
+  const radius = innerRadius + (outerRadius - innerRadius) * 0.1;
   const x = cx + radius * Math.cos(-midAngle * RADIAN);
   const y = cy + radius * Math.sin(-midAngle * RADIAN);
   const check = percent * 100 > 0;
@@ -258,8 +258,8 @@ const ClassWiseStudentRanking = ({ selectedOptions }) => {
                 cx="50%"
                 cy="50%"
                 labelLine={false}
-                innerRadius={60}
-                outerRadius={100}
+                innerRadius={55}
+                outerRadius={110}
                 label={renderCustomizedLabel}
                 dataKey="value"
               >

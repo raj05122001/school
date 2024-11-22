@@ -57,7 +57,6 @@ const Assignment = () => {
     setIsLoading(true);
     try {
       const apiResponse = await getTeacherAssignment("","",classValue,subject,searchQuery);
-      console.log("apiResponse",apiResponse)
       if (apiResponse?.success) {
         setLectureList(apiResponse?.data?.lectures);
       }

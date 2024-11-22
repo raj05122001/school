@@ -53,7 +53,7 @@ const StudentFilters = ({
   const [filterState, setFilterState] = useState({
     selectedSubject: subject,
     globalSearch: searchQuery,
-    selectedMonth: dayjs(month),
+    selectedMonth: month,
     selectedLectureType: lectureType,
   });
   const [subjectList, setSubjectList] = useState([]);
@@ -225,7 +225,7 @@ const StudentFilters = ({
             <DatePicker
               views={["month"]}
               placeholder="Select Month"
-              value={filterState.selectedMonth}
+              value={dayjs(filterState.selectedMonth)}
               onChange={(newValue) =>
                 handleChange(newValue.format("YYYY-MM"), "selectedMonth")
               }

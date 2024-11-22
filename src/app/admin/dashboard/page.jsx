@@ -28,7 +28,6 @@ const Page = () => {
   const fetchClassOptions = async () => {
     try {
       const subjectResponse = await getAllSubject();
-      console.log("subjectResponse", subjectResponse);
       setClassOptions(subjectResponse?.data?.data);
       setSelectedOptions(subjectResponse?.data?.data?.[0]);
     } catch (error) {

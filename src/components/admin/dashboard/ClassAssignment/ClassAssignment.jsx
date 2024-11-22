@@ -9,8 +9,6 @@ const ClassAssignment = ({selectedOptions}) => {
   const [loading, setLoading] = useState(true);
   const { isDarkMode, primaryColor, secondaryColor } = useThemeContext();
 
-  console.log("selectedOptions",selectedOptions)
-
   useEffect(() => {
     if(selectedOptions?.id){
     fetchClassAssignment();
@@ -21,7 +19,6 @@ const ClassAssignment = ({selectedOptions}) => {
     setLoading(true);
     try {
       const response = await getClassAssignment(selectedOptions?.id);
-      console.log("response fetchClassAssignment admin",response)
       setData(response?.data?.data);
     } catch (error) {
       console.error(error);

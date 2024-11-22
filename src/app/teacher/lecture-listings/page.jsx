@@ -57,13 +57,13 @@ const Page = () => {
     try {
       const apiResponse = await getTeacherAllLecture(
         userDetails?.teacher_id,
-        encodeURI(searchQuery),
+        searchQuery,
         month,
         lectureType,
         activePage,
         9,
-        encodeURI(subject),
-        encodeURI(classValue)
+        subject,
+        classValue
       );
       if (apiResponse?.data?.success) {
         setLectureList(apiResponse?.data);

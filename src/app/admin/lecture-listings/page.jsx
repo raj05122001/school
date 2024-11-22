@@ -66,8 +66,6 @@ const Page = () => {
         encodeURI(classValue)
       );
 
-      console.log("apiResponse?.data==>",apiResponse)
-
       if (apiResponse?.data?.success) {
         setLectureList(apiResponse?.data);
       }

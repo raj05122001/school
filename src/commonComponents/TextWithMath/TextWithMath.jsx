@@ -26,7 +26,7 @@ const TextWithMath = ({ text }) => {
         return (
           <Typography
             variant="span"
-            sx={{ fontSize: "1.25rem", lineHeight: "1.75rem" }}
+            sx={{ fontSize: "1rem", lineHeight: "1rem" }}
             key={i}
           >
             <MathJax.Node key={i} inline>

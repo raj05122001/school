@@ -24,7 +24,6 @@ function OverallClassPerformance() {
   const fetchRatingsCount = async () => {
     try {
       const response = await getRatingsCount();
-      console.log("response fetchgetRatingsCount", response);
 
       // Transform the data structure to an array format for the chart
       const transformedData = [

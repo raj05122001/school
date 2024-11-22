@@ -45,7 +45,6 @@ const SignupPage = () => {
 
     // Add your form submission logic here
     try {
-      console.log("Form submitted:", formData);
       setSuccess("Account created successfully!");
       toast.success("Account created successfully!");
       // Redirect to login page

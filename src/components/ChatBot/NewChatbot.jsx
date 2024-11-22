@@ -85,8 +85,6 @@ export default function NewChatbot({ suggestionInput, setIsOpenChatBot }) {
     setIsLoading(false);
   };
 
-  console.log("chatHistory :  ", chatHistory);
-
   return (
     <Box
       sx={{
@@ -263,7 +261,7 @@ export default function NewChatbot({ suggestionInput, setIsOpenChatBot }) {
                   >
                     {isLoading ? <CircularProgress size={24} /> : <FaArrowUp />}
                   </IconButton>
-                  {userTextInput ? "":<VoiceToText setUserTextInput={setUserTextInput} />}
+                  {userTextInput && isLoading ? "":<VoiceToText setUserTextInput={setUserTextInput} />}
                 </Box>
                 ),
               }}

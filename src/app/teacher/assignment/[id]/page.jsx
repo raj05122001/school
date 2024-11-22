@@ -89,7 +89,6 @@ const CoursePlaylist = ({ params }) => {
         searchQuery
       );
 
-      console.log("apiResponse apiResponse : ",apiResponse?.data?.students)
       if (apiResponse?.success) {
         setListData(apiResponse?.data);
       }

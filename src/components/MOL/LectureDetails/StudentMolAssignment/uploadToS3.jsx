@@ -8,7 +8,6 @@ export const uploadToS3 = async (
   setUploadProgress
 ) => {
   return new Promise(async (resolve, reject) => {
-    console.log("component is working");
     try {
       const fileConfigs = {
         IMAGE: {
@@ -58,7 +57,6 @@ export const uploadToS3 = async (
       });
 
       const result = await upload.done();
-      console.log("result", result);
       file.s3Location = result.Location;
       resolve(result);
     } catch (err) {
