@@ -906,5 +906,15 @@ export default class apiServices {
     }
   };
   
+  public postDepartment = (formData) => {
+    return this.authAxiosInstance
+      .post(`api/v1/administration/department/`, formData)
+      .then((response) => {
+        return response;
+      })
+      .catch((error) => {
+        console.error(error);
+      });
+  };
 
 }
