@@ -24,61 +24,49 @@ export default class apiServices {
   };
 
   public createLecture = (formData) => {
-    const toastInstance = toast.loading("Loading...");
     return this.axiosInstance
       .post(`/api/v1/lecture/`, formData)
       .then((response) => {
-        if (!response.data.success) {
-          toast.dismiss(toastInstance); // Dismiss the loading toast
-          toast.error(response.data.message, {
-            duration: Constants.toastTimer,
-          });
-          return response;
-        }
-        toast.dismiss(toastInstance); // Dismiss the loading toast
-        toast.success("Lecture is created", {
-          duration: Constants.toastTimer,
-        });
         return response;
       })
       .catch((error) => {
-        toast.dismiss(toastInstance); // Dismiss the loading toast
-        const errorText = error.response?.data?.message || "An error occurred";
-        toast.error(errorText, {
-          duration: Constants.toastTimer,
-        });
-        console.error(error);
         throw error;
       });
   };
 
   public updateLecture = (lectureId, formData) => {
-    const toastInstance = toast.loading("Loading...");
     return this.axiosInstance
       .patch(`/api/v1/lecture/${lectureId}/`, formData)
       .then((response) => {
-        if (!response.data.success) {
-          toast.dismiss(toastInstance); // Dismiss the loading toast
-          toast.error(response.data.message, {
-            duration: Constants.toastTimer,
-          });
-          return response;
-        }
-        toast.dismiss(toastInstance); // Dismiss the loading toast
-        toast.success("Lecture is updated", {
-          duration: Constants.toastTimer,
-        });
         return response;
       })
       .catch((error) => {
-        toast.dismiss(toastInstance); // Dismiss the loading toast
-        const errorText = error.response?.data?.message || "An error occurred";
-        toast.error(errorText, {
-          duration: Constants.toastTimer,
-        });
         console.error(error);
         throw error;
       });
+  };
+
+  public registration = async (payload) => {
+    return await this.authAxiosInstance
+      .post("api/v1/account/register/", payload, {
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+      })
+      .then((response) => {
+        return response;
+      })
+      .catch((error) => {
+        console.error(error);
+        throw error
+      });
+  };
+
+  public grtDepartment = async () => {
+    return await this.authAxiosInstance
+      .get(`/api/v1/dropdown/department/`)
+      .then((Response) => Response)
+      .catch((error) => console.error(error));
   };
 
   public getClassDropdown = async () => {
@@ -152,22 +140,12 @@ export default class apiServices {
   };
 
   public deleteUpcommingLecture = (lectureId) => {
-    const toastInstance = toast.loading("Loading...");
     return this.axiosInstance
       .delete(`/api/v1/lecture/${lectureId}/`)
       .then((response) => {
-        toast.dismiss(toastInstance); // Dismiss the loading toast
-        toast.success("Lecture Successfully Deleted", {
-          duration: Constants.toastTimer,
-        });
         return response;
       })
       .catch((error) => {
-        toast.dismiss(toastInstance); // Dismiss the loading toast
-        const errorText = error?.response?.data?.message || "An error occurred";
-        toast.error(errorText, {
-          duration: Constants.toastTimer,
-        });
         console.error("this is error", error);
       });
   };
@@ -247,29 +225,12 @@ export default class apiServices {
   };
 
   public uploadExcelFile = (formData) => {
-    const toastInstance = toast.loading("Loading...");
     return this.axiosInstance
       .post(`/api/v1/dashboard/upload_excel/`, formData)
       .then((response) => {
-        if (!response.data.success) {
-          toast.dismiss(toastInstance); // Dismiss the loading toast
-          toast.error(response.data.message, {
-            duration: Constants.toastTimer,
-          });
-          return response;
-        }
-        toast.dismiss(toastInstance); // Dismiss the loading toast
-        toast.success(response.data?.data?.message, {
-          duration: Constants.toastTimer,
-        });
         return response;
       })
       .catch((error) => {
-        toast.dismiss(toastInstance); // Dismiss the loading toast
-        const errorText = error.response?.data?.message || "An error occurred";
-        toast.error(errorText, {
-          duration: Constants.toastTimer,
-        });
         console.error(error);
         throw error;
       });
@@ -514,29 +475,12 @@ export default class apiServices {
   };
 
   public createAssignment = (formData) => {
-    const toastInstance = toast.loading("Loading...");
     return this.axiosInstance
       .post(`/api/v1/lecture_assignment/`, formData)
       .then((response) => {
-        if (!response.data.success) {
-          toast.dismiss(toastInstance); // Dismiss the loading toast
-          toast.error(response.data.message, {
-            duration: Constants.toastTimer,
-          });
-          return response;
-        }
-        toast.dismiss(toastInstance); // Dismiss the loading toast
-        toast.success("Assignment is created", {
-          duration: Constants.toastTimer,
-        });
         return response;
       })
       .catch((error) => {
-        toast.dismiss(toastInstance); // Dismiss the loading toast
-        const errorText = error.response?.data?.message || "An error occurred";
-        toast.error(errorText, {
-          duration: Constants.toastTimer,
-        });
         console.error(error);
         throw error;
       });
@@ -694,29 +638,12 @@ export default class apiServices {
   };
 
   public submitMOLAssignment = (formData) => {
-    const toastInstance = toast.loading("Loading...");
     return this.axiosInstance
       .post(`/api/v1/lecture_assignmentAnswer/`, formData)
       .then((response) => {
-        if (!response.data.success) {
-          toast.dismiss(toastInstance); // Dismiss the loading toast
-          toast.error(response.data.message, {
-            duration: Constants.toastTimer,
-          });
-          return response;
-        }
-        toast.dismiss(toastInstance); // Dismiss the loading toast
-        toast.success("Submitted", {
-          duration: Constants.toastTimer,
-        });
         return response;
       })
       .catch((error) => {
-        toast.dismiss(toastInstance); // Dismiss the loading toast
-        const errorText = error.response?.data?.message || "An error occurred";
-        toast.error(errorText, {
-          duration: Constants.toastTimer,
-        });
         console.error(error);
         throw error;
       });
@@ -852,7 +779,6 @@ export default class apiServices {
   };
 
   public resendOneTimePassword = (data) => {
-    const toastInstance = toast.loading("Loading...");
     return this.authAxiosInstance
       .post("api/v1/account/resend-otp/", data)
       .then((response) => {

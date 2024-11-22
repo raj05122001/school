@@ -1,5 +1,6 @@
 "use client";
-import React, { useState } from "react";
+
+import React, { useState, useEffect } from "react";
 import {
   Box,
   TextField,
@@ -7,65 +8,156 @@ import {
   Typography,
   Link,
   Grid,
-  MenuItem,
+  Autocomplete,
 } from "@mui/material";
 import toast from "react-hot-toast";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import Image from "next/image";
 import { RiAccountCircleLine } from "react-icons/ri";
+import { grtDepartment, getClassDropdown, registration } from "@/api/apiHelper";
+import { useForm, Controller } from "react-hook-form";
+import * as yup from "yup";
+import { yupResolver } from "@hookform/resolvers/yup";
+
+// Define keyframes for animation
+const textAnimation = {
+  "@keyframes slideFade": {
+    "0%": {
+      opacity: 0,
+      transform: "translateY(-20px)",
+    },
+    "100%": {
+      opacity: 1,
+      transform: "translateY(0)",
+    },
+  },
+};
 
 const SignupPage = () => {
   const router = useRouter();
+  const searchParams = useSearchParams();
+  const emailParam = searchParams.get("email");
+  const roleParam = searchParams.get("role");
+  const [loading, setLoading] = useState(false);
+  const [serverError, setServerError] = useState(null);
+  const [classOptions, setClassOptions] = useState([]);
+  const [departmentOptions, setDepartmentOptions] = useState([]);
 
-  const [formData, setFormData] = useState({
-    name: "",
-    email: "",
-    phone: "",
-    role: "",
-    department: "",
-    subject: "",
-    newPassword:"",
-    confirmPassword:"",
+  const isTeacher = roleParam === "TEACHER";
+
+  const validationSchema = yup.object().shape({
+    name: yup.string().required("Name is required"),
+    email: yup.string().email("Invalid email").required("Email is required"),
+    phone: yup
+      .string()
+      .matches(/^[0-9]{10}$/, "Phone number must be 10 digits")
+      .required("Phone number is required"),
+    role: yup.string().required("Role is required"),
+    newPassword: yup
+      .string()
+      .min(6, "Password must be at least 6 characters")
+      .required("Password is required"),
+    confirmPassword: yup
+      .string()
+      .oneOf([yup.ref("newPassword"), null], "Passwords must match")
+      .required("Confirm Password is required"),
   });
 
-  const [error, setError] = useState(null);
-  const [success, setSuccess] = useState(null);
+  const {
+    control,
+    handleSubmit,
+    setError,
+    clearErrors,
+    formState: { errors },
+  } = useForm({
+    defaultValues: {
+      name: "",
+      email: emailParam || "",
+      phone: "",
+      role: roleParam || "",
+      department: null,
+      subject: "",
+      newPassword: "",
+      confirmPassword: "",
+    },
+    resolver: yupResolver(validationSchema),
+  });
 
-  const handleChange = (e) => {
-    setFormData({
-      ...formData,
-      [e.target.name]: e.target.value,
-    });
-  };
-
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    setError(null);
-    setSuccess(null);
-
-    // Add your form submission logic here
+  const fetchData = async () => {
     try {
-      setSuccess("Account created successfully!");
-      toast.success("Account created successfully!");
-      // Redirect to login page
-      router.push("/login");
-    } catch (err) {
-      setError("An error occurred. Please try again.");
-      toast.error("Signup failed. Please check the details.");
+      if (isTeacher) {
+        const departmentResponse = await grtDepartment();
+        setDepartmentOptions(departmentResponse?.data?.data || []);
+      } else {
+        const response = await getClassDropdown();
+        setClassOptions(response?.data || []);
+      }
+    } catch (error) {
+      console.error("Error fetching data:", error);
+      toast.error("Failed to load dropdown options.");
     }
   };
 
-  const textAnimation = {
-    "@keyframes slideFade": {
-      "0%": {
-        opacity: 0,
-        transform: "translateY(-20px)",
-      },
-      "100%": {
-        opacity: 1,
-        transform: "translateY(0)",
-      },
-    },
+  useEffect(() => {
+    fetchData();
+  }, [roleParam]);
+
+  const onSubmit = async (data) => {
+    setLoading(true);
+    setServerError(null);
+
+    const payload = {
+      full_name: data.name,
+      email: data.email,
+      phone_number: data.phone,
+      role: data.role,
+      password: data.newPassword,
+      country_code: "+91",
+      time_zone: "IND",
+    };
+
+    if (isTeacher) {
+      payload.department =
+        data.department?.value || data.department?.id || data.department;
+      payload.subjects = 9;
+    } else {
+      payload.student_class = data.subject;
+    }
+
+    console.log("payload", payload);
+
+    try {
+      const apiResponse = await registration(payload);
+
+      if (apiResponse?.data?.success) {
+        toast.success("Account created successfully!");
+        router.push("/login");
+      } else if (apiResponse?.response?.status === 400) {
+        let errorsArray = apiResponse?.response?.data?.errors;
+        if (errorsArray && Object.keys(errorsArray).length > 0) {
+          Object.keys(errorsArray).forEach((field) => {
+            const messages = errorsArray[field];
+            setError(field, {
+              type: "server",
+              message: messages.join(". "),
+            });
+          });
+          toast.error(messages.join(". "));
+        } else {
+          setServerError("An unexpected error occurred. Please try again.");
+          toast.error("Signup failed. Please check the details.");
+        }
+      } else {
+        setServerError("An unexpected error occurred. Please try again.");
+        toast.error("Signup failed. Please check the details.");
+      }
+    } catch (error) {
+      console.error("Signup error:", error);
+      setServerError("An error occurred. Please try again.");
+      toast.error("Signup failed. Please check the details.");
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -77,18 +169,16 @@ const SignupPage = () => {
       }}
     >
       {/* Left Side Background */}
-      {/* Left Side with Gradient Background */}
       <Grid
         item
         xs={false}
         sm={4}
         md={6}
         sx={{
-          // background: "linear-gradient(to bottom right, #1976d2, #00c853)",
-          backgroundImage: "url('/loginBG3.jpg')", // Add background image
-          backgroundSize: "cover", // Ensure the image covers the entire page
-          backgroundPosition: "center", // Center the image
-          position: "relative", // Ensures the overlay text is positioned correctly
+          backgroundImage: "url('/loginBG3.jpg')",
+          backgroundSize: "cover",
+          backgroundPosition: "center",
+          position: "relative",
         }}
       >
         {/* Overlay Text */}
@@ -97,7 +187,6 @@ const SignupPage = () => {
             position: "absolute",
             top: "25%",
             left: "25%",
-            // transform: "translate(-50%, -50%)",
             color: "#fff",
             textAlign: "left",
             animation: "slideFade 1s ease-in-out",
@@ -113,9 +202,9 @@ const SignupPage = () => {
             <Image
               src="/vidyaAIlogo.png"
               alt="VidyaAI Logo"
-              width={40} // Adjust width as needed
-              height={40} // Adjust height as needed
-              style={{ display: "inline-block" }} // Optional: to align properly
+              width={40}
+              height={40}
+              style={{ display: "inline-block" }}
             />
             <span style={{ color: "#454B1B" }}> VidyaAI</span>
           </Typography>
@@ -151,162 +240,250 @@ const SignupPage = () => {
             boxShadow: "0 4px 10px rgba(0,0,0,0.1)",
           }}
         >
-        <Box sx={{display:"flex", justifyContent:"center"}}>
-        <Typography component="h1" variant="h5" sx={{ textAlign: "center" }}>
-            Create Account 
-          </Typography>
-        <RiAccountCircleLine style={{paddingTop:"4px", fontSize:"28px"}}/>
-        </Box>
-          
-          <Box component="form" noValidate onSubmit={handleSubmit} sx={{ mt: 3 }}>
-          <Box sx={{ display: "flex", gap: 2 }}>
-          <TextField
-              name="name"
-              label="Name"
-              fullWidth
-              required
-              value={formData.name}
-              onChange={handleChange}
-              margin="normal"
-              InputLabelProps={{
-                shrink: true, // Ensures the label shrinks when value is present
-                style: { color: "#555" },
-              }}
-            />
-            <TextField
-              name="email"
-              label="Email"
-              fullWidth
-              required
-              value={formData.email}
-              onChange={handleChange}
-              margin="normal"
-              InputLabelProps={{
-                shrink: true, // Ensures the label shrinks when value is present
-                style: { color: "#555" },
-              }}
-            />
-          </Box>
-          <Box sx={{ display: "flex", gap: 2 }}>
-          <TextField
-              margin="normal"
-              required
-              fullWidth
-              name="newPassword"
-              label="Password"
-              type="password"
-              id="password"
-              value={formData.newPassword}
-              onChange={handleChange}
-              InputLabelProps={{
-                shrink: true, // Ensures the label shrinks when value is present
-                style: { color: "#555" },
-              }}
-              InputProps={{
-                style: { color: "#000" },
-              }}
-              sx={{ backgroundColor: "#fff", borderRadius: "5px" }}
-              variant="outlined"
-              autoComplete="new-password"
-            />
-            <TextField
-              margin="normal"
-              required
-              fullWidth
-              name="confirmPassword"
-              label="Confirm Password"
-              type="password"
-              id="password"
-              value={formData.confirmPassword}
-              onChange={handleChange}
-              InputLabelProps={{
-                shrink: true, // Ensures the label shrinks when value is present
-                style: { color: "#555" },
-              }}
-              InputProps={{
-                style: { color: "#000" },
-              }}
-              sx={{ backgroundColor: "#fff", borderRadius: "5px" }}
-              variant="outlined"
-            />
-          </Box>
-          <Box sx={{ display: "flex", gap: 2 }}>
-          <TextField
-              name="phone"
-              label="Phone Number"
-              fullWidth
-              required
-              value={formData.phone}
-              onChange={handleChange}
-              margin="normal"
-              InputLabelProps={{
-                shrink: true, // Ensures the label shrinks when value is present
-                style: { color: "#555" },
-              }}
-            />
-            <TextField
-              name="role"
-              label="Role"
-              fullWidth
-              required
-              value={formData.role}
-              onChange={handleChange}
-              margin="normal"
-              InputLabelProps={{
-                shrink: true, // Ensures the label shrinks when value is present
-                style: { color: "#555" },
-              }}
-            />
-          </Box>
-          <Box sx={{ display: "flex", gap: 2 }}>
-          <TextField
-              select
-              name="department"
-              label="Department"
-              fullWidth
-              required
-              value={formData.department}
-              onChange={handleChange}
-              margin="normal"
-              InputLabelProps={{
-                shrink: true, // Ensures the label shrinks when value is present
-                style: { color: "#555" },
-              }}
+          {/* Header */}
+          <Box
+            sx={{
+              display: "flex",
+              justifyContent: "center",
+              alignItems: "center",
+              gap: 1,
+            }}
+          >
+            <Typography
+              component="h1"
+              variant="h5"
+              sx={{ textAlign: "center" }}
             >
-              <MenuItem value="CSE">CSE</MenuItem>
-              <MenuItem value="ME">ME</MenuItem>
-              <MenuItem value="ECE">ECE</MenuItem>
-              <MenuItem value="CE">CE</MenuItem>
-            </TextField>
-            {error && (
-              <Typography color="error" sx={{ mt: 1 }}>
-                {error}
-              </Typography>
-            )}
-            {success && (
-              <Typography color="primary" sx={{ mt: 1 }}>
-                {success}
-              </Typography>
-            )}
-            <TextField
-              name="Subject"
-              label="Subject"
-              fullWidth
-              required
-              value={formData.subject}
-              onChange={handleChange}
-              margin="normal"
-              InputLabelProps={{
-                shrink: true, // Ensures the label shrinks when value is present
-                style: { color: "#555" },
-              }}
+              Create Account
+            </Typography>
+            <RiAccountCircleLine
+              style={{ paddingTop: "4px", fontSize: "28px" }}
             />
-          </Box>  
-            
+          </Box>
+
+          {/* Signup Form */}
+          <Box
+            component="form"
+            noValidate
+            onSubmit={handleSubmit(onSubmit)}
+            sx={{ mt: 3 }}
+          >
+            {/* Name and Email */}
+            <Box sx={{ display: "flex", gap: 2 }}>
+              {/* Name Field */}
+              <Controller
+                name="name"
+                control={control}
+                render={({ field }) => (
+                  <TextField
+                    {...field}
+                    label="Name"
+                    fullWidth
+                    required
+                    margin="normal"
+                    error={!!errors.name}
+                    helperText={errors.name?.message}
+                    InputLabelProps={{
+                      shrink: true,
+                      style: { color: "#555" },
+                    }}
+                  />
+                )}
+              />
+
+              {/* Email Field (Read-Only) */}
+              <TextField
+                label="Email"
+                fullWidth
+                required
+                margin="normal"
+                value={emailParam || ""}
+                InputProps={{
+                  readOnly: true,
+                  style: { color: "#000" },
+                }}
+                InputLabelProps={{
+                  shrink: true,
+                  style: { color: "#555" },
+                }}
+              />
+            </Box>
+
+            {/* Password and Confirm Password */}
+            <Box sx={{ display: "flex", gap: 2 }}>
+              {/* Password Field */}
+              <Controller
+                name="newPassword"
+                control={control}
+                render={({ field }) => (
+                  <TextField
+                    {...field}
+                    label="Password"
+                    type="password"
+                    fullWidth
+                    required
+                    margin="normal"
+                    error={!!errors.newPassword}
+                    helperText={errors.newPassword?.message}
+                    InputLabelProps={{
+                      shrink: true,
+                      style: { color: "#555" },
+                    }}
+                    InputProps={{
+                      style: { color: "#000" },
+                    }}
+                    sx={{ backgroundColor: "#fff", borderRadius: "5px" }}
+                    variant="outlined"
+                    autoComplete="new-password"
+                  />
+                )}
+              />
+
+              {/* Confirm Password Field */}
+              <Controller
+                name="confirmPassword"
+                control={control}
+                render={({ field }) => (
+                  <TextField
+                    {...field}
+                    label="Confirm Password"
+                    type="password"
+                    fullWidth
+                    required
+                    margin="normal"
+                    error={!!errors.confirmPassword}
+                    helperText={errors.confirmPassword?.message}
+                    InputLabelProps={{
+                      shrink: true,
+                      style: { color: "#555" },
+                    }}
+                    InputProps={{
+                      style: { color: "#000" },
+                    }}
+                    sx={{ backgroundColor: "#fff", borderRadius: "5px" }}
+                    variant="outlined"
+                  />
+                )}
+              />
+            </Box>
+
+            {/* Phone and Role */}
+            <Box sx={{ display: "flex", gap: 2 }}>
+              {/* Phone Number Field */}
+              <Controller
+                name="phone"
+                control={control}
+                render={({ field }) => (
+                  <TextField
+                    {...field}
+                    label="Phone Number"
+                    fullWidth
+                    required
+                    margin="normal"
+                    error={!!errors.phone}
+                    helperText={errors.phone?.message}
+                    InputLabelProps={{
+                      shrink: true,
+                      style: { color: "#555" },
+                    }}
+                  />
+                )}
+              />
+
+              {/* Role Field (Read-Only) */}
+              <TextField
+                label="Role"
+                fullWidth
+                required
+                margin="normal"
+                value={roleParam || ""}
+                InputProps={{
+                  readOnly: true,
+                  style: { color: "#000" },
+                }}
+                InputLabelProps={{
+                  shrink: true,
+                  style: { color: "#555" },
+                }}
+              />
+            </Box>
+
+            {/* Department or Subject */}
+            <Box>
+              {isTeacher ? (
+                // Department Autocomplete for Teachers
+                <Controller
+                  name="department"
+                  control={control}
+                  render={({
+                    field: { onChange, value },
+                    fieldState: { error },
+                  }) => (
+                    <Autocomplete
+                      options={departmentOptions}
+                      getOptionLabel={(option) =>
+                        typeof option === "string"
+                          ? option
+                          : option.name || option.value || ""
+                      }
+                      value={value}
+                      onChange={(event, newValue) => {
+                        onChange(newValue);
+                      }}
+                      renderInput={(params) => (
+                        <TextField
+                          {...params}
+                          label="Department"
+                          required
+                          margin="normal"
+                          error={!!error}
+                          helperText={error ? error.message : null}
+                          InputLabelProps={{
+                            shrink: true,
+                            style: { color: "#555" },
+                          }}
+                        />
+                      )}
+                    />
+                  )}
+                />
+              ) : (
+                // Subject Field for Students
+                <Controller
+                  name="subject"
+                  control={control}
+                  render={({ field }) => (
+                    <TextField
+                      {...field}
+                      label="Subject"
+                      fullWidth
+                      required
+                      margin="normal"
+                      error={!!errors.subject}
+                      helperText={errors.subject?.message}
+                      InputLabelProps={{
+                        shrink: true,
+                        style: { color: "#555" },
+                      }}
+                    />
+                  )}
+                />
+              )}
+            </Box>
+
+            {/* Server Error Message */}
+            {serverError && (
+              <Typography color="error" sx={{ mt: 1 }}>
+                {serverError}
+              </Typography>
+            )}
+
+            {/* Submit Button */}
             <Button
               type="submit"
               fullWidth
               variant="contained"
+              disabled={loading}
               sx={{
                 mt: 3,
                 mb: 2,
@@ -314,8 +491,10 @@ const SignupPage = () => {
                 ":hover": { backgroundColor: "#115293" },
               }}
             >
-              Signup
+              {loading ? "Signing up..." : "Signup"}
             </Button>
+
+            {/* Link to Login */}
             <Grid container justifyContent="center">
               <Grid item>
                 <Typography variant="body2">

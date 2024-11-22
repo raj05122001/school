@@ -21,6 +21,16 @@ export const getClassDropdown = async () => {
   return await apiInstance.getClassDropdown();
 };
 
+export const grtDepartment = async () => {
+  const apiInstance = new apiServices(axiosAPIInstance);
+  return await apiInstance.grtDepartment();
+};
+
+export const registration = async (payload) => {
+  const apiInstance = new apiServices(axiosAPIInstance);
+  return await apiInstance.registration(payload);
+};
+
 export const getSubjectByClass = async (className, search) => {
   const apiInstance = new apiServices(axiosAPIInstance);
   return await apiInstance.getSubjectByClass(className, search);
