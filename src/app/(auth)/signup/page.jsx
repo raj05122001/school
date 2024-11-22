@@ -9,12 +9,21 @@ import {
   Link,
   Grid,
   Autocomplete,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogTitle,
 } from "@mui/material";
 import toast from "react-hot-toast";
 import { useRouter, useSearchParams } from "next/navigation";
 import Image from "next/image";
 import { RiAccountCircleLine } from "react-icons/ri";
-import { grtDepartment, getClassDropdown, registration } from "@/api/apiHelper";
+import {
+  grtDepartment,
+  getClassDropdown,
+  registration,
+  postDepartment,
+} from "@/api/apiHelper";
 import { useForm, Controller } from "react-hook-form";
 import * as yup from "yup";
 import { yupResolver } from "@hookform/resolvers/yup";
@@ -42,6 +51,8 @@ const SignupPage = () => {
   const [serverError, setServerError] = useState(null);
   const [classOptions, setClassOptions] = useState([]);
   const [departmentOptions, setDepartmentOptions] = useState([]);
+  const [openDialog, setOpenDialog] = useState(false); // For Create Department Dialog
+  const [newDepartment, setNewDepartment] = useState(""); // Input for new department
 
   const isTeacher = roleParam === "TEACHER";
 
@@ -101,6 +112,29 @@ const SignupPage = () => {
   useEffect(() => {
     fetchData();
   }, [roleParam]);
+
+  const handleCreateDepartment = async () => {
+    if (!newDepartment.trim()) {
+      toast.error("Department name cannot be empty.");
+      return;
+    }
+
+    try {
+      const response = await postDepartment({ name: newDepartment });
+      if (response?.data?.success) {
+        const newDept = response.data.data; // Assuming API returns the created department object
+        setDepartmentOptions((prev) => [...prev, newDept]);
+        toast.success("Department created successfully!");
+        setOpenDialog(false);
+        setNewDepartment(""); // Reset input
+      } else {
+        toast.error("Failed to create department.");
+      }
+    } catch (error) {
+      console.error("Error creating department:", error);
+      toast.error("An error occurred. Please try again.");
+    }
+  };
 
   const onSubmit = async (data) => {
     setLoading(true);
@@ -410,43 +444,77 @@ const SignupPage = () => {
 
             {/* Department or Subject */}
             <Box>
+              {console.log("Department", departmentOptions)}
               {isTeacher ? (
                 // Department Autocomplete for Teachers
-                <Controller
-                  name="department"
-                  control={control}
-                  render={({
-                    field: { onChange, value },
-                    fieldState: { error },
-                  }) => (
-                    <Autocomplete
-                      options={departmentOptions}
-                      getOptionLabel={(option) =>
-                        typeof option === "string"
-                          ? option
-                          : option.name || option.value || ""
-                      }
-                      value={value}
-                      onChange={(event, newValue) => {
-                        onChange(newValue);
-                      }}
-                      renderInput={(params) => (
-                        <TextField
-                          {...params}
-                          label="Department"
-                          required
-                          margin="normal"
-                          error={!!error}
-                          helperText={error ? error.message : null}
-                          InputLabelProps={{
-                            shrink: true,
-                            style: { color: "#555" },
-                          }}
-                        />
-                      )}
-                    />
+                <>
+                  <Controller
+                    name="department"
+                    control={control}
+                    render={({
+                      field: { onChange, value },
+                      fieldState: { error },
+                    }) => (
+                      <Autocomplete
+                        options={departmentOptions}
+                        getOptionLabel={(option) =>
+                          typeof option === "string"
+                            ? option
+                            : option.name || option.value || ""
+                        }
+                        value={value}
+                        onChange={(event, newValue) => {
+                          onChange(newValue);
+                        }}
+                        renderInput={(params) => (
+                          <TextField
+                            {...params}
+                            label="Department"
+                            required
+                            margin="normal"
+                            error={!!error}
+                            helperText={error ? error.message : null}
+                            InputLabelProps={{
+                              shrink: true,
+                              style: { color: "#555" },
+                            }}
+                          />
+                        )}
+                      />
+                    )}
+                  />
+                  <Button
+                    variant="outlined"
+                    color="primary"
+                    onClick={() => setOpenDialog(!openDialog)} // Toggle TextField visibility
+                    sx={{ mt: 1 }}
+                  >
+                    {openDialog ? "Cancel" : "Create Department"}
+                  </Button>
+                  {openDialog && (
+                    <Box sx={{ mt: 2 }}>
+                      <TextField
+                        label="New Department Name"
+                        fullWidth
+                        value={newDepartment}
+                        onChange={(e) => setNewDepartment(e.target.value)}
+                        margin="normal"
+                        InputLabelProps={{
+                          shrink: true,
+                          style: { color: "#555" },
+                        }}
+                      />
+                      <Button
+                        variant="contained"
+                        color="primary"
+                        onClick={handleCreateDepartment}
+                        sx={{ mt: 1 }}
+                      >
+                        Submit
+                      </Button>
+                    </Box>
                   )}
-                />
+                </>
               ) : (
                 // Subject Field for Students
                 <Controller

@@ -558,3 +558,8 @@ export const deleteAttachment = async (deleteId) => {
   return await apiInstance.deleteAttachment(deleteId);
 };
 
+export const postDepartment = async (formData) => {
+  const apiInstance = new apiServices(axiosAPIInstance);
+  return await apiInstance.postDepartment(formData);
+};
+
