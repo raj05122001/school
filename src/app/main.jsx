@@ -12,6 +12,7 @@ import CreatingLecture from "@/components/teacher/LectureCreate/CreatingLecture"
 import ChatBot from "@/components/ChatBot/ChatBot";
 import { BsChatSquareText } from "react-icons/bs";
 import Image from "next/image";
+import NewChatbot from "@/components/ChatBot/NewChatbot";
 
 export const AppContextProvider = createContext({});
 
@@ -149,10 +150,14 @@ const Main = ({ children }) => {
 
               {/* Chatbot Component */}
               {isOpenChatBot && (
-                <ChatBot
+                // <ChatBot
+                //   suggestionInput={userInput}
+                //   setIsOpenChatBot={setIsOpenChatBot}
+                //   isOpenChatBot={isOpenChatBot}
+                // />
+                <NewChatbot
                   suggestionInput={userInput}
                   setIsOpenChatBot={setIsOpenChatBot}
-                  isOpenChatBot={isOpenChatBot}
                 />
               )}
             </Box>
