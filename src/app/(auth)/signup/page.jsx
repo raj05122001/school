@@ -452,19 +452,36 @@ const SignupPage = () => {
                 <Controller
                   name="subject"
                   control={control}
-                  render={({ field }) => (
-                    <TextField
-                      {...field}
-                      label="Subject"
-                      fullWidth
-                      required
-                      margin="normal"
-                      error={!!errors.subject}
-                      helperText={errors.subject?.message}
-                      InputLabelProps={{
-                        shrink: true,
-                        style: { color: "#555" },
+                  render={({
+                    field: { onChange, value },
+                    fieldState: { error },
+                  }) => (
+                    <Autocomplete
+                      options={classOptions}
+                      getOptionLabel={(option) =>
+                        typeof option === "string" ? option : option.name || ""
+                      }
+                      value={
+                        classOptions.find((option) => option.id === value) ||
+                        null
+                      }
+                      onChange={(event, newValue) => {
+                        onChange(newValue ? newValue.id : null);
                       }}
+                      renderInput={(params) => (
+                        <TextField
+                          {...params}
+                          label="Class"
+                          required
+                          margin="normal"
+                          error={!!error}
+                          helperText={error ? error.message : null}
+                          InputLabelProps={{
+                            shrink: true,
+                            style: { color: "#555" },
+                          }}
+                        />
+                      )}
                     />
                   )}
                 />
