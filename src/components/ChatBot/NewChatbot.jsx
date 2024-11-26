@@ -152,6 +152,7 @@ export default function NewChatbot({ suggestionInput, setIsOpenChatBot }) {
                 justifyContent: "center",
                 alignItems: "center",
                 width: "100%",
+                flexGrow: 1
               }}
             >
               <Button
@@ -513,10 +514,11 @@ export const ChatHistory = ({ onHistoryClick }) => {
     <List
       sx={{
         width: "100%",
-        maxHeight: 300,
+        maxHeight: 350,
         overflowY: "auto",
         backgroundColor: "#f0f0f0",
         borderRadius: 4,
+        flexGrow:1
       }}
     >
       <Typography

@@ -37,7 +37,7 @@ import Cookies from "js-cookie";
 import { useThemeContext } from "@/hooks/ThemeContext";
 import CustomAutocomplete from "@/commonComponents/CustomAutocomplete/CustomAutocomplete";
 
-const userDetails = decodeToken(Cookies.get("ACCESS_TOKEN"));
+// const userDetails = decodeToken(Cookies.get("ACCESS_TOKEN"));
 
 const CreatingLecture = ({
   open,
@@ -71,6 +71,19 @@ const CreatingLecture = ({
   const encodeURI = (value) => encodeURIComponent(value);
 
   const lowerCase = (str) => str?.toLowerCase();
+
+  const [userDetails, setUserDetails] = useState(null);
+
+  useEffect(() => {
+    if (typeof window !== "undefined") {
+      const token = Cookies.get("ACCESS_TOKEN");
+      setUserDetails(token ? decodeToken(token) : {});
+    }
+  }, []);
+
+  if (!userDetails || !userDetails.teacher_id) {
+    console.error("Invalid or expired token");
+  }
 
   useEffect(() => {
     if (isEditMode && lecture) {
