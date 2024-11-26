@@ -13,6 +13,10 @@ import {
   Grid,
   Skeleton,
   Tooltip,
+  Button,
+  List,
+  ListItem,
+  ListItemText,
 } from "@mui/material";
 import { FaArrowUp, FaRobot } from "react-icons/fa6";
 import { BsChevronDown } from "react-icons/bs";
@@ -29,9 +33,13 @@ export default function NewChatbot({ suggestionInput, setIsOpenChatBot }) {
   const [isLoading, setIsLoading] = useState(false);
   const [lastAssistantResponse, setLastAssistantResponse] = useState("");
   const [chatHistory, setChatHistory] = useState([]);
+  const [showChat, setShowChat] = useState(false);
+  const [showList, setShowList] = useState(true);
 
   useEffect(() => {
     if (suggestionInput) {
+      setShowChat(true);
+      setShowList(false);
       handleUserInput(suggestionInput);
     }
   }, [suggestionInput]);
@@ -85,6 +93,12 @@ export default function NewChatbot({ suggestionInput, setIsOpenChatBot }) {
     setIsLoading(false);
   };
 
+  const handleHistoryClick = (question) => {
+    setShowChat(true);
+    setShowList(false);
+    handleUserInput(question);
+  };
+
   return (
     <Box
       sx={{
@@ -125,149 +139,199 @@ export default function NewChatbot({ suggestionInput, setIsOpenChatBot }) {
           </Box>
         </Grid>
 
-        {/* Chat Area */}
-        <Grid
-          item
-          xs
-          style={{
-            overflowY: "auto",
-            padding: "16px",
-            width: chatHistory.length > 0 ? "99%" : "100%",
-            height: "100%",
-          }}
-          ref={graphRef}
-        >
-          {chatHistory.length > 0 ? (
-            chatHistory.map((message, index) => (
-              <Box
-                key={index}
-                sx={{
-                  display: "flex",
-                  flexDirection:
-                    message.role === "user" ? "row-reverse" : "row",
-                  mb: 2,
-                }}
-              >
-                <Box
-                  sx={{
-                    maxWidth: "85%",
-                    bgcolor:
-                      message.role === "user" ? "primary.light" : "grey.300",
-                    color: "text.primary",
-                    borderRadius: 2,
-                    p: 1,
-                    mx: 1,
-                    overflowX: "auto",
-                  }}
-                >
-                  <FormattedText text={message.content} />
-
-                  {message.links &&
-                    message.links.map((link, idx) => (
-                      <Typography variant="caption" key={idx}>
-                        <a
-                          href={link}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                        >
-                          {link}
-                        </a>
-                      </Typography>
-                    ))}
-                </Box>
-              </Box>
-            ))
-          ) : (
+        {/* New Chat and History Section */}
+        {showList && (
+          <Grid item>
             <Box
               sx={{
+                p: 2,
+                borderBottom: 1,
+                borderColor: "grey.300",
                 display: "flex",
                 flexDirection: "column",
-                alignItems: "center",
                 justifyContent: "center",
-                height: "100%",
-                color: "text.secondary",
+                alignItems: "center",
+                width: "100%",
               }}
             >
-              <FaRobot size={50} sx={{ mb: 2 }} />
-              <Typography variant="h6">Ask me any question</Typography>
+              <Button
+                variant="outlined"
+                color="primary"
+                onClick={() => {
+                  setShowChat(true);
+                  setShowList(false);
+                }}
+                sx={{ mb: 2, width: "100%" }}
+              >
+                New Chat
+              </Button>
+              <ChatHistory onHistoryClick={handleHistoryClick} />
             </Box>
-          )}
-          {isLoading && (
-            <Box
-              sx={{ display: "flex", mt: 2, flexDirection: "column", pb: 8 }}
-            >
-              <Skeleton
-                variant="text"
-                sx={{ fontSize: "1.5rem", width: "80%" }}
-              />
-              <Skeleton
-                variant="text"
-                sx={{ fontSize: "1.5rem", width: "60%" }}
-              />
-              <Skeleton
-                variant="text"
-                sx={{ fontSize: "1.5rem", width: "80%" }}
-              />
-            </Box>
-          )}
-        </Grid>
+          </Grid>
+        )}
 
-        {/* Input Field */}
-        <Grid item>
-          <Divider />
-          <Box sx={{ display: "flex", gap: 2, p: 1, px: 2 }}>
-            <TextField
-              fullWidth
-              multiline
-              placeholder="Ask me..."
-              value={userTextInput}
-              onChange={(e) => setUserTextInput(e.target.value)}
-              onKeyPress={handleKeyPress}
-              variant="outlined"
-              InputProps={{
-                sx: {
-                  // Targeting the root container of TextField
-                  backdropFilter: "blur(10px)",
-                  backgroundColor: "rgba(255, 255, 255, 0.8)",
-                  borderRadius: "12px",
-                  padding: "10px 14px",
-                  transition: "all 0.3s ease",
-                  "&:hover": {
-                    backgroundColor: "rgba(255, 255, 255, 0.9)",
-                  },
-                  "& .MuiOutlinedInput-notchedOutline": {
-                    borderColor: "#ccc",
-                  },
-                  "&.Mui-focused .MuiOutlinedInput-notchedOutline": {
-                    borderColor: "#1e88e5",
-                    borderWidth: "1px",
-                  },
-                  // Ensure the textarea inside TextField is scrollable
-                  "& .MuiInputBase-inputMultiline": {
-                    maxHeight: "100px", // Restrict height
-                    overflowY: "auto", // Enable vertical scrolling
-                  },
-                  "& textarea": {
-                    maxHeight: "100px", // Ensure the textarea respects height
-                    overflowY: "auto !important", // Enable scroll
-                  },
-                },
-                endAdornment: (
-                  <Box sx={{ display: "flex", alignItems: "center" }}>
-                  <IconButton
-                    color="primary"
-                    onClick={() => handleUserInput(userTextInput.trim())}
-                    disabled={isLoading}
-                  >
-                    {isLoading ? <CircularProgress size={24} /> : <FaArrowUp />}
-                  </IconButton>
-                  {userTextInput && isLoading ? "":<VoiceToText setUserTextInput={setUserTextInput} />}
-                </Box>
-                ),
+        {showChat && (
+          <>
+            {/* Chat Area */}
+            <Grid
+              item
+              xs
+              style={{
+                overflowY: "auto",
+                padding: "16px",
+                width: chatHistory.length > 0 ? "99%" : "100%",
+                height: "100%",
               }}
-            />
-          </Box>
-        </Grid>
+              ref={graphRef}
+            >
+              {chatHistory.length > 0 ? (
+                chatHistory.map((message, index) => (
+                  <Box
+                    key={index}
+                    sx={{
+                      display: "flex",
+                      flexDirection:
+                        message.role === "user" ? "row-reverse" : "row",
+                      mb: 2,
+                    }}
+                  >
+                    <Box
+                      sx={{
+                        maxWidth: "85%",
+                        bgcolor:
+                          message.role === "user"
+                            ? "primary.light"
+                            : "grey.300",
+                        color: "text.primary",
+                        borderRadius: 2,
+                        p: 1,
+                        mx: 1,
+                        overflowX: "auto",
+                      }}
+                    >
+                      <FormattedText text={message.content} />
+
+                      {message.links &&
+                        message.links.map((link, idx) => (
+                          <Typography variant="caption" key={idx}>
+                            <a
+                              href={link}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                            >
+                              {link}
+                            </a>
+                          </Typography>
+                        ))}
+                    </Box>
+                  </Box>
+                ))
+              ) : (
+                <Box
+                  sx={{
+                    display: "flex",
+                    flexDirection: "column",
+                    alignItems: "center",
+                    justifyContent: "center",
+                    height: "100%",
+                    color: "text.secondary",
+                  }}
+                >
+                  <FaRobot size={50} sx={{ mb: 2 }} />
+                  <Typography variant="h6">Ask me any question</Typography>
+                </Box>
+              )}
+              {isLoading && (
+                <Box
+                  sx={{
+                    display: "flex",
+                    mt: 2,
+                    flexDirection: "column",
+                    pb: 8,
+                  }}
+                >
+                  <Skeleton
+                    variant="text"
+                    sx={{ fontSize: "1.5rem", width: "80%" }}
+                  />
+                  <Skeleton
+                    variant="text"
+                    sx={{ fontSize: "1.5rem", width: "60%" }}
+                  />
+                  <Skeleton
+                    variant="text"
+                    sx={{ fontSize: "1.5rem", width: "80%" }}
+                  />
+                </Box>
+              )}
+            </Grid>
+
+            {/* Input Field */}
+            <Grid item>
+              <Divider />
+              <Box sx={{ display: "flex", gap: 2, p: 1, px: 2}}>
+                <TextField
+                  fullWidth
+                  multiline
+                  placeholder="Ask me..."
+                  value={userTextInput}
+                  onChange={(e) => setUserTextInput(e.target.value)}
+                  onKeyPress={handleKeyPress}
+                  variant="outlined"
+                  InputProps={{
+                    sx: {
+                      // Targeting the root container of TextField
+                      backdropFilter: "blur(10px)",
+                      backgroundColor: "rgba(255, 255, 255, 0.8)",
+                      borderRadius: "12px",
+                      padding: "10px 14px",
+                      transition: "all 0.3s ease",
+                      "&:hover": {
+                        backgroundColor: "rgba(255, 255, 255, 0.9)",
+                      },
+                      "& .MuiOutlinedInput-notchedOutline": {
+                        borderColor: "#ccc",
+                      },
+                      "&.Mui-focused .MuiOutlinedInput-notchedOutline": {
+                        borderColor: "#1e88e5",
+                        borderWidth: "1px",
+                      },
+                      // Ensure the textarea inside TextField is scrollable
+                      "& .MuiInputBase-inputMultiline": {
+                        maxHeight: "100px", // Restrict height
+                        overflowY: "auto", // Enable vertical scrolling
+                      },
+                      "& textarea": {
+                        maxHeight: "100px", // Ensure the textarea respects height
+                        overflowY: "auto !important", // Enable scroll
+                      },
+                    },
+                    endAdornment: (
+                      <Box sx={{ display: "flex", alignItems: "center" }}>
+                        <IconButton
+                          color="primary"
+                          onClick={() => handleUserInput(userTextInput.trim())}
+                          disabled={isLoading}
+                        >
+                          {isLoading ? (
+                            <CircularProgress size={24} />
+                          ) : (
+                            <FaArrowUp />
+                          )}
+                        </IconButton>
+                        {userTextInput && isLoading ? (
+                          ""
+                        ) : (
+                          <VoiceToText setUserTextInput={setUserTextInput} />
+                        )}
+                      </Box>
+                    ),
+                  }}
+                />
+              </Box>
+            </Grid>
+          </>
+        )}
       </Grid>
     </Box>
   );
@@ -430,5 +494,48 @@ export const FormattedText = ({ text }) => {
         ))}
       </Box>
     </MathJax.Context>
+  );
+};
+
+export const ChatHistory = ({ onHistoryClick }) => {
+  const dummyQuestions = [
+    "What is React?",
+    "Explain hooks in React?",
+    "How does useState work?",
+    "Closures in JavaScript",
+    "What is the virtual DOM?",
+    "What are forms in ReactJS?",
+    "Arrow Function",
+    "Explain React Fiber",
+  ];
+
+  return (
+    <List
+      sx={{
+        width: "100%",
+        maxHeight: 300,
+        overflowY: "auto",
+        backgroundColor: "#f0f0f0",
+        borderRadius: 4,
+      }}
+    >
+      <Typography
+        variant="body1"
+        fontFamily={"monospace"}
+        fontSize={"18px"}
+        textAlign={"center"}
+        color={"#6082B6"}
+      >
+        Your History
+      </Typography>
+      {dummyQuestions.map((question, index) => (
+        <ListItem button key={index} onClick={() => onHistoryClick(question)}>
+          <ListItemText
+            primary={question}
+            primaryTypographyProps={{ fontFamily: "monospace" }}
+          />
+        </ListItem>
+      ))}
+    </List>
   );
 };
