@@ -915,6 +915,29 @@ export default class apiServices {
       .catch((error) => {
         console.error(error);
       });
+    }
+  public getPersonalisedRecommendations = async (lectureId) => {
+    return await this.axiosInstance
+      .get(`/api/v1/student/get-personalised-recommendations/?lecture_id=${lectureId}`)
+      .then((Response) => Response)
+      .catch((error) => console.error(error));
+  };
+
+  public getTopic = async (lectureId,section) => {
+    return await this.axiosInstance
+      .get(`/api/v1/student/get-topic/?lecture_id=${lectureId}&section=${section}`)
+      .then((Response) => Response)
+      .catch((error) => console.error(error));
+  };
+
+  public getQuery = (formData) => {
+    return this.axiosInstance
+      .post(
+        `/api/v1/student/get-query/`,formData
+      )
+      .then((response) => {
+        return response;
+      })
   };
 
 }

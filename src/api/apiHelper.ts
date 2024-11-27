@@ -563,3 +563,17 @@ export const postDepartment = async (formData) => {
   return await apiInstance.postDepartment(formData);
 };
 
+export const getPersonalisedRecommendations = async (lectureId) => {
+  const apiInstance = new apiServices(axiosAPIInstance);
+  return await apiInstance.getPersonalisedRecommendations(lectureId);
+};
+
+export const getTopic = async (lectureId,section) => {
+  const apiInstance = new apiServices(axiosAPIInstance);
+  return await apiInstance.getTopic(lectureId,section);
+};
+
+export const getQuery = async (formData) => {
+  const apiInstance = new apiServices(axiosAPIInstance);
+  return await apiInstance.getQuery(formData);
+};
