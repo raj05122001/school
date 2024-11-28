@@ -47,14 +47,18 @@ const PersonalisedRecommendations = ({ id }) => {
     try {
       const response = await getTopic(id, value);
       const data = response?.data?.data?.[0];
-      setTopics(data?.topic_list);
+      const jsonData = Array.isArray(data?.topic_list)
+        ? data.topic_list
+        : JSON.parse(data?.topic_list || "[]");
+
+      setTopics(jsonData);
       setSelectedTopic(data?.prevoius_selected_topic || "");
       setSelectedApproach(data?.previous_selected_approach || "");
     } catch (error) {
       console.error(error);
     }
   };
-
+  
   return (
     <Container
       sx={{
@@ -100,7 +104,7 @@ const PersonalisedRecommendations = ({ id }) => {
       </Typography>
 
       {topics.length > 0 ? (
-        topics.map((topic, index) => (
+        topics?.map((topic, index) => (
           <TopicAccordion
             key={index}
             topic={topic}
