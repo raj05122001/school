@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import { Box, Typography, List, ListItem, Button, Skeleton, Radio, RadioGroup, FormControlLabel } from "@mui/material";
 import { getLectureQuiz, submitQuiz, getQuizResponse } from "@/api/apiHelper";
 import MathJax from "react-mathjax2";
@@ -13,6 +13,8 @@ const StudentMCQ = ({ id, isDarkMode }) => {
   const [selectedAnswers, setSelectedAnswers] = useState({});
   const [submittedAnswers, setSubmittedAnswers] = useState({});
   const [quizResponses, setQuizResponses] = useState({});
+  const hasFetchedData = useRef(false); // Prevent multiple fetch calls
+
 
   const userDetails = decodeToken(Cookies.get("ACCESS_TOKEN"));
   const studentID = userDetails?.student_id
@@ -44,7 +46,10 @@ const StudentMCQ = ({ id, isDarkMode }) => {
       }
     };
 
-    fetchQuizData();
+    if (!hasFetchedData.current) {
+      hasFetchedData.current = true;
+      fetchQuizData();
+    }
   }, [id]);
 
   const parseOptions = (options) => {

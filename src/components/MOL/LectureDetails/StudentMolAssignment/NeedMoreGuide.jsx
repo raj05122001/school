@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import Button from "@mui/material/Button";
 import Dialog from "@mui/material/Dialog";
 import DialogActions from "@mui/material/DialogActions";
@@ -11,10 +11,14 @@ import { Box, CircularProgress, Typography } from "@mui/material";
 export default function NeedMoreGuide({ assignmentId, open, setOpen }) {
   const [data, setData] = useState({});
   const [loading, setLoading] = useState(true);
+  const hasFetchedData = useRef(false); // Prevent multiple fetch calls
 
   useEffect(() => {
     if (assignmentId && open) {
-      fetchData();
+      if (!hasFetchedData.current) {
+        hasFetchedData.current = true;
+        fetchData();
+      }
     }
   }, [assignmentId]);
 

@@ -137,7 +137,7 @@ const LecturePage = ({ params }) => {
             {lectureOverview}
             {lectureDetails}
             {articles}
-            {personalisedRecommendations}
+            {/* {personalisedRecommendations} */}
           </Box>
         </Grid>
 

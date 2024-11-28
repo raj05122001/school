@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import { Box, Typography, Link, Button, Skeleton } from "@mui/material";
 import { getLectureResources } from "@/api/apiHelper";
 
@@ -6,6 +6,7 @@ const LectureReferrence = ({ id, isDarkMode }) => {
   const [resources, setResources] = useState([]);
   const [visibleCount, setVisibleCount] = useState(10);
   const [loading, setLoading] = useState(true);
+  const hasFetchedData = useRef(false); // Prevent multiple fetch calls
 
   useEffect(() => {
     // Fetch lecture resources
@@ -24,7 +25,10 @@ const LectureReferrence = ({ id, isDarkMode }) => {
       }
     };
 
-    fetchResources();
+    if (!hasFetchedData.current) {
+      hasFetchedData.current = true;
+      fetchResources();
+    }
   }, [id]);
 
   // Filter unique resources
