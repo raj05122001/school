@@ -577,3 +577,8 @@ export const getQuery = async (formData) => {
   const apiInstance = new apiServices(axiosAPIInstance);
   return await apiInstance.getQuery(formData);
 };
+
+export const getGuidance = async (assignmentId) => {
+  const apiInstance = new apiServices(axiosAPIInstance);
+  return await apiInstance.getGuidance(assignmentId);
+};
