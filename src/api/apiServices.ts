@@ -139,16 +139,16 @@ export default class apiServices {
       .catch((error) => console.error(error));
   };
 
-  public deleteUpcommingLecture = (lectureId) => {
-    return this.axiosInstance
-      .delete(`/api/v1/lecture/${lectureId}/`)
-      .then((response) => {
-        return response;
-      })
-      .catch((error) => {
-        console.error("this is error", error);
-      });
-  };
+  // public deleteUpcommingLecture = (lectureId) => {
+  //   return this.axiosInstance
+  //     .delete(`/api/v1/lecture/${lectureId}/`)
+  //     .then((response) => {
+  //       return response;
+  //     })
+  //     .catch((error) => {
+  //       console.error("this is error", error);
+  //     });
+  // };
 
   public getMyLectures = async (
     status = "UPCOMMING",
@@ -938,6 +938,46 @@ export default class apiServices {
       .then((response) => {
         return response;
       })
+  };
+
+  public createSession = (formData) => {
+    return this.axiosInstance
+      .post(`/api/v1/chatbot/`, formData)
+      .then((response) => {
+        return response;
+      })
+      .catch((error) => {
+        console.error(error);
+      });
+  };
+
+  public getNewLectureAns = async (sessionID, data) => {
+    return await this.axiosInstance
+      .post(`/api/v1/chatbot/user_message/${sessionID}/`, data)
+      .then((Response) => Response.data)
+      .catch((error) => console.error(error));
+  };
+
+  public deleteUpcomingLecture = (lectureId) => {
+    const deleteLecturePromise = this.axiosInstance.delete(`/api/v1/lecture/${lectureId}/`);
+  
+    toast.promise(deleteLecturePromise, {
+      loading: "Deleting lecture...",
+      success: "Lecture successfully deleted!",
+      error: (error) => error?.response?.data?.message || "Failed to delete the lecture",
+    }, {
+      duration: Constants.toastTimer, // Set your custom auto-close timer
+    });
+  
+    return deleteLecturePromise
+      .then((response) => {
+        console.log("Lecture deleted successfully:", response);
+        return response;
+      })
+      .catch((error) => {
+        console.error("Error deleting lecture:", error);
+        throw error; // Re-throw the error for further handling
+      });
   };
 
 }

@@ -1,5 +1,9 @@
 import React, { useState, useEffect, useRef } from "react";
-import { getLectureAns } from "@/api/apiHelper";
+import {
+  getLectureAns,
+  createSession,
+  getNewLectureAns,
+} from "@/api/apiHelper";
 import {
   Box,
   IconButton,
@@ -25,6 +29,9 @@ import { useThemeContext } from "@/hooks/ThemeContext";
 import UserImage from "@/commonComponents/UserImage/UserImage";
 import MathJax from "react-mathjax2";
 import { FaMicrophone, FaStopCircle } from "react-icons/fa";
+import { decodeToken } from "react-jwt";
+import Cookies from "js-cookie";
+import { usePathname } from "next/navigation";
 
 export default function NewChatbot({ suggestionInput, setIsOpenChatBot }) {
   const chatbotRef = useRef();
@@ -35,11 +42,38 @@ export default function NewChatbot({ suggestionInput, setIsOpenChatBot }) {
   const [chatHistory, setChatHistory] = useState([]);
   const [showChat, setShowChat] = useState(false);
   const [showList, setShowList] = useState(true);
+  const [sessionID, setSessionID] = useState(null);
+  const [oldChats, setOldChats] = useState([]);
+
+  const userDetails = decodeToken(Cookies.get("ACCESS_TOKEN"));
+  const userName = userDetails?.username;
+  const userID = userDetails?.user_id;
+  const currentDate = new Date().toISOString();
+  const pathname = usePathname(); // Retrieves the full pathname (e.g., "/teacher/lecture-listings/43")
+  const lectureID = pathname?.split("/").pop(); // Extracts the last segment
+  const sessionTitle = `${userName}${currentDate}`;
+
+  const handleCreateSession = async () => {
+    try {
+      const formData = new FormData();
+      formData.append("session_title", sessionTitle);
+      formData.append("user", userID);
+      formData.append("lecture", lectureID);
+
+      const response = await createSession(formData);
+      const { session_id } = response?.data?.data;
+      setSessionID(session_id);
+      console.log("Session ID created with ID:", session_id);
+    } catch (error) {
+      console.error("Error creating Session", error);
+    }
+  };
 
   useEffect(() => {
     if (suggestionInput) {
       setShowChat(true);
       setShowList(false);
+      handleCreateSession();
       handleUserInput(suggestionInput);
     }
   }, [suggestionInput]);
@@ -64,8 +98,18 @@ export default function NewChatbot({ suggestionInput, setIsOpenChatBot }) {
     }
   }, [isLoading]);
 
+  const fetchOldChats = () => {
+    const savedChats = JSON.parse(localStorage.getItem("chatSessions")) || {};
+    return Object.entries(savedChats); // Returns an array of [sessionID, prompts]
+  };
+
+  const handleOldChatsClick = () => {
+    const chats = fetchOldChats();
+    setOldChats(chats);
+  };
+
   const handleUserInput = async (input) => {
-    if (!input) return;
+    if (!input || !sessionID) return;
     setIsLoading(true);
     const combinedInput = lastAssistantResponse
       ? `${lastAssistantResponse}\n\n${input}`
@@ -75,28 +119,28 @@ export default function NewChatbot({ suggestionInput, setIsOpenChatBot }) {
       { role: "user", content: input },
     ]);
 
+    // Store user input for the current session in localStorage
+    const savedChats = JSON.parse(localStorage.getItem("chatSessions")) || {};
+    if (!savedChats[sessionID]) savedChats[sessionID] = [];
+    savedChats[sessionID].push(input);
+    localStorage.setItem("chatSessions", JSON.stringify(savedChats));
+
     try {
       const formData = new FormData();
-      formData.append("text", combinedInput);
+      formData.append("user_message", combinedInput);
       setUserTextInput("");
-      const response = await getLectureAns(formData);
-      const data = response.data.ans;
+      const response = await getNewLectureAns(sessionID, formData);
+      const data = response.data.response;
       const linkArry = response.data?.reference_link || [];
       setChatHistory((prevChat) => [
         ...prevChat,
-        { role: "assistant", content: data?.[0], links: linkArry?.[0] },
+        { role: "assistant", content: data, links: linkArry?.[0] },
       ]);
       setLastAssistantResponse(data);
     } catch (error) {
       console.error(error);
     }
     setIsLoading(false);
-  };
-
-  const handleHistoryClick = (question) => {
-    setShowChat(true);
-    setShowList(false);
-    handleUserInput(question);
   };
 
   return (
@@ -141,7 +185,15 @@ export default function NewChatbot({ suggestionInput, setIsOpenChatBot }) {
 
         {/* New Chat and History Section */}
         {showList && (
-          <Grid item>
+          <Grid
+            item
+            sx={{
+              flexGrow: 1,
+              display: "flex",
+              justifyContent: "center",
+              alignItems: "center",
+            }}
+          >
             <Box
               sx={{
                 p: 2,
@@ -151,22 +203,47 @@ export default function NewChatbot({ suggestionInput, setIsOpenChatBot }) {
                 flexDirection: "column",
                 justifyContent: "center",
                 alignItems: "center",
+                gap: 2,
                 width: "100%",
-                flexGrow: 1
+                flexGrow: 1,
               }}
             >
               <Button
                 variant="outlined"
                 color="primary"
                 onClick={() => {
+                  handleCreateSession();
                   setShowChat(true);
                   setShowList(false);
                 }}
-                sx={{ mb: 2, width: "100%" }}
+                sx={{ mb: 2, width: "60%" }}
               >
                 New Chat
               </Button>
-              <ChatHistory onHistoryClick={handleHistoryClick} />
+              <Typography>Or</Typography>
+              <Button
+                variant="outlined"
+                color="primary"
+                onClick={handleOldChatsClick}
+                sx={{ mb: 2, width: "60%" }}
+              >
+                Old Chats
+              </Button>
+              {oldChats.length > 0 && (
+                <div>
+                  <h3>Old Chats</h3>
+                  {oldChats.map(([sessionID, prompts]) => (
+                    <div key={sessionID}>
+                      <h4>Session ID: {sessionID}</h4>
+                      <ul>
+                        {prompts.map((prompt, index) => (
+                          <li key={index}>{prompt}</li>
+                        ))}
+                      </ul>
+                    </div>
+                  ))}
+                </div>
+              )}
             </Box>
           </Grid>
         )}
@@ -270,7 +347,7 @@ export default function NewChatbot({ suggestionInput, setIsOpenChatBot }) {
             {/* Input Field */}
             <Grid item>
               <Divider />
-              <Box sx={{ display: "flex", gap: 2, p: 1, px: 2}}>
+              <Box sx={{ display: "flex", gap: 2, p: 1, px: 2 }}>
                 <TextField
                   fullWidth
                   multiline
@@ -495,49 +572,5 @@ export const FormattedText = ({ text }) => {
         ))}
       </Box>
     </MathJax.Context>
-  );
-};
-
-export const ChatHistory = ({ onHistoryClick }) => {
-  const dummyQuestions = [
-    "What is React?",
-    "Explain hooks in React?",
-    "How does useState work?",
-    "Closures in JavaScript",
-    "What is the virtual DOM?",
-    "What are forms in ReactJS?",
-    "Arrow Function",
-    "Explain React Fiber",
-  ];
-
-  return (
-    <List
-      sx={{
-        width: "100%",
-        maxHeight: 350,
-        overflowY: "auto",
-        backgroundColor: "#f0f0f0",
-        borderRadius: 4,
-        flexGrow:1
-      }}
-    >
-      <Typography
-        variant="body1"
-        fontFamily={"monospace"}
-        fontSize={"18px"}
-        textAlign={"center"}
-        color={"#6082B6"}
-      >
-        Your History
-      </Typography>
-      {dummyQuestions.map((question, index) => (
-        <ListItem button key={index} onClick={() => onHistoryClick(question)}>
-          <ListItemText
-            primary={question}
-            primaryTypographyProps={{ fontFamily: "monospace" }}
-          />
-        </ListItem>
-      ))}
-    </List>
   );
 };
