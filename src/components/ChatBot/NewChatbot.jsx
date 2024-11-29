@@ -70,11 +70,11 @@ export default function NewChatbot({ suggestionInput, setIsOpenChatBot }) {
     }
   };
 
-  useEffect(()=>{
-    if(sessionID && suggestionInput){
+  useEffect(() => {
+    if (sessionID && suggestionInput) {
       handleUserInput(suggestionInput);
     }
-  },[sessionID, suggestionInput])
+  }, [sessionID, suggestionInput]);
 
   useEffect(() => {
     if (suggestionInput) {
@@ -202,7 +202,7 @@ export default function NewChatbot({ suggestionInput, setIsOpenChatBot }) {
                 justifyContent: "center",
                 alignItems: "center",
                 width: "100%",
-                height:"100%"
+                height: "100%",
               }}
             >
               <Button
@@ -264,59 +264,46 @@ export default function NewChatbot({ suggestionInput, setIsOpenChatBot }) {
               {oldChats.length > 0 && (
                 <Box
                   sx={{
+                    width: "100%",
+                    maxHeight: 300,
+                    overflowY: "auto", // Enable scrolling
+                    bgcolor: "grey.100",
+                    borderRadius: 2,
+                    p: 2,
+                    boxShadow: "0px 4px 6px rgba(0, 0, 0, 0.1)",
                     display: "flex",
                     flexDirection: "column",
                     alignItems: "center",
-                    width: "100%",
-                    height: "100%",
-                    overflowY: "auto", // Scrollable old chats
-                    "&::-webkit-scrollbar": {
-                      display: "none", // Hides scrollbar in WebKit browsers
-                    },
-                    "-ms-overflow-style": "none", // Hides scrollbar in IE and Edge
-                    "scrollbar-width": "none", // Hides scrollbar in Firefox
                   }}
                 >
-                  <Box
-                    sx={{
-                      width: "90%",
-                      maxHeight: "50vh", // Restrict the height
-                      overflowY: "auto", // Enable scrolling
-                      bgcolor: "grey.100",
-                      borderRadius: 2,
-                      p: 2,
-                      boxShadow: "0px 4px 6px rgba(0, 0, 0, 0.1)",
-                    }}
-                  >
-                    <List>
-                      {oldChats.map(([sessionID, prompts]) => (
-                        <React.Fragment key={sessionID}>
-                          <ListItem disablePadding>
-                            <ListItemText
-                              primary={`Session ID: ${sessionID}`}
-                              secondaryTypographyProps={{
-                                sx: { color: "text.secondary" },
-                              }}
-                              secondary={`Prompts (${prompts.length}):`}
-                            />
-                          </ListItem>
-                          <List sx={{ pl: 2 }}>
-                            {prompts.map((prompt, index) => (
-                              <ListItem key={index} sx={{ py: 0.5 }}>
-                                <Typography
-                                  variant="body2"
-                                  color="text.secondary"
-                                >
-                                  {index + 1}. {prompt}
-                                </Typography>
-                              </ListItem>
-                            ))}
-                          </List>
-                          <Divider sx={{ my: 1 }} />
-                        </React.Fragment>
-                      ))}
-                    </List>
-                  </Box>
+                  <List>
+                    {oldChats.map(([sessionID, prompts]) => (
+                      <React.Fragment key={sessionID}>
+                        <ListItem disablePadding>
+                          <ListItemText
+                            primary={`Session ID: ${sessionID}`}
+                            secondaryTypographyProps={{
+                              sx: { color: "text.secondary" },
+                            }}
+                            secondary={`Prompts (${prompts.length}):`}
+                          />
+                        </ListItem>
+                        <List sx={{ pl: 2 }}>
+                          {prompts.map((prompt, index) => (
+                            <ListItem key={index} sx={{ py: 0.5 }}>
+                              <Typography
+                                variant="body2"
+                                color="text.secondary"
+                              >
+                                {index + 1}. {prompt}
+                              </Typography>
+                            </ListItem>
+                          ))}
+                        </List>
+                        <Divider sx={{ my: 1 }} />
+                      </React.Fragment>
+                    ))}
+                  </List>
                 </Box>
               )}
             </Box>
