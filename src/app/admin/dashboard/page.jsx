@@ -29,7 +29,7 @@ const Page = () => {
     try {
       const subjectResponse = await getAllSubject();
       setClassOptions(subjectResponse?.data?.data);
-      setSelectedOptions(subjectResponse?.data?.data?.[0]);
+      setSelectedOptions(subjectResponse?.data?.data?.[1]);
     } catch (error) {
       console.error(error);
     }
