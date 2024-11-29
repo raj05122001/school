@@ -21,6 +21,8 @@ import {
 } from "@mui/material";
 import { FaChevronDown } from "react-icons/fa"; // Importing icon from react-icons
 import MathJax from "react-mathjax2";
+import { VscPreview } from "react-icons/vsc";
+import { MdSelfImprovement, MdRecommend } from "react-icons/md";
 
 const PersonalisedRecommendations = ({ id }) => {
   const { isDarkMode, primaryColor, secondaryColor } = useThemeContext();
@@ -47,14 +49,18 @@ const PersonalisedRecommendations = ({ id }) => {
     try {
       const response = await getTopic(id, value);
       const data = response?.data?.data?.[0];
-      setTopics(data?.topic_list);
+      const jsonData = Array.isArray(data?.topic_list)
+        ? data.topic_list
+        : JSON.parse(data?.topic_list || "[]");
+
+      setTopics(jsonData);
       setSelectedTopic(data?.prevoius_selected_topic || "");
       setSelectedApproach(data?.previous_selected_approach || "");
     } catch (error) {
       console.error(error);
     }
   };
-
+  
   return (
     <Container
       sx={{
@@ -72,35 +78,38 @@ const PersonalisedRecommendations = ({ id }) => {
       }}
     >
       <Typography variant="h4" gutterBottom color={primaryColor}>
-        Personalised Recommendations
+       <MdSelfImprovement style={{fontSize:"32px"}}/> Personalised Recommendations
       </Typography>
 
       <Card
         variant="outlined"
-        sx={{ mb: 3, backgroundColor: "rgba(255, 255, 255, 0.2)" }}
+        sx={{ mb: 3, backgroundColor: "rgba(255, 255, 255, 0.2)", borderRadius: 6, pl:2, boxShadow: "0px 4px 10px #ADD8E6", }}
       >
-        <CardContent>
-          <Typography variant="h6" color={primaryColor}>
-            Previously Selected
+        <CardContent sx={{}}>
+          <Typography variant="h6" color={"#483248"}>
+            <VscPreview style={{marginRight:2}}/>Previously Selected
           </Typography>
-          <Typography variant="body1" color={primaryColor}>
-            <strong>Topic:</strong> {selectedTopic || "None"}
+          <Typography variant="body1" color={"#630330"}>
+            <strong>✦ Topic:</strong> <span style={{color: "#51414F"}}>{selectedTopic || "None"}</span>
           </Typography>
-          <Typography variant="body1" color={primaryColor}>
-            <strong>Approach:</strong> {selectedApproach || "None"}
+          <Typography variant="body1" color={"#630330"}>
+            <strong>✦ Approach:</strong> <span style={{color: "#51414F"}}>{selectedApproach || "None"}</span>
           </Typography>
-          <Typography variant="body1" color={primaryColor}>
-            <strong>Section:</strong> {section || "None"}
+          <Typography variant="body1" color={"#630330"}>
+            <strong>✦ Section:</strong> <span style={{color: "#51414F"}}>{section || "None"}</span>
           </Typography>
         </CardContent>
       </Card>
-
+      <Box display={"flex"} gap={1}>
+      <MdRecommend style={{fontSize:"32px"}}/>
       <Typography variant="h6" gutterBottom color={primaryColor}>
-        Recommended Topics
+        {" "} Recommended Topics
       </Typography>
+      </Box>
+      
 
       {topics.length > 0 ? (
-        topics.map((topic, index) => (
+        topics?.map((topic, index) => (
           <TopicAccordion
             key={index}
             topic={topic}
@@ -144,7 +153,7 @@ const TopicAccordion = ({ topic, id, section, selectedApproach }) => {
   return (
     <Accordion
       onChange={(event, expanded) => expanded && fetchQuery()}
-      sx={{ backgroundColor: "rgba(255, 255, 255, 0.2)" }}
+      sx={{ backgroundColor: "rgba(255, 255, 255, 0.2)", borderRadius: 2, p:2, boxShadow: "0px 4px 10px #FFDEAD", }}
     >
       <AccordionSummary
         expandIcon={<FaChevronDown />} // Using react-icons here
@@ -230,7 +239,7 @@ const FormattedText = ({ text, color }) => {
   };
 
   return (
-    <MathJax.Context input="tex">
+    <MathJax.Context input="tex" inline>
       <Box>
         {textArray.map((part, index) => (
           <Box key={index} color={color}>

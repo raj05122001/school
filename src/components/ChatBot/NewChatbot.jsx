@@ -1,5 +1,9 @@
 import React, { useState, useEffect, useRef } from "react";
-import { getLectureAns } from "@/api/apiHelper";
+import {
+  getLectureAns,
+  createSession,
+  getNewLectureAns,
+} from "@/api/apiHelper";
 import {
   Box,
   IconButton,
@@ -13,6 +17,10 @@ import {
   Grid,
   Skeleton,
   Tooltip,
+  Button,
+  List,
+  ListItem,
+  ListItemText,
 } from "@mui/material";
 import { FaArrowUp, FaRobot } from "react-icons/fa6";
 import { BsChevronDown } from "react-icons/bs";
@@ -21,6 +29,9 @@ import { useThemeContext } from "@/hooks/ThemeContext";
 import UserImage from "@/commonComponents/UserImage/UserImage";
 import MathJax from "react-mathjax2";
 import { FaMicrophone, FaStopCircle } from "react-icons/fa";
+import { decodeToken } from "react-jwt";
+import Cookies from "js-cookie";
+import { usePathname } from "next/navigation";
 
 export default function NewChatbot({ suggestionInput, setIsOpenChatBot }) {
   const chatbotRef = useRef();
@@ -29,9 +40,41 @@ export default function NewChatbot({ suggestionInput, setIsOpenChatBot }) {
   const [isLoading, setIsLoading] = useState(false);
   const [lastAssistantResponse, setLastAssistantResponse] = useState("");
   const [chatHistory, setChatHistory] = useState([]);
+  const [showChat, setShowChat] = useState(false);
+  const [showList, setShowList] = useState(true);
+  const [sessionID, setSessionID] = useState(null);
+  const [oldChats, setOldChats] = useState([]);
+  const [showOldChat, setShowOldChat] = useState(false);
+
+  const userDetails = decodeToken(Cookies.get("ACCESS_TOKEN"));
+  const userName = userDetails?.username;
+  const userID = userDetails?.user_id;
+  const currentDate = new Date().toISOString();
+  const pathname = usePathname(); // Retrieves the full pathname (e.g., "/teacher/lecture-listings/43")
+  const lectureID = pathname?.split("/").pop(); // Extracts the last segment
+  const sessionTitle = `${userName}${currentDate}`;
+
+  const handleCreateSession = async () => {
+    try {
+      const formData = new FormData();
+      formData.append("session_title", sessionTitle);
+      formData.append("user", userID);
+      formData.append("lecture", lectureID);
+
+      const response = await createSession(formData);
+      const { session_id } = response?.data?.data;
+      setSessionID(session_id);
+      console.log("Session ID created with ID:", session_id);
+    } catch (error) {
+      console.error("Error creating Session", error);
+    }
+  };
 
   useEffect(() => {
     if (suggestionInput) {
+      setShowChat(true);
+      setShowList(false);
+      handleCreateSession();
       handleUserInput(suggestionInput);
     }
   }, [suggestionInput]);
@@ -56,8 +99,19 @@ export default function NewChatbot({ suggestionInput, setIsOpenChatBot }) {
     }
   }, [isLoading]);
 
+  const fetchOldChats = () => {
+    const savedChats = JSON.parse(localStorage.getItem("chatSessions")) || {};
+    return Object.entries(savedChats); // Returns an array of [sessionID, prompts]
+  };
+
+  const handleOldChatsClick = () => {
+    const chats = fetchOldChats();
+    setShowOldChat(true);
+    setOldChats(chats);
+  };
+
   const handleUserInput = async (input) => {
-    if (!input) return;
+    if (!input || !sessionID) return;
     setIsLoading(true);
     const combinedInput = lastAssistantResponse
       ? `${lastAssistantResponse}\n\n${input}`
@@ -67,16 +121,22 @@ export default function NewChatbot({ suggestionInput, setIsOpenChatBot }) {
       { role: "user", content: input },
     ]);
 
+    // Store user input for the current session in localStorage
+    const savedChats = JSON.parse(localStorage.getItem("chatSessions")) || {};
+    if (!savedChats[sessionID]) savedChats[sessionID] = [];
+    savedChats[sessionID].push(input);
+    localStorage.setItem("chatSessions", JSON.stringify(savedChats));
+
     try {
       const formData = new FormData();
-      formData.append("text", combinedInput);
+      formData.append("user_message", combinedInput);
       setUserTextInput("");
-      const response = await getLectureAns(formData);
-      const data = response.data.ans;
+      const response = await getNewLectureAns(sessionID, formData);
+      const data = response.data.response;
       const linkArry = response.data?.reference_link || [];
       setChatHistory((prevChat) => [
         ...prevChat,
-        { role: "assistant", content: data?.[0], links: linkArry?.[0] },
+        { role: "assistant", content: data, links: linkArry?.[0] },
       ]);
       setLastAssistantResponse(data);
     } catch (error) {
@@ -125,149 +185,302 @@ export default function NewChatbot({ suggestionInput, setIsOpenChatBot }) {
           </Box>
         </Grid>
 
-        {/* Chat Area */}
-        <Grid
-          item
-          xs
-          style={{
-            overflowY: "auto",
-            padding: "16px",
-            width: chatHistory.length > 0 ? "99%" : "100%",
-            height: "100%",
-          }}
-          ref={graphRef}
-        >
-          {chatHistory.length > 0 ? (
-            chatHistory.map((message, index) => (
-              <Box
-                key={index}
-                sx={{
-                  display: "flex",
-                  flexDirection:
-                    message.role === "user" ? "row-reverse" : "row",
-                  mb: 2,
-                }}
-              >
-                <Box
-                  sx={{
-                    maxWidth: "85%",
-                    bgcolor:
-                      message.role === "user" ? "primary.light" : "grey.300",
-                    color: "text.primary",
-                    borderRadius: 2,
-                    p: 1,
-                    mx: 1,
-                    overflowX: "auto",
-                  }}
-                >
-                  <FormattedText text={message.content} />
-
-                  {message.links &&
-                    message.links.map((link, idx) => (
-                      <Typography variant="caption" key={idx}>
-                        <a
-                          href={link}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                        >
-                          {link}
-                        </a>
-                      </Typography>
-                    ))}
-                </Box>
-              </Box>
-            ))
-          ) : (
+        {/* New Chat and History Section */}
+        {showList && (
+          <Grid item display={"flex"} flexDirection={"column"} flexGrow={1}>
             <Box
               sx={{
+                p: 2,
+                borderBottom: 1,
+                borderColor: "grey.300",
                 display: "flex",
                 flexDirection: "column",
-                alignItems: "center",
                 justifyContent: "center",
-                height: "100%",
-                color: "text.secondary",
+                alignItems: "center",
+                width: "100%",
+                flexGrow: 1,
               }}
             >
-              <FaRobot size={50} sx={{ mb: 2 }} />
-              <Typography variant="h6">Ask me any question</Typography>
-            </Box>
-          )}
-          {isLoading && (
-            <Box
-              sx={{ display: "flex", mt: 2, flexDirection: "column", pb: 8 }}
-            >
-              <Skeleton
-                variant="text"
-                sx={{ fontSize: "1.5rem", width: "80%" }}
-              />
-              <Skeleton
-                variant="text"
-                sx={{ fontSize: "1.5rem", width: "60%" }}
-              />
-              <Skeleton
-                variant="text"
-                sx={{ fontSize: "1.5rem", width: "80%" }}
-              />
-            </Box>
-          )}
-        </Grid>
+              <Button
+                variant="outlined"
+                color="primary"
+                onClick={() => {
+                  handleCreateSession();
+                  setShowChat(true);
+                  setShowList(false);
+                }}
+                sx={{
+                  mb: 2,
+                  width: "60%",
+                  border: "none",
+                  borderRadius: 4,
+                  backgroundColor: "#AFE1AF", // Gold
+                  transition: "all 150ms ease-in-out",
+                  color: "#003366", // Dark blue for text
 
-        {/* Input Field */}
-        <Grid item>
-          <Divider />
-          <Box sx={{ display: "flex", gap: 2, p: 1, px: 2 }}>
-            <TextField
-              fullWidth
-              multiline
-              placeholder="Ask me..."
-              value={userTextInput}
-              onChange={(e) => setUserTextInput(e.target.value)}
-              onKeyPress={handleKeyPress}
-              variant="outlined"
-              InputProps={{
-                sx: {
-                  // Targeting the root container of TextField
-                  backdropFilter: "blur(10px)",
-                  backgroundColor: "rgba(255, 255, 255, 0.8)",
-                  borderRadius: "12px",
-                  padding: "10px 14px",
-                  transition: "all 0.3s ease",
-                  "&:hover": {
-                    backgroundColor: "rgba(255, 255, 255, 0.9)",
+                  ":hover": {
+                    border: "none",
+                    backgroundColor: "#00A36C", // Slightly darker gold on hover
+                    boxShadow: "0 0 10px 0 #ECFFDC inset, 0 0 10px 4px #ECFFDC", // Matching hover color with gold shade
+                    color: "#fff",
                   },
-                  "& .MuiOutlinedInput-notchedOutline": {
-                    borderColor: "#ccc",
-                  },
-                  "&.Mui-focused .MuiOutlinedInput-notchedOutline": {
-                    borderColor: "#1e88e5",
-                    borderWidth: "1px",
-                  },
-                  // Ensure the textarea inside TextField is scrollable
-                  "& .MuiInputBase-inputMultiline": {
-                    maxHeight: "100px", // Restrict height
-                    overflowY: "auto", // Enable vertical scrolling
-                  },
-                  "& textarea": {
-                    maxHeight: "100px", // Ensure the textarea respects height
-                    overflowY: "auto !important", // Enable scroll
-                  },
-                },
-                endAdornment: (
-                  <Box sx={{ display: "flex", alignItems: "center" }}>
-                  <IconButton
+                }}
+              >
+                Fresh Conversation
+              </Button>
+
+              {!showOldChat && (
+                <>
+                  <Typography marginBottom={2}>Or</Typography>
+                  <Button
+                    variant="outlined"
                     color="primary"
-                    onClick={() => handleUserInput(userTextInput.trim())}
-                    disabled={isLoading}
+                    onClick={handleOldChatsClick}
+                    sx={{
+                      mb: 2,
+                      width: "60%",
+                      borderRadius: 4,
+                      backgroundColor: "#EADDCA", // Gold
+                      transition: "all 150ms ease-in-out",
+                      color: "#003366", // Dark blue for text
+                      border: "none",
+                      ":hover": {
+                        border: "none",
+                        backgroundColor: "#C19A6B", // Slightly darker gold on hover
+                        boxShadow:
+                          "0 0 10px 0 #F2D2BD inset, 0 0 10px 4px #F2D2BD", // Matching hover color with gold shade
+                        color: "#fff",
+                      },
+                    }}
                   >
-                    {isLoading ? <CircularProgress size={24} /> : <FaArrowUp />}
-                  </IconButton>
-                  {userTextInput && isLoading ? "":<VoiceToText setUserTextInput={setUserTextInput} />}
+                    Conversation History
+                  </Button>
+                </>
+              )}
+              {oldChats.length > 0 && (
+                <Box
+                  sx={{
+                    display: "flex",
+                    flexDirection: "column",
+                    alignItems: "center",
+                    width: "100%",
+                    height: "100%",
+                    overflowY: "auto", // Scrollable old chats
+                    "&::-webkit-scrollbar": {
+                      display: "none", // Hides scrollbar in WebKit browsers
+                    },
+                    "-ms-overflow-style": "none", // Hides scrollbar in IE and Edge
+                    "scrollbar-width": "none", // Hides scrollbar in Firefox
+                  }}
+                >
+                  <Box
+                    sx={{
+                      width: "90%",
+                      maxHeight: "50vh", // Restrict the height
+                      overflowY: "auto", // Enable scrolling
+                      bgcolor: "grey.100",
+                      borderRadius: 2,
+                      p: 2,
+                      boxShadow: "0px 4px 6px rgba(0, 0, 0, 0.1)",
+                    }}
+                  >
+                    <List>
+                      {oldChats.map(([sessionID, prompts]) => (
+                        <React.Fragment key={sessionID}>
+                          <ListItem disablePadding>
+                            <ListItemText
+                              primary={`Session ID: ${sessionID}`}
+                              secondaryTypographyProps={{
+                                sx: { color: "text.secondary" },
+                              }}
+                              secondary={`Prompts (${prompts.length}):`}
+                            />
+                          </ListItem>
+                          <List sx={{ pl: 2 }}>
+                            {prompts.map((prompt, index) => (
+                              <ListItem key={index} sx={{ py: 0.5 }}>
+                                <Typography
+                                  variant="body2"
+                                  color="text.secondary"
+                                >
+                                  {index + 1}. {prompt}
+                                </Typography>
+                              </ListItem>
+                            ))}
+                          </List>
+                          <Divider sx={{ my: 1 }} />
+                        </React.Fragment>
+                      ))}
+                    </List>
+                  </Box>
                 </Box>
-                ),
+              )}
+            </Box>
+          </Grid>
+        )}
+
+        {showChat && (
+          <>
+            {/* Chat Area */}
+            <Grid
+              item
+              xs
+              style={{
+                overflowY: "auto",
+                padding: "16px",
+                width: chatHistory.length > 0 ? "99%" : "100%",
+                height: "100%",
               }}
-            />
-          </Box>
-        </Grid>
+              ref={graphRef}
+            >
+              {chatHistory.length > 0 ? (
+                chatHistory.map((message, index) => (
+                  <Box
+                    key={index}
+                    sx={{
+                      display: "flex",
+                      flexDirection:
+                        message.role === "user" ? "row-reverse" : "row",
+                      mb: 2,
+                    }}
+                  >
+                    <Box
+                      sx={{
+                        maxWidth: "85%",
+                        bgcolor:
+                          message.role === "user"
+                            ? "primary.light"
+                            : "grey.300",
+                        color: "text.primary",
+                        borderRadius: 2,
+                        p: 1,
+                        mx: 1,
+                        overflowX: "auto",
+                      }}
+                    >
+                      <FormattedText text={message.content} />
+
+                      {message.links &&
+                        message.links.map((link, idx) => (
+                          <Typography variant="caption" key={idx}>
+                            <a
+                              href={link}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                            >
+                              {link}
+                            </a>
+                          </Typography>
+                        ))}
+                    </Box>
+                  </Box>
+                ))
+              ) : (
+                <Box
+                  sx={{
+                    display: "flex",
+                    flexDirection: "column",
+                    alignItems: "center",
+                    justifyContent: "center",
+                    height: "100%",
+                    color: "text.secondary",
+                  }}
+                >
+                  <FaRobot size={50} sx={{ mb: 2 }} />
+                  <Typography variant="h6">Ask me any question</Typography>
+                </Box>
+              )}
+              {isLoading && (
+                <Box
+                  sx={{
+                    display: "flex",
+                    mt: 2,
+                    flexDirection: "column",
+                    pb: 8,
+                  }}
+                >
+                  <Skeleton
+                    variant="text"
+                    sx={{ fontSize: "1.5rem", width: "80%" }}
+                  />
+                  <Skeleton
+                    variant="text"
+                    sx={{ fontSize: "1.5rem", width: "60%" }}
+                  />
+                  <Skeleton
+                    variant="text"
+                    sx={{ fontSize: "1.5rem", width: "80%" }}
+                  />
+                </Box>
+              )}
+            </Grid>
+
+            {/* Input Field */}
+            <Grid item>
+              <Divider />
+              <Box sx={{ display: "flex", gap: 2, p: 1, px: 2 }}>
+                <TextField
+                  fullWidth
+                  multiline
+                  placeholder="Ask me..."
+                  value={userTextInput}
+                  onChange={(e) => setUserTextInput(e.target.value)}
+                  onKeyPress={handleKeyPress}
+                  variant="outlined"
+                  InputProps={{
+                    sx: {
+                      // Targeting the root container of TextField
+                      backdropFilter: "blur(10px)",
+                      backgroundColor: "rgba(255, 255, 255, 0.8)",
+                      borderRadius: "12px",
+                      padding: "10px 14px",
+                      transition: "all 0.3s ease",
+                      "&:hover": {
+                        backgroundColor: "rgba(255, 255, 255, 0.9)",
+                      },
+                      "& .MuiOutlinedInput-notchedOutline": {
+                        borderColor: "#ccc",
+                      },
+                      "&.Mui-focused .MuiOutlinedInput-notchedOutline": {
+                        borderColor: "#1e88e5",
+                        borderWidth: "1px",
+                      },
+                      // Ensure the textarea inside TextField is scrollable
+                      "& .MuiInputBase-inputMultiline": {
+                        maxHeight: "100px", // Restrict height
+                        overflowY: "auto", // Enable vertical scrolling
+                      },
+                      "& textarea": {
+                        maxHeight: "100px", // Ensure the textarea respects height
+                        overflowY: "auto !important", // Enable scroll
+                      },
+                    },
+                    endAdornment: (
+                      <Box sx={{ display: "flex", alignItems: "center" }}>
+                        <IconButton
+                          color="primary"
+                          onClick={() => handleUserInput(userTextInput.trim())}
+                          disabled={isLoading}
+                        >
+                          {isLoading ? (
+                            <CircularProgress size={24} />
+                          ) : (
+                            <FaArrowUp />
+                          )}
+                        </IconButton>
+                        {userTextInput && isLoading ? (
+                          ""
+                        ) : (
+                          <VoiceToText setUserTextInput={setUserTextInput} />
+                        )}
+                      </Box>
+                    ),
+                  }}
+                />
+              </Box>
+            </Grid>
+          </>
+        )}
       </Grid>
     </Box>
   );
@@ -431,4 +644,55 @@ export const FormattedText = ({ text }) => {
       </Box>
     </MathJax.Context>
   );
+};
+
+export const ChatHistory = () => {
+  <Box
+    sx={{
+      display: "flex",
+      flexDirection: "column",
+      alignItems: "center",
+      width: "100%",
+      height: "100%",
+      overflow: "auto", // Scrollable old chats
+    }}
+  >
+    <Box
+      sx={{
+        width: "90%",
+        maxHeight: "60vh", // Restrict the height
+        overflowY: "auto", // Enable scrolling
+        bgcolor: "grey.100",
+        borderRadius: 2,
+        p: 2,
+        boxShadow: "0px 4px 6px rgba(0, 0, 0, 0.1)",
+      }}
+    >
+      <List>
+        {oldChats.map(([sessionID, prompts]) => (
+          <React.Fragment key={sessionID}>
+            <ListItem disablePadding>
+              <ListItemText
+                primary={`Session ID: ${sessionID}`}
+                secondaryTypographyProps={{
+                  sx: { color: "text.secondary" },
+                }}
+                secondary={`Prompts (${prompts.length}):`}
+              />
+            </ListItem>
+            <List sx={{ pl: 2 }}>
+              {prompts.map((prompt, index) => (
+                <ListItem key={index} sx={{ py: 0.5 }}>
+                  <Typography variant="body2" color="text.secondary">
+                    {index + 1}. {prompt}
+                  </Typography>
+                </ListItem>
+              ))}
+            </List>
+            <Divider sx={{ my: 1 }} />
+          </React.Fragment>
+        ))}
+      </List>
+    </Box>
+  </Box>;
 };

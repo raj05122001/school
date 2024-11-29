@@ -76,9 +76,9 @@ export const updateSubject = async (class_id, formData) => {
   return await apiInstance.updateSubject(class_id, formData);
 };
 
-export const deleteUpcommingLecture = async (lectureId) => {
+export const deleteUpcomingLecture = async (lectureId) => {
   const apiInstance = new apiServices(axiosAPIInstance);
-  return await apiInstance.deleteUpcommingLecture(lectureId);
+  return await apiInstance.deleteUpcomingLecture(lectureId);
 };
 
 export const getMyLectures = async (
@@ -576,6 +576,16 @@ export const getTopic = async (lectureId,section) => {
 export const getQuery = async (formData) => {
   const apiInstance = new apiServices(axiosAPIInstance);
   return await apiInstance.getQuery(formData);
+};
+
+export const createSession = async (formData) => {
+  const apiInstance = new apiServices(axiosAPIInstance);
+  return await apiInstance.createSession(formData);
+};
+
+export const getNewLectureAns = async (sessionID, data) => {
+  const apiInstance = new apiServices(axiosAPIInstance);
+  return await apiInstance.getNewLectureAns(sessionID, data);
 };
 
 export const getGuidance = async (assignmentId) => {

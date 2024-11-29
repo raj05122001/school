@@ -19,7 +19,7 @@ import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { DatePicker, TimePicker } from "@mui/x-date-pickers";
 import dayjs from "dayjs"; // Import dayjs for date handling
-import { MdOutlineClass } from "react-icons/md";
+import { MdOutlineClass, MdDelete } from "react-icons/md";
 import Image from "next/image";
 import { lecture_type } from "@/helper/Helper";
 import { IoDocumentAttachOutline } from "react-icons/io5";
@@ -31,13 +31,14 @@ import {
   getTopicsByChapter,
   createLecture,
   updateLecture,
+  deleteUpcomingLecture
 } from "@/api/apiHelper";
 import { decodeToken } from "react-jwt";
 import Cookies from "js-cookie";
 import { useThemeContext } from "@/hooks/ThemeContext";
 import CustomAutocomplete from "@/commonComponents/CustomAutocomplete/CustomAutocomplete";
 
-const userDetails = decodeToken(Cookies.get("ACCESS_TOKEN"));
+// const userDetails = decodeToken(Cookies.get("ACCESS_TOKEN"));
 
 const CreatingLecture = ({
   open,
@@ -72,9 +73,21 @@ const CreatingLecture = ({
 
   const lowerCase = (str) => str?.toLowerCase();
 
+  const [userDetails, setUserDetails] = useState(null);
+
+  useEffect(() => {
+    if (typeof window !== "undefined") {
+      const token = Cookies.get("ACCESS_TOKEN");
+      setUserDetails(token ? decodeToken(token) : {});
+    }
+  }, []);
+
+  if (!userDetails || !userDetails.teacher_id) {
+    console.error("Invalid or expired token");
+  }
+
   useEffect(() => {
     if (isEditMode && lecture) {
-
       setSelectedClass(
         {
           name: lecture?.lecture_class?.name,
@@ -85,7 +98,7 @@ const CreatingLecture = ({
       setLectureChapter(
         { name: lecture?.chapter?.chapter, id: lecture?.chapter?.id } || ""
       );
-      setLectureTopics({name:lecture?.topics,id:0} || "");
+      setLectureTopics({ name: lecture?.topics, id: 0 } || "");
 
       setLectureDescription(lecture?.description || "");
       setLectureType(lecture?.type || "subject");
@@ -267,6 +280,15 @@ const CreatingLecture = ({
     }
   };
 
+  const onDeleteLecture = async () => {
+    try {
+      await deleteUpcomingLecture(lecture?.id);
+      handleClose();
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
   return (
     <Dialog
       open={open}
@@ -287,12 +309,12 @@ const CreatingLecture = ({
         "& .MuiDialogTitle-root": {
           bgcolor: isDarkMode ? "#424242" : "white",
           color: isDarkMode ? "white" : "black",
-          display: "flex",
-          justifyContent: "center",
-          alignItems: "center",
           background: isDarkMode
             ? "linear-gradient(to top, #09203f 0%, #537895 100%);"
             : "linear-gradient(to top, #dfe9f3 0%, white 100%)",
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
         },
         "& .MuiPaper-root": {
           border: "2px solid #0096FF",
@@ -302,15 +324,49 @@ const CreatingLecture = ({
     >
       <DialogTitle
         sx={{
-          bgcolor: isDarkMode ? "#424242" : "white", // Apply the background color dynamically
+          bgcolor: isDarkMode ? "#424242" : "white",
           color: isDarkMode ? "white" : "black",
+          display: "flex",
+          alignItems: "center",
+          position: "relative", // For absolute positioning of the delete button
+          flex:1
         }}
       >
+        <Box
+          sx={{
+            flex: 1,
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
+            position: "absolute",
+            left: "50%",
+            transform: "translateX(-50%)", // Center the text
+          }}
+        >
         {" "}
-        <MdOutlineClass
-          style={{ color: isDarkMode ? "white" : "black", marginRight: "2px" }}
-        />{" "}
-        Create Lecture
+          <MdOutlineClass
+            style={{
+              color: isDarkMode ? "white" : "black",
+              marginRight: "2px",
+            }}
+          />{" "}
+          Create Lecture
+        </Box>
+        {isEditMode && lecture?.id && (
+          <Box
+            sx={{
+              position: "absolute",
+              right: "16px", // Align the delete button to the right
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "flex-end",
+              cursor: "pointer",
+              flex:1
+            }}
+          >
+            <MdDelete size={20} onClick={() => onDeleteLecture()} />
+          </Box>
+        )}
       </DialogTitle>
       <DialogContent>
         <form onSubmit={handleSubmit}>
