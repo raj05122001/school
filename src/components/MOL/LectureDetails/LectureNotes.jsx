@@ -34,6 +34,7 @@ const LectureNotes = ({
   const [showTextFields, setShowTextFields] = useState({});
   const notesBoxRef = useRef(null);
   const updateCalled = useRef(false);
+  const hasFetchedData = useRef(false); // Prevent multiple fetch calls
 
   usePersonalisedRecommendations(id, "NOTES", notesBoxRef, "");
 
@@ -49,7 +50,10 @@ const LectureNotes = ({
       }
     };
 
-    fetchLectureNotes();
+    if (!hasFetchedData.current) {
+      hasFetchedData.current = true;
+      fetchLectureNotes();
+    }
   }, [id]);
 
   const handleMoreInsightClick = (noteId) => {

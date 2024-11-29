@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import {
   Box,
   Typography,
@@ -14,6 +14,7 @@ const LectureMCQ = ({ id, isDarkMode }) => {
   const [quizData, setQuizData] = useState([]);
   const [visibleCount, setVisibleCount] = useState(5);
   const [loading, setLoading] = useState(true);
+  const hasFetchedData = useRef(false); // Prevent multiple fetch calls
 
   useEffect(() => {
     const fetchQuizData = async () => {
@@ -29,7 +30,10 @@ const LectureMCQ = ({ id, isDarkMode }) => {
       }
     };
 
-    fetchQuizData();
+    if (!hasFetchedData.current) {
+      hasFetchedData.current = true;
+      fetchQuizData();
+    }
   }, [id]);
 
   const parseOptions = (options) => {

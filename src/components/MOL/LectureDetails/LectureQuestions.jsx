@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import { Box, Typography, Button, Skeleton } from "@mui/material";
 import { getLectureQuestion } from "@/api/apiHelper";
 import MathJax from "react-mathjax2";
@@ -8,6 +8,7 @@ const LectureQuestions = ({ id, isDarkMode }) => {
   const [questionsData, setQuestionsData] = useState([]);
   const [visibleCount, setVisibleCount] = useState(5);
   const [loading, setLoading] = useState(true);
+  const hasFetchedData = useRef(false); // Prevent multiple fetch calls
 
   useEffect(() => {
     const fetchQuestions = async () => {
@@ -25,7 +26,10 @@ const LectureQuestions = ({ id, isDarkMode }) => {
       }
     };
 
-    fetchQuestions();
+    if (!hasFetchedData.current) {
+      hasFetchedData.current = true;
+      fetchQuestions();
+    }
   }, [id]);
 
   const displayedQuestion = questionsData.slice(0, visibleCount);
