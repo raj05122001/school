@@ -70,12 +70,17 @@ export default function NewChatbot({ suggestionInput, setIsOpenChatBot }) {
     }
   };
 
+  useEffect(()=>{
+    if(sessionID && suggestionInput){
+      handleUserInput(suggestionInput);
+    }
+  },[sessionID, suggestionInput])
+
   useEffect(() => {
     if (suggestionInput) {
       setShowChat(true);
       setShowList(false);
       handleCreateSession();
-      handleUserInput(suggestionInput);
     }
   }, [suggestionInput]);
 
