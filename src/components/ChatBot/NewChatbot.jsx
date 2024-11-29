@@ -192,18 +192,17 @@ export default function NewChatbot({ suggestionInput, setIsOpenChatBot }) {
 
         {/* New Chat and History Section */}
         {showList && (
-          <Grid item display={"flex"} flexDirection={"column"} flexGrow={1}>
+          <Grid item xs>
             <Box
               sx={{
                 p: 2,
-                borderBottom: 1,
                 borderColor: "grey.300",
                 display: "flex",
                 flexDirection: "column",
                 justifyContent: "center",
                 alignItems: "center",
                 width: "100%",
-                flexGrow: 1,
+                height:"100%"
               }}
             >
               <Button
