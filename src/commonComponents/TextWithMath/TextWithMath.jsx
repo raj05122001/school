@@ -13,8 +13,12 @@ const TextWithMath = ({ text }) => {
   // Function to replace bold text in plain text and remove newlines inside LaTeX
   const replaceString = (data) => {
     return data
-      .replace(/\*\*(.*?)\*\*/g, "<strong>$1</strong>") // Bold text
-      .replace(/\n/g, "<br>"); // New lines outside LaTeX
+      .replace(/\[(.*?)\]/g, `<span style="font-weight: 600">[$1]</span>`)
+      .replace(/\*\*(.*?)\*\*/g, "<strong>$1</strong>")
+      .replace(/#/g, "")
+      .replace(/`/g, "")
+      .replace(/(?<!\d)\. /g, ".<br>")
+      .replace(/\n/g, "<br>");
   };
 
   // Function to process and render text with LaTeX expressions

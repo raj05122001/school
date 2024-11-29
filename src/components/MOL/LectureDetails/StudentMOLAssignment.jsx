@@ -19,6 +19,13 @@ const StudentMOLAssignment = ({ id, isDarkMode, class_ID }) => {
   const { s3 } = AwsSdk();
   const answered_by = Number(userDetails.student_id);
 
+  useEffect(() => {
+    if(id){
+      fetchAssignments();
+      fetchAssignmentAnswer()
+    }
+  }, [id]);
+
   const fetchAssignments = useCallback(async () => {
     dispatch({ type: "FETCH_START" });
     try {
@@ -52,11 +59,6 @@ const StudentMOLAssignment = ({ id, isDarkMode, class_ID }) => {
       console.error(error);
     }
   }
-
-  useEffect(() => {
-    fetchAssignments();
-    fetchAssignmentAnswer()
-  }, [fetchAssignments]);
 
   const lectureTitle =
     assignments.length > 0 ? assignments[0].lecture.title : "";

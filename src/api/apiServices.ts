@@ -980,4 +980,10 @@ export default class apiServices {
       });
   };
 
+  public getGuidance = async (assignmentId) => {
+    return await this.axiosInstance
+      .get(`/api/v1/get_guidance/${assignmentId}/`)
+      .then((Response) => Response)
+      .catch((error) => console.error(error));
+  };
 }

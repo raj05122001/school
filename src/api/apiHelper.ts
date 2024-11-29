@@ -588,3 +588,7 @@ export const getNewLectureAns = async (sessionID, data) => {
   return await apiInstance.getNewLectureAns(sessionID, data);
 };
 
+export const getGuidance = async (assignmentId) => {
+  const apiInstance = new apiServices(axiosAPIInstance);
+  return await apiInstance.getGuidance(assignmentId);
+};

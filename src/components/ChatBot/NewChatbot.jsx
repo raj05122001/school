@@ -44,6 +44,7 @@ export default function NewChatbot({ suggestionInput, setIsOpenChatBot }) {
   const [showList, setShowList] = useState(true);
   const [sessionID, setSessionID] = useState(null);
   const [oldChats, setOldChats] = useState([]);
+  const [showOldChat, setShowOldChat] = useState(false);
 
   const userDetails = decodeToken(Cookies.get("ACCESS_TOKEN"));
   const userName = userDetails?.username;
@@ -105,6 +106,7 @@ export default function NewChatbot({ suggestionInput, setIsOpenChatBot }) {
 
   const handleOldChatsClick = () => {
     const chats = fetchOldChats();
+    setShowOldChat(true);
     setOldChats(chats);
   };
 
@@ -185,15 +187,7 @@ export default function NewChatbot({ suggestionInput, setIsOpenChatBot }) {
 
         {/* New Chat and History Section */}
         {showList && (
-          <Grid
-            item
-            sx={{
-              flexGrow: 1,
-              display: "flex",
-              justifyContent: "center",
-              alignItems: "center",
-            }}
-          >
+          <Grid item display={"flex"} flexDirection={"column"} flexGrow={1}>
             <Box
               sx={{
                 p: 2,
@@ -203,7 +197,6 @@ export default function NewChatbot({ suggestionInput, setIsOpenChatBot }) {
                 flexDirection: "column",
                 justifyContent: "center",
                 alignItems: "center",
-                gap: 2,
                 width: "100%",
                 flexGrow: 1,
               }}
@@ -216,33 +209,111 @@ export default function NewChatbot({ suggestionInput, setIsOpenChatBot }) {
                   setShowChat(true);
                   setShowList(false);
                 }}
-                sx={{ mb: 2, width: "60%" }}
+                sx={{
+                  mb: 2,
+                  width: "60%",
+                  border: "none",
+                  borderRadius: 4,
+                  backgroundColor: "#AFE1AF", // Gold
+                  transition: "all 150ms ease-in-out",
+                  color: "#003366", // Dark blue for text
+
+                  ":hover": {
+                    border: "none",
+                    backgroundColor: "#00A36C", // Slightly darker gold on hover
+                    boxShadow: "0 0 10px 0 #ECFFDC inset, 0 0 10px 4px #ECFFDC", // Matching hover color with gold shade
+                    color: "#fff",
+                  },
+                }}
               >
-                New Chat
+                Fresh Conversation
               </Button>
-              <Typography>Or</Typography>
-              <Button
-                variant="outlined"
-                color="primary"
-                onClick={handleOldChatsClick}
-                sx={{ mb: 2, width: "60%" }}
-              >
-                Old Chats
-              </Button>
+
+              {!showOldChat && (
+                <>
+                  <Typography marginBottom={2}>Or</Typography>
+                  <Button
+                    variant="outlined"
+                    color="primary"
+                    onClick={handleOldChatsClick}
+                    sx={{
+                      mb: 2,
+                      width: "60%",
+                      borderRadius: 4,
+                      backgroundColor: "#EADDCA", // Gold
+                      transition: "all 150ms ease-in-out",
+                      color: "#003366", // Dark blue for text
+                      border: "none",
+                      ":hover": {
+                        border: "none",
+                        backgroundColor: "#C19A6B", // Slightly darker gold on hover
+                        boxShadow:
+                          "0 0 10px 0 #F2D2BD inset, 0 0 10px 4px #F2D2BD", // Matching hover color with gold shade
+                        color: "#fff",
+                      },
+                    }}
+                  >
+                    Conversation History
+                  </Button>
+                </>
+              )}
               {oldChats.length > 0 && (
-                <div>
-                  <h3>Old Chats</h3>
-                  {oldChats.map(([sessionID, prompts]) => (
-                    <div key={sessionID}>
-                      <h4>Session ID: {sessionID}</h4>
-                      <ul>
-                        {prompts.map((prompt, index) => (
-                          <li key={index}>{prompt}</li>
-                        ))}
-                      </ul>
-                    </div>
-                  ))}
-                </div>
+                <Box
+                  sx={{
+                    display: "flex",
+                    flexDirection: "column",
+                    alignItems: "center",
+                    width: "100%",
+                    height: "100%",
+                    overflowY: "auto", // Scrollable old chats
+                    "&::-webkit-scrollbar": {
+                      display: "none", // Hides scrollbar in WebKit browsers
+                    },
+                    "-ms-overflow-style": "none", // Hides scrollbar in IE and Edge
+                    "scrollbar-width": "none", // Hides scrollbar in Firefox
+                  }}
+                >
+                  <Box
+                    sx={{
+                      width: "90%",
+                      maxHeight: "50vh", // Restrict the height
+                      overflowY: "auto", // Enable scrolling
+                      bgcolor: "grey.100",
+                      borderRadius: 2,
+                      p: 2,
+                      boxShadow: "0px 4px 6px rgba(0, 0, 0, 0.1)",
+                    }}
+                  >
+                    <List>
+                      {oldChats.map(([sessionID, prompts]) => (
+                        <React.Fragment key={sessionID}>
+                          <ListItem disablePadding>
+                            <ListItemText
+                              primary={`Session ID: ${sessionID}`}
+                              secondaryTypographyProps={{
+                                sx: { color: "text.secondary" },
+                              }}
+                              secondary={`Prompts (${prompts.length}):`}
+                            />
+                          </ListItem>
+                          <List sx={{ pl: 2 }}>
+                            {prompts.map((prompt, index) => (
+                              <ListItem key={index} sx={{ py: 0.5 }}>
+                                <Typography
+                                  variant="body2"
+                                  color="text.secondary"
+                                >
+                                  {index + 1}. {prompt}
+                                </Typography>
+                              </ListItem>
+                            ))}
+                          </List>
+                          <Divider sx={{ my: 1 }} />
+                        </React.Fragment>
+                      ))}
+                    </List>
+                  </Box>
+                </Box>
               )}
             </Box>
           </Grid>
@@ -573,4 +644,55 @@ export const FormattedText = ({ text }) => {
       </Box>
     </MathJax.Context>
   );
+};
+
+export const ChatHistory = () => {
+  <Box
+    sx={{
+      display: "flex",
+      flexDirection: "column",
+      alignItems: "center",
+      width: "100%",
+      height: "100%",
+      overflow: "auto", // Scrollable old chats
+    }}
+  >
+    <Box
+      sx={{
+        width: "90%",
+        maxHeight: "60vh", // Restrict the height
+        overflowY: "auto", // Enable scrolling
+        bgcolor: "grey.100",
+        borderRadius: 2,
+        p: 2,
+        boxShadow: "0px 4px 6px rgba(0, 0, 0, 0.1)",
+      }}
+    >
+      <List>
+        {oldChats.map(([sessionID, prompts]) => (
+          <React.Fragment key={sessionID}>
+            <ListItem disablePadding>
+              <ListItemText
+                primary={`Session ID: ${sessionID}`}
+                secondaryTypographyProps={{
+                  sx: { color: "text.secondary" },
+                }}
+                secondary={`Prompts (${prompts.length}):`}
+              />
+            </ListItem>
+            <List sx={{ pl: 2 }}>
+              {prompts.map((prompt, index) => (
+                <ListItem key={index} sx={{ py: 0.5 }}>
+                  <Typography variant="body2" color="text.secondary">
+                    {index + 1}. {prompt}
+                  </Typography>
+                </ListItem>
+              ))}
+            </List>
+            <Divider sx={{ my: 1 }} />
+          </React.Fragment>
+        ))}
+      </List>
+    </Box>
+  </Box>;
 };

@@ -18,6 +18,7 @@ import { styled } from "@mui/material/styles";
 import LinearProgress, {
   linearProgressClasses,
 } from "@mui/material/LinearProgress";
+import NeedMoreGuide from "./NeedMoreGuide";
 
 const AssignmentItem = ({
   assignment,
@@ -34,6 +35,7 @@ const AssignmentItem = ({
   const [fileType, setFileType] = useState("");
   const [uploadProgress, setUploadProgress] = useState(0);
   const [submitting, setSubmitting] = useState(false);
+  const [open, setOpen] = useState(false);
 
   const handleFileSelect = async (e, type) => {
     const file = e.target.files[0];
@@ -119,6 +121,16 @@ const AssignmentItem = ({
         </Typography>
         <Box mt={0.3}>
           <TextWithMath text={assignment.assignment_text} />
+          <Button onClick={()=>!open && setOpen(true)}>
+            Need More
+          </Button>
+          {open ? (
+            <NeedMoreGuide
+              assignmentId={assignment.id}
+              open={open}
+              setOpen={setOpen}
+            />
+          ):""}
         </Box>
       </Box>
       <Typography variant="body2" sx={{ mt: 1, fontWeight: "bold" }}>
