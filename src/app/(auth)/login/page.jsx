@@ -12,9 +12,9 @@ import {
   Slide,
 } from "@mui/material";
 import toast from "react-hot-toast";
+import { useMediaQuery } from "@mui/material";
 import { useRouter, useSearchParams } from "next/navigation";
 import Cookies from "js-cookie";
-import axios from "axios";
 import { loginApi } from "@/api/apiHelper";
 import { decodeToken } from "react-jwt";
 import Image from "next/image";
@@ -43,6 +43,10 @@ const LoginPage = () => {
   });
 
   const [error, setError] = useState(null);
+
+    // Determine screen size
+  const isMobile = useMediaQuery("(max-width:600px)");
+
 
   const handleChange = (e) => {
     setFormData({
@@ -96,7 +100,7 @@ const LoginPage = () => {
       }}
     >
       {/* Left Side with Gradient Background */}
-      <Grid
+      {!isMobile && <Grid
         item
         xs={false}
         sm={4}
@@ -141,7 +145,7 @@ const LoginPage = () => {
             Your AI-powered Learning Companion
           </Typography>
         </Box>
-      </Grid>
+      </Grid>}
 
       {/* Right Side Login Form */}
       <Grid
@@ -157,7 +161,9 @@ const LoginPage = () => {
           justifyContent: "center",
           // backgroundColor: "#f7f9fc",
           // background: "radial-gradient(circle at 10% 20%, rgba(216, 241, 230, 0.46) 0.1%, rgba(233, 226, 226, 0.28) 90.1%)",
-          background: "linear-gradient(135deg, #fdfcfb 0%, #e2d1c3 100%)",
+          background: `${isMobile ? "url('/mobileLoginBG2.jpg')" : "linear-gradient(135deg, #fdfcfb 0%, #e2d1c3 100%)"}`,
+          backgroundSize: "cover", // Ensure the image covers the entire page
+          backgroundPosition: "center", // Center the image
           padding: 4,
           animation: "slideFade 1s ease-in-out",
           ...textAnimation,
@@ -197,7 +203,7 @@ const LoginPage = () => {
             p: 5,
           }}
         >
-          <Typography component="h1" variant="h5" sx={{ textAlign: "center" }}>
+          <Typography component="h1" variant="h5" fontWeight={"bold"} sx={{ textAlign: "center", color:"#36454F" }}>
             Sign in to your account
           </Typography>
           <Box
