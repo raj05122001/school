@@ -5,6 +5,7 @@ import { useForm } from "react-hook-form";
 import { useSearchParams, useRouter, usePathname } from "next/navigation";
 import { getOneTimePassword } from "@/api/apiHelper";
 import toast from "react-hot-toast";
+import { useMediaQuery } from "@mui/material";
 
 const textAnimation = {
   "@keyframes slideFade": {
@@ -32,6 +33,7 @@ const AccessKey = () => {
   });
 
   const { handleSubmit } = useForm();
+  const isMobile = useMediaQuery("(max-width:600px)");
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -77,7 +79,9 @@ const AccessKey = () => {
         flexDirection: "column",
         alignItems: "center",
         justifyContent: "center",
-        background: "linear-gradient(135deg, #fdfcfb 0%, #e2d1c3 100%)",
+        background: `${isMobile ? "url('/mobileLoginBG2.jpg')" :"linear-gradient(135deg, #fdfcfb 0%, #e2d1c3 100%)"}`,
+        backgroundSize:"cover",
+        backgroundPosition: "center",
         padding: 4,
         animation: "slideFade 1s ease-in-out",
         ...textAnimation,

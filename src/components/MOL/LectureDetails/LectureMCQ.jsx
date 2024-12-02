@@ -9,6 +9,7 @@ import {
 } from "@mui/material";
 import { getLectureQuiz } from "@/api/apiHelper";
 import MathJax from "react-mathjax2";
+import TextWithMath from "@/commonComponents/TextWithMath/TextWithMath";
 
 const LectureMCQ = ({ id, isDarkMode }) => {
   const [quizData, setQuizData] = useState([]);
@@ -129,7 +130,7 @@ const LectureMCQ = ({ id, isDarkMode }) => {
                      sx={{marginTop:0.2}}
                       variant="span"
                     >
-                    <MathJax.Text text={item.question} />{" "}
+                    <TextWithMath text={item.question} />{" "}
                     </Typography>
                   </Box>
                   <List sx={{ padding: 0 }}>

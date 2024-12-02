@@ -27,6 +27,7 @@ import {
 import { useForm, Controller } from "react-hook-form";
 import * as yup from "yup";
 import { yupResolver } from "@hookform/resolvers/yup";
+import { useMediaQuery } from "@mui/material";
 
 // Define keyframes for animation
 const textAnimation = {
@@ -53,6 +54,7 @@ const SignupPage = () => {
   const [departmentOptions, setDepartmentOptions] = useState([]);
   const [openDialog, setOpenDialog] = useState(false); // For Create Department Dialog
   const [newDepartment, setNewDepartment] = useState(""); // Input for new department
+  const isMobile = useMediaQuery("(max-width:600px)");
 
   const isTeacher = roleParam === "TEACHER";
 
@@ -203,7 +205,7 @@ const SignupPage = () => {
       }}
     >
       {/* Left Side Background */}
-      <Grid
+      {!isMobile && <Grid
         item
         xs={false}
         sm={4}
@@ -246,7 +248,7 @@ const SignupPage = () => {
             Your AI-powered Learning Companion
           </Typography>
         </Box>
-      </Grid>
+      </Grid>}
 
       {/* Right Side Signup Form */}
       <Grid
@@ -261,7 +263,9 @@ const SignupPage = () => {
           alignItems: "center",
           justifyContent: "center",
           padding: 4,
-          background: "linear-gradient(135deg, #fdfcfb 0%, #e2d1c3 100%)",
+          background: `${isMobile ? "url('/mobileLoginBG2.jpg')" :"linear-gradient(135deg, #fdfcfb 0%, #e2d1c3 100%)"}`,
+          backgroundPosition: "center",
+          backgroundSize: "cover",
         }}
       >
         <Box
@@ -273,6 +277,7 @@ const SignupPage = () => {
             borderRadius: 2,
             boxShadow: "0 4px 10px rgba(0,0,0,0.1)",
           }}
+
         >
           {/* Header */}
           <Box
