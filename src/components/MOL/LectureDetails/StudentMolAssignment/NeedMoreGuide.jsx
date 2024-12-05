@@ -6,18 +6,33 @@ import DialogContent from "@mui/material/DialogContent";
 import DialogContentText from "@mui/material/DialogContentText";
 import DialogTitle from "@mui/material/DialogTitle";
 import { getGuidance } from "@/api/apiHelper";
-import { Box, CircularProgress, Typography } from "@mui/material";
+import {
+  Box,
+  CircularProgress,
+  Typography,
+  Paper,
+  IconButton,
+} from "@mui/material";
+import { TbArrowGuide } from "react-icons/tb";
+import { CiCircleChevRight, CiCircleChevLeft } from "react-icons/ci";
+import { RiRoadMapLine } from "react-icons/ri";
+import { FaCode } from "react-icons/fa";
+import { SiKnowledgebase } from "react-icons/si";
+import { GrTechnology } from "react-icons/gr";
+import { IoFootstepsSharp } from "react-icons/io5";
 
 export default function NeedMoreGuide({ assignmentId, open, setOpen }) {
   const [data, setData] = useState({});
   const [loading, setLoading] = useState(true);
   const hasFetchedData = useRef(false); // Prevent multiple fetch calls
-
+  // const [currentStepIndex, setCurrentStepIndex] = useState(0);
+  const containerRef = useRef(null);
   useEffect(() => {
     if (assignmentId && open) {
       if (!hasFetchedData.current) {
         hasFetchedData.current = true;
         fetchData();
+        console.log("Data is",data)
       }
     }
   }, [assignmentId]);
@@ -27,7 +42,11 @@ export default function NeedMoreGuide({ assignmentId, open, setOpen }) {
     try {
       const response = await getGuidance(assignmentId);
       console.log("NeedMoreGuide response : ", response);
-      setData(response?.data?.data);
+      const parsedData =
+        typeof response?.data?.data === "string"
+          ? JSON?.parse(response?.data?.data)
+          : response?.data?.data;
+      setData(parsedData);
       setLoading(false);
     } catch (error) {
       console.error(error);
@@ -35,40 +54,280 @@ export default function NeedMoreGuide({ assignmentId, open, setOpen }) {
     }
   };
 
+
   const handleClose = () => {
     setOpen(false);
   };
 
-  // Function to render nested data
+  const scrollContainer = (direction) => {
+    if (containerRef.current) {
+      containerRef.current.scrollBy({
+        left: direction === "left" ? -200 : 200,
+        behavior: "smooth",
+      });
+    }
+  };
+
+  // Function to render the carousel for `road_map_guide`
+  const renderCarousel = (steps) => {
+    console.log("Steps", steps);
+    const stepArray = steps
+    .split(/step_\d+:/)
+    .filter((step) => step.replace(/\n/g, "").trim() !== "");
+
+    return (
+      <Box
+        sx={{
+          display: "flex",
+          gap: 1,
+          overflowX: "auto",
+          p: 1,
+          "&::-webkit-scrollbar": {
+            height: "8px",
+          },
+          "&::-webkit-scrollbar-thumb": {
+            backgroundColor: "#ccc",
+            borderRadius: "4px",
+          },
+          "&::-webkit-scrollbar": { display: "none" },
+          msOverflowStyle: "none",
+          scrollbarWidth: "none",
+        }}
+      >
+        <IconButton
+          onClick={() => scrollContainer(`left`)}
+          // disabled={currentStepIndex === 0}
+          disableRipple
+          sx={{
+            fontWeight: "bold",
+            fontSize: "36px",
+            color: "black",
+            gap: 2,
+            "&:hover": {
+              backgroundColor: "transparent", // Removes the hover background color
+            },
+            cursor: "pointer", // Ensures the cursor is a pointer
+          }}
+        >
+          <CiCircleChevLeft />
+        </IconButton>
+        <Box
+          ref={containerRef}
+          sx={{
+            display: "flex",
+            borderRadius: 3,
+            gap: 2,
+            overflowX: "auto",
+            p: 2,
+            "&::-webkit-scrollbar": {
+              height: "8px",
+            },
+            "&::-webkit-scrollbar-thumb": {
+              backgroundColor: "#ccc",
+              borderRadius: "4px",
+            },
+            "&::-webkit-scrollbar": { display: "none" },
+            msOverflowStyle: "none",
+            scrollbarWidth: "none",
+          }}
+        >
+          {stepArray.map((step, index) => (
+            <Paper
+              key={index}
+              elevation={3}
+              sx={{
+                minWidth: "300px",
+                padding: 2,
+                textAlign: "left",
+                whiteSpace: "pre-wrap",
+                borderRadius: 4,
+                background: "linear-gradient(to top, #accbee 0%, #e7f0fd 100%)",
+                boxShadow: "0px 4px 10px #5d7aa1",
+              }}
+            >
+              <Typography variant="h6" gutterBottom textAlign={"center"}>
+                <IoFootstepsSharp />
+                Step {index + 1}
+              </Typography>
+              <Typography>{renderWithLineBreaks(step)}</Typography>
+            </Paper>
+          ))}
+        </Box>
+
+        <IconButton
+          onClick={() => scrollContainer(`right`)}
+          // disabled={currentStepIndex === roadMapSteps.length - 1}
+          disableRipple
+          sx={{
+            fontWeight: "bold",
+            fontSize: "36px",
+            color: "black",
+            gap: 2,
+            "&:hover": {
+              backgroundColor: "transparent", // Removes the hover background color
+            },
+            cursor: "pointer", // Ensures the cursor is a pointer
+          }}
+        >
+          <CiCircleChevRight />
+        </IconButton>
+      </Box>
+    );
+  };
+
+  // Typing effect for the text
+  const TypingEffect = ({ text }) => {
+    const [displayedText, setDisplayedText] = useState("");
+    useEffect(() => {
+      let index = 0;
+      const interval = setInterval(() => {
+        if (index < text.length - 1) {
+          setDisplayedText((prev) => prev + text[index]);
+          index++;
+        } else {
+          clearInterval(interval);
+        }
+      }, 20); // Adjust speed (50ms per character)
+      return () => clearInterval(interval);
+    }, [text]);
+
+    return (
+      <Typography variant="subtitle1" fontSize={"14px"}>
+        {renderCodeWithLineBreaks(displayedText)}
+      </Typography>
+    );
+  };
+
+  // Function to render data
   const renderData = (data) => {
     return Object.keys(data).map((key) => {
       const value = data[key];
-      if (typeof value === "object") {
+
+      if (key === "road_map_guide") {
         return (
-          <div key={key} style={{ marginBottom: "16px" }}>
-            <h3>{formatKey(key)}</h3>
-            <ul style={{ paddingLeft: "20px" }}>
-              {Object.keys(value).map((subKey) => (
-                <li key={subKey}>
-                  <strong>{formatKey(subKey)}:</strong> {value[subKey]}
-                </li>
-              ))}
-            </ul>
-          </div>
-        );
-      } else {
-        return (
-          <div key={key} style={{ marginBottom: "8px" }}>
-            <strong>{formatKey(key)}:</strong> {value}
-          </div>
+          <Box key={key} sx={{ marginBottom: "16px" }}>
+            <Typography variant="h6" gutterBottom textAlign={"center"}>
+              <RiRoadMapLine style={{ marginRight: 4 }} /> {formatKey(key)}
+            </Typography>
+            {renderCarousel(value)}
+          </Box>
         );
       }
+
+      if (key === "code_snippet_or_examples" && value !== "") {
+        console.log("Value is ", value)
+        return (
+          <Box key={key} sx={{ marginBottom: "16px" }}>
+            <Typography variant="h6" gutterBottom textAlign={"center"}>
+              <FaCode style={{ marginRight: 4 }} />
+              {formatKey(key)}
+            </Typography>
+            <Box
+              sx={{
+                backgroundColor: "#000000",
+                color: "#4CBB17",
+                padding: 4,
+                borderRadius: 4,
+              }}
+            >
+              <TypingEffect text={value} />
+            </Box>
+          </Box>
+        );
+      }
+
+      if (key === "concept_and_knowledge_required") {
+        return (
+          <Box key={key} sx={{ marginBottom: "16px" }}>
+            <Typography variant="h6" gutterBottom textAlign={"center"}>
+              <SiKnowledgebase style={{ marginRight: 4 }} /> {formatKey(key)}
+            </Typography>
+            <Box
+              sx={{
+                backgroundColor: "#EADDCA",
+                color: "#4A0404",
+                padding: 4,
+                borderRadius: 4,
+                boxShadow: "0px 4px 10px #a1865d",
+              }}
+            >
+              {renderWithLineBreaks(value)}
+            </Box>
+          </Box>
+        );
+      }
+
+      if (key === "technology_and_tools_options") {
+        return (
+          <Box key={key} sx={{ marginBottom: "16px" }}>
+            <Typography variant="h6" gutterBottom textAlign={"center"}>
+              <GrTechnology style={{ marginRight: 4 }} /> {formatKey(key)}
+            </Typography>
+            <Box
+              sx={{
+                backgroundColor: "#E6E6FA80",
+                color: "#51414F",
+                padding: 4,
+                borderRadius: 4,
+                backdropFilter: "blur(10px)",
+                boxShadow: "0px 4px 10px #E0B0FF",
+              }}
+            >
+              {renderWithLineBreaks(value)}
+            </Box>
+          </Box>
+        );
+      }
+
+      return (
+        value !== "" && (
+          <div key={key} style={{ marginBottom: "8px" }}>
+            <strong>{formatKey(key)}:</strong> <br />{" "}
+            {renderWithLineBreaks(value)}
+          </div>
+        )
+      );
     });
+  };
+
+  const replaceString = (data) => {
+    return data
+      .replace(/\[(.*?)\]/g, <span style="font-weight: 600">[$1]</span>)
+      .replace(/#/g, "")
+      .replace(/`/g, "")
+      .replace(/(?<!\d)\. /g, `. <br>`)
+      .replace(/\n/g, `.<br>`)
+      .replace(/\\n/g, `<br>`); // Handle escaped \n
+      // .replace(/\\(.?)\\*/g, "<strong>$1</strong>");
+  };
+
+  // Function to handle rendering text with line breaks
+  const renderWithLineBreaks = (text) => {
+    return text?.split("\\\\n")?.map((line, index) => (
+      <React.Fragment key={index}>
+        <Typography
+          variant="span"
+          dangerouslySetInnerHTML={{ __html: replaceString(line.trim()) }}
+        />
+        <br />
+      </React.Fragment>
+    ));
+  };
+  // Function to handle conde snippet key rendering text with line breaks
+  const renderCodeWithLineBreaks = (text) => {
+    return text.split("\\n").map((line, index) => (
+      <React.Fragment key={index}>
+        {line}
+        <br />
+      </React.Fragment>
+    ));
   };
 
   // Function to format keys (optional)
   const formatKey = (key) => {
-    return key.replace(/_/g, " ");
+    return key
+      .replace(/_/g, " ")
+      .replace(/\b\w/g, (char) => char.toUpperCase());
   };
 
   return (
@@ -79,8 +338,23 @@ export default function NeedMoreGuide({ assignmentId, open, setOpen }) {
       aria-describedby="alert-dialog-description"
       maxWidth="md"
       fullWidth
+      sx={{
+        "& .MuiPaper-root": {
+          bgcolor: "#f0f0f0",
+        },
+      }}
     >
-      <DialogTitle id="alert-dialog-title">Guidance</DialogTitle>
+      <DialogTitle
+        id="alert-dialog-title"
+        marginTop={5}
+        fontWeight={"bold"}
+        fontSize={"22px"}
+      >
+        <TbArrowGuide
+          style={{ marginRight: 4, fontSize: "24px", fontFamily: "monospace" }}
+        />
+        Guidance
+      </DialogTitle>
       <DialogContent>
         <DialogContentText id="alert-dialog-description">
           {loading ? (
