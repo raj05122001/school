@@ -110,7 +110,7 @@ export const BreakpointPlayer = ({ markers, id }) => {
         el.style.left = left;
         el.dataset.time = marker.start / 1000;
         el.innerHTML = `<span style={{backgroundColor:'red'}}>
-        ${marker.headline}
+        ${marker.gist}
         </span>`;
 
         el.onclick = function () {
