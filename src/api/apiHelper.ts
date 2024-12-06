@@ -592,3 +592,9 @@ export const getGuidance = async (assignmentId) => {
   const apiInstance = new apiServices(axiosAPIInstance);
   return await apiInstance.getGuidance(assignmentId);
 };
+
+export const getStudentAssignmentComment = async (assignmentId,studentId) => {
+  const apiInstance = new apiServices(axiosAPIInstance);
+  return await apiInstance.getStudentAssignmentComment(assignmentId,studentId);
+};
+
