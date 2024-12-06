@@ -187,7 +187,7 @@ export default function NeedMoreGuide({ assignmentId, open, setOpen }) {
         } else {
           clearInterval(interval);
         }
-      }, 20); // Adjust speed (50ms per character)
+      }, 10); // Adjust speed (50ms per character)
       return () => clearInterval(interval);
     }, [text]);
 

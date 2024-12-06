@@ -986,4 +986,11 @@ export default class apiServices {
       .then((Response) => Response)
       .catch((error) => console.error(error));
   };
+
+  public getStudentAssignmentComment = async (assignmentId,studentId) => {
+    return await this.axiosInstance
+      .get(`/api/v1/student/auto-assessment-feedback/${assignmentId}/${studentId}`)
+      .then((Response) => Response)
+      .catch((error) => console.error(error));
+  };
 }

@@ -238,16 +238,16 @@ const CreatingLecture = ({
     };
 
     const data = {
-      subject: checkCondition(lectureSubject, subjectName),
-      chapter: checkCondition(lectureChapter, chapterName),
-      lecture_class: checkCondition(selectedClass, selectedClassName),
-      topics: topicsName,
-      title: topicsName,
+      subject: checkCondition(lectureSubject, subjectName) || lecture?.subject?.id,
+      chapter: checkCondition(lectureChapter, chapterName) || lecture?.chapter?.id,
+      lecture_class: checkCondition(selectedClass, selectedClassName) || lecture?.lecture_class?.id,
+      topics: topicsName || lecture?.topics,
+      title: topicsName  || lecture?.title,
       organizer: Number(userDetails.teacher_id),
       schedule_date: lectureDate.format("YYYY-MM-DD"),
       schedule_time: lectureStartTime.format("HH:mm"),
-      type: lectureType,
-      description: lectureDescription || "",
+      type: lectureType || lecture?.type,
+      description: lectureDescription || lecture?.description || "",
     };
 
     if (file) {
@@ -379,7 +379,7 @@ const CreatingLecture = ({
                 onChange={setSelectedClassName}
                 label={"Lecture Class"}
                 value={selectedClass}
-                disabled={isEditMode} // Disable in edit mode
+                // disabled={isEditMode} // Disable in edit mode
               />
             </Grid>
 
@@ -391,7 +391,7 @@ const CreatingLecture = ({
                 onChange={setSubjectName}
                 label={"Lecture Subject"}
                 value={lectureSubject}
-                disabled={isEditMode} // Disable in edit mode
+                // disabled={isEditMode} // Disable in edit mode
               />
             </Grid>
 
@@ -403,7 +403,7 @@ const CreatingLecture = ({
                 onChange={setChapterName}
                 label={"Lecture Chapter"}
                 value={lectureChapter}
-                disabled={isEditMode} // Disable in edit mode
+                // disabled={isEditMode} // Disable in edit mode
               />
             </Grid>
 

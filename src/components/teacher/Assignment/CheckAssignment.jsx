@@ -1,5 +1,5 @@
 "use client";
-import React, { useState, useCallback } from "react";
+import React, { useState, useCallback, useEffect } from "react";
 import PropTypes from "prop-types";
 import {
   Box,
@@ -16,7 +16,7 @@ import {
 } from "@mui/material";
 import { AiOutlineDownload } from "react-icons/ai";
 import { useThemeContext } from "@/hooks/ThemeContext";
-import { updateAssignment } from "@/api/apiHelper";
+import { updateAssignment, getStudentAssignmentComment } from "@/api/apiHelper";
 import { BiSolidRightArrowCircle } from "react-icons/bi";
 import { FaPenNib } from "react-icons/fa";
 import MathJax from "react-mathjax2";
@@ -28,8 +28,25 @@ const CheckAssignment = ({ assignment, index }) => {
   const [comment, setComment] = useState(assignment?.comment_by_teacher || "");
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState(null);
+  const [result, setResult] = useState({})
+ 
 
   const isChecked = assignment?.is_checked || false;
+  const answeredBy = assignment?.answer_by?.id;
+
+  const fetchAssessmentResult = async () =>{
+    try{
+      const response = await getStudentAssignmentComment(assignment?.assignment_que?.id, answeredBy)
+      const data = response?.data
+      setComment(data?.data?.comment)
+      setGrades(data?.data?.score)
+    }catch(error){
+      console.error("Error fetching result", error)
+    }
+  }
+  useEffect(()=>{
+    fetchAssessmentResult()
+  },[])
 
   const handleGradeSubmission = useCallback(async () => {
     setIsLoading(true);
@@ -168,7 +185,7 @@ const CheckAssignment = ({ assignment, index }) => {
               }}
             >
               {error && <Alert severity="error">{error}</Alert>}
-              <Grid container spacing={2}>
+              <Grid container spacing={2} display={"flex"} flexDirection={"column"}>
                 <Grid item xs={12} sm={3}>
                   <TextField
                     label="Marks Obtained"
@@ -190,7 +207,7 @@ const CheckAssignment = ({ assignment, index }) => {
                     }}
                   />
                 </Grid>
-                <Grid item xs={12} sm={9}>
+                <Grid item xs={12} sm={9} maxWidth={"full"}>
                   <TextField
                     label="Comment"
                     variant="outlined"

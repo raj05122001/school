@@ -32,7 +32,7 @@ const CustomAutocomplete = ({ options, onSelect, onChange, label, value, disable
       options={options}
       value={value}
       getOptionLabel={(option) => option.name}
-      disabled = {disabled}
+      // disabled = {disabled}
       onChange={(event, newValue) => {
         handleSelect(newValue);
       }}
