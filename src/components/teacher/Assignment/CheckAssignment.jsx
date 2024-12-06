@@ -29,18 +29,14 @@ const CheckAssignment = ({ assignment, index }) => {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState(null);
   const [result, setResult] = useState({})
-
-  console.log("Assignment", assignment)
  
 
   const isChecked = assignment?.is_checked || false;
   const answeredBy = assignment?.answer_by?.id;
-  console.log("Assignment ID", answeredBy)
 
   const fetchAssessmentResult = async () =>{
     try{
       const response = await getStudentAssignmentComment(assignment?.assignment_que?.id, answeredBy)
-      console.log("Response", response)
       const data = response?.data
       setComment(data?.data?.comment)
       setGrades(data?.data?.score)

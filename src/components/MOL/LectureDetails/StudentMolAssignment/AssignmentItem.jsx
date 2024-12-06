@@ -45,9 +45,6 @@ const AssignmentItem = ({
   const [open, setOpen] = useState(false);
   const [result, setResult] = useState({})
 
-  console.log("Answered By", answered_by)
-  console.log("Assignment ID", assignment?.id)
-
   const getScoreColor = (score) => {
     if (score > 7) return 'green';
     if (score >= 3 && score <= 7) return 'brown';
