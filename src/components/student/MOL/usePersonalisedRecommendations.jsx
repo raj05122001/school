@@ -51,6 +51,8 @@ const usePersonalisedRecommendations = (id, section, useref, comment = "") => {
       useref.current?.removeEventListener("mouseleave", handleScrollAndUpdate);
     };
   }, [useref, userDetails, section, comment, id]);
+
+  // Optionally, return any values or handlers you might want to use elsewhere
 };
 
 export default usePersonalisedRecommendations;

@@ -16,7 +16,7 @@ import { FaVideo } from "react-icons/fa";
 import { decodeToken } from "react-jwt";
 import Cookies from "js-cookie";
 import axios from "axios";
-import personalisedRecommendations from "../student/MOL/personalisedRecommendations";
+// import usePersonalisedRecommendations from "../student/MOL/personalisedRecommendations";
 
 const VideoPlayer = ({ id }) => {
   const userDetails = decodeToken(Cookies.get("ACCESS_TOKEN"));
@@ -39,21 +39,35 @@ const VideoPlayer = ({ id }) => {
 
   const updateVideoWatchtime = async (time) => {
     if (time !== 0) {
+      console.log("userDetails?.student_id : ", userDetails?.student_id);
       try {
+        // const formData = {
+        //   lecture_id: id,
+        //   timestamp: time,
+        //   student_id: userDetails?.student_id,
+        // };
+        // const beaconData = new Blob([JSON.stringify(formData)]);
+
+
+        // await axios.post(
+        //   "https://dev-vidyaai.ultimeet.io/api/v1/dashboard/watchtime_data/",
+        //   beaconData
+        // );
+
+        // Use navigator.sendBeacon for unload events
         const formData = {
           lecture_id: id,
           timestamp: time,
           student_id: userDetails?.student_id,
         };
-
-        // await axios.post("https://dev-vidyaai.ultimeet.io/api/v1/dashboard/watchtime_data/",formData)
-
-        // Use navigator.sendBeacon for unload events
-        // const beaconData = new Blob([JSON.stringify(formData)]);
+        
+        const blob = new Blob([JSON.stringify(formData)], {type : 'application/json'});
+        
         navigator.sendBeacon(
           "https://dev-vidyaai.ultimeet.io/api/v1/dashboard/watchtime_data/",
-          JSON.stringify(formData)
+          blob
         );
+        
 
         console.log(
           "successful uploade watch time : ",
@@ -211,7 +225,6 @@ export const BreakpointPlayer = ({ markers, id, onPlayerReady }) => {
           playerRef.current.currentTime(marker.start / 1000);
         };
 
-        // progressControl.el().appendChild(el);
         progressControl.children_[0].el_.appendChild(el);
       });
     });
@@ -221,19 +234,23 @@ export const BreakpointPlayer = ({ markers, id, onPlayerReady }) => {
       const currentTime = playerRef.current.currentTime();
 
       // Trigger updateData when playtime exceeds 5 minutes (300 seconds)
-      if (currentTime >= 600 && !updateDataTriggered.current && userDetails?.role==="STUDENT") {
+      if (
+        currentTime >= 600 &&
+        !updateDataTriggered.current &&
+        userDetails?.role === "STUDENT"
+      ) {
         updateDataTriggered.current = true; // Prevent multiple triggers
         updateData();
       }
     });
 
     // return () => {
-    //   if (playerRef.current) {
-    //     playerRef.current.dispose();
-    //   }
+    //   // Clean up Video.js player
+    //     if (playerRef.current) {
+    //       playerRef.current=null
+    //     }
     // };
-  }, [markers, onPlayerReady]);
-
+  }, [markers?.length, markers]);
   return (
     <video
       ref={videoRef}
@@ -241,7 +258,7 @@ export const BreakpointPlayer = ({ markers, id, onPlayerReady }) => {
       controls
       preload="auto"
       style={{ width: "100%", height: "100%", borderRadius: 10 }}
-      data-setup='{ "html5": { "nativeTextTracks": true }, "playbackRates": [0.25, 0.5, 0.75, 1, 1.25, 1.5, 1.75] }'
+      data-setup='{ "html5": { "nativeTextTracks": true },"playbackRates" : [0.25, 0.5, 0.75, 1, 1.25, 1.5,1.75]}'
     >
       <source
         src={`https://d3515ggloh2j4b.cloudfront.net/videos/${id}.mp4`}
