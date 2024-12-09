@@ -993,4 +993,11 @@ export default class apiServices {
       .then((Response) => Response)
       .catch((error) => console.error(error));
   };
+
+  public getChatbotHistory = async () => {
+    return await this.axiosInstance
+      .get(`/api/v1/chatbot`)
+      .then((Response) => Response)
+      .catch((error) => console.error(error));
+  };
 }

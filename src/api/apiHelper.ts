@@ -598,3 +598,8 @@ export const getStudentAssignmentComment = async (assignmentId,studentId) => {
   return await apiInstance.getStudentAssignmentComment(assignmentId,studentId);
 };
 
+export const getChatbotHistory = async () => {
+  const apiInstance = new apiServices(axiosAPIInstance);
+  return await apiInstance.getChatbotHistory();
+};
+

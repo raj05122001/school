@@ -15,10 +15,11 @@ const StudentMOLAssignment = ({ id, isDarkMode, class_ID }) => {
   const [state, dispatch] = useReducer(reducer, initialState);
   const { assignments, loading, error, snackbar } = state;
   const [submittedId,SetSubmittedId]=useState([])
+  const [assignmentType, setAssignmentType] = useState([])
   const hasFetchedData = useRef(false); // Prevent multiple fetch calls
 
   const { s3 } = AwsSdk();
-  const answered_by = Number(userDetails.student_id);
+  const answered_by = Number(userDetails?.student_id);
 
   useEffect(() => {
     if(id){
@@ -57,8 +58,11 @@ const StudentMOLAssignment = ({ id, isDarkMode, class_ID }) => {
     try{
       const response=await getAssignmentAnswer(id)
       const data=response?.data?.data?.data
+      console.log("Dtat ", data)
       const newData=data?.map((val)=>val?.assignment_que?.id)
+      const typeAssignment = data?.map((val)=>val?.answer_type)
       SetSubmittedId(newData)
+      setAssignmentType(data)   
     }catch(error){
       console.error(error);
     }
@@ -117,6 +121,7 @@ const StudentMOLAssignment = ({ id, isDarkMode, class_ID }) => {
               dispatch={dispatch}
               isDarkMode={isDarkMode}
               fetchAssignmentAnswer={fetchAssignmentAnswer}
+              assignmentType={assignmentType?.find((val)=>val?.assignment_que?.id===assignment.id)?.answer_type}
             />
           ))}
         </>
