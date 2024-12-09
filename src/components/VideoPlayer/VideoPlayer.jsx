@@ -2,7 +2,7 @@ import React, { useEffect, useState, useRef, useContext, useMemo } from "react";
 import videojs from "video.js";
 import "video.js/dist/video-js.css";
 import "./VideoPlayer.css";
-import { getBreakpoint } from "@/api/apiHelper";
+import { getBreakpoint, updatePersonalised } from "@/api/apiHelper";
 import {
   Button,
   Box,
@@ -13,17 +13,71 @@ import {
 } from "@mui/material";
 import { AppContextProvider } from "@/app/main";
 import { FaVideo } from "react-icons/fa";
+import { decodeToken } from "react-jwt";
+import Cookies from "js-cookie";
+import axios from "axios";
+// import usePersonalisedRecommendations from "../student/MOL/personalisedRecommendations";
 
 const VideoPlayer = ({ id }) => {
+  const userDetails = decodeToken(Cookies.get("ACCESS_TOKEN"));
   const [markers, setMarkers] = useState([]);
   const [suggestionData, setSuggestionData] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
+  const playerRef = useRef(null);
+
+  console.log("userDetails", userDetails);
 
   useEffect(() => {
     if (id) {
       fetchBreakPoint();
     }
   }, [id]);
+
+  useEffect(() => {
+    updateVideoWatchtime(435.34);
+  }, []);
+
+  const updateVideoWatchtime = async (time) => {
+    if (time !== 0) {
+      console.log("userDetails?.student_id : ", userDetails?.student_id);
+      try {
+        // const formData = {
+        //   lecture_id: id,
+        //   timestamp: time,
+        //   student_id: userDetails?.student_id,
+        // };
+        // const beaconData = new Blob([JSON.stringify(formData)]);
+
+
+        // await axios.post(
+        //   "https://dev-vidyaai.ultimeet.io/api/v1/dashboard/watchtime_data/",
+        //   beaconData
+        // );
+
+        // Use navigator.sendBeacon for unload events
+        const formData = {
+          lecture_id: id,
+          timestamp: time,
+          student_id: userDetails?.student_id,
+        };
+        
+        const blob = new Blob([JSON.stringify(formData)], {type : 'application/json'});
+        
+        navigator.sendBeacon(
+          "https://dev-vidyaai.ultimeet.io/api/v1/dashboard/watchtime_data/",
+          blob
+        );
+        
+
+        console.log(
+          "successful uploade watch time : ",
+          JSON.stringify(formData)
+        );
+      } catch (error) {
+        console.error(error);
+      }
+    }
+  };
 
   const fetchBreakPoint = async () => {
     setIsLoading(true);
@@ -48,9 +102,42 @@ const VideoPlayer = ({ id }) => {
     }
   };
 
+  const handleBeforeUnload = () => {
+    if (playerRef.current) {
+      const currentTime = playerRef.current.currentTime();
+      updateVideoWatchtime(currentTime);
+    }
+  };
+
+  useEffect(() => {
+    // pagehide
+    // unload
+    // visibilitychange
+    // document.addEventListener("visibilitychange", function logData() {
+    //   if (document.visibilityState === "hidden") {
+    //     navigator.sendBeacon("/log", analyticsData);
+    //   }
+    // });
+    window.addEventListener("beforeunload", handleBeforeUnload);
+
+    return () => {
+      window.removeEventListener("beforeunload", handleBeforeUnload);
+      // Optionally, update watch time when component unmounts
+      handleBeforeUnload();
+    };
+  }, [playerRef.current, id, playerRef.current?.currentTime()]);
+
   const breakpointPlayer = useMemo(
-    () => <BreakpointPlayer markers={markers} id={id} />,
-    [markers, id, markers?.length]
+    () => (
+      <BreakpointPlayer
+        markers={markers}
+        id={id}
+        onPlayerReady={(player) => {
+          playerRef.current = player;
+        }}
+      />
+    ),
+    [markers, id]
   );
 
   return (
@@ -90,14 +177,35 @@ const VideoPlayer = ({ id }) => {
 
 export default VideoPlayer;
 
-export const BreakpointPlayer = ({ markers, id }) => {
+export const BreakpointPlayer = ({ markers, id, onPlayerReady }) => {
+  const userDetails = decodeToken(Cookies.get("ACCESS_TOKEN"));
   const videoRef = useRef(null);
   const playerRef = useRef(null);
+  const updateDataTriggered = useRef(false);
+
+  const updateData = async () => {
+    try {
+      const formData = {
+        student: userDetails?.student_id,
+        lecture: id,
+        section: "VIDEO",
+        comment: "",
+      };
+      await updatePersonalised(formData);
+    } catch (error) {
+      console.error(error);
+    }
+  };
 
   useEffect(() => {
     // Initialize Video.js
     const videoElement = videoRef.current;
     playerRef.current = videojs(videoElement);
+
+    // Notify parent that the player is ready
+    if (onPlayerReady) {
+      onPlayerReady(playerRef.current);
+    }
 
     playerRef.current.on("loadedmetadata", function () {
       const total = playerRef.current.duration();
@@ -119,6 +227,21 @@ export const BreakpointPlayer = ({ markers, id }) => {
 
         progressControl.children_[0].el_.appendChild(el);
       });
+    });
+
+    // Add event listener to track playtime
+    playerRef.current.on("timeupdate", () => {
+      const currentTime = playerRef.current.currentTime();
+
+      // Trigger updateData when playtime exceeds 5 minutes (300 seconds)
+      if (
+        currentTime >= 600 &&
+        !updateDataTriggered.current &&
+        userDetails?.role === "STUDENT"
+      ) {
+        updateDataTriggered.current = true; // Prevent multiple triggers
+        updateData();
+      }
     });
 
     // return () => {
@@ -218,7 +341,7 @@ export const Suggestion = ({ suggestionData }) => {
               sx={{
                 overflow: "hidden",
                 bgcolor: "grey.300",
-                marginRight:"4px",
+                marginRight: "4px",
                 "&:hover": {
                   bgcolor: "grey.400",
                   ringColor: "green.400",

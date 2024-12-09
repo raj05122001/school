@@ -14,10 +14,11 @@
   position:absolute;
   background:red;
   width:5px;
-  height:110%;
+  height:140%;
   top:-5%;
   z-index:30;
   margin-left:-3px;
+  border-radius: 50%;
 }
 
 .vjs-marker:hover span 

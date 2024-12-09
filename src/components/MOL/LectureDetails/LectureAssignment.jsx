@@ -102,7 +102,7 @@ const LectureAssignment = ({ id, isDarkMode, class_ID, isEdit }) => {
         assignment.lecture.id,
         formData
       );
-      
+
       if (response?.data.success) {
         setAssignments((prevAssignments) =>
           prevAssignments?.map((a) =>
