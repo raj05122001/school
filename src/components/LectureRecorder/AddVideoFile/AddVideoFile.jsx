@@ -135,7 +135,7 @@ const AddVideoFile = ({
                 }}
               >
                 <FormControlLabel value="vidya" control={<Radio />} label="Vidya AI ZIP" />
-                <FormControlLabel value="youtube" control={<Radio />} label="YouTube Link" />
+                {/* <FormControlLabel value="youtube" control={<Radio />} label="YouTube Link" /> */}
                 <FormControlLabel value="other" control={<Radio />} label="Video Upload" />
               </RadioGroup>
             </FormControl>

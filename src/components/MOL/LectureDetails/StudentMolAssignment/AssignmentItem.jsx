@@ -16,7 +16,10 @@ import { MdClose, MdDescription } from "react-icons/md";
 import { uploadToS3 } from "./uploadToS3";
 import TextWithMath from "@/commonComponents/TextWithMath/TextWithMath";
 import FilePreview from "./FilePreview";
-import { submitMOLAssignment, getStudentAssignmentComment } from "@/api/apiHelper";
+import {
+  submitMOLAssignment,
+  getStudentAssignmentComment,
+} from "@/api/apiHelper";
 import { styled } from "@mui/material/styles";
 import LinearProgress, {
   linearProgressClasses,
@@ -36,6 +39,7 @@ const AssignmentItem = ({
   isDarkMode,
   isSubmitted,
   fetchAssignmentAnswer,
+  assignmentType,
 }) => {
   const [answerDescription, setAnswerDescription] = useState("");
   const [selectedFile, setSelectedFile] = useState(null);
@@ -43,27 +47,41 @@ const AssignmentItem = ({
   const [uploadProgress, setUploadProgress] = useState(0);
   const [submitting, setSubmitting] = useState(false);
   const [open, setOpen] = useState(false);
-  const [result, setResult] = useState({})
+  const [result, setResult] = useState({});
+  const excludedTypes = ["VIDEO", "AUDIO", "IMAGE", "LINK"];
+  const shouldRenderAccordion = isSubmitted && !excludedTypes.includes(assignmentType);
 
-  const getScoreColor = (score) => {
-    if (score > 7) return 'green';
-    if (score >= 3 && score <= 7) return 'brown';
-    return 'red';
+    console.log("Assignment", assignment)
+
+  // console.log("Assignment is", fetchAssignmentAnswer)
+
+  // const getScoreColor = (score) => {
+  //   const goodScore = score/(1.25)
+  //   const midScore = (score/2)
+  //   if (score > goodScore) return 'green';
+  //   if (score >= midScore && score <= goodScore) return 'brown';
+  //   return 'red';
+  // };
+
+  console.log("Assignment type", assignmentType)
+
+  const fetchAssessmentResult = async () => {
+    try {
+      const response = await getStudentAssignmentComment(
+        assignment?.id,
+        answered_by
+      );
+      const data = response?.data;
+      // const parsedComment = data?.comment ? JSON.parse(data.comment) : null; // Parse the JSON string
+      setResult(data); // Store parsed data
+    } catch (error) {
+      console.error("Error fetching result", error);
+    }
   };
 
-  const fetchAssessmentResult = async () =>{
-    try{
-      const response = await getStudentAssignmentComment(assignment?.id, answered_by)
-      const data = response?.data
-      setResult(data)
-    }catch(error){
-      console.error("Error fetching result", error)
-    }
-  }
-
-  useEffect(()=>{
-    fetchAssessmentResult()
-  },[isSubmitted])
+  useEffect(() => {
+    fetchAssessmentResult();
+  }, [isSubmitted]);
 
   const handleFileSelect = async (e, type) => {
     const file = e.target.files[0];
@@ -141,6 +159,49 @@ const AssignmentItem = ({
     }
   };
 
+  // console.log(
+  //   "Condition:",
+  //   assignmentType !== "VIDEO" &&
+  //     assignmentType !== "AUDIO" &&
+  //     assignmentType !== "IMAGE" &&
+  //     assignmentType !== "LINK"
+  // );
+  // try {
+  //   parsedComment = result?.data?.comment ? JSON.parse(result.data.comment) : null;
+  // } catch (error) {
+  //   console.error("Error parsing comment JSON:", error);
+  // }
+
+  const jsonData = (value) => {
+    try {
+      const data = value ? JSON.parse(value) : value;
+      return (
+        <>
+          <Typography
+            variant="subtitle2"
+            sx={{ fontSize: "15px", marginBottom: 2 }}
+          >
+            <strong>Overall Feedback:</strong> {data?.overall_feedback}
+          </Typography>
+          <Typography variant="subtitle2" sx={{ fontSize: "15px" }}>
+            <strong>Feedback Points:</strong>
+            <ul>
+              {data?.feedback_points?.map((point, index) => (
+                <li key={index}>{point}</li>
+              ))}
+            </ul>
+          </Typography>
+        </>
+      );
+    } catch (error) {
+      return (
+        <Typography variant="subtitle2" sx={{ fontSize: "15px" }}>
+          {value}
+        </Typography>
+      );
+    }
+  };
+  // const parsedComment = jsonData(result?.data?.comment);
   return (
     <Box sx={{ mb: 4, display: "flex", flexDirection: "column" }}>
       <Box sx={{ display: "flex" }}>
@@ -149,48 +210,89 @@ const AssignmentItem = ({
         </Typography>
         <Box mt={0.3}>
           <TextWithMath text={assignment.assignment_text} />
-          <Button onClick={()=>!open && setOpen(true)}>
-            Need Guidance
-          </Button>
+          <Button onClick={() => !open && setOpen(true)}>Need Guidance</Button>
           {open ? (
             <NeedMoreGuide
               assignmentId={assignment.id}
               open={open}
               setOpen={setOpen}
             />
-          ):""}
+          ) : (
+            ""
+          )}
         </Box>
       </Box>
-      <Typography variant="body2" sx={{ mt: 1, fontWeight: "bold"}}>
+      <Typography variant="body2" sx={{ mt: 1, fontWeight: "bold" }}>
         Total Marks: {assignment.assignment_mark}
       </Typography>
-      <Box sx={{marginTop:2}}>
-      {isSubmitted && 
-      <Accordion sx={{ backgroundColor: "rgba(255, 255, 255, 0.2)",p:1, mt:1, borderRadius:"12px !important", boxShadow: "0px 4px 10px #adc0ff", }}>
-        <AccordionSummary
-          expandIcon={<FaAngleDown />}
-          aria-controls="panel2-content"
-          id="panel2-header"
-        >
-        <Box sx={{display:"flex"}}>
-        <GiBullseye style={{marginRight:3, fontSize:"24px"}}/>
-          <Typography variant="body1" sx={{fontSize:"16px"}}>AI assessed result</Typography>
-        </Box>
-          
-        </AccordionSummary>
-        <AccordionDetails>
-          <Typography>
-            {/* {console.log("Result", result)} */}
-            <GrScorecard style={{marginRight: "4px"}}/><strong>Marks Scored:</strong> <span style={{color: getScoreColor(result?.data?.score)}}>{result?.data?.score}</span>
-          </Typography>
-          <Typography variant="subtitle1" sx={{marginTop:2, fontSize:"18px"}}>
-            {/* {console.log("Result", result)} */}
-            <strong><PiChalkboardTeacher style={{marginRight:"4px"}}/>Comments</strong>
-            <br />
-          </Typography>
-          <Typography variant="subtitle2" sx={{fontSize:"15px"}}>{result?.data?.comment}</Typography>         
-        </AccordionDetails>
-      </Accordion>}
+      <Box sx={{ marginTop: 2 }}>
+        {shouldRenderAccordion && (
+          <Accordion
+            sx={{
+              backgroundColor: "rgba(255, 255, 255, 0.2)",
+              p: 1,
+              mt: 1,
+              borderRadius: "12px !important",
+              boxShadow: "0px 4px 10px #adc0ff",
+            }}
+          >
+            <AccordionSummary
+              expandIcon={<FaAngleDown />}
+              aria-controls="panel2-content"
+              id="panel2-header"
+            >
+              <Box sx={{ display: "flex" }}>
+                <GiBullseye style={{ marginRight: 3, fontSize: "24px" }} />
+                <Typography variant="body1" sx={{ fontSize: "16px" }}>
+                  AI assessed result
+                </Typography>
+              </Box>
+            </AccordionSummary>
+            <AccordionDetails>
+              <Typography>
+                
+                <GrScorecard style={{ marginRight: "4px" }} />
+                <strong>Marks Scored:</strong> {result?.data?.score}
+              </Typography>
+              <Typography
+                variant="subtitle1"
+                sx={{ marginTop: 2, fontSize: "18px" }}
+              >
+
+                <strong>
+                  <PiChalkboardTeacher style={{ marginRight: "4px" }} />
+                  Comments
+                </strong>
+                <br />
+              </Typography>
+              {/* {parsedComment ? (
+                <>
+                  <Typography
+                    variant="subtitle2"
+                    sx={{ fontSize: "15px", marginBottom: 2 }}
+                  >
+                    <strong>Overall Feedback:</strong>{" "}
+                    {parsedComment?.overall_feedback}
+                  </Typography>
+                  <Typography variant="subtitle2" sx={{ fontSize: "15px" }}>
+                    <strong>Feedback Points:</strong>
+                    <ul>
+                      {parsedComment?.feedback_points?.map((point, index) => (
+                        <li key={index}>{point}</li>
+                      ))}
+                    </ul>
+                  </Typography>
+                </>
+              ) : (
+                <Typography variant="subtitle2" sx={{ fontSize: "15px" }}>
+                  Error: Unable to parse comment data or no comment available.
+                </Typography>
+              )} */}
+              {jsonData(result?.data?.comment)
+              }
+            </AccordionDetails>
+          </Accordion>
+        )}
       </Box>
 
       {!isSubmitted && (

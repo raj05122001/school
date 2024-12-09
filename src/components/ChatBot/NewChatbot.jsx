@@ -3,6 +3,7 @@ import {
   getLectureAns,
   createSession,
   getNewLectureAns,
+  getChatbotHistory,
 } from "@/api/apiHelper";
 import {
   Box,
@@ -21,6 +22,9 @@ import {
   List,
   ListItem,
   ListItemText,
+  Accordion,
+  AccordionSummary,
+  AccordionDetails,
 } from "@mui/material";
 import { FaArrowUp, FaRobot } from "react-icons/fa6";
 import { BsChevronDown } from "react-icons/bs";
@@ -32,13 +36,13 @@ import { FaMicrophone, FaStopCircle } from "react-icons/fa";
 import { decodeToken } from "react-jwt";
 import Cookies from "js-cookie";
 import { usePathname } from "next/navigation";
+import { RiArrowDropDownLine } from "react-icons/ri";
 
 export default function NewChatbot({ suggestionInput, setIsOpenChatBot }) {
   const chatbotRef = useRef();
   const graphRef = useRef(null);
   const [userTextInput, setUserTextInput] = useState("");
   const [isLoading, setIsLoading] = useState(false);
-  const [lastAssistantResponse, setLastAssistantResponse] = useState("");
   const [chatHistory, setChatHistory] = useState([]);
   const [showChat, setShowChat] = useState(false);
   const [showList, setShowList] = useState(true);
@@ -104,37 +108,29 @@ export default function NewChatbot({ suggestionInput, setIsOpenChatBot }) {
     }
   }, [isLoading]);
 
-  const fetchOldChats = () => {
-    const savedChats = JSON.parse(localStorage.getItem("chatSessions")) || {};
-    return Object.entries(savedChats); // Returns an array of [sessionID, prompts]
+  const fetchOldChats = async () => {
+    const response = await getChatbotHistory();
+    const data = response?.data?.data || [];
+    setOldChats(data);
   };
+  useEffect(() => {
+    fetchOldChats();
+  }, []);
 
   const handleOldChatsClick = () => {
-    const chats = fetchOldChats();
     setShowOldChat(true);
-    setOldChats(chats);
   };
 
   const handleUserInput = async (input) => {
     if (!input || !sessionID) return;
     setIsLoading(true);
-    const combinedInput = lastAssistantResponse
-      ? `${lastAssistantResponse}\n\n${input}`
-      : input;
     setChatHistory((prevChat) => [
       ...prevChat,
       { role: "user", content: input },
     ]);
-
-    // Store user input for the current session in localStorage
-    const savedChats = JSON.parse(localStorage.getItem("chatSessions")) || {};
-    if (!savedChats[sessionID]) savedChats[sessionID] = [];
-    savedChats[sessionID].push(input);
-    localStorage.setItem("chatSessions", JSON.stringify(savedChats));
-
     try {
       const formData = new FormData();
-      formData.append("user_message", combinedInput);
+      formData.append("user_message", input);
       setUserTextInput("");
       const response = await getNewLectureAns(sessionID, formData);
       const data = response.data.response;
@@ -143,12 +139,13 @@ export default function NewChatbot({ suggestionInput, setIsOpenChatBot }) {
         ...prevChat,
         { role: "assistant", content: data, links: linkArry?.[0] },
       ]);
-      setLastAssistantResponse(data);
     } catch (error) {
       console.error(error);
     }
     setIsLoading(false);
   };
+
+  console.log("Old Chat", oldChats);
 
   return (
     <Box
@@ -261,51 +258,71 @@ export default function NewChatbot({ suggestionInput, setIsOpenChatBot }) {
                   </Button>
                 </>
               )}
-              {oldChats.length > 0 && (
-                <Box
-                  sx={{
-                    width: "100%",
-                    maxHeight: 300,
-                    overflowY: "auto", // Enable scrolling
-                    bgcolor: "grey.100",
-                    borderRadius: 2,
-                    p: 2,
-                    boxShadow: "0px 4px 6px rgba(0, 0, 0, 0.1)",
-                    display: "flex",
-                    flexDirection: "column",
-                    alignItems: "center",
-                  }}
-                >
-                  <List>
-                    {oldChats.map(([sessionID, prompts]) => (
-                      <React.Fragment key={sessionID}>
-                        <ListItem disablePadding>
-                          <ListItemText
-                            primary={`Session ID: ${sessionID}`}
-                            secondaryTypographyProps={{
-                              sx: { color: "text.secondary" },
+              {showOldChat &&
+                (oldChats.length > 0 ? (
+                  <Box
+                    sx={{
+                      width: "100%",
+                      maxHeight: 300,
+                      overflowY: "auto", // Enable scrolling
+                      bgcolor: "grey.100",
+                      borderRadius: 2,
+                      p: 2,
+                      boxShadow: "0px 4px 6px rgba(0, 0, 0, 0.1)",
+                      display: "flex",
+                      flexDirection: "column",
+                      alignItems: "center",
+                    }}
+                  >
+                    <List>
+                      {oldChats.map((data, index) => (
+                        <Accordion
+                          key={data?.id}
+                          sx={{
+                            mb: 1,
+                            borderRadius: 4,
+                            backdropFilter: "blur(10px)",
+                            backgroundColor: "rgba(255, 255, 255, 0.2)",
+                          }}
+                        >
+                          <AccordionSummary
+                            expandIcon={<RiArrowDropDownLine />}
+                            sx={{
+                              color: "text.primary",
+                              p: 2,
+                              width: "100%",
+                              height: "100%"
                             }}
-                            secondary={`Prompts (${prompts.length}):`}
-                          />
-                        </ListItem>
-                        <List sx={{ pl: 2 }}>
-                          {prompts.map((prompt, index) => (
-                            <ListItem key={index} sx={{ py: 0.5 }}>
-                              <Typography
-                                variant="body2"
-                                color="text.secondary"
-                              >
-                                {index + 1}. {prompt}
-                              </Typography>
-                            </ListItem>
-                          ))}
-                        </List>
-                        <Divider sx={{ my: 1 }} />
-                      </React.Fragment>
-                    ))}
-                  </List>
-                </Box>
-              )}
+                          >
+                            <Typography
+                              variant="subtitle1"
+                              gutterBottom
+                              sx={{ fontSize: "14px" }}
+                            >
+                              Session ID - {data?.session?.session_id}
+                              <br />
+                              {index + 1}. {data?.user_question}
+                            </Typography>
+                          </AccordionSummary>
+                          <AccordionDetails
+                            sx={{
+                              bgcolor: "grey.200",
+                              borderRadius: 1,
+                              p: 1,
+                              boxShadow: "0px 2px 4px rgba(0, 0, 0, 0.1)",
+                            }}
+                          >
+                            <Typography variant="body2" color="text.secondary">
+                              {data?.bot_response}
+                            </Typography>
+                          </AccordionDetails>
+                        </Accordion>
+                      ))}
+                    </List>
+                  </Box>
+                ) : (
+                  <Typography>No conversation history available.</Typography>
+                ))}
             </Box>
           </Grid>
         )}
@@ -637,53 +654,53 @@ export const FormattedText = ({ text }) => {
   );
 };
 
-export const ChatHistory = () => {
-  <Box
-    sx={{
-      display: "flex",
-      flexDirection: "column",
-      alignItems: "center",
-      width: "100%",
-      height: "100%",
-      overflow: "auto", // Scrollable old chats
-    }}
-  >
-    <Box
-      sx={{
-        width: "90%",
-        maxHeight: "60vh", // Restrict the height
-        overflowY: "auto", // Enable scrolling
-        bgcolor: "grey.100",
-        borderRadius: 2,
-        p: 2,
-        boxShadow: "0px 4px 6px rgba(0, 0, 0, 0.1)",
-      }}
-    >
-      <List>
-        {oldChats.map(([sessionID, prompts]) => (
-          <React.Fragment key={sessionID}>
-            <ListItem disablePadding>
-              <ListItemText
-                primary={`Session ID: ${sessionID}`}
-                secondaryTypographyProps={{
-                  sx: { color: "text.secondary" },
-                }}
-                secondary={`Prompts (${prompts.length}):`}
-              />
-            </ListItem>
-            <List sx={{ pl: 2 }}>
-              {prompts.map((prompt, index) => (
-                <ListItem key={index} sx={{ py: 0.5 }}>
-                  <Typography variant="body2" color="text.secondary">
-                    {index + 1}. {prompt}
-                  </Typography>
-                </ListItem>
-              ))}
-            </List>
-            <Divider sx={{ my: 1 }} />
-          </React.Fragment>
-        ))}
-      </List>
-    </Box>
-  </Box>;
-};
+// export const ChatHistory = () => {
+//   <Box
+//     sx={{
+//       display: "flex",
+//       flexDirection: "column",
+//       alignItems: "center",
+//       width: "100%",
+//       height: "100%",
+//       overflow: "auto", // Scrollable old chats
+//     }}
+//   >
+//     <Box
+//       sx={{
+//         width: "90%",
+//         maxHeight: "60vh", // Restrict the height
+//         overflowY: "auto", // Enable scrolling
+//         bgcolor: "grey.100",
+//         borderRadius: 2,
+//         p: 2,
+//         boxShadow: "0px 4px 6px rgba(0, 0, 0, 0.1)",
+//       }}
+//     >
+//       <List>
+//         {oldChats.map(([sessionID, prompts]) => (
+//           <React.Fragment key={sessionID}>
+//             <ListItem disablePadding>
+//               <ListItemText
+//                 primary={`Session ID: ${sessionID}`}
+//                 secondaryTypographyProps={{
+//                   sx: { color: "text.secondary" },
+//                 }}
+//                 secondary={`Prompts (${prompts.length}):`}
+//               />
+//             </ListItem>
+//             <List sx={{ pl: 2 }}>
+//               {prompts.map((prompt, index) => (
+//                 <ListItem key={index} sx={{ py: 0.5 }}>
+//                   <Typography variant="body2" color="text.secondary">
+//                     {index + 1}. {prompt}
+//                   </Typography>
+//                 </ListItem>
+//               ))}
+//             </List>
+//             <Divider sx={{ my: 1 }} />
+//           </React.Fragment>
+//         ))}
+//       </List>
+//     </Box>
+//   </Box>;
+// };
