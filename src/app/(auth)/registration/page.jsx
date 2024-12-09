@@ -6,6 +6,7 @@ import Image from "next/image";
 import AccessKey from "@/components/Registration/AccessKey";
 import VerifyOtp from "@/components/Registration/VerifyOtp";
 import UserData from "@/components/Registration/UserData";
+import { useMediaQuery } from "@mui/material";
 
 // Keyframes for the text animation
 const textAnimation = {
@@ -26,6 +27,7 @@ const RegistationPage = () => {
   const email = searchParams.get("email");
   const accesskey = searchParams.get("accesskey");
   const verifyotp = searchParams.get("verifyotp");
+  const isMobile = useMediaQuery("(max-width:600px)");
 
   return (
     <Grid
@@ -36,7 +38,7 @@ const RegistationPage = () => {
       }}
     >
       {/* Left Side with Gradient Background */}
-      <Grid
+      {!isMobile && <Grid
         item
         xs={false}
         sm={4}
@@ -81,7 +83,7 @@ const RegistationPage = () => {
             Your AI-powered Learning Companion
           </Typography>
         </Box>
-      </Grid>
+      </Grid>}
 
       {/* Right Side Login Form */}
       {accesskey && email && verifyotp ? (

@@ -47,21 +47,21 @@ const renderCustomizedLabel = ({
   outerRadius,
   percent,
 }) => {
-  const radius = innerRadius + (outerRadius - innerRadius) * 0.5;
+  const radius = innerRadius + (outerRadius - innerRadius) * 0.1;
   const x = cx + radius * Math.cos(-midAngle * RADIAN);
   const y = cy + radius * Math.sin(-midAngle * RADIAN);
-
+  const check = percent * 100 > 0;
   return (
     <text
       x={x}
       y={y}
-      fill="#fff"
+      fill="#D3D3D3"
       textAnchor={x > cx ? "start" : "end"}
       dominantBaseline="central"
       fontSize={14}
       fontWeight={600}
     >
-      {`${(percent * 100).toFixed(0)}%`}
+      {`${check ? `${(percent * 100).toFixed(0)}%` : ""}`}
     </text>
   );
 };
@@ -258,8 +258,8 @@ const ClassWiseStudentRanking = ({ selectedOptions }) => {
                 cx="50%"
                 cy="50%"
                 labelLine={false}
-                innerRadius={60}
-                outerRadius={100}
+                innerRadius={55}
+                outerRadius={110}
                 label={renderCustomizedLabel}
                 dataKey="value"
               >
@@ -303,7 +303,7 @@ const ClassWiseStudentRanking = ({ selectedOptions }) => {
                 item
                 xs={12}
                 sm={6}
-                md={statusTabValue === 0? 4:6}
+                md={statusTabValue === 0 ? 4 : 6}
                 key={entry.name}
                 onClick={() => handleOpenModal(entry.name)}
                 sx={{
@@ -340,7 +340,7 @@ const ClassWiseStudentRanking = ({ selectedOptions }) => {
                       mt: 0.5,
                     }}
                   >
-                   {entry.value}
+                    {entry.value}
                   </Typography>
                 </Box>
               </Grid>

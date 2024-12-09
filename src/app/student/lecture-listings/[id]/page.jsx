@@ -13,6 +13,7 @@ import RatingSection from "@/components/teacher/RatingSection/RatingSection";
 import LectureAnalytics from "@/components/teacher/LectureAnalytics/LectureAnalytics";
 import Cookies from "js-cookie";
 import { decodeToken } from "react-jwt";
+import PersonalisedRecommendations from "@/components/student/MOL/PersonalisedRecommendations/PersonalisedRecommendations";
 
 const LecturePage = ({ params }) => {
   const { id } = params;
@@ -98,6 +99,9 @@ const LecturePage = ({ params }) => {
     [id]
   );
   const commentSection = useMemo(() => <CommentsSection id={id} />, [id]);
+  const personalisedRecommendations = useMemo(() => <PersonalisedRecommendations id={id} />, [id]);
+
+  
 
   return (
     <Box
@@ -134,6 +138,7 @@ const LecturePage = ({ params }) => {
             </Box>
             {lectureOverview}
             {lectureDetails}
+            {personalisedRecommendations}
             {articles}
           </Box>
         </Grid>

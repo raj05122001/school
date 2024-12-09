@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import {
   Box,
   Typography,
@@ -42,6 +42,7 @@ const LectureAssignment = ({ id, isDarkMode, class_ID, isEdit }) => {
   const [isEditData, setIsEditData] = useState(false);
   const [editedText, setEditedText] = useState("");
   const [isLoadingRewrite, setIsLoadingRewrite] = useState(false);
+  const hasFetchedData = useRef(false); // Prevent multiple fetch calls
 
   const lectureID = id;
 
@@ -54,7 +55,10 @@ const LectureAssignment = ({ id, isDarkMode, class_ID, isEdit }) => {
   };
 
   useEffect(() => {
-    fetchAssignments();
+    if (!hasFetchedData.current) {
+      hasFetchedData.current = true;
+      fetchAssignments();
+    }
   }, [id]);
 
   const fetchAssignments = async () => {

@@ -61,16 +61,18 @@ function OverallClassPerformance() {
       <ResponsiveContainer width="100%" height="80%">
         <BarChart
           data={data}
-          margin={{ top: 20, right: 30, left: 20, bottom: 5 }}
+          margin={{ top: 20, right: 30, left: 20, bottom: 15}}
         >
           <CartesianGrid strokeDasharray="3 3" />
           <XAxis
             dataKey="rating"
-            tick={{ fill: isDarkMode ? "#FFFFF0" : "#36454F" }}
+            tick={{ fill: isDarkMode ? "#FFFFF0" : "#36454F", fontSize:"12px" }}
+            angle={-45}
+  textAnchor="end"
           />
-          <YAxis tick={{ fill: isDarkMode ? "#FFFFF0" : "#36454F" }} />
+          <YAxis tick={{ fill: isDarkMode ? "#FFFFF0" : "#36454F", fontSize:"12px" }} />
           <Tooltip />
-          <Legend />
+          <Legend verticalAlign="top" />
           <Bar dataKey="count" fill="#8884d8" />
         </BarChart>
       </ResponsiveContainer>

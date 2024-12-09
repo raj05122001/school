@@ -17,7 +17,7 @@ import {
 import { toast } from "react-hot-toast";
 import MathJax from "react-mathjax2";
 import TextWithMath from "@/commonComponents/TextWithMath/TextWithMath";
-import personalisedRecommendations from "@/components/student/MOL/personalisedRecommendations";
+import usePersonalisedRecommendations from "@/components/student/MOL/usePersonalisedRecommendations";
 
 const LectureNotes = ({
   id,
@@ -34,8 +34,9 @@ const LectureNotes = ({
   const [showTextFields, setShowTextFields] = useState({});
   const notesBoxRef = useRef(null);
   const updateCalled = useRef(false);
+  const hasFetchedData = useRef(false); // Prevent multiple fetch calls
 
-  personalisedRecommendations(id, "NOTES", notesBoxRef, "");
+  usePersonalisedRecommendations(id, "NOTES", notesBoxRef, "");
 
   useEffect(() => {
     const fetchLectureNotes = async () => {
@@ -49,7 +50,10 @@ const LectureNotes = ({
       }
     };
 
-    fetchLectureNotes();
+    if (!hasFetchedData.current) {
+      hasFetchedData.current = true;
+      fetchLectureNotes();
+    }
   }, [id]);
 
   const handleMoreInsightClick = (noteId) => {
@@ -210,6 +214,12 @@ const LectureNotes = ({
                     <Button
                       variant="outlined"
                       onClick={() => handleMoreInsightClick(note.id)}
+                      sx={{
+                        whiteSpace: "nowrap", // Prevent text wrapping
+                        minHeight: "36px", // Set a consistent button height
+                        lineHeight: "1.5", // Ensure proper vertical alignment
+                        textTransform: "none", // Optional: Keep text casing as it is
+                      }}
                     >
                       More Insights
                     </Button>
@@ -239,7 +249,11 @@ const LectureNotes = ({
                 </Box>
                 {/* Check and remove leading ** symbols from notes */}
                 <Typography variant="subtitle2">
-                  <TextWithMath text={note.notes.replace(/^\*\*\s*/, "").replace(/\\n/g, "\n")}/>
+                  <TextWithMath
+                    text={note.notes
+                      .replace(/^\*\*\s*/, "")
+                      .replace(/\\n/g, "\n")}
+                  />
                 </Typography>
               </Box>
             ))}

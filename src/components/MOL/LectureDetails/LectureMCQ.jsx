@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import {
   Box,
   Typography,
@@ -9,11 +9,13 @@ import {
 } from "@mui/material";
 import { getLectureQuiz } from "@/api/apiHelper";
 import MathJax from "react-mathjax2";
+import TextWithMath from "@/commonComponents/TextWithMath/TextWithMath";
 
 const LectureMCQ = ({ id, isDarkMode }) => {
   const [quizData, setQuizData] = useState([]);
   const [visibleCount, setVisibleCount] = useState(5);
   const [loading, setLoading] = useState(true);
+  const hasFetchedData = useRef(false); // Prevent multiple fetch calls
 
   useEffect(() => {
     const fetchQuizData = async () => {
@@ -29,7 +31,10 @@ const LectureMCQ = ({ id, isDarkMode }) => {
       }
     };
 
-    fetchQuizData();
+    if (!hasFetchedData.current) {
+      hasFetchedData.current = true;
+      fetchQuizData();
+    }
   }, [id]);
 
   const parseOptions = (options) => {
@@ -125,7 +130,7 @@ const LectureMCQ = ({ id, isDarkMode }) => {
                      sx={{marginTop:0.2}}
                       variant="span"
                     >
-                    <MathJax.Text text={item.question} />{" "}
+                    <TextWithMath text={item.question} />{" "}
                     </Typography>
                   </Box>
                   <List sx={{ padding: 0 }}>

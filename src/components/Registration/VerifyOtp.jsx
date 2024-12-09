@@ -6,6 +6,7 @@ import { useRouter, useSearchParams } from "next/navigation";
 import { verifyOneTimePassword, resendOneTimePassword } from "@/api/apiHelper";
 import toast from "react-hot-toast";
 import {CircularProgress} from "@mui/material";
+import { useMediaQuery } from "@mui/material";
 
 const textAnimation = {
   "@keyframes slideFade": {
@@ -26,6 +27,7 @@ const VerifyOtp = () => {
   const email = searchParams.get("email");
   const accesskey = searchParams.get("accesskey");
   const [loading, setLoading] = useState(false);
+  const isMobile = useMediaQuery("(max-width:600px)");
 
   const [otp, setOtp] = useState("");
 
@@ -86,7 +88,9 @@ const VerifyOtp = () => {
         flexDirection: "column",
         alignItems: "center",
         justifyContent: "center",
-        background: "linear-gradient(135deg, #fdfcfb 0%, #e2d1c3 100%)",
+        background: `${isMobile ? "url('/mobileLoginBG2.jpg')" :"linear-gradient(135deg, #fdfcfb 0%, #e2d1c3 100%)"}`,
+        backgroundSize: "cover",
+        backgroundPosition: "center",
         padding: 4,
         animation: "slideFade 1s ease-in-out",
         ...textAnimation,

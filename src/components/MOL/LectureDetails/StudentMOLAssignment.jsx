@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useReducer, useCallback } from "react";
+import React, { useEffect, useState, useReducer, useCallback, useRef } from "react";
 import { Box, Typography, Skeleton, Snackbar, Alert } from "@mui/material";
 import { getLectureAssignment,getAssignmentAnswer } from "@/api/apiHelper";
 import MathJax from "react-mathjax2";
@@ -15,9 +15,20 @@ const StudentMOLAssignment = ({ id, isDarkMode, class_ID }) => {
   const [state, dispatch] = useReducer(reducer, initialState);
   const { assignments, loading, error, snackbar } = state;
   const [submittedId,SetSubmittedId]=useState([])
+  const hasFetchedData = useRef(false); // Prevent multiple fetch calls
 
   const { s3 } = AwsSdk();
   const answered_by = Number(userDetails.student_id);
+
+  useEffect(() => {
+    if(id){
+      if (!hasFetchedData.current) {
+        hasFetchedData.current = true;
+        fetchAssignments();
+        fetchAssignmentAnswer()
+      }     
+    }
+  }, [id]);
 
   const fetchAssignments = useCallback(async () => {
     dispatch({ type: "FETCH_START" });
@@ -52,11 +63,6 @@ const StudentMOLAssignment = ({ id, isDarkMode, class_ID }) => {
       console.error(error);
     }
   }
-
-  useEffect(() => {
-    fetchAssignments();
-    fetchAssignmentAnswer()
-  }, [fetchAssignments]);
 
   const lectureTitle =
     assignments.length > 0 ? assignments[0].lecture.title : "";

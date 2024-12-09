@@ -19,7 +19,11 @@ import CircularProgress, {
   circularProgressClasses,
 } from "@mui/material/CircularProgress";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
-import { getAllLectureCount, getMyLectures ,getLectureTracking} from "@/api/apiHelper";
+import {
+  getAllLectureCount,
+  getMyLectures,
+  getLectureTracking,
+} from "@/api/apiHelper";
 import { useThemeContext } from "@/hooks/ThemeContext";
 import { BiSolidDownArrow } from "react-icons/bi";
 import LectureType from "@/commonComponents/LectureType/LectureType";
@@ -101,6 +105,7 @@ const Page = () => {
         subject,
         classValue
       );
+
       setLectureData(response?.data);
       setLoading(false);
     } catch (error) {
@@ -149,7 +154,7 @@ const Page = () => {
         label={
           <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
             <MdOutlineTrackChanges size={30} color={primaryColor} />
-            <Typography variant="h4" color={isDarkMode ? "#F9F6EE" : "#36454F"}>
+            <Typography variant="h4" color={isDarkMode ? "#E5E4E2" : "#36454F"}>
               Lecture Tracking
             </Typography>
           </Box>
@@ -280,7 +285,6 @@ const Page = () => {
             background: isDarkMode
               ? ""
               : "linear-gradient(to top, #dfe9f3 0%, white 100%)",
-              
           }}
         >
           <Table className="blur_effect_card">
@@ -364,33 +368,28 @@ const Page = () => {
                 )}
               </TableRow>
             </TableHead>
-            <TableBody sx={{color: isDarkMode ? "#36454F" : "#FFFFF0"}}>
-              {lectureData?.data?.length > 0 &&
+            <TableBody sx={{ color: isDarkMode ? "#36454F" : "#FFFFF0" }}>
+              {lectureData?.data?.length > 0 ? (
                 lectureData?.data?.map((lecture, index) => (
-                  <TableRow key={index} sx={{ color: isDarkMode ? "#36454F" : "#FFFFF0" }}>
-                    <TableCell sx={{  }}>
-                      {lecture.title}
-                    </TableCell>
-                    <TableCell sx={{  }}>
+                  <TableRow
+                    key={index}
+                    sx={{ color: isDarkMode ? "#36454F" : "#FFFFF0" }}
+                  >
+                    <TableCell sx={{}}>{lecture.title}</TableCell>
+                    <TableCell sx={{}}>
                       <LectureType lectureType={lecture?.type} />
                     </TableCell>
-                    <TableCell sx={{  }}>
-                      {lecture.schedule_date}
-                    </TableCell>
-                    <TableCell sx={{  }}>
-                      {lecture.schedule_time}
-                    </TableCell>
-                    <TableCell sx={{  }}>
+                    <TableCell sx={{}}>{lecture.schedule_date}</TableCell>
+                    <TableCell sx={{}}>{lecture.schedule_time}</TableCell>
+                    <TableCell sx={{}}>
                       {lecture?.lecture_class?.name}
                     </TableCell>
-                    <TableCell sx={{  }}>
+                    <TableCell sx={{}}>
                       {lecture?.chapter?.subject?.name}
                     </TableCell>
-                    <TableCell sx={{  }}>
-                      {lecture?.chapter?.chapter}
-                    </TableCell>
+                    <TableCell sx={{}}>{lecture?.chapter?.chapter}</TableCell>
                     {status === "UPCOMMING" && (
-                      <TableCell sx={{ }}>
+                      <TableCell sx={{}}>
                         <Box
                           sx={{ display: "flex", alignItems: "center", gap: 1 }}
                         >
@@ -408,7 +407,14 @@ const Page = () => {
                       </TableCell>
                     )}
                   </TableRow>
-                ))}
+                ))
+              ) : (
+                <TableRow>
+                  <TableCell colSpan={7} sx={{ textAlign: "center" }}>
+                    No Data Available
+                  </TableCell>
+                </TableRow>
+              )}
             </TableBody>
           </Table>
         </TableContainer>

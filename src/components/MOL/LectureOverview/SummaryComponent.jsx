@@ -10,7 +10,7 @@ import TextEditor from "@/commonComponents/TextEditor/TextEditor";
 import { FaEdit } from "react-icons/fa";
 import { FaSave } from "react-icons/fa";
 import { FaInfoCircle } from "react-icons/fa";
-import personalisedRecommendations from "@/components/student/MOL/personalisedRecommendations";
+import usePersonalisedRecommendations from "@/components/student/MOL/usePersonalisedRecommendations";
 
 const SummaryComponent = ({
   lectureId,
@@ -32,7 +32,7 @@ const SummaryComponent = ({
     fetchSummary();
   }, [lectureId]);
 
-  personalisedRecommendations(lectureId, "SUMMARY", summaryBoxRef, "");
+  usePersonalisedRecommendations(lectureId, "SUMMARY", summaryBoxRef, "");
 
   useEffect(() => {
     const handleScrollAndUpdate = async () => {
@@ -143,9 +143,18 @@ const SummaryComponent = ({
 
   // Updated stringToHtml function
   const stringToHtml = (data) => {
-    const formattedText = data
+    console.log("data stringToHtml : ",data)
+    let formattedText = data
       ?.replace(/#+/g, "")
       ?.replace(/\*\*(.*?)\*\*/g, "<strong>$1</strong>");
+
+    formattedText = formattedText?.replace(
+        /<img\s+([^>]*?)src="([^"]+)"([^>]*?)>/g,
+        (match, beforeSrc, src, afterSrc) => {
+          return `<img ${beforeSrc}src="${src}" ${afterSrc} style="max-width: 800px; max-height: 400px; display: block; margin: auto;">`;
+        }
+     );
+    
     const newLine = formattedText?.replace(/\n/g, "<br>");
     const paragraphs = splitTextIntoParagraphs(formattedText);
     return paragraphs.join("\n");
@@ -169,7 +178,7 @@ const SummaryComponent = ({
         overflowY: "auto",
         height: "100%",
         minHeight: 400,
-        maxHeight: 450,
+        maxHeight: 500,
       }}
       ref={summaryBoxRef}
     >
