@@ -313,7 +313,7 @@ export default function NewChatbot({ suggestionInput, setIsOpenChatBot }) {
                             }}
                           >
                             <Typography variant="body2" color="text.secondary">
-                              {data?.bot_response}
+                            <FormattedText text = {data?.bot_response} />
                             </Typography>
                           </AccordionDetails>
                         </Accordion>
