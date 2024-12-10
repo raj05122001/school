@@ -186,7 +186,7 @@ const Page = () => {
         <Table>
           <TableHead>
             <TableRow>
-              {(tabValue === 0 ? studentHeaders : teacherHeaders).map((header) => (
+              {(tabValue === 0 ? studentHeaders : teacherHeaders)?.map((header) => (
                 <TableCell key={header} sx={{ color: isDarkMode ? "#F0EAD6" : "#36454F" }}>
                   <Typography variant="subtitle1" fontWeight="bold">
                     {header}
@@ -205,36 +205,36 @@ const Page = () => {
                     {student?.user_class?.name}
                   </TableCell>
                   <TableCell sx={{ color: isDarkMode ? "#F0EAD6" : "#36454F" }}>
-                    {student.user.email}
+                    {student?.user?.email}
                   </TableCell>
                   <TableCell sx={{ color: isDarkMode ? "#F0EAD6" : "#36454F" }}>
-                    {student.batch_year}
+                    {student?.batch_year}
                   </TableCell>
                 </TableRow>
               ))}
             {tabValue === 1 &&
-              filteredTeacherData.map((teacher) => (
-                <TableRow key={teacher.user.id}>
+              filteredTeacherData?.map((teacher) => (
+                <TableRow key={teacher?.user?.id}>
                   <TableCell sx={{ color: isDarkMode ? "#F0EAD6" : "#36454F" }}>
-                    {teacher.user.full_name}
+                    {teacher?.user.full_name}
                   </TableCell>
                   <TableCell sx={{ color: isDarkMode ? "#F0EAD6" : "#36454F" }}>
-                    {teacher.lectures_done}
+                    {teacher?.lectures_done}
                   </TableCell>
                   <TableCell sx={{ color: isDarkMode ? "#F0EAD6" : "#36454F" }}>
-                    {teacher.alloted_lecturehour}
+                    {teacher?.alloted_lecturehour}
                   </TableCell>
                   <TableCell sx={{ color: isDarkMode ? "#F0EAD6" : "#36454F" }}>
-                    {teacher.total_lectures}
+                    {teacher?.total_lectures}
                   </TableCell>
                   <TableCell sx={{ color: isDarkMode ? "#F0EAD6" : "#36454F" }}>
-                    {teacher.user.email}
+                    {teacher?.user?.email}
                   </TableCell>
                   <TableCell sx={{ color: isDarkMode ? "#F0EAD6" : "#36454F" }}>
-                    {teacher.experience}
+                    {teacher?.experience}
                   </TableCell>
                   <TableCell sx={{ color: isDarkMode ? "#F0EAD6" : "#36454F" }}>
-                    {teacher.avg_feedback.toFixed(1)}
+                    {teacher?.avg_feedback?.toFixed(1)}
                   </TableCell>
                 </TableRow>
               ))}
