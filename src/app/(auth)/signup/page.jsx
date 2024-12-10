@@ -68,7 +68,10 @@ const SignupPage = () => {
     role: yup.string().required("Role is required"),
     newPassword: yup
       .string()
-      .min(6, "Password must be at least 6 characters")
+      .matches(
+        /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/,
+        "Password must be at least 8 characters long and contain at least one uppercase letter, one lowercase letter, one number, and one special character"
+      )
       .required("Password is required"),
     confirmPassword: yup
       .string()
@@ -150,15 +153,11 @@ const SignupPage = () => {
       password: data.newPassword,
       country_code: "+91",
       time_zone: "IND",
+      department:
+        data.department?.value || data.department?.id || data.department || "",
+      subjects: 9,
+      student_class: data.subject || "",
     };
-
-    if (isTeacher) {
-      payload.department =
-        data.department?.value || data.department?.id || data.department;
-      payload.subjects = 9;
-    } else {
-      payload.student_class = data.subject;
-    }
 
     console.log("payload", payload);
 
@@ -205,50 +204,52 @@ const SignupPage = () => {
       }}
     >
       {/* Left Side Background */}
-      {!isMobile && <Grid
-        item
-        xs={false}
-        sm={4}
-        md={6}
-        sx={{
-          backgroundImage: "url('/loginBG3.jpg')",
-          backgroundSize: "cover",
-          backgroundPosition: "center",
-          position: "relative",
-        }}
-      >
-        {/* Overlay Text */}
-        <Box
+      {!isMobile && (
+        <Grid
+          item
+          xs={false}
+          sm={4}
+          md={6}
           sx={{
-            position: "absolute",
-            top: "25%",
-            left: "25%",
-            color: "#fff",
-            textAlign: "left",
-            animation: "slideFade 1s ease-in-out",
-            ...textAnimation,
+            backgroundImage: "url('/loginBG3.jpg')",
+            backgroundSize: "cover",
+            backgroundPosition: "center",
+            position: "relative",
           }}
         >
-          <Typography
-            variant="h3"
-            sx={{ fontWeight: "bold", color: "#EDEADE" }}
+          {/* Overlay Text */}
+          <Box
+            sx={{
+              position: "absolute",
+              top: "25%",
+              left: "25%",
+              color: "#fff",
+              textAlign: "left",
+              animation: "slideFade 1s ease-in-out",
+              ...textAnimation,
+            }}
           >
-            Welcome to
-            <br />
-            <Image
-              src="/vidyaAIlogo.png"
-              alt="VidyaAI Logo"
-              width={40}
-              height={40}
-              style={{ display: "inline-block" }}
-            />
-            <span style={{ color: "#454B1B" }}> VidyaAI</span>
-          </Typography>
-          <Typography variant="h5" sx={{ mt: 2, color: "#191970" }}>
-            Your AI-powered Learning Companion
-          </Typography>
-        </Box>
-      </Grid>}
+            <Typography
+              variant="h3"
+              sx={{ fontWeight: "bold", color: "#EDEADE" }}
+            >
+              Welcome to
+              <br />
+              <Image
+                src="/vidyaAIlogo.png"
+                alt="VidyaAI Logo"
+                width={40}
+                height={40}
+                style={{ display: "inline-block" }}
+              />
+              <span style={{ color: "#454B1B" }}> VidyaAI</span>
+            </Typography>
+            <Typography variant="h5" sx={{ mt: 2, color: "#191970" }}>
+              Your AI-powered Learning Companion
+            </Typography>
+          </Box>
+        </Grid>
+      )}
 
       {/* Right Side Signup Form */}
       <Grid
@@ -263,7 +264,11 @@ const SignupPage = () => {
           alignItems: "center",
           justifyContent: "center",
           padding: 4,
-          background: `${isMobile ? "url('/mobileLoginBG2.jpg')" :"linear-gradient(135deg, #fdfcfb 0%, #e2d1c3 100%)"}`,
+          background: `${
+            isMobile
+              ? "url('/mobileLoginBG2.jpg')"
+              : "linear-gradient(135deg, #fdfcfb 0%, #e2d1c3 100%)"
+          }`,
           backgroundPosition: "center",
           backgroundSize: "cover",
         }}
@@ -277,7 +282,6 @@ const SignupPage = () => {
             borderRadius: 2,
             boxShadow: "0 4px 10px rgba(0,0,0,0.1)",
           }}
-
         >
           {/* Header */}
           <Box
