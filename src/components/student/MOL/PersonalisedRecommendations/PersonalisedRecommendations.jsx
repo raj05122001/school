@@ -52,7 +52,6 @@ const PersonalisedRecommendations = ({ id }) => {
       const jsonData = Array.isArray(data?.topic_list)
         ? data.topic_list
         : JSON.parse(data?.topic_list || "[]");
-
       setTopics(jsonData);
       setSelectedTopic(data?.prevoius_selected_topic || "");
       setSelectedApproach(data?.previous_selected_approach || "");
@@ -60,7 +59,7 @@ const PersonalisedRecommendations = ({ id }) => {
       console.error(error);
     }
   };
-  
+
   return (
     <Container
       sx={{
@@ -78,35 +77,52 @@ const PersonalisedRecommendations = ({ id }) => {
       }}
     >
       <Typography variant="h4" gutterBottom color={primaryColor}>
-       <MdSelfImprovement style={{fontSize:"32px"}}/> Personalised Recommendations
+        <MdSelfImprovement style={{ fontSize: "32px" }} /> Personalised
+        Recommendations
       </Typography>
 
-      <Card
-        variant="outlined"
-        sx={{ mb: 3, backgroundColor: "rgba(255, 255, 255, 0.2)", borderRadius: 6, pl:2, boxShadow: "0px 4px 10px #ADD8E6", }}
-      >
-        <CardContent sx={{}}>
-          <Typography variant="h6" color={"#483248"}>
-            <VscPreview style={{marginRight:2}}/>Previously Selected
-          </Typography>
-          <Typography variant="body1" color={"#630330"}>
-            <strong>✦ Topic:</strong> <span style={{color: "#51414F"}}>{selectedTopic || "None"}</span>
-          </Typography>
-          <Typography variant="body1" color={"#630330"}>
-            <strong>✦ Approach:</strong> <span style={{color: "#51414F"}}>{selectedApproach || "None"}</span>
-          </Typography>
-          <Typography variant="body1" color={"#630330"}>
-            <strong>✦ Section:</strong> <span style={{color: "#51414F"}}>{section || "None"}</span>
-          </Typography>
-        </CardContent>
-      </Card>
+      {selectedTopic && (
+        <Card
+          variant="outlined"
+          sx={{
+            mb: 3,
+            backgroundColor: "rgba(255, 255, 255, 0.2)",
+            borderRadius: 6,
+            pl: 2,
+            boxShadow: "0px 4px 10px #ADD8E6",
+          }}
+        >
+          <CardContent sx={{}}>
+            <Typography variant="h6" color={"#483248"}>
+              <VscPreview style={{ marginRight: 2 }} />
+              Previously Selected
+            </Typography>
+            <TopicAccordion
+              topic={selectedTopic}
+              id={id}
+              section={section}
+              selectedApproach={selectedApproach}
+            />
+            <Typography variant="body1" color={"#630330"}>
+              <strong>✦ Approach:</strong>{" "}
+              <span style={{ color: "#51414F" }}>
+                {selectedApproach || "None"}
+              </span>
+            </Typography>
+            <Typography variant="body1" color={"#630330"}>
+              <strong>✦ Section:</strong>{" "}
+              <span style={{ color: "#51414F" }}>{section || "None"}</span>
+            </Typography>
+          </CardContent>
+        </Card>
+      )}
       <Box display={"flex"} gap={1}>
-      <MdRecommend style={{fontSize:"32px"}}/>
-      <Typography variant="h6" gutterBottom color={primaryColor}>
-        {" "} Recommended Topics
-      </Typography>
+        <MdRecommend style={{ fontSize: "32px" }} />
+        <Typography variant="h6" gutterBottom color={primaryColor}>
+          {" "}
+          Personalized Topics Tailored for You
+        </Typography>
       </Box>
-      
 
       {topics.length > 0 ? (
         topics?.map((topic, index) => (
@@ -153,7 +169,13 @@ const TopicAccordion = ({ topic, id, section, selectedApproach }) => {
   return (
     <Accordion
       onChange={(event, expanded) => expanded && fetchQuery()}
-      sx={{ backgroundColor: "rgba(255, 255, 255, 0.2)", borderRadius: 2, p:2, boxShadow: "0px 4px 10px #FFDEAD", }}
+      sx={{
+        backgroundColor: "rgba(255, 255, 255, 0.2)",
+        borderRadius: 2,
+        p: 2,
+        boxShadow: "0px 2px 6px #FFDEAD",
+        margin: 2,
+      }}
     >
       <AccordionSummary
         expandIcon={<FaChevronDown />} // Using react-icons here
