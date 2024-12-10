@@ -120,10 +120,11 @@ const EditDetailsPage = () => {
     }
 
     try {
-      await updateTeacherDetails(
+     const response= await updateTeacherDetails(
         userDetails?.teacher_id,
         updateData
       );
+      console.log("response onSubmit : ",response)
       toast.success("Details updated successfully.")
     } catch (error) {
       console.error("Update error:", error);
@@ -148,6 +149,7 @@ const EditDetailsPage = () => {
         gutterBottom
         align="center"
         sx={{ fontWeight: "bold" }}
+        color= {isDarkMode ? "#E5E4E2" : "black"}
       >
         Teacher Details
       </Typography>

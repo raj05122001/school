@@ -10,6 +10,8 @@ import {
   Link,
   Grid,
   Slide,
+  IconButton,
+  InputAdornment,
 } from "@mui/material";
 import toast from "react-hot-toast";
 import { useMediaQuery } from "@mui/material";
@@ -18,6 +20,7 @@ import Cookies from "js-cookie";
 import { loginApi } from "@/api/apiHelper";
 import { decodeToken } from "react-jwt";
 import Image from "next/image";
+import { MdVisibility, MdVisibilityOff } from "react-icons/md";
 
 // Keyframes for the text animation
 const textAnimation = {
@@ -35,6 +38,7 @@ const textAnimation = {
 
 const LoginPage = () => {
   const router = useRouter();
+  const [showPassword, setShowPassword] = useState(false);
   const searchParams = useSearchParams();
   const redirectTo = searchParams.get("redirectTo");
   const [formData, setFormData] = useState({
@@ -89,6 +93,10 @@ const LoginPage = () => {
       );
       toast.error("Login failed. Please check your credentials.");
     }
+  };
+
+  const handlePasswordVisibility = () => {
+    setShowPassword(!showPassword);
   };
 
   return (
@@ -240,7 +248,7 @@ const LoginPage = () => {
               fullWidth
               name="password"
               label="Password"
-              type="password"
+              type={showPassword ? 'text' : 'password'}
               id="password"
               value={formData.password}
               onChange={handleChange}
@@ -249,6 +257,17 @@ const LoginPage = () => {
                 style: { color: "#555" },
               }}
               InputProps={{
+                endAdornment: (
+                  <InputAdornment position="end">
+                    <IconButton
+                      aria-label="toggle password visibility"
+                      onClick={()=>handlePasswordVisibility()}
+                      edge="end"
+                    >
+                      {showPassword ?  <MdVisibilityOff /> : <MdVisibility />}
+                    </IconButton>
+                  </InputAdornment>
+                ),
                 style: { color: "#000" },
               }}
               sx={{ backgroundColor: "#fff", borderRadius: "5px" }}
