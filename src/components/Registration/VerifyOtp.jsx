@@ -58,6 +58,8 @@ const VerifyOtp = () => {
     } catch (err) {
       toast.error("An error occurred while verifying the OTP.");
       setLoading(false);
+    }finally{
+      setLoading(false);
     }
   };
 

@@ -13,6 +13,8 @@ import {
   DialogActions,
   DialogContent,
   DialogTitle,
+  InputAdornment,
+  IconButton,
 } from "@mui/material";
 import toast from "react-hot-toast";
 import { useRouter, useSearchParams } from "next/navigation";
@@ -28,6 +30,7 @@ import { useForm, Controller } from "react-hook-form";
 import * as yup from "yup";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { useMediaQuery } from "@mui/material";
+import { MdVisibility, MdVisibilityOff } from "react-icons/md";
 
 // Define keyframes for animation
 const textAnimation = {
@@ -46,6 +49,8 @@ const textAnimation = {
 const SignupPage = () => {
   const router = useRouter();
   const searchParams = useSearchParams();
+  const [showPassword, setShowPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const emailParam = searchParams.get("email");
   const roleParam = searchParams.get("role");
   const [loading, setLoading] = useState(false);
@@ -362,7 +367,7 @@ const SignupPage = () => {
                   <TextField
                     {...field}
                     label="Password"
-                    type="password"
+                    type={showPassword ? 'text' : 'password'}
                     fullWidth
                     required
                     margin="normal"
@@ -373,6 +378,17 @@ const SignupPage = () => {
                       style: { color: "#555" },
                     }}
                     InputProps={{
+                      endAdornment: (
+                        <InputAdornment position="end">
+                          <IconButton
+                            aria-label="toggle password visibility"
+                            onClick={()=>setShowPassword(!showPassword)}
+                            edge="end"
+                          >
+                            {showPassword ?  <MdVisibilityOff /> : <MdVisibility />}
+                          </IconButton>
+                        </InputAdornment>
+                      ),
                       style: { color: "#000" },
                     }}
                     sx={{ backgroundColor: "#fff", borderRadius: "5px" }}
@@ -390,7 +406,7 @@ const SignupPage = () => {
                   <TextField
                     {...field}
                     label="Confirm Password"
-                    type="password"
+                    type={showConfirmPassword ? 'text' : 'password'}
                     fullWidth
                     required
                     margin="normal"
@@ -401,6 +417,17 @@ const SignupPage = () => {
                       style: { color: "#555" },
                     }}
                     InputProps={{
+                      endAdornment: (
+                        <InputAdornment position="end">
+                          <IconButton
+                            aria-label="toggle password visibility"
+                            onClick={()=>setShowConfirmPassword(!showConfirmPassword)}
+                            edge="end"
+                          >
+                            {showConfirmPassword ?  <MdVisibilityOff /> : <MdVisibility />}
+                          </IconButton>
+                        </InputAdornment>
+                      ),
                       style: { color: "#000" },
                     }}
                     sx={{ backgroundColor: "#fff", borderRadius: "5px" }}
