@@ -29,6 +29,25 @@ import { FaAngleDown } from "react-icons/fa";
 import { GiBullseye } from "react-icons/gi";
 import { GrScorecard } from "react-icons/gr";
 import { PiChalkboardTeacher } from "react-icons/pi";
+import { VscFeedback } from "react-icons/vsc";
+import { VscActivateBreakpoints } from "react-icons/vsc";
+
+const ColorLinearProgress = styled(LinearProgress)(({ theme, value }) => {
+  let color = "#FF0000"; // Default: Red for low scores
+  if (value >= 75) {
+    color = "#4CAF50"; // Green for high scores
+  } else if (value >= 50) {
+    color = "#FFEB3B"; // Yellow for mid-range scores
+  }
+
+  return {
+    height: 10,
+    borderRadius: 5,
+    [`& .${linearProgressClasses.bar}`]: {
+      backgroundColor: color,
+    },
+  };
+});
 
 const AssignmentItem = ({
   assignment,
@@ -49,21 +68,10 @@ const AssignmentItem = ({
   const [open, setOpen] = useState(false);
   const [result, setResult] = useState({});
   const excludedTypes = ["VIDEO", "AUDIO", "IMAGE", "LINK"];
-  const shouldRenderAccordion = isSubmitted && !excludedTypes.includes(assignmentType);
+  const shouldRenderAccordion =
+    isSubmitted && !excludedTypes.includes(assignmentType);
 
-    console.log("Assignment", assignment)
-
-  // console.log("Assignment is", fetchAssignmentAnswer)
-
-  // const getScoreColor = (score) => {
-  //   const goodScore = score/(1.25)
-  //   const midScore = (score/2)
-  //   if (score > goodScore) return 'green';
-  //   if (score >= midScore && score <= goodScore) return 'brown';
-  //   return 'red';
-  // };
-
-  console.log("Assignment type", assignmentType)
+  console.log("Assignment type", assignmentType);
 
   const fetchAssessmentResult = async () => {
     try {
@@ -72,7 +80,6 @@ const AssignmentItem = ({
         answered_by
       );
       const data = response?.data;
-      // const parsedComment = data?.comment ? JSON.parse(data.comment) : null; // Parse the JSON string
       setResult(data); // Store parsed data
     } catch (error) {
       console.error("Error fetching result", error);
@@ -159,38 +166,65 @@ const AssignmentItem = ({
     }
   };
 
-  // console.log(
-  //   "Condition:",
-  //   assignmentType !== "VIDEO" &&
-  //     assignmentType !== "AUDIO" &&
-  //     assignmentType !== "IMAGE" &&
-  //     assignmentType !== "LINK"
-  // );
-  // try {
-  //   parsedComment = result?.data?.comment ? JSON.parse(result.data.comment) : null;
-  // } catch (error) {
-  //   console.error("Error parsing comment JSON:", error);
-  // }
-
   const jsonData = (value) => {
     try {
       const data = value ? JSON.parse(value) : value;
       return (
         <>
           <Typography
-            variant="subtitle2"
-            sx={{ fontSize: "15px", marginBottom: 2 }}
+            variant="body1"
+            sx={{
+              fontSize: "18px",
+              marginBottom: 2,
+              textAlign: "center",
+              color: "#04052e",
+            }}
           >
-            <strong>Overall Feedback:</strong> {data?.overall_feedback}
+            <VscFeedback style={{ marginRight: 4 }} />
+            Overall Feedback
           </Typography>
-          <Typography variant="subtitle2" sx={{ fontSize: "15px" }}>
-            <strong>Feedback Points:</strong>
-            <ul>
+          <Box
+            sx={{
+              backgroundColor: "#E0F0FE",
+              color: "#1d1924",
+              padding: 4,
+              borderRadius: 4,
+              backdropFilter: "blur(10px)",
+              boxShadow: "0px 2px 8px #1389f0",
+              fontSize: "15px",
+            }}
+          >
+            {data?.overall_feedback}
+          </Box>
+          <Typography
+            variant="body1"
+            sx={{
+              fontSize: "18px",
+              marginTop: 4,
+              textAlign: "center",
+              marginBottom: 2,
+              color: "#04052e",
+            }}
+          >
+            <VscActivateBreakpoints style={{ marginRight: 4 }} />
+            Feedback Points
+          </Typography>
+          <Box
+            sx={{
+              backgroundColor: "#EADDCA",
+              color: "#4A0404",
+              padding: 4,
+              borderRadius: 4,
+              boxShadow: "0px 4px 10px #a1865d",
+              fontSize: "15px",
+            }}
+          >
+            <ul style={{ lineHeight: "1.8" }}>
               {data?.feedback_points?.map((point, index) => (
                 <li key={index}>{point}</li>
               ))}
             </ul>
-          </Typography>
+          </Box>
         </>
       );
     } catch (error) {
@@ -201,7 +235,7 @@ const AssignmentItem = ({
       );
     }
   };
-  // const parsedComment = jsonData(result?.data?.comment);
+
   return (
     <Box sx={{ mb: 4, display: "flex", flexDirection: "column" }}>
       <Box sx={{ display: "flex" }}>
@@ -250,46 +284,30 @@ const AssignmentItem = ({
             </AccordionSummary>
             <AccordionDetails>
               <Typography>
-                
                 <GrScorecard style={{ marginRight: "4px" }} />
-                <strong>Marks Scored:</strong> {result?.data?.score}
+                <strong>Marks Scored:</strong> {result?.data?.score}/{assignment.assignment_mark}
               </Typography>
+              {result?.data?.score !== undefined &&
+                assignment.assignment_mark && (
+                  <ColorLinearProgress
+                    variant="determinate"
+                    sx={{height:"6px"}}
+                    value={
+                      (result?.data?.score / assignment.assignment_mark) * 100
+                    }
+                  />
+                )}
               <Typography
                 variant="subtitle1"
                 sx={{ marginTop: 2, fontSize: "18px" }}
               >
-
                 <strong>
                   <PiChalkboardTeacher style={{ marginRight: "4px" }} />
                   Comments
                 </strong>
                 <br />
               </Typography>
-              {/* {parsedComment ? (
-                <>
-                  <Typography
-                    variant="subtitle2"
-                    sx={{ fontSize: "15px", marginBottom: 2 }}
-                  >
-                    <strong>Overall Feedback:</strong>{" "}
-                    {parsedComment?.overall_feedback}
-                  </Typography>
-                  <Typography variant="subtitle2" sx={{ fontSize: "15px" }}>
-                    <strong>Feedback Points:</strong>
-                    <ul>
-                      {parsedComment?.feedback_points?.map((point, index) => (
-                        <li key={index}>{point}</li>
-                      ))}
-                    </ul>
-                  </Typography>
-                </>
-              ) : (
-                <Typography variant="subtitle2" sx={{ fontSize: "15px" }}>
-                  Error: Unable to parse comment data or no comment available.
-                </Typography>
-              )} */}
-              {jsonData(result?.data?.comment)
-              }
+              {jsonData(result?.data?.comment)}
             </AccordionDetails>
           </Accordion>
         )}
