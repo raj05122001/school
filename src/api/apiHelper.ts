@@ -603,3 +603,7 @@ export const getChatbotHistory = async () => {
   return await apiInstance.getChatbotHistory();
 };
 
+export const releasedLecture = async (lectureId,formData) => {
+  const apiInstance = new apiServices(axiosAPIInstance);
+  return await apiInstance.releasedLecture(lectureId,formData);
+};

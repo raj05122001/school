@@ -10,7 +10,7 @@ import {
   Grid,
   useTheme,
 } from "@mui/material";
-import { getLectureById } from "@/api/apiHelper";
+import { getLectureById, releasedLecture } from "@/api/apiHelper";
 import { useThemeContext } from "@/hooks/ThemeContext";
 import HeaderMOL from "@/components/MOL/Header/HeaderMOL";
 import VideoPlayer from "@/components/VideoPlayer/VideoPlayer";
@@ -49,12 +49,22 @@ const LecturePage = ({ params }) => {
       setLoading(false);
     }
   };
+
+  const handleReleased = async () => {
+    try {
+      await releasedLecture(id, { is_released: true });
+      getMeetingByID();
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
   const classID = lectureData?.lecture_class?.id;
 
   const videoPlayer = useMemo(() => <VideoPlayer id={id} />, [id]);
   const headerMOL = useMemo(
     () => (
-      <HeaderMOL lectureData={lectureData} isEdit={true} isShowPic={false} loading={loading} />
+      <HeaderMOL lectureData={lectureData} handleReleased={handleReleased} isEdit={true} isShowPic={false} loading={loading} />
     ),
     [lectureData]
   );

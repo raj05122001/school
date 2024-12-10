@@ -17,8 +17,10 @@ const HeaderMOL = ({
   lectureData,
   isEdit = false,
   isShowPic = false,
-  loading
+  loading,
+  handleReleased=(()=>{}),
 }) => {
+  console.log("lectureData : ",lectureData)
   const { isDarkMode } = useThemeContext();
   const theme = useTheme();
 
@@ -46,6 +48,20 @@ const HeaderMOL = ({
         }}
       >
         <Box sx={{ display: "flex", gap: 3, alignItems: "center" }}>
+          {isEdit && !lectureData?.is_released && (
+            <Button
+              variant="outlined"
+              onClick={() => handleReleased()}
+              startIcon={<FaDownload size={22} />}
+              sx={{
+                color: isDarkMode ? "#fff" : "#000",
+                borderColor: isDarkMode ? "#fff" : theme.palette.primary.main,
+              }}
+            >
+              Is Released
+            </Button>
+          )}
+
           <Button
             variant="outlined"
             startIcon={<FaDownload size={22} />}
@@ -107,7 +123,8 @@ const HeaderMOL = ({
               <Skeleton width="80%" height={30} />
             ) : (
               <Typography variant="subtitle1">
-                <strong>Description:</strong> {lectureData?.description || "N/A"}
+                <strong>Description:</strong>{" "}
+                {lectureData?.description || "N/A"}
               </Typography>
             )}
           </Box>
@@ -130,7 +147,8 @@ const HeaderMOL = ({
                   {lectureData?.chapter?.subject?.name || "N/A"}
                 </Typography>
                 <Typography variant="subtitle1">
-                  <strong>Chapter:</strong> {lectureData?.chapter?.chapter || "N/A"}
+                  <strong>Chapter:</strong>{" "}
+                  {lectureData?.chapter?.chapter || "N/A"}
                 </Typography>
               </>
             )}
