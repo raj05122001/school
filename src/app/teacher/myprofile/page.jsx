@@ -124,7 +124,6 @@ const EditDetailsPage = () => {
         userDetails?.teacher_id,
         updateData
       );
-      console.log("response onSubmit : ",response)
       toast.success("Details updated successfully.")
     } catch (error) {
       console.error("Update error:", error);

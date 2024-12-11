@@ -25,8 +25,6 @@ const VideoPlayer = ({ id }) => {
   const [isLoading, setIsLoading] = useState(true);
   const playerRef = useRef(null);
 
-  console.log("userDetails", userDetails);
-
   useEffect(() => {
     if (id) {
       fetchBreakPoint();
@@ -39,7 +37,6 @@ const VideoPlayer = ({ id }) => {
 
   const updateVideoWatchtime = async (time) => {
     if (time !== 0) {
-      console.log("userDetails?.student_id : ", userDetails?.student_id);
       try {
         // const formData = {
         //   lecture_id: id,
@@ -68,11 +65,6 @@ const VideoPlayer = ({ id }) => {
           blob
         );
         
-
-        console.log(
-          "successful uploade watch time : ",
-          JSON.stringify(formData)
-        );
       } catch (error) {
         console.error(error);
       }

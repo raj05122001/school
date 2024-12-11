@@ -1006,7 +1006,6 @@ export default class apiServices {
 
     return deleteLecturePromise
       .then((response) => {
-        console.log("Lecture deleted successfully:", response);
         return response;
       })
       .catch((error) => {

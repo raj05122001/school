@@ -14,6 +14,7 @@ import LectureAnalytics from "@/components/teacher/LectureAnalytics/LectureAnaly
 import Cookies from "js-cookie";
 import { decodeToken } from "react-jwt";
 import PersonalisedRecommendations from "@/components/student/MOL/PersonalisedRecommendations/PersonalisedRecommendations";
+import AudioPlayer from "@/components/AudioPlayer/AudioPlayer";
 
 const LecturePage = ({ params }) => {
   const { id } = params;
@@ -58,8 +59,6 @@ const LecturePage = ({ params }) => {
     }
   };
 
-  console.log("marksData : ",marksData)
-
   const classID = lectureData?.lecture_class?.id;
 
   const videoPlayer = useMemo(() => <VideoPlayer id={id} />, [id]);
@@ -79,15 +78,19 @@ const LecturePage = ({ params }) => {
         setMarksData={setMarksData}
       />
     ),
-    [id,marksData]
+    [id, marksData]
   );
   const lectureDetails = useMemo(
-    () => <LectureDetails id={id} classID={classID} 
-    marksData={marksData}
-    isStudent={true}
-    setMarksData={setMarksData}
-    />,
-    [id, classID,marksData]
+    () => (
+      <LectureDetails
+        id={id}
+        classID={classID}
+        marksData={marksData}
+        isStudent={true}
+        setMarksData={setMarksData}
+      />
+    ),
+    [id, classID, marksData]
   );
   const articles = useMemo(() => <Articles lectureId={id} />, [id]);
   const lectureAnalytics = useMemo(
@@ -99,9 +102,10 @@ const LecturePage = ({ params }) => {
     [id]
   );
   const commentSection = useMemo(() => <CommentsSection id={id} />, [id]);
-  const personalisedRecommendations = useMemo(() => <PersonalisedRecommendations id={id} />, [id]);
-
-  
+  const personalisedRecommendations = useMemo(
+    () => <PersonalisedRecommendations id={id} />,
+    [id]
+  );
 
   return (
     <Box
@@ -133,9 +137,16 @@ const LecturePage = ({ params }) => {
         {/* Main Content */}
         <Grid item xs={12} md={8} lg={8}>
           <Box sx={{ display: "flex", flexDirection: "column", gap: 2 }}>
-            <Box sx={{ maxHeight: "500px", width: "100%", height: 500 }}>
-              {videoPlayer}
-            </Box>
+            {lectureData?.video_src === "PDF" ? (
+              <AudioPlayer
+                audio={lectureData?.audio}
+                duration={lectureData?.duration}
+              />
+            ) : (
+              <Box sx={{ maxHeight: "500px", width: "100%", height: 500 }}>
+                {videoPlayer}
+              </Box>
+            )}
             {lectureOverview}
             {lectureDetails}
             {personalisedRecommendations}

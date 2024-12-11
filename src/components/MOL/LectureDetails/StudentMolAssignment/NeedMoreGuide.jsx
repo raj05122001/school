@@ -32,7 +32,6 @@ export default function NeedMoreGuide({ assignmentId, open, setOpen }) {
       if (!hasFetchedData.current) {
         hasFetchedData.current = true;
         fetchData();
-        console.log("Data is",data)
       }
     }
   }, [assignmentId]);
@@ -41,7 +40,6 @@ export default function NeedMoreGuide({ assignmentId, open, setOpen }) {
     setLoading(true);
     try {
       const response = await getGuidance(assignmentId);
-      console.log("NeedMoreGuide response : ", response);
       const parsedData =
         typeof response?.data?.data === "string"
           ? JSON?.parse(response?.data?.data)
@@ -70,7 +68,6 @@ export default function NeedMoreGuide({ assignmentId, open, setOpen }) {
 
   // Function to render the carousel for `road_map_guide`
   const renderCarousel = (steps) => {
-    console.log("Steps", steps);
     const stepArray = steps
     .split(/step_\d+:/)
     .filter((step) => step.replace(/\n/g, "").trim() !== "");
@@ -215,7 +212,6 @@ export default function NeedMoreGuide({ assignmentId, open, setOpen }) {
       }
 
       if (key === "code_snippet_or_examples" && value !== "") {
-        console.log("Value is ", value)
         return (
           <Box key={key} sx={{ marginBottom: "16px" }}>
             <Typography variant="h6" gutterBottom textAlign={"center"}>

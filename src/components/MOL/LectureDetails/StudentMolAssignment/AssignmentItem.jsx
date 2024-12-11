@@ -71,8 +71,6 @@ const AssignmentItem = ({
   const shouldRenderAccordion =
     isSubmitted && !excludedTypes.includes(assignmentType);
 
-  console.log("Assignment type", assignmentType);
-
   const fetchAssessmentResult = async () => {
     try {
       const response = await getStudentAssignmentComment(

@@ -164,8 +164,6 @@ const SignupPage = () => {
       student_class: data.subject || "",
     };
 
-    console.log("payload", payload);
-
     try {
       const apiResponse = await registration(payload);
 
@@ -480,7 +478,6 @@ const SignupPage = () => {
 
             {/* Department or Subject */}
             <Box>
-              {console.log("Department", departmentOptions)}
               {isTeacher ? (
                 // Department Autocomplete for Teachers
                 <>

@@ -21,6 +21,7 @@ import Articles from "@/components/teacher/Articles/Articles";
 import RatingSection from "@/components/teacher/RatingSection/RatingSection";
 import LectureAnalytics from "@/components/teacher/LectureAnalytics/LectureAnalytics";
 import LectureAttachments from "@/components/MOL/LectureAttachment/LectureAttachment";
+import AudioPlayer from "@/components/AudioPlayer/AudioPlayer";
 
 const LecturePage = ({ params }) => {
   const { id } = params;
@@ -41,6 +42,7 @@ const LecturePage = ({ params }) => {
       const apiResponse = await getLectureById(id);
       if (apiResponse?.data?.success) {
         setLectureData(apiResponse?.data?.data);
+        console.log("apiResponse?.data?.data : ", apiResponse?.data?.data);
       }
       setLoading(false);
     } catch (e) {
@@ -64,7 +66,13 @@ const LecturePage = ({ params }) => {
   const videoPlayer = useMemo(() => <VideoPlayer id={id} />, [id]);
   const headerMOL = useMemo(
     () => (
-      <HeaderMOL lectureData={lectureData} handleReleased={handleReleased} isEdit={true} isShowPic={false} loading={loading} />
+      <HeaderMOL
+        lectureData={lectureData}
+        handleReleased={handleReleased}
+        isEdit={true}
+        isShowPic={false}
+        loading={loading}
+      />
     ),
     [lectureData]
   );
@@ -82,7 +90,7 @@ const LecturePage = ({ params }) => {
     [id]
   );
   const lectureAttachment = useMemo(
-    () => <LectureAttachments lectureId={id} isDarkMode={isDarkMode}/>,
+    () => <LectureAttachments lectureId={id} isDarkMode={isDarkMode} />,
     [id, isDarkMode]
   );
   const ratingSection = useMemo(
@@ -121,9 +129,13 @@ const LecturePage = ({ params }) => {
         {/* Main Content */}
         <Grid item xs={12} md={8.2} lg={8.2}>
           <Box sx={{ display: "flex", flexDirection: "column", gap: 2 }}>
-            <Box sx={{ maxHeight: "500px", width: "100%", height: 500 }}>
-              {videoPlayer}
-            </Box>
+            {lectureData?.video_src === "PDF" ? (
+              <AudioPlayer audio={lectureData?.audio} duration={lectureData?.duration}/>
+            ) : (
+              <Box sx={{ maxHeight: "500px", width: "100%", height: 500 }}>
+                {videoPlayer}
+              </Box>
+            )}
             {lectureOverview}
             {lectureDetails}
             {articles}

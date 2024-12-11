@@ -143,7 +143,6 @@ const SummaryComponent = ({
 
   // Updated stringToHtml function
   const stringToHtml = (data) => {
-    console.log("data stringToHtml : ",data)
     let formattedText = data
       ?.replace(/#+/g, "")
       ?.replace(/\*\*(.*?)\*\*/g, "<strong>$1</strong>");
