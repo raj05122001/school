@@ -19,6 +19,8 @@ import FilePreview from "./FilePreview";
 import {
   submitMOLAssignment,
   getStudentAssignmentComment,
+  getAnswerStatus,
+  reSubmitAssignment
 } from "@/api/apiHelper";
 import { styled } from "@mui/material/styles";
 import LinearProgress, {
@@ -59,6 +61,7 @@ const AssignmentItem = ({
   isSubmitted,
   fetchAssignmentAnswer,
   assignmentType,
+  isSubmit
 }) => {
   const [answerDescription, setAnswerDescription] = useState("");
   const [selectedFile, setSelectedFile] = useState(null);
@@ -68,10 +71,10 @@ const AssignmentItem = ({
   const [open, setOpen] = useState(false);
   const [result, setResult] = useState({});
   const excludedTypes = ["VIDEO", "AUDIO", "IMAGE", "LINK"];
-  const shouldRenderAccordion =
-    isSubmitted && !excludedTypes.includes(assignmentType);
-
-  console.log("Assignment type", assignmentType);
+  const [assignmentStatus, setAssignmentStatus] = useState("")
+  const shouldRenderAccordion = assignmentStatus==="data-found" && !excludedTypes.includes(assignmentType);
+  // console.log("IsSubmit Status", isSubmit, assignment?.id)
+  // console.log("IsSubmitted", isSubmitted, assignment?.id)
 
   const fetchAssessmentResult = async () => {
     try {
@@ -114,6 +117,19 @@ const AssignmentItem = ({
     }
   };
 
+  useEffect(()=>{
+    fetchStatus()
+  },[])
+
+  const fetchStatus = async () => {
+    try{
+      const response = await getAnswerStatus(assignment?.id)
+      setAssignmentStatus(response?.data?.data?.message)
+    }catch(error){
+      console.log("Error Fetching Status", error)
+    }
+  }
+
   const removeSelectedFile = () => {
     setSelectedFile(null);
     setFileType("");
@@ -138,6 +154,49 @@ const AssignmentItem = ({
           type: "SHOW_SNACKBAR",
           payload: {
             message: "Assignment submitted successfully!",
+            severity: "success",
+          },
+        });
+        fetchAssignmentAnswer();
+      } else {
+        console.error("Error submitting assignment:", submitResponse.message);
+        dispatch({
+          type: "SHOW_SNACKBAR",
+          payload: {
+            message: "Error submitting assignment. Please try again.",
+            severity: "error",
+          },
+        });
+      }
+    } catch (err) {
+      console.error("Submission error:", err);
+      dispatch({
+        type: "SHOW_SNACKBAR",
+        payload: {
+          message: "Submission failed. Please try again.",
+          severity: "error",
+        },
+      });
+    } finally {
+      setSubmitting(false);
+    }
+  };
+
+  const handleReSubmit = async () => {
+    console.log("ReSubmit function triggered");
+    setSubmitting(true);
+    try {
+      const formData = {
+        is_submitted: true,
+        answer_link: selectedFile ? selectedFile.s3Location : null,    
+      };
+      const submitResponse = await reSubmitAssignment(assignment.id, formData);
+      if (submitResponse.data.success) {
+        dispatch({ type: "SET_SUBMITTED", payload: assignment.id });
+        dispatch({
+          type: "SHOW_SNACKBAR",
+          payload: {
+            message: "Assignment re-submitted successfully!",
             severity: "success",
           },
         });
@@ -313,7 +372,7 @@ const AssignmentItem = ({
         )}
       </Box>
 
-      {!isSubmitted && (
+      {isSubmit===false && (
         <TextField
           fullWidth
           variant="outlined"
@@ -325,7 +384,7 @@ const AssignmentItem = ({
         />
       )}
 
-      {!isSubmitted && !selectedFile && (
+      {isSubmit===false && !selectedFile && (
         <Stack direction="row" spacing={1}>
           <Tooltip title="Image">
             <IconButton
@@ -374,7 +433,7 @@ const AssignmentItem = ({
         </Stack>
       )}
 
-      {selectedFile && (
+      {isSubmit===false && selectedFile && (
         <Box
           position="relative"
           display="inline-block"
@@ -415,12 +474,12 @@ const AssignmentItem = ({
         </Box>
       )}
 
-      {!isSubmitted &&
+      {isSubmit===false &&
         (uploadProgress === 100 || answerDescription ? (
           <Button
             variant="contained"
             color="primary"
-            onClick={handleSubmit}
+            onClick={assignmentStatus==="data-found" ? handleReSubmit : handleSubmit}
             sx={{ mt: 2 }}
             disabled={submitting || (!answerDescription && !selectedFile)}
           >
@@ -442,9 +501,9 @@ const AssignmentItem = ({
               alignItems="center"
               justifyContent="center"
             >
-              <Typography variant="body1" color="textPrimary">
+            <Typography variant="body1" color="textPrimary">
                 {!selectedFile && !answerDescription
-                  ? "Please upload a file or enter a description to proceed."
+                  ? isSubmitted ? "Please re-upload a file or enter a description to proceed for resubmitting.": "Please upload a file or enter a description to proceed."
                   : uploadProgress < 100
                   ? `Uploading... ${Math.round(uploadProgress)}%`
                   : "Upload complete! You can now submit your assignment."}
