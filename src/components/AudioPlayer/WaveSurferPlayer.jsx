@@ -272,4 +272,6 @@ const WaveSurferPlayer = forwardRef(
   }
 );
 
+WaveSurferPlayer.displayName = "WaveSurferPlayer";
+
 export default WaveSurferPlayer;
