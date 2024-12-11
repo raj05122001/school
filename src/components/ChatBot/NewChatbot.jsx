@@ -68,7 +68,6 @@ export default function NewChatbot({ suggestionInput, setIsOpenChatBot }) {
       const response = await createSession(formData);
       const { session_id } = response?.data?.data;
       setSessionID(session_id);
-      console.log("Session ID created with ID:", session_id);
     } catch (error) {
       console.error("Error creating Session", error);
     }
@@ -144,8 +143,6 @@ export default function NewChatbot({ suggestionInput, setIsOpenChatBot }) {
     }
     setIsLoading(false);
   };
-
-  console.log("Old Chat", oldChats);
 
   return (
     <Box

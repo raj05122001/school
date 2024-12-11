@@ -56,7 +56,6 @@ const StudentMOLAssignment = ({ id, isDarkMode, class_ID }) => {
     try{
       const response=await getAssignmentAnswer(id)
       const data=response?.data?.data?.data
-      console.log("Dtat ", data)
       const newData=data?.map((val)=>val?.assignment_que?.id)
       const typeAssignment = data?.map((val)=>val?.answer_type)
       SetSubmittedId(newData)

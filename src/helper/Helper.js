@@ -246,3 +246,39 @@ export const handleErrorResponse = (error) => {
       }
   }
 };
+
+export const msToHMS = (ms, timeOrDuretion = "time") => {
+  // 1- Convert to seconds:
+  let seconds = ms / 1000;
+  // 2- Extract hours:
+  const hours = parseInt(seconds / 3600); // 3,600 seconds in 1 hour
+  seconds = seconds % 3600; // seconds remaining after extracting hours
+  // 3- Extract minutes:
+  const minutes = parseInt(seconds / 60); // 60 seconds in 1 minute
+  // 4- Keep only seconds not extracted to minutes:
+  seconds = (seconds % 60).toFixed(0);
+  if (timeOrDuretion === "time") {
+    seconds = seconds < 10 ? `0${seconds}` : `${seconds}`;
+    return `${hours == 0 ? "" : hours + ":"}${minutes}:${seconds}`;
+  } else {
+    return `${hours == 0 ? "" : `${hours}h `}${
+      minutes == 0 ? "" : `${minutes}m `
+    }${seconds == 0 ? "" : `${seconds}s`}`;
+  }
+};
+
+export const replaceSpeaker = (text) => {
+  if (!(text?.match(/^Unidentified ([A-Za-z0-9_]+)(?:,([^@]+@[^,\s]+))?( .+)?$/))) {
+    return text?.split(',')[0]
+  }
+  return text?.split(',')[0].replace(/SPEAKER_(\d+)/g, function (match, digits) {
+    const numericValue = parseInt(digits, 10);
+
+    if (numericValue >= 0 && numericValue < 24) {
+      const replacement = String.fromCharCode('A'.charCodeAt(0) + numericValue);
+      return replacement;
+    }
+
+    return match;
+  });
+}

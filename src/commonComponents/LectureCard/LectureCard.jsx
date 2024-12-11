@@ -71,8 +71,6 @@ const LectureCard = ({ lecture }) => {
 
   const router = useRouter();
 
-  console.log("open ", open);
-
   const lectureCardStyle = {
     position: "relative",
     display: "flex",

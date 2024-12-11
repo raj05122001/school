@@ -20,7 +20,6 @@ const HeaderMOL = ({
   loading,
   handleReleased=(()=>{}),
 }) => {
-  console.log("lectureData : ",lectureData)
   const { isDarkMode } = useThemeContext();
   const theme = useTheme();
 
