@@ -11,7 +11,7 @@ import CommentsSection from "@/components/teacher/CommentsSection/CommentsSectio
 import Articles from "@/components/teacher/Articles/Articles";
 import RatingSection from "@/components/teacher/RatingSection/RatingSection";
 import LectureAnalytics from "@/components/teacher/LectureAnalytics/LectureAnalytics";
-// import AudioPlayer from "@/components/AudioPlayer/AudioPlayer";
+import AudioPlayer from "@/components/AudioPlayer/AudioPlayer";
 
 const LecturePage = ({ params }) => {
   const { id } = params;
@@ -90,16 +90,13 @@ const LecturePage = ({ params }) => {
         {/* Main Content */}
         <Grid item xs={12} md={8} lg={8}>
           <Box sx={{ display: "flex", flexDirection: "column", gap: 2 }}>
-          {/* {lectureData?.video_src === "PDF" ? (
+          {lectureData?.video_src === "PDF" ? (
               <AudioPlayer audio={lectureData?.audio} duration={lectureData?.duration}/>
             ) : (
               <Box sx={{ maxHeight: "500px", width: "100%", height: 500 }}>
                 {videoPlayer}
               </Box>
-            )} */}
-              <Box sx={{ maxHeight: "500px", width: "100%", height: 500 }}>
-                {videoPlayer}
-              </Box>
+            )}
             {lectureOverview}
             {lectureDetails}
             {articles}

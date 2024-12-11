@@ -14,7 +14,7 @@ import LectureAnalytics from "@/components/teacher/LectureAnalytics/LectureAnaly
 import Cookies from "js-cookie";
 import { decodeToken } from "react-jwt";
 import PersonalisedRecommendations from "@/components/student/MOL/PersonalisedRecommendations/PersonalisedRecommendations";
-// import AudioPlayer from "@/components/AudioPlayer/AudioPlayer";
+import AudioPlayer from "@/components/AudioPlayer/AudioPlayer";
 
 const LecturePage = ({ params }) => {
   const { id } = params;
@@ -137,7 +137,7 @@ const LecturePage = ({ params }) => {
         {/* Main Content */}
         <Grid item xs={12} md={8} lg={8}>
           <Box sx={{ display: "flex", flexDirection: "column", gap: 2 }}>
-            {/* {lectureData?.video_src === "PDF" ? (
+            {lectureData?.video_src === "PDF" ? (
               <AudioPlayer
                 audio={lectureData?.audio}
                 duration={lectureData?.duration}
@@ -146,10 +146,7 @@ const LecturePage = ({ params }) => {
               <Box sx={{ maxHeight: "500px", width: "100%", height: 500 }}>
                 {videoPlayer}
               </Box>
-            )} */}
-             <Box sx={{ maxHeight: "500px", width: "100%", height: 500 }}>
-                {videoPlayer}
-              </Box>
+            )}
             {lectureOverview}
             {lectureDetails}
             {personalisedRecommendations}
