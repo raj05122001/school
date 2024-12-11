@@ -323,21 +323,12 @@ export function BasicModal({ open, setOpen, id, getAllLecture = () => {} }) {
   const handleFileChange = (e) => {
     setError("");
     const selectedFiles = Array.from(e.target.files);
-    const filteredFiles = selectedFiles.filter((file) =>
-      ["application/pdf"].includes(file.type)
-    );
-
-    if (filteredFiles.length !== selectedFiles.length) {
-      setError("Only PDF files are allowed.");
-      return;
-    }
-
-    setFiles(filteredFiles);
+    setFiles(selectedFiles);
   };
 
   const handleSubmit = async () => {
     if (!files.length) {
-      setError("No file selected. Please choose a PDF to upload.");
+      setError("No file selected. Please choose a Files to upload.");
       return;
     }
 
@@ -458,7 +449,7 @@ export function BasicModal({ open, setOpen, id, getAllLecture = () => {} }) {
               multiple
               hidden
               ref={inputVideoRef}
-              accept="application/pdf"
+              accept="application/pdf, application/msword, application/vnd.openxmlformats-officedocument.wordprocessingml.document, text/plain"
               onChange={handleFileChange}
             />
           </Button>
