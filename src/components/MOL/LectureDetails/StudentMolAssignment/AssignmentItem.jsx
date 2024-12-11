@@ -61,7 +61,9 @@ const AssignmentItem = ({
   isSubmitted,
   fetchAssignmentAnswer,
   assignmentType,
-  isSubmit
+  isSubmit,
+  marksObtained,
+  teacherComments
 }) => {
   const [answerDescription, setAnswerDescription] = useState("");
   const [selectedFile, setSelectedFile] = useState(null);
@@ -73,8 +75,8 @@ const AssignmentItem = ({
   const excludedTypes = ["VIDEO", "AUDIO", "IMAGE", "LINK"];
   const [assignmentStatus, setAssignmentStatus] = useState("")
   const shouldRenderAccordion = assignmentStatus==="data-found" && !excludedTypes.includes(assignmentType);
-  // console.log("IsSubmit Status", isSubmit, assignment?.id)
-  // console.log("IsSubmitted", isSubmitted, assignment?.id)
+  console.log("Marks obtained", marksObtained, assignment?.id)
+  console.log("Teacher Comments", teacherComments, assignment?.id)
 
   const fetchAssessmentResult = async () => {
     try {
@@ -511,6 +513,56 @@ const AssignmentItem = ({
             </Box>
           </Box>
         ))}
+      {isSubmit===true && teacherComments!==null && marksObtained!==null &&
+      <Accordion
+            sx={{
+              backgroundColor: "rgba(255, 255, 255, 0.2)",
+              p: 1,
+              mt: 1,
+              borderRadius: "12px !important",
+              boxShadow: "0px 4px 10px #adc0ff",
+            }}
+          >
+            <AccordionSummary
+              expandIcon={<FaAngleDown />}
+              aria-controls="panel2-content"
+              id="panel2-header"
+            >
+              <Box sx={{ display: "flex" }}>
+                <GiBullseye style={{ marginRight: 3, fontSize: "24px" }} />
+                <Typography variant="body1" sx={{ fontSize: "16px" }}>
+                  Teacher Assessed Result
+                </Typography>
+              </Box>
+            </AccordionSummary>
+            <AccordionDetails>
+              <Typography>
+                <GrScorecard style={{ marginRight: "4px" }} />
+                <strong>Marks Scored:</strong> {marksObtained}/{assignment.assignment_mark}
+              </Typography>
+              {marksObtained !== undefined &&
+                assignment.assignment_mark && (
+                  <ColorLinearProgress
+                    variant="determinate"
+                    sx={{height:"6px"}}
+                    value={
+                      (marksObtained / assignment.assignment_mark) * 100
+                    }
+                  />
+                )}
+              <Typography
+                variant="subtitle1"
+                sx={{ marginTop: 2, fontSize: "18px" }}
+              >
+                <strong>
+                  <PiChalkboardTeacher style={{ marginRight: "4px" }} />
+                  Comments
+                </strong>
+                <br />
+              </Typography>
+              {teacherComments}
+            </AccordionDetails>
+          </Accordion>}
     </Box>
   );
 };

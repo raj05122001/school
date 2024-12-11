@@ -1024,7 +1024,7 @@ export default class apiServices {
   public getStudentAssignmentComment = async (assignmentId, studentId) => {
     return await this.axiosInstance
       .get(
-        `/api/v1/student/auto-assessment-feedback/${assignmentId}/${studentId}`
+        `/api/v1/student/auto-assessment-feedback/${assignmentId}/?student_id=${studentId}`
       )
       .then((Response) => Response)
       .catch((error) => console.error(error));
