@@ -607,3 +607,13 @@ export const releasedLecture = async (lectureId,formData) => {
   const apiInstance = new apiServices(axiosAPIInstance);
   return await apiInstance.releasedLecture(lectureId,formData);
 };
+
+export const getAnswerStatus = async (assignmentId) => {
+  const apiInstance = new apiServices(axiosAPIInstance);
+  return await apiInstance.getAnswerStatus(assignmentId);
+};
+
+export const reSubmitAssignment = async (assignmentId,formData) => {
+  const apiInstance = new apiServices(axiosAPIInstance);
+  return await apiInstance.reSubmitAssignment(assignmentId,formData);
+};

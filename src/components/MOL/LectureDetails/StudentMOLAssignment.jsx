@@ -17,10 +17,8 @@ const StudentMOLAssignment = ({ id, isDarkMode, class_ID }) => {
   const [submittedId,SetSubmittedId]=useState([])
   const [assignmentType, setAssignmentType] = useState([])
   const hasFetchedData = useRef(false); // Prevent multiple fetch calls
-
   const { s3 } = AwsSdk();
   const answered_by = Number(userDetails?.student_id);
-
   useEffect(() => {
     if(id){
       if (!hasFetchedData.current) {
@@ -109,8 +107,10 @@ const StudentMOLAssignment = ({ id, isDarkMode, class_ID }) => {
               {lectureTitle}
             </Typography>
           </Box>
-          {assignments.map((assignment, index) => (
-            <AssignmentItem
+          {assignments.map((assignment, index) => {
+            const submitStatus = assignmentType?.find((val)=>val?.assignment_que?.id===assignment.id)?.is_submitted || false
+            return (
+              <AssignmentItem
               isSubmitted={submittedId?.includes(assignment.id)}
               key={assignment.id}
               assignment={assignment}
@@ -121,8 +121,12 @@ const StudentMOLAssignment = ({ id, isDarkMode, class_ID }) => {
               isDarkMode={isDarkMode}
               fetchAssignmentAnswer={fetchAssignmentAnswer}
               assignmentType={assignmentType?.find((val)=>val?.assignment_que?.id===assignment.id)?.answer_type}
+              isSubmit={submitStatus}
             />
-          ))}
+            )
+          })}
+          
+          {console.log("Assignments", assignments[3])}
         </>
       </MathJax.Context>
       {/* Snackbar for notifications */}
