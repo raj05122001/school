@@ -33,7 +33,7 @@ import { FaBookOpen } from "react-icons/fa";
 import { decodeToken } from "react-jwt";
 import Cookies from "js-cookie";
 import { useRouter } from "next/navigation";
-import { MdFileUpload } from "react-icons/md";
+import { MdFileUpload, MdRemoveCircleOutline } from "react-icons/md";
 import { uploadS3Video } from "@/api/apiHelper";
 import { IoIosCloseCircle } from "react-icons/io";
 
@@ -49,7 +49,7 @@ const day = [
 
 const settings = ["Upload File", "Record or Upload Video"];
 
-const LectureCard = ({ lecture }) => {
+const LectureCard = ({ lecture, getAllLecture = () => {} }) => {
   const { isDarkMode, primaryColor, secondaryColor } = useThemeContext();
   const [open, setOpen] = useState(false);
   const {
@@ -283,17 +283,21 @@ const LectureCard = ({ lecture }) => {
           </Box>
         )}
       </Paper>
-      <BasicModal open={open} setOpen={setOpen} id={lecture?.id} />
+      <BasicModal
+        open={open}
+        setOpen={setOpen}
+        id={lecture?.id}
+        getAllLecture={getAllLecture}
+      />
     </>
   );
 };
 
 export default LectureCard;
 
-export function BasicModal({ open, setOpen, id }) {
+export function BasicModal({ open, setOpen, id, getAllLecture = () => {} }) {
   const inputVideoRef = useRef(null);
-  const [file, setFile] = useState(null);
-  const [fileName, setFileName] = useState("");
+  const [files, setFiles] = useState([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
 
@@ -305,9 +309,12 @@ export function BasicModal({ open, setOpen, id }) {
     }
   };
 
+  const handleRemoveFile = (index) => {
+    setFiles((prevFiles) => prevFiles.filter((_, idx) => idx !== index));
+  };
+
   const resetStates = () => {
-    setFile(null);
-    setFileName("");
+    setFiles([]);
     setError("");
     setLoading(false);
     if (inputVideoRef.current) inputVideoRef.current.value = null;
@@ -315,21 +322,21 @@ export function BasicModal({ open, setOpen, id }) {
 
   const handleFileChange = (e) => {
     setError("");
-    const selectedFile = e.target.files[0];
-    if (selectedFile) {
-      if (selectedFile.type !== "application/pdf") {
-        setError("Please select a valid PDF file.");
-        setFile(null);
-        setFileName("");
-        return;
-      }
-      setFile(selectedFile);
-      setFileName(selectedFile.name);
+    const selectedFiles = Array.from(e.target.files);
+    const filteredFiles = selectedFiles.filter((file) =>
+      ["application/pdf"].includes(file.type)
+    );
+
+    if (filteredFiles.length !== selectedFiles.length) {
+      setError("Only PDF files are allowed.");
+      return;
     }
+
+    setFiles(filteredFiles);
   };
 
   const handleSubmit = async () => {
-    if (!file) {
+    if (!files.length) {
       setError("No file selected. Please choose a PDF to upload.");
       return;
     }
@@ -338,13 +345,16 @@ export function BasicModal({ open, setOpen, id }) {
       setLoading(true);
       const formData = new FormData();
       formData.append("video_src", "PDF");
-      formData.append("pdf", file);
+      files.forEach((file) => {
+        formData.append("pdf", file);
+      });
       await uploadS3Video(id, formData);
       resetStates();
+      getAllLecture();
       setOpen(false);
     } catch (error) {
       console.error(error);
-      setError("Failed to upload file. Please try again.");
+      setError("Failed to upload files. Please try again.");
     } finally {
       setLoading(false);
     }
@@ -368,68 +378,69 @@ export function BasicModal({ open, setOpen, id }) {
       }}
     >
       <DialogContent>
-      <Box
-        sx={{
-          p: 3,
-          display: "flex",
-          flexDirection: "column",
-          justifyContent: "center",
-          alignItems: "center",
-          position: "relative",
-        }}
-      >
-        <MdFileUpload
-          size="60"
-          style={{ color: "#E0E0E0", marginBottom: 20 }}
-        />
-        <Typography variant="h6" sx={{ mb: 2 }} id="upload-dialog-title">
-          Upload File
-        </Typography>
-        {loading && (
-          <CircularProgress
-            size={24}
-            sx={{
-              position: "absolute",
-              top: 16,
-              right: 16,
-              color: "primary.main",
-            }}
+        <Box
+          sx={{
+            p: 3,
+            display: "flex",
+            flexDirection: "column",
+            justifyContent: "center",
+            alignItems: "center",
+            position: "relative",
+          }}
+        >
+          <MdFileUpload
+            size="60"
+            style={{ color: "#E0E0E0", marginBottom: 20 }}
           />
-        )}
-        {error && (
-          <Alert
-            severity="error"
-            sx={{ mb: 2, width: "100%", bgcolor: "darkred", color: "white" }}
-          >
-            {error}
-          </Alert>
-        )}
-
-        {fileName ? (
+          <Typography variant="h6" sx={{ mb: 2 }} id="upload-dialog-title">
+            Upload Files
+          </Typography>
+          {loading && (
+            <CircularProgress
+              size={24}
+              sx={{
+                position: "absolute",
+                top: 16,
+                right: 16,
+                color: "primary.main",
+              }}
+            />
+          )}
+          {error && (
+            <Alert
+              severity="error"
+              sx={{ mb: 2, width: "100%", bgcolor: "darkred", color: "white" }}
+            >
+              {error}
+            </Alert>
+          )}
           <Box
             sx={{
-              borderRadius: "16px",
-              padding: "8px",
-              backgroundColor: "#444",
-              cursor: "default",
               display: "flex",
-              alignItems: "center",
+              flexDirection: "column",
               width: "100%",
-              justifyContent: "space-between",
-              mb: 2,
             }}
           >
-            <Typography variant="body2" sx={{ color: "white" ,pl:2}}>
-              {fileName.length > 18 ? `${fileName.slice(0, 16)}...` : fileName}
-            </Typography>
-            <IoIosCloseCircle
-              size={26}
-              color="red"
-              onClick={resetStates}
-              style={{ cursor: "pointer" }}
-            />
+            {files.map((file, index) => (
+              <Box
+                key={index}
+                sx={{ display: "flex", alignItems: "center", mb: 1 }}
+              >
+                <Typography
+                  variant="body2"
+                  sx={{ color: "white", flexGrow: 1, mr: 2 }}
+                >
+                  {file.name}
+                </Typography>
+                <IconButton
+                  onClick={() => handleRemoveFile(index)}
+                  sx={{ color: "red" }}
+                >
+                  <MdRemoveCircleOutline />
+                </IconButton>
+              </Box>
+            ))}
           </Box>
-        ) : (
           <Button
             variant="contained"
             component="label"
@@ -441,16 +452,16 @@ export function BasicModal({ open, setOpen, id }) {
               ":hover": { bgcolor: "#555" },
             }}
           >
-            Select PDF
+            Select Files
             <input
               type="file"
+              multiple
               hidden
               ref={inputVideoRef}
               accept="application/pdf"
               onChange={handleFileChange}
             />
           </Button>
-        )}
         </Box>
       </DialogContent>
       <DialogActions>
@@ -466,7 +477,7 @@ export function BasicModal({ open, setOpen, id }) {
           <Button
             variant="contained"
             onClick={handleSubmit}
-            disabled={loading || !file}
+            disabled={loading || !files.length}
             sx={{
               bgcolor: "primary.main",
               color: "white",

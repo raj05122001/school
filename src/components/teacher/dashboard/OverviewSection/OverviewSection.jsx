@@ -99,7 +99,7 @@ const OverviewSection = () => {
                 }
                 key={lecture.id}
               >
-                <LectureCard lecture={lecture} />
+                <LectureCard lecture={lecture} getAllLecture={getAllLecture} />
               </Grid>
             ))}
         </Grid>
