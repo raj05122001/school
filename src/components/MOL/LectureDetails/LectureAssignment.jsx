@@ -347,7 +347,7 @@ const LectureAssignment = ({ id, isDarkMode, class_ID, isEdit }) => {
                           // backgroundColor: assignment.is_assigned
                           //   ? "green"
                           //   : "#89CFF0",
-                          backgroundColor: "#89CFF0",
+                          backgroundColor: assignment?.is_assigned ? "#92d689" : "#89CFF0",
                           color: "white",
                         }}
                       >

@@ -168,7 +168,7 @@ const Page = ({ params }) => {
           {listData?.data?.length > 0 &&
             listData?.data?.map((assignment, index) => (
               <Grid item xs={12} key={assignment.id}>
-                <CheckAssignment assignment={assignment} index={index} />
+                <CheckAssignment  assignment={assignment} index={index} fetchAssignmentAnswer={fetchAssignmentAnswer} />
               </Grid>
             ))}
         </Grid>

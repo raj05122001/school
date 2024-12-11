@@ -63,7 +63,8 @@ const AssignmentItem = ({
   assignmentType,
   isSubmit,
   marksObtained,
-  teacherComments
+  teacherComments,
+  fetchAssignments
 }) => {
   const [answerDescription, setAnswerDescription] = useState("");
   const [selectedFile, setSelectedFile] = useState(null);
@@ -75,8 +76,6 @@ const AssignmentItem = ({
   const excludedTypes = ["VIDEO", "AUDIO", "IMAGE", "LINK"];
   const [assignmentStatus, setAssignmentStatus] = useState("")
   const shouldRenderAccordion = assignmentStatus==="data-found" && !excludedTypes.includes(assignmentType);
-  console.log("Marks obtained", marksObtained, assignment?.id)
-  console.log("Teacher Comments", teacherComments, assignment?.id)
 
   const fetchAssessmentResult = async () => {
     try {
@@ -128,7 +127,7 @@ const AssignmentItem = ({
       const response = await getAnswerStatus(assignment?.id)
       setAssignmentStatus(response?.data?.data?.message)
     }catch(error){
-      console.log("Error Fetching Status", error)
+      console.error("Error Fetching Status", error)
     }
   }
 
@@ -150,6 +149,7 @@ const AssignmentItem = ({
         answer_type: fileType,
       };
       const submitResponse = await submitMOLAssignment(formData);
+      fetchAssignments();
       if (submitResponse.data.success) {
         dispatch({ type: "SET_SUBMITTED", payload: assignment.id });
         dispatch({
@@ -160,6 +160,7 @@ const AssignmentItem = ({
           },
         });
         fetchAssignmentAnswer();
+        fetchAssessmentResult();
       } else {
         console.error("Error submitting assignment:", submitResponse.message);
         dispatch({
@@ -185,7 +186,6 @@ const AssignmentItem = ({
   };
 
   const handleReSubmit = async () => {
-    console.log("ReSubmit function triggered");
     setSubmitting(true);
     try {
       const formData = {
