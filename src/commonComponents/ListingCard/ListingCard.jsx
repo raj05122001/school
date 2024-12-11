@@ -10,8 +10,9 @@ import {
 import { useThemeContext } from "@/hooks/ThemeContext";
 import { MdOutlineDateRange } from "react-icons/md";
 import LectureType from "../LectureType/LectureType";
+import Image from "next/image";
 
-const ListingCard = ({ data ,onClick}) => {
+const ListingCard = ({ data, onClick }) => {
   const { isDarkMode, primaryColor, secondaryColor } = useThemeContext();
   const videoRef = useRef(null);
 
@@ -27,8 +28,14 @@ const ListingCard = ({ data ,onClick}) => {
     videoRef.current.pause();
   };
 
+  console.log("data : ", data);
+
   return (
-    <Box p={2} sx={{ width: "100%", height: "100%" }} onClick={()=>onClick(data?.id)}>
+    <Box
+      p={2}
+      sx={{ width: "100%", height: "100%" }}
+      onClick={() => onClick(data?.id)}
+    >
       <Card
         className="blur_effect_card"
         sx={{
@@ -49,21 +56,25 @@ const ListingCard = ({ data ,onClick}) => {
         onMouseEnter={handleMouseEnter}
         onMouseLeave={handleMouseLeave}
       >
-        <CardMedia
-          component="video"
-          preload="auto"
-          ref={videoRef}
-          src={`https://d3515ggloh2j4b.cloudfront.net/videos/${data?.id}.mp4`}
-          controls={isHovered}
-          sx={{
-            width: "100%",
-            height: "auto",
-            maxHeight: 230,
-            borderRadius: "16px 16px 0 0",
-            backdropFilter: "blur(10px)",
-            backgroundColor: "black",
-          }}
-        />
+        {data?.processing_status === "SUCCESS" ? (
+          <CardMedia
+            component="video"
+            preload="auto"
+            ref={videoRef}
+            src={`https://d3515ggloh2j4b.cloudfront.net/videos/${data?.id}.mp4`}
+            controls={isHovered}
+            sx={{
+              width: "100%",
+              height: "auto",
+              maxHeight: 230,
+              borderRadius: "16px 16px 0 0",
+              backdropFilter: "blur(10px)",
+              backgroundColor: "black",
+            }}
+          />
+        ) : (
+          <Image src={"/Your Lecture is.png"} width={200} height={230} style={{width:"100%",height: "auto", maxHeight: 230,}}/>
+        )}
 
         <CardContent
           sx={{

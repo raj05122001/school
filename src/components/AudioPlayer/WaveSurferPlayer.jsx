@@ -32,7 +32,7 @@ const WaveSurferPlayer = forwardRef(
 
     const playerOptions = useMemo(
       () => ({
-        height: 40,
+        height: 100,
         container: "#waveform",
         waveColor: "#2196f3",
         progressColor: "#4caf50",
@@ -176,7 +176,7 @@ const WaveSurferPlayer = forwardRef(
           sx={{
             display: loading ? "none" : "block", // Show the wave line when loading is done
             width: "100%",
-            height: "40px", // Match the height defined in playerOptions
+            height: "100px", // Match the height defined in playerOptions
             marginBottom: 2,
             overflow: "hidden",
             position: "relative",
