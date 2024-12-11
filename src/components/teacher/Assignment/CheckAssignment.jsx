@@ -34,19 +34,19 @@ const CheckAssignment = ({ assignment, index }) => {
   const isChecked = assignment?.is_checked || false;
   const answeredBy = assignment?.answer_by?.id;
 
-  const fetchAssessmentResult = async () =>{
-    try{
-      const response = await getStudentAssignmentComment(assignment?.assignment_que?.id, answeredBy)
-      const data = response?.data
-      setComment(data?.data?.comment)
-      setGrades(data?.data?.score)
-    }catch(error){
-      console.error("Error fetching result", error)
-    }
-  }
-  useEffect(()=>{
-    fetchAssessmentResult()
-  },[])
+  // const fetchAssessmentResult = async () =>{
+  //   try{
+  //     const response = await getStudentAssignmentComment(assignment?.assignment_que?.id, answeredBy)
+  //     const data = response?.data
+  //     setComment(data?.data?.comment)
+  //     setGrades(data?.data?.score)
+  //   }catch(error){
+  //     console.error("Error fetching result", error)
+  //   }
+  // }
+  // useEffect(()=>{
+  //   fetchAssessmentResult()
+  // },[])
 
   const handleGradeSubmission = useCallback(async () => {
     setIsLoading(true);

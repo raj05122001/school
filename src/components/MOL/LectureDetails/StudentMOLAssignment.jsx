@@ -122,6 +122,8 @@ const StudentMOLAssignment = ({ id, isDarkMode, class_ID }) => {
               fetchAssignmentAnswer={fetchAssignmentAnswer}
               assignmentType={assignmentType?.find((val)=>val?.assignment_que?.id===assignment.id)?.answer_type}
               isSubmit={submitStatus}
+              marksObtained={assignmentType?.find((val)=>val?.assignment_que?.id===assignment.id)?.marks_obtained}
+              teacherComments={assignmentType?.find((val)=>val?.assignment_que?.id===assignment.id)?.comment_by_teacher}
             />
             )
           })}
