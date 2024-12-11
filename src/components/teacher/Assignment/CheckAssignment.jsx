@@ -22,7 +22,7 @@ import { FaPenNib } from "react-icons/fa";
 import MathJax from "react-mathjax2";
 import TextWithMath from "@/commonComponents/TextWithMath/TextWithMath";
 
-const CheckAssignment = ({ assignment, index }) => {
+const CheckAssignment = ({ assignment, index, fetchAssignmentAnswer }) => {
   const { isDarkMode, primaryColor, secondaryColor } = useThemeContext();
   const [grades, setGrades] = useState(assignment?.marks_obtained || 0);
   const [comment, setComment] = useState(assignment?.comment_by_teacher || "");
@@ -59,6 +59,7 @@ const CheckAssignment = ({ assignment, index }) => {
         is_checked: true,
       };
       await updateAssignment(assignment?.assignment_que?.id, formData);
+      fetchAssignmentAnswer()
     } catch (error) {
       console.error(error);
       setError("Failed to submit grade. Please try again.");

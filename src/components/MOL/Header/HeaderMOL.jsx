@@ -61,7 +61,7 @@ const HeaderMOL = ({
             </Button>
           )}
 
-          <Button
+          {/* <Button
             variant="outlined"
             startIcon={<FaDownload size={22} />}
             sx={{
@@ -70,7 +70,7 @@ const HeaderMOL = ({
             }}
           >
             {loading ? <Skeleton width={80} height={30} /> : "Download"}
-          </Button>
+          </Button> */}
 
           <DarkMode />
 

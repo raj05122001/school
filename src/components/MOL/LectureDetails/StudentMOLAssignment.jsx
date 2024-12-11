@@ -9,7 +9,6 @@ import AssignmentItem from "./StudentMolAssignment/AssignmentItem";
 import { initialState, reducer } from "./StudentMolAssignment/stateManagement";
 import { AwsSdk } from "@/hooks/AwsSdk";
 
-const userDetails = decodeToken(Cookies.get("ACCESS_TOKEN"));
 
 const StudentMOLAssignment = ({ id, isDarkMode, class_ID }) => {
   const [state, dispatch] = useReducer(reducer, initialState);
@@ -18,6 +17,15 @@ const StudentMOLAssignment = ({ id, isDarkMode, class_ID }) => {
   const [assignmentType, setAssignmentType] = useState([])
   const hasFetchedData = useRef(false); // Prevent multiple fetch calls
   const { s3 } = AwsSdk();
+  const [userDetails, setUserDetails] = useState(null);
+
+  useEffect(() => {
+    if (typeof window !== "undefined") {
+      const token = Cookies.get("ACCESS_TOKEN");
+      setUserDetails(token ? decodeToken(token) : {});
+    }
+  }, []);
+  
   const answered_by = Number(userDetails?.student_id);
   useEffect(() => {
     if(id){
@@ -124,6 +132,7 @@ const StudentMOLAssignment = ({ id, isDarkMode, class_ID }) => {
               isSubmit={submitStatus}
               marksObtained={assignmentType?.find((val)=>val?.assignment_que?.id===assignment.id)?.marks_obtained}
               teacherComments={assignmentType?.find((val)=>val?.assignment_que?.id===assignment.id)?.comment_by_teacher}
+              fetchAssignments={fetchAssignments}
             />
             )
           })}
