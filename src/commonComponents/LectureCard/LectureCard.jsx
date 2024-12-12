@@ -37,7 +37,7 @@ import { MdFileUpload, MdRemoveCircleOutline } from "react-icons/md";
 import { uploadS3Video } from "@/api/apiHelper";
 import { IoIosCloseCircle } from "react-icons/io";
 
-const days = [
+const day = [
   "Sunday",
   "Monday",
   "Tuesday",

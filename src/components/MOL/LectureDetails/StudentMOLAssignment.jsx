@@ -86,7 +86,11 @@ const StudentMOLAssignment = ({ id, isDarkMode, class_ID }) => {
       </Box>
     );
   }
-
+  const legendItems = [
+    { label: "Fully Submitted", color: "#ACE1AF" },
+    { label: "Re-Submit to Teacher", color: "#e8e2c3" },
+    { label: "Not Attempted", color: "#ffe0e0" },
+  ];
   return (
     <Box
       sx={{
@@ -115,6 +119,24 @@ const StudentMOLAssignment = ({ id, isDarkMode, class_ID }) => {
               {lectureTitle}
             </Typography>
           </Box>
+          <Typography component="div" style={{ display: 'flex', gap: '8px', margin: 10 }}>
+            {legendItems.map((item, index) => (
+                <Box key={index} display="flex" alignItems="center">
+                    <Box
+                        sx={{
+                            width: 16,
+                            height: 16,
+                            backgroundColor: item.color,
+                            borderRadius: '4px',
+                            marginRight: '8px',
+                        }}
+                    />
+                    <Typography variant="body2" color="textPrimary">
+                        {item.label}
+                    </Typography>
+                </Box>
+            ))}
+        </Typography>
           {assignments.map((assignment, index) => {
             const submitStatus = assignmentType?.find((val)=>val?.assignment_que?.id===assignment.id)?.is_submitted || false
             console.log("assignment are", assignment)
