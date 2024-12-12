@@ -323,7 +323,7 @@ export function BasicModal({ open, setOpen, id, getAllLecture = () => {} }) {
   const handleFileChange = (e) => {
     setError("");
     const selectedFiles = Array.from(e.target.files);
-    setFiles(selectedFiles);
+    setFiles(prev => [...prev, ...selectedFiles]);
   };
 
   const handleSubmit = async () => {
