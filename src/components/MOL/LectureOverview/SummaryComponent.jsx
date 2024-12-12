@@ -215,7 +215,7 @@ const SummaryComponent = ({
           </Box>
           <TextEditor text={summary[0]} onChange={onChange} />
         </Box>
-      ) : summary.length > 0 ? (
+      ) : summary?.length > 0 ? (
         <Box>
           {isEdit && (
             <Box sx={{ display: "flex", justifyContent: "flex-end" }}>
