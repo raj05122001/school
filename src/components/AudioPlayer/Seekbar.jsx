@@ -43,14 +43,14 @@ const Seekbar = ({ data, time, onClickonUser, totalTime }) => {
               aria-haspopup="true"
               onMouseEnter={handlePopoverOpen}
               onMouseLeave={handlePopoverClose}
-              key={obj.index}
+              key={index}
               className={styles.thumb}
               style={{
                 marginLeft: `calc(${timePersantage}% - 1px)`,
                 backgroundColor: "#4caf50",
               }}
             />
-            <Popover
+          {hoveredIndex===index &&  <Popover
               id="mouse-over-popover"
               sx={{ pointerEvents: "none" }}
               open={open}
@@ -79,7 +79,7 @@ const Seekbar = ({ data, time, onClickonUser, totalTime }) => {
                   </div>
                 )}
               </Typography>
-            </Popover>
+            </Popover>}
           </Box>
         );
       })}
