@@ -290,6 +290,35 @@ const AssignmentItem = ({
               ))}
             </ul>
           </Box>
+          <Typography
+            variant="body1"
+            sx={{
+              fontSize: "18px",
+              marginTop: 4,
+              textAlign: "center",
+              marginBottom: 2,
+              color: "#04052e",
+            }}
+          >
+            <VscActivateBreakpoints style={{ marginRight: 4 }} />
+            Improvement Points
+          </Typography>
+          <Box
+            sx={{
+              backgroundColor: "#EADDCA",
+              color: "#4A0404",
+              padding: 4,
+              borderRadius: 4,
+              boxShadow: "0px 4px 10px #a1865d",
+              fontSize: "15px",
+            }}
+          >
+            <ul style={{ lineHeight: "1.8" }}>
+              {data?.improvement_points?.map((point, index) => (
+                <li key={index}>{point}</li>
+              ))}
+            </ul>
+          </Box>
         </>
       );
     } catch (error) {
@@ -318,18 +347,35 @@ const AssignmentItem = ({
     link.click();
     document.body.removeChild(link);
   };
-
   return (
-    <Box sx={{ mb: 4, display: "flex", flexDirection: "column" }}>
+    <Box
+      sx={{
+        mb: 4,
+        display: "flex",
+        borderRadius: 4,
+        flexDirection: "column",
+        backgroundColor:
+          isSubmit === true
+            ? "#ACE1AF"
+            : shouldRenderAccordion
+            ? "#e8e2c3"
+            : "#ffe0e0",
+        boxShadow:
+        isSubmit === true
+            ? "0px 4px 10px #38ba47"
+            : shouldRenderAccordion
+            ? "0px 4px 10px #bfb999"
+            : "0px 4px 10px #ba5038",
+        p: 2,
+      }}
+    >
       <Box sx={{ display: "flex" }}>
         <Typography variant="body1">
           {String.fromCharCode(65 + index)}.&nbsp;
         </Typography>
         <Box mt={0.3}>
           <TextWithMath text={assignment.assignment_text} />
-            <Button onClick={() => !open && setOpen(true)}>
-              Need Guidance
-            </Button>
+          <Button onClick={() => !open && setOpen(true)}>Need Guidance</Button>
           {open ? (
             <NeedMoreGuide
               assignmentId={assignment.id}
@@ -341,29 +387,29 @@ const AssignmentItem = ({
           )}
         </Box>
       </Box>
-      <Box sx={{display:"flex", justifyContent:"space-between"}}>
-      <Typography variant="body2" sx={{ mt: 1, fontWeight: "bold" }}>
-        Total Marks: {assignment.assignment_mark}
-      </Typography>
-      {assignment.assignment_attachment && (
-              <Button
-                variant="outlined"
-                startIcon={<BsDownload />}
-                sx={{
-                  backgroundColor: "#f0f4fa",
-                  color: "#36454F",
-                  ":hover": {
-                    backgroundColor: "#e3e3e3",
-                    color: "#000",
-                  },
-                }}
-                onClick={() => downloadFile(assignment.assignment_attachment)}
-              >
-                Download
-              </Button>
-            )}
+      <Box sx={{ display: "flex", justifyContent: "space-between" }}>
+        <Typography variant="body2" sx={{ mt: 1, fontWeight: "bold" }}>
+          Total Marks: {assignment.assignment_mark}
+        </Typography>
+        {assignment.assignment_attachment && (
+          <Button
+            variant="outlined"
+            startIcon={<BsDownload />}
+            sx={{
+              backgroundColor: "#f0f4fa",
+              color: "#36454F",
+              ":hover": {
+                backgroundColor: "#e3e3e3",
+                color: "#000",
+              },
+            }}
+            onClick={() => downloadFile(assignment.assignment_attachment)}
+          >
+            Download
+          </Button>
+        )}
       </Box>
-      
+
       <Box sx={{ marginTop: 2 }}>
         {shouldRenderAccordion && (
           <Accordion
