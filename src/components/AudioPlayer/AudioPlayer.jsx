@@ -4,7 +4,7 @@ import WaveSurferPlayer from "./WaveSurferPlayer";
 import stc from "string-to-color";
 import { getBreakpoint } from "@/api/apiHelper";
 
-const AudioPlayer = ({ audio, id=1 ,duration}) => {
+const AudioPlayer = ({ audio, id ,duration}) => {
   const [startTime, setStartTime] = useState(0);
   const [playerTalk, setPlayerTalk] = useState([]);
   const [avtarName, setAvtarName] = useState("");

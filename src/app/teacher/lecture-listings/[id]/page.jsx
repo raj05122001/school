@@ -130,7 +130,7 @@ const LecturePage = ({ params }) => {
         <Grid item xs={12} md={8.2} lg={8.2}>
           <Box sx={{ display: "flex", flexDirection: "column", gap: 2 }}>
             {lectureData?.video_src === "PDF" ? (
-              <AudioPlayer audio={lectureData?.audio} duration={lectureData?.duration}/>
+              <AudioPlayer audio={lectureData?.audio} id={id} duration={lectureData?.duration}/>
             ) : (
               <Box sx={{ maxHeight: "500px", width: "100%", height: 500 }}>
                 {videoPlayer}

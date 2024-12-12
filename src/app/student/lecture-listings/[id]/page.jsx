@@ -141,6 +141,7 @@ const LecturePage = ({ params }) => {
               <AudioPlayer
                 audio={lectureData?.audio}
                 duration={lectureData?.duration}
+                id={id}
               />
             ) : (
               <Box sx={{ maxHeight: "500px", width: "100%", height: 500 }}>
