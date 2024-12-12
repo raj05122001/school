@@ -4,7 +4,7 @@ import WaveSurferPlayer from "./WaveSurferPlayer";
 import stc from "string-to-color";
 import { getBreakpoint } from "@/api/apiHelper";
 
-const AudioPlayer = ({ audio, id ,duration}) => {
+const AudioPlayer = ({ audio, id, duration }) => {
   const [startTime, setStartTime] = useState(0);
   const [playerTalk, setPlayerTalk] = useState([]);
   const [avtarName, setAvtarName] = useState("");
@@ -13,15 +13,22 @@ const AudioPlayer = ({ audio, id ,duration}) => {
     fetchBreakPoint();
   }, []);
 
+  const jsonData = (value) => {
+    try {
+      return value.length > 0 ? JSON.parse(value || "[]") : [];
+    } catch (error) {
+      return value;
+    }
+  };
+
   const fetchBreakPoint = async () => {
     try {
       const apiResponse = await getBreakpoint(id);
-      const breakPoint =
-        apiResponse?.data?.data?.break_point?.length > 0
-          ? JSON.parse(apiResponse?.data?.data?.break_point)
-          : [];
-          setPlayerTalk(breakPoint);
-
+      const breakPoint =jsonData(apiResponse?.data?.data?.break_point)
+        // apiResponse?.data?.data?.break_point?.length > 0
+        //   ? JSON.parse(apiResponse?.data?.data?.break_point)
+        //   : [];
+      setPlayerTalk(breakPoint);
     } catch (error) {
       console.error(error);
     }
