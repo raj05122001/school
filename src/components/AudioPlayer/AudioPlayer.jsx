@@ -15,7 +15,7 @@ const AudioPlayer = ({ audio, id, duration }) => {
 
   const jsonData = (value) => {
     try {
-      return value.length > 0 ? JSON.parse(value || "[]") : [];
+      return value ? JSON.parse(value || "[]") : [];
     } catch (error) {
       return value;
     }
