@@ -25,7 +25,9 @@ import { MdAssignmentAdd } from "react-icons/md";
 import TextEditor from "@/commonComponents/TextEditor/TextEditor";
 import { FaEdit } from "react-icons/fa";
 import { FaSave } from "react-icons/fa";
+import { BsDownload } from "react-icons/bs";
 import TextWithMath from "@/commonComponents/TextWithMath/TextWithMath";
+import { BASE_URL_MEET } from "@/constants/apiconfig";
 
 const userDetails = decodeToken(Cookies.get("ACCESS_TOKEN"));
 
@@ -46,7 +48,7 @@ const LectureAssignment = ({ id, isDarkMode, class_ID, isEdit }) => {
 
   const lectureID = id;
 
-  const checker = Number(userDetails.teacher_id);
+  const checker = Number(userDetails?.teacher_id);
   const classID = class_ID;
   const [editedAssignmentId, setEditedAssignmentId] = useState(null);
 
@@ -64,7 +66,7 @@ const LectureAssignment = ({ id, isDarkMode, class_ID, isEdit }) => {
   const fetchAssignments = async () => {
     try {
       const response = await getLectureAssignment(id);
-      if (response.success && response?.data.success) {
+      if (response?.success && response?.data.success) {
         setAssignments(response?.data?.data);
       } else {
         setError("Failed to fetch assignments.");
@@ -79,7 +81,7 @@ const LectureAssignment = ({ id, isDarkMode, class_ID, isEdit }) => {
   const handleMarkChange = (assignmentId, newMark) => {
     setAssignments((prevAssignments) =>
       prevAssignments?.map((assignment) =>
-        assignment.id === assignmentId
+        assignment?.id === assignmentId
           ? { ...assignment, assignment_mark: newMark }
           : assignment
       )
@@ -99,14 +101,14 @@ const LectureAssignment = ({ id, isDarkMode, class_ID, isEdit }) => {
 
     try {
       const response = await updateLectureAssignment(
-        assignment.lecture.id,
+        assignment?.lecture.id,
         formData
       );
 
-      if (response?.data.success) {
+      if (response?.data?.success) {
         setAssignments((prevAssignments) =>
           prevAssignments?.map((a) =>
-            a.id === assignment_id
+            a?.id === assignment_id
               ? { ...a, assignment_text: editedText, is_assigned: true }
               : a
           )
@@ -126,14 +128,14 @@ const LectureAssignment = ({ id, isDarkMode, class_ID, isEdit }) => {
     const formData = {
       lecture: Number(lectureID),
       checker,
-      assignment_text: newAssignment.assignment_text,
-      assignment_mark: newAssignment.assignment_mark,
+      assignment_text: newAssignment?.assignment_text,
+      assignment_mark: newAssignment?.assignment_mark,
       lecture_class: class_ID,
       is_assigned: 1,
     };
-
+    console.log("File is", file);
     if (file) {
-      formData.append("assignment_attachment", file); // Append file if available
+      formData.assignment_attachment = file;
     }
 
     try {
@@ -141,7 +143,7 @@ const LectureAssignment = ({ id, isDarkMode, class_ID, isEdit }) => {
       if (response?.data?.success) {
         setAssignments((prevAssignments) => [
           ...prevAssignments,
-          { ...formData, id: response.data.id, is_assigned: true },
+          { ...formData, id: response?.data?.id, is_assigned: true },
         ]);
         fetchAssignments();
         setOpenDialog(false);
@@ -175,6 +177,24 @@ const LectureAssignment = ({ id, isDarkMode, class_ID, isEdit }) => {
     } finally {
       setIsLoadingRewrite(false); // Stop loader
     }
+  };
+
+  const getFileName = (path = "") => {
+    const pathSplited = path.split("/");
+    return pathSplited.pop();
+  };
+
+  const downloadFile = (path) => {
+    const downloadPath = path.startsWith("http")
+      ? path
+      : `${BASE_URL_MEET}${path}`;
+    const link = document?.createElement("a");
+    link.href = downloadPath;
+    link.target = "_blank";
+    link.download = getFileName(path);
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
   };
 
   return (
@@ -340,19 +360,42 @@ const LectureAssignment = ({ id, isDarkMode, class_ID, isEdit }) => {
                         size="small"
                         sx={{ width: 80, mr: 2 }}
                       />
-                      <Button
-                        variant="contained"
-                        onClick={() => handleUpdateAssignment(assignment)}
-                        sx={{
-                          // backgroundColor: assignment.is_assigned
-                          //   ? "green"
-                          //   : "#89CFF0",
-                          backgroundColor: assignment?.is_assigned ? "#92d689" : "#89CFF0",
-                          color: "white",
-                        }}
-                      >
-                        {assignment.is_assigned ? "Assigned" : "Assign"}
-                      </Button>
+                      <Box sx={{display:"flex", gap:2}}>           
+                        {assignment.assignment_attachment && (
+                          <Button
+                            variant="outlined"
+                            startIcon={<BsDownload />}
+                            sx={{
+                              backgroundColor: "#f0f4fa",
+                              color: "#36454F",
+                              ":hover": {
+                                backgroundColor: "#e3e3e3",
+                                color: "#000",
+                              },
+                            }}
+                            onClick={() =>
+                              downloadFile(assignment.assignment_attachment)
+                            }
+                          >
+                            Download
+                          </Button>
+                        )}
+                        <Button
+                          variant="contained"
+                          onClick={() => handleUpdateAssignment(assignment)}
+                          sx={{
+                            // backgroundColor: assignment.is_assigned
+                            //   ? "green"
+                            //   : "#89CFF0",
+                            backgroundColor: assignment?.is_assigned
+                              ? "#92d689"
+                              : "#89CFF0",
+                            color: "white",
+                          }}
+                        >
+                          {assignment.is_assigned ? "Assigned" : "Assign"}
+                        </Button>
+                      </Box>
                     </Box>
                   </Box>
                 )
@@ -451,7 +494,10 @@ const LectureAssignment = ({ id, isDarkMode, class_ID, isEdit }) => {
                   }}
                 >
                   {isLoadingRewrite ? (
-                    <CircularProgress size={24} sx={{color:"#fff", width:"100%"}} />
+                    <CircularProgress
+                      size={24}
+                      sx={{ color: "#fff", width: "100%" }}
+                    />
                   ) : (
                     "◇ Rewrite with AI "
                   )}
@@ -483,7 +529,7 @@ const LectureAssignment = ({ id, isDarkMode, class_ID, isEdit }) => {
               />
               <input
                 type="file"
-                accept="application/pdf"
+                accept=".pdf,.doc,.docx,.xls,.xlsx,.ppt,.pptx,.txt"
                 onChange={(e) => setFile(e.target.files[0])}
                 style={{ marginTop: "16px" }}
               />

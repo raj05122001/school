@@ -117,6 +117,7 @@ const StudentMOLAssignment = ({ id, isDarkMode, class_ID }) => {
           </Box>
           {assignments.map((assignment, index) => {
             const submitStatus = assignmentType?.find((val)=>val?.assignment_que?.id===assignment.id)?.is_submitted || false
+            console.log("assignment are", assignment)
             return (
               <AssignmentItem
               isSubmitted={submittedId?.includes(assignment.id)}

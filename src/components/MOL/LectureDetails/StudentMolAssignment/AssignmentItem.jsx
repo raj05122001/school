@@ -20,7 +20,7 @@ import {
   submitMOLAssignment,
   getStudentAssignmentComment,
   getAnswerStatus,
-  reSubmitAssignment
+  reSubmitAssignment,
 } from "@/api/apiHelper";
 import { styled } from "@mui/material/styles";
 import LinearProgress, {
@@ -33,6 +33,8 @@ import { GrScorecard } from "react-icons/gr";
 import { PiChalkboardTeacher } from "react-icons/pi";
 import { VscFeedback } from "react-icons/vsc";
 import { VscActivateBreakpoints } from "react-icons/vsc";
+import { BASE_URL_MEET } from "@/constants/apiconfig";
+import { BsDownload } from "react-icons/bs";
 
 const ColorLinearProgress = styled(LinearProgress)(({ theme, value }) => {
   let color = "#FF0000"; // Default: Red for low scores
@@ -64,7 +66,7 @@ const AssignmentItem = ({
   isSubmit,
   marksObtained,
   teacherComments,
-  fetchAssignments
+  fetchAssignments,
 }) => {
   const [answerDescription, setAnswerDescription] = useState("");
   const [selectedFile, setSelectedFile] = useState(null);
@@ -74,8 +76,10 @@ const AssignmentItem = ({
   const [open, setOpen] = useState(false);
   const [result, setResult] = useState({});
   const excludedTypes = ["VIDEO", "AUDIO", "IMAGE", "LINK"];
-  const [assignmentStatus, setAssignmentStatus] = useState("")
-  const shouldRenderAccordion = assignmentStatus==="data-found" && !excludedTypes.includes(assignmentType);
+  const [assignmentStatus, setAssignmentStatus] = useState("");
+  const shouldRenderAccordion =
+    assignmentStatus === "data-found" &&
+    !excludedTypes.includes(assignmentType);
 
   const fetchAssessmentResult = async () => {
     try {
@@ -118,18 +122,18 @@ const AssignmentItem = ({
     }
   };
 
-  useEffect(()=>{
-    fetchStatus()
-  },[])
+  useEffect(() => {
+    fetchStatus();
+  }, []);
 
   const fetchStatus = async () => {
-    try{
-      const response = await getAnswerStatus(assignment?.id)
-      setAssignmentStatus(response?.data?.data?.message)
-    }catch(error){
-      console.error("Error Fetching Status", error)
+    try {
+      const response = await getAnswerStatus(assignment?.id);
+      setAssignmentStatus(response?.data?.data?.message);
+    } catch (error) {
+      console.error("Error Fetching Status", error);
     }
-  }
+  };
 
   const removeSelectedFile = () => {
     setSelectedFile(null);
@@ -190,7 +194,7 @@ const AssignmentItem = ({
     try {
       const formData = {
         is_submitted: true,
-        answer_link: selectedFile ? selectedFile.s3Location : null,    
+        answer_link: selectedFile ? selectedFile.s3Location : null,
       };
       const submitResponse = await reSubmitAssignment(assignment.id, formData);
       if (submitResponse.data.success) {
@@ -297,6 +301,24 @@ const AssignmentItem = ({
     }
   };
 
+  const getFileName = (path = "") => {
+    const pathSplited = path.split("/");
+    return pathSplited.pop();
+  };
+
+  const downloadFile = (path) => {
+    const downloadPath = path.startsWith("http")
+      ? path
+      : `${BASE_URL_MEET}${path}`;
+    const link = document?.createElement("a");
+    link.href = downloadPath;
+    link.target = "_blank";
+    link.download = getFileName(path);
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+  };
+
   return (
     <Box sx={{ mb: 4, display: "flex", flexDirection: "column" }}>
       <Box sx={{ display: "flex" }}>
@@ -305,7 +327,9 @@ const AssignmentItem = ({
         </Typography>
         <Box mt={0.3}>
           <TextWithMath text={assignment.assignment_text} />
-          <Button onClick={() => !open && setOpen(true)}>Need Guidance</Button>
+            <Button onClick={() => !open && setOpen(true)}>
+              Need Guidance
+            </Button>
           {open ? (
             <NeedMoreGuide
               assignmentId={assignment.id}
@@ -317,9 +341,29 @@ const AssignmentItem = ({
           )}
         </Box>
       </Box>
+      <Box sx={{display:"flex", justifyContent:"space-between"}}>
       <Typography variant="body2" sx={{ mt: 1, fontWeight: "bold" }}>
         Total Marks: {assignment.assignment_mark}
       </Typography>
+      {assignment.assignment_attachment && (
+              <Button
+                variant="outlined"
+                startIcon={<BsDownload />}
+                sx={{
+                  backgroundColor: "#f0f4fa",
+                  color: "#36454F",
+                  ":hover": {
+                    backgroundColor: "#e3e3e3",
+                    color: "#000",
+                  },
+                }}
+                onClick={() => downloadFile(assignment.assignment_attachment)}
+              >
+                Download
+              </Button>
+            )}
+      </Box>
+      
       <Box sx={{ marginTop: 2 }}>
         {shouldRenderAccordion && (
           <Accordion
@@ -346,13 +390,14 @@ const AssignmentItem = ({
             <AccordionDetails>
               <Typography>
                 <GrScorecard style={{ marginRight: "4px" }} />
-                <strong>Marks Scored:</strong> {result?.data?.score}/{assignment.assignment_mark}
+                <strong>Marks Scored:</strong> {result?.data?.score}/
+                {assignment.assignment_mark}
               </Typography>
               {result?.data?.score !== undefined &&
                 assignment.assignment_mark && (
                   <ColorLinearProgress
                     variant="determinate"
-                    sx={{height:"6px"}}
+                    sx={{ height: "6px" }}
                     value={
                       (result?.data?.score / assignment.assignment_mark) * 100
                     }
@@ -374,7 +419,7 @@ const AssignmentItem = ({
         )}
       </Box>
 
-      {isSubmit===false && (
+      {isSubmit === false && (
         <TextField
           fullWidth
           variant="outlined"
@@ -386,7 +431,7 @@ const AssignmentItem = ({
         />
       )}
 
-      {isSubmit===false && !selectedFile && (
+      {isSubmit === false && !selectedFile && (
         <Stack direction="row" spacing={1}>
           <Tooltip title="Image">
             <IconButton
@@ -435,7 +480,7 @@ const AssignmentItem = ({
         </Stack>
       )}
 
-      {isSubmit===false && selectedFile && (
+      {isSubmit === false && selectedFile && (
         <Box
           position="relative"
           display="inline-block"
@@ -476,12 +521,14 @@ const AssignmentItem = ({
         </Box>
       )}
 
-      {isSubmit===false &&
+      {isSubmit === false &&
         (uploadProgress === 100 || answerDescription ? (
           <Button
             variant="contained"
             color="primary"
-            onClick={assignmentStatus==="data-found" ? handleReSubmit : handleSubmit}
+            onClick={
+              assignmentStatus === "data-found" ? handleReSubmit : handleSubmit
+            }
             sx={{ mt: 2 }}
             disabled={submitting || (!answerDescription && !selectedFile)}
           >
@@ -503,9 +550,11 @@ const AssignmentItem = ({
               alignItems="center"
               justifyContent="center"
             >
-            <Typography variant="body1" color="textPrimary">
+              <Typography variant="body1" color="textPrimary">
                 {!selectedFile && !answerDescription
-                  ? isSubmitted ? "Please re-upload a file or enter a description to proceed for resubmitting.": "Please upload a file or enter a description to proceed."
+                  ? isSubmitted
+                    ? "Please re-upload a file or enter a description to proceed for resubmitting."
+                    : "Please upload a file or enter a description to proceed."
                   : uploadProgress < 100
                   ? `Uploading... ${Math.round(uploadProgress)}%`
                   : "Upload complete! You can now submit your assignment."}
@@ -513,8 +562,10 @@ const AssignmentItem = ({
             </Box>
           </Box>
         ))}
-      {isSubmit===true && teacherComments!==null && marksObtained!==null &&
-      <Accordion
+      {isSubmit === true &&
+        teacherComments !== null &&
+        marksObtained !== null && (
+          <Accordion
             sx={{
               backgroundColor: "rgba(255, 255, 255, 0.2)",
               p: 1,
@@ -538,18 +589,16 @@ const AssignmentItem = ({
             <AccordionDetails>
               <Typography>
                 <GrScorecard style={{ marginRight: "4px" }} />
-                <strong>Marks Scored:</strong> {marksObtained}/{assignment.assignment_mark}
+                <strong>Marks Scored:</strong> {marksObtained}/
+                {assignment.assignment_mark}
               </Typography>
-              {marksObtained !== undefined &&
-                assignment.assignment_mark && (
-                  <ColorLinearProgress
-                    variant="determinate"
-                    sx={{height:"6px"}}
-                    value={
-                      (marksObtained / assignment.assignment_mark) * 100
-                    }
-                  />
-                )}
+              {marksObtained !== undefined && assignment.assignment_mark && (
+                <ColorLinearProgress
+                  variant="determinate"
+                  sx={{ height: "6px" }}
+                  value={(marksObtained / assignment.assignment_mark) * 100}
+                />
+              )}
               <Typography
                 variant="subtitle1"
                 sx={{ marginTop: 2, fontSize: "18px" }}
@@ -562,7 +611,8 @@ const AssignmentItem = ({
               </Typography>
               {teacherComments}
             </AccordionDetails>
-          </Accordion>}
+          </Accordion>
+        )}
     </Box>
   );
 };
