@@ -82,6 +82,10 @@ const SignupPage = () => {
       .string()
       .oneOf([yup.ref("newPassword"), null], "Passwords must match")
       .required("Confirm Password is required"),
+    subject: yup
+      .number()
+      .typeError("Please select/fill class before submitting")
+      .required("Please select/fill class before submitting"),
   });
 
   const {
@@ -97,7 +101,7 @@ const SignupPage = () => {
       phone: "",
       role: roleParam || "",
       department: null,
-      subject: "",
+      class: "",
       newPassword: "",
       confirmPassword: "",
     },
@@ -128,7 +132,15 @@ const SignupPage = () => {
       toast.error("Department name cannot be empty.");
       return;
     }
+    // Check if department already exists
+    const departmentExists = departmentOptions.some(
+      (dept) => dept.name.toLowerCase() === newDepartment.trim().toLowerCase()
+    );
 
+    if (departmentExists) {
+      toast.error(`${newDepartment} department already exists.`);
+      return;
+    }
     try {
       const response = await postDepartment({ name: newDepartment });
       if (response?.data?.success) {
@@ -149,7 +161,7 @@ const SignupPage = () => {
   const onSubmit = async (data) => {
     setLoading(true);
     setServerError(null);
-
+    console.log("Selected department:", data.department);
     const payload = {
       full_name: data.name,
       email: data.email,
@@ -365,7 +377,7 @@ const SignupPage = () => {
                   <TextField
                     {...field}
                     label="Password"
-                    type={showPassword ? 'text' : 'password'}
+                    type={showPassword ? "text" : "password"}
                     fullWidth
                     required
                     margin="normal"
@@ -380,10 +392,14 @@ const SignupPage = () => {
                         <InputAdornment position="end">
                           <IconButton
                             aria-label="toggle password visibility"
-                            onClick={()=>setShowPassword(!showPassword)}
+                            onClick={() => setShowPassword(!showPassword)}
                             edge="end"
                           >
-                            {showPassword ?  <MdVisibilityOff /> : <MdVisibility />}
+                            {showPassword ? (
+                              <MdVisibilityOff />
+                            ) : (
+                              <MdVisibility />
+                            )}
                           </IconButton>
                         </InputAdornment>
                       ),
@@ -404,7 +420,7 @@ const SignupPage = () => {
                   <TextField
                     {...field}
                     label="Confirm Password"
-                    type={showConfirmPassword ? 'text' : 'password'}
+                    type={showConfirmPassword ? "text" : "password"}
                     fullWidth
                     required
                     margin="normal"
@@ -419,10 +435,16 @@ const SignupPage = () => {
                         <InputAdornment position="end">
                           <IconButton
                             aria-label="toggle password visibility"
-                            onClick={()=>setShowConfirmPassword(!showConfirmPassword)}
+                            onClick={() =>
+                              setShowConfirmPassword(!showConfirmPassword)
+                            }
                             edge="end"
                           >
-                            {showConfirmPassword ?  <MdVisibilityOff /> : <MdVisibility />}
+                            {showConfirmPassword ? (
+                              <MdVisibilityOff />
+                            ) : (
+                              <MdVisibility />
+                            )}
                           </IconButton>
                         </InputAdornment>
                       ),
@@ -549,7 +571,7 @@ const SignupPage = () => {
                   )}
                 </>
               ) : (
-                // Subject Field for Students
+                // Class Field for Students
                 <Controller
                   name="subject"
                   control={control}
