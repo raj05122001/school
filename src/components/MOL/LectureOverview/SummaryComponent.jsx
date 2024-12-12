@@ -120,6 +120,7 @@ const SummaryComponent = ({
 
   const onUpdateSummary = async () => {
     try {
+      // if(!editedText)return ;
       const updatedSummaryText = JSON.stringify([editedText]);
 
       await updateSummary(summaryId, { summary_text: updatedSummaryText });
@@ -129,7 +130,7 @@ const SummaryComponent = ({
     } catch (error) {
       console.error("Error updating summary:", error);
     }
-  };
+  }
 
   // Utility function to split text into paragraphs after every 5 sentences
   const splitTextIntoParagraphs = (text) => {
@@ -218,10 +219,13 @@ const SummaryComponent = ({
       ) : summary?.length > 0 ? (
         <Box>
           {isEdit && (
-            <Box sx={{ display: "flex", justifyContent: "flex-end" }}>
+            <Box sx={{ display: "flex", justifyContent: "flex-end" }} >
               <FaEdit
                 size={24}
-                onClick={() => setIsEditData(true)}
+                onClick={() => {
+                  setIsEditData(true);
+                  setEditedText(summary[0]);
+                }}
                 style={{ cursor: "pointer" }}
               />
             </Box>

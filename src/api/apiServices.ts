@@ -484,7 +484,11 @@ export default class apiServices {
 
   public createAssignment = (formData) => {
     return this.axiosInstance
-      .post(`/api/v1/lecture_assignment/`, formData)
+      .post(`/api/v1/lecture_assignment/`, formData, {
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+      })
       .then((response) => {
         return response;
       })
