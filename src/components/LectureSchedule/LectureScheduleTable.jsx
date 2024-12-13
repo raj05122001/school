@@ -25,7 +25,6 @@ const TABLE_HEAD = [
   "Class",
   "Subject",
   "Chapter",
-  "Topics",
   "Academic Year",
   "Starting Time",
   "Allotted hr",
@@ -172,9 +171,6 @@ const LectureScheduleTable = () => {
                   </TableCell>
                   <TableCell sx={{ color: isDarkMode ? "white" : "black" }}>
                     {lecture?.chapter?.chapter}
-                  </TableCell>
-                  <TableCell sx={{ color: isDarkMode ? "white" : "black" }}>
-                    {lecture?.topics}
                   </TableCell>
                   <TableCell sx={{ color: isDarkMode ? "white" : "black" }}>
                     {lecture?.academic_year}

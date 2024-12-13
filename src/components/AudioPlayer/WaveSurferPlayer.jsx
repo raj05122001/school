@@ -199,7 +199,7 @@ const WaveSurferPlayer = forwardRef(
           <Box sx={{ textAlign: "center", py: 4 }}>
             <CircularProgress />
             <Typography variant="body2">
-              Please wait, meeting audio is loading...
+              Please wait, lecture audio is loading...
             </Typography>
           </Box>
         ) : (
