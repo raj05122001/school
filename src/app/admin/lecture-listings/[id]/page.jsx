@@ -12,6 +12,7 @@ import Articles from "@/components/teacher/Articles/Articles";
 import RatingSection from "@/components/teacher/RatingSection/RatingSection";
 import LectureAnalytics from "@/components/teacher/LectureAnalytics/LectureAnalytics";
 import AudioPlayer from "@/components/AudioPlayer/AudioPlayer";
+import LectureAttachments from "@/components/MOL/LectureAttachment/LectureAttachment";
 
 const LecturePage = ({ params }) => {
   const { id } = params;
@@ -56,6 +57,10 @@ const LecturePage = ({ params }) => {
   const lectureAnalytics = useMemo(
     () => <LectureAnalytics lectureId={id} />,
     [id]
+  );
+  const lectureAttachment = useMemo(
+    () => <LectureAttachments lectureId={id} isDarkMode={isDarkMode} />,
+    [id, isDarkMode]
   );
   const ratingSection = useMemo(() => <RatingSection id={id} isShowRating={false}/>, [id]);
   const commentSection = useMemo(() => <CommentsSection id={id}/>, [id]);
@@ -107,6 +112,7 @@ const LecturePage = ({ params }) => {
         <Grid item xs={12} md={4} lg={4}>
           <Box sx={{ display: "flex", flexDirection: "column", gap: 2 }}>
             {lectureAnalytics}
+            {lectureAttachment}
             {ratingSection}
             {commentSection}
           </Box>

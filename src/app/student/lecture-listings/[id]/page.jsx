@@ -15,6 +15,7 @@ import Cookies from "js-cookie";
 import { decodeToken } from "react-jwt";
 import PersonalisedRecommendations from "@/components/student/MOL/PersonalisedRecommendations/PersonalisedRecommendations";
 import AudioPlayer from "@/components/AudioPlayer/AudioPlayer";
+import LectureAttachments from "@/components/MOL/LectureAttachment/LectureAttachment";
 
 const LecturePage = ({ params }) => {
   const { id } = params;
@@ -106,6 +107,10 @@ const LecturePage = ({ params }) => {
     () => <PersonalisedRecommendations id={id} />,
     [id]
   );
+  const lectureAttachment = useMemo(
+    () => <LectureAttachments lectureId={id} isDarkMode={isDarkMode} />,
+    [id, isDarkMode]
+  );
 
   return (
     <Box
@@ -159,6 +164,7 @@ const LecturePage = ({ params }) => {
         <Grid item xs={12} md={4} lg={4}>
           <Box sx={{ display: "flex", flexDirection: "column", gap: 2 }}>
             {lectureAnalytics}
+            {lectureAttachment}
             {ratingSection}
             {commentSection}
           </Box>

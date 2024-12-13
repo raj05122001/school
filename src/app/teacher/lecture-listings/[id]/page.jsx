@@ -22,6 +22,7 @@ import RatingSection from "@/components/teacher/RatingSection/RatingSection";
 import LectureAnalytics from "@/components/teacher/LectureAnalytics/LectureAnalytics";
 import LectureAttachments from "@/components/MOL/LectureAttachment/LectureAttachment";
 import AudioPlayer from "@/components/AudioPlayer/AudioPlayer";
+import { toast } from "react-hot-toast";
 
 const LecturePage = ({ params }) => {
   const { id } = params;
@@ -53,11 +54,16 @@ const LecturePage = ({ params }) => {
   };
 
   const handleReleased = async () => {
+    
     try {
       await releasedLecture(id, { is_released: true });
       getMeetingByID();
+      toast.success(
+        "Lecture has been published."
+      );
     } catch (error) {
       console.error(error);
+      toast.error("Failed to update lecture status. Please try again.");
     }
   };
 

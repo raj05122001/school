@@ -8,17 +8,19 @@ import {
   Skeleton,
 } from "@mui/material";
 import DarkMode from "@/components/DarkMode/DarkMode";
-import { FaBell, FaDownload } from "react-icons/fa";
+import { FaBell, FaUpload, FaDownload } from "react-icons/fa";
 import UserImage from "@/commonComponents/UserImage/UserImage";
 import React from "react";
 import { useThemeContext } from "@/hooks/ThemeContext";
+import { MdPublishedWithChanges, MdUnpublished } from "react-icons/md";
+
 
 const HeaderMOL = ({
   lectureData,
   isEdit = false,
   isShowPic = false,
   loading,
-  handleReleased=(()=>{}),
+  handleReleased = () => {},
 }) => {
   const { isDarkMode } = useThemeContext();
   const theme = useTheme();
@@ -49,15 +51,25 @@ const HeaderMOL = ({
         <Box sx={{ display: "flex", gap: 3, alignItems: "center" }}>
           {isEdit && !lectureData?.is_released && (
             <Button
-              variant="outlined"
-              onClick={() => handleReleased()}
-              startIcon={<FaDownload size={22} />}
+              variant="contained"
+              onClick={() => handleReleased(!lectureData?.is_released)}
+              startIcon={
+                lectureData?.is_released ? (
+                  <MdUnpublished size={22} />
+                ) : (
+                  <MdPublishedWithChanges size={22} />
+                )
+              }
               sx={{
                 color: isDarkMode ? "#fff" : "#000",
-                borderColor: isDarkMode ? "#fff" : theme.palette.primary.main,
+                backgroundColor:"#89CFF0",
+                p:1,
+                fontSize:"12px"
               }}
             >
-              Is Released
+              {lectureData?.is_released
+                ? "Unpublish Lecture"
+                : "Publish Lecture"}
             </Button>
           )}
 

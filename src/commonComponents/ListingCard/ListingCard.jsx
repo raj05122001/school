@@ -25,7 +25,7 @@ const ListingCard = ({ data, onClick }) => {
 
   const handleMouseLeave = () => {
     setIsHovered(false);
-    videoRef.current.pause();
+    videoRef?.current?.pause();
   };
 
   console.log("data : ", data);

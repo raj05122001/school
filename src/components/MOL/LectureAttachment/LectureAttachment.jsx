@@ -22,12 +22,22 @@ import {
   DialogTitle,
 } from "@mui/material";
 import { GrAttachment } from "react-icons/gr";
+import Cookies from "js-cookie";
+import { decodeToken } from "react-jwt";
 
 const window = global?.window || {};
 
 const LectureAttachments = ({ lectureId, isDarkMode }) => {
   const [attachments, setAttachments] = useState([]);
   const [deleteId, setDeleteId] = useState(0);
+  const [userDetails, setUserDetails] = useState(null);
+  
+    useEffect(() => {
+      if (typeof window !== "undefined") {
+        const token = Cookies.get("ACCESS_TOKEN");
+        setUserDetails(token ? decodeToken(token) : {});
+      }
+    }, []);
 
   useEffect(() => {
     getAttachments();
@@ -36,6 +46,7 @@ const LectureAttachments = ({ lectureId, isDarkMode }) => {
   const handleFileSelect = (e) => {
     onSaveAttachment(e?.target.files[0]);
   };
+
 
   const onSaveAttachment = async (files) => {
     var fd = new FormData();
@@ -156,9 +167,9 @@ const LectureAttachments = ({ lectureId, isDarkMode }) => {
               </Typography>
             </Box>
             <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
-              <IconButton onClick={() => setDeleteId(item.id)}>
+              {userDetails?.role!=="STUDENT" && <IconButton onClick={() => setDeleteId(item.id)}>
                 <MdDeleteOutline fontSize={18} />
-              </IconButton>
+              </IconButton>}
 
               <IconButton onClick={() => downloadFile(item.file)}>
                 <BsDownload />
