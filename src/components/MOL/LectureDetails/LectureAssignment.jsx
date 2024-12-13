@@ -11,6 +11,7 @@ import {
   Skeleton,
   IconButton,
   CircularProgress,
+  Divider,
 } from "@mui/material";
 import {
   getLectureAssignment,
@@ -28,6 +29,7 @@ import { FaSave } from "react-icons/fa";
 import { BsDownload } from "react-icons/bs";
 import TextWithMath from "@/commonComponents/TextWithMath/TextWithMath";
 import { BASE_URL_MEET } from "@/constants/apiconfig";
+import { IoIosArrowDown, IoIosArrowUp } from "react-icons/io";
 
 const userDetails = decodeToken(Cookies.get("ACCESS_TOKEN"));
 
@@ -45,6 +47,7 @@ const LectureAssignment = ({ id, isDarkMode, class_ID, isEdit }) => {
   const [editedText, setEditedText] = useState("");
   const [isLoadingRewrite, setIsLoadingRewrite] = useState(false);
   const hasFetchedData = useRef(false); // Prevent multiple fetch calls
+  const [openAccordian, setOpenAccordian] = useState(false);
 
   const lectureID = id;
 
@@ -301,35 +304,33 @@ const LectureAssignment = ({ id, isDarkMode, class_ID, isEdit }) => {
                       onChange={onChange}
                     />
                   </Box>
-                ) : (
+                ) : openAccordian ? (
                   <Box
                     key={assignment.id}
-                    sx={{ mb: 2, display: "flex", flexDirection: "column" }}
+                    sx={{
+                      mb: 2,
+                      mt: 2,
+                      p: 2,
+                      borderRadius: 4,
+                      display: "flex",
+                      flexDirection: "column",
+                      boxShadow: "0px 2px 8px #1389f0",
+                    }}
                   >
-                    {isEdit && (
-                      <Box sx={{ display: "flex", justifyContent: "flex-end" }}>
-                        <FaEdit
-                          size={24}
-                          onClick={() => setEditedAssignmentId(assignment.id)}
-                          style={{ cursor: "pointer" }}
-                        />
-                      </Box>
-                    )}
-                    <Box sx={{ display: "flex" }}>
-                      <Typography variant="body1" sx={{ mb: 1 }}>
-                        {String.fromCharCode(65 + index)}.&nbsp;
-                      </Typography>
-                      {/* <Typography
-                        variant="body1"
-                        dangerouslySetInnerHTML={{
-                          __html: assignment.assignment_text,
+                  <Box sx={{display:"flex", justifyContent:"space-between", gap:8, alignItems:"center"}}>
+                  <Typography variant="h6">
+                    Question {String.fromCharCode(65 + index)}&nbsp;
+                  </Typography>
+                  {isEdit && (
+                      <Box
+                        sx={{
+                          display: "flex",
+                          gap: 1,
+                          justifyContent: "space-evenly",
+                          alignItems: "center",
                         }}
-                      /> */}
-                      <Box>
-                        <TextWithMath text={assignment.assignment_text} />
-                      </Box>
-                    </Box>
-                    <Box
+                      >
+                      <Box
                       sx={{
                         display: "flex",
                         alignItems: "center",
@@ -337,6 +338,7 @@ const LectureAssignment = ({ id, isDarkMode, class_ID, isEdit }) => {
                         mt: "auto",
                       }}
                     >
+                   <span style={{marginRight:2}}>Marks:</span> 
                       <TextField
                         type="number"
                         InputLabelProps={{
@@ -358,44 +360,112 @@ const LectureAssignment = ({ id, isDarkMode, class_ID, isEdit }) => {
                         }
                         variant="outlined"
                         size="small"
-                        sx={{ width: 80, mr: 2 }}
+                        sx={{ width: 80, mr: 1 }}
                       />
-                      <Box sx={{display:"flex", gap:2}}>           
-                        {assignment.assignment_attachment && (
+                    </Box>
+                        <Box sx={{ display: "flex", gap: 1}}>
+                          {assignment.assignment_attachment && (
+                            <Button
+                              variant="outlined"
+                              startIcon={<BsDownload />}
+                              sx={{
+                                backgroundColor: "#f0f4fa",
+                                color: "#36454F",
+                                ":hover": {
+                                  backgroundColor: "#e3e3e3",
+                                  color: "#000",
+                                },
+                              }}
+                              onClick={() =>
+                                downloadFile(assignment.assignment_attachment)
+                              }
+                            >
+                              Download
+                            </Button>
+                          )}
                           <Button
-                            variant="outlined"
-                            startIcon={<BsDownload />}
+                            variant="contained"
+                            onClick={() => handleUpdateAssignment(assignment)}
                             sx={{
-                              backgroundColor: "#f0f4fa",
-                              color: "#36454F",
-                              ":hover": {
-                                backgroundColor: "#e3e3e3",
-                                color: "#000",
-                              },
+                              // backgroundColor: assignment.is_assigned
+                              //   ? "green"
+                              //   : "#89CFF0",
+                              backgroundColor: assignment?.is_assigned
+                                ? "#92d689"
+                                : "#89CFF0",
+                              color: "white",
                             }}
-                            onClick={() =>
-                              downloadFile(assignment.assignment_attachment)
-                            }
                           >
-                            Download
+                            {assignment.is_assigned ? "Assigned" : "Assign"}
                           </Button>
-                        )}
-                        <Button
-                          variant="contained"
-                          onClick={() => handleUpdateAssignment(assignment)}
-                          sx={{
-                            // backgroundColor: assignment.is_assigned
-                            //   ? "green"
-                            //   : "#89CFF0",
-                            backgroundColor: assignment?.is_assigned
-                              ? "#92d689"
-                              : "#89CFF0",
-                            color: "white",
-                          }}
-                        >
-                          {assignment.is_assigned ? "Assigned" : "Assign"}
-                        </Button>
+                        </Box>
+                        <Box sx={{display:"flex", alignItems:"center"}}>
+                          <FaEdit
+                            size={24}
+                            onClick={() => setEditedAssignmentId(assignment.id)}
+                            style={{ cursor: "pointer" }}
+                          />
+                          <IconButton onClick={() => setOpenAccordian(false)}>
+                          <IoIosArrowUp />
+                        </IconButton>
+                        </Box>
                       </Box>
+                    )}
+                  </Box>
+                    <Box sx={{marginY:2}}>
+                    <Divider />
+                    </Box>
+                  
+                    
+                    
+                    <Box sx={{ display: "flex" }}>
+                      {/* <Typography
+                        variant="body1"
+                        dangerouslySetInnerHTML={{
+                          __html: assignment.assignment_text,
+                        }}
+                      /> */}
+                      <Box>
+                        <TextWithMath text={assignment.assignment_text} />
+                      </Box>
+                    </Box>
+                    
+                  </Box>
+                ) : (
+                  <Box
+                    sx={{
+                      mb: 4,
+                      mt: 4,
+                      display: "flex",
+                      borderRadius: 4,
+                      flexDirection: "row",
+                      boxShadow: "0px 2px 8px #1389f0",
+                      p: 2,
+                      justifyContent: "space-between",
+                    }}
+                    onClick={() => setOpenAccordian(true)}
+                  >
+                    <Box sx={{ display: "flex" }}>
+                      <Typography variant="body1">
+                        {String.fromCharCode(65 + index)}.&nbsp;
+                      </Typography>
+                      <Box mt={0.3}>
+                        <TextWithMath
+                          text={
+                            assignment.assignment_text?.length > 200
+                              ? `${assignment.assignment_text?.slice(
+                                  0,
+                                  200
+                                )}...`
+                              : assignment.assignment_text
+                          }
+                        />
+                      </Box>
+                    </Box>
+                    <Box>
+                      <IconButton>
+                        <IoIosArrowDown />
+                      </IconButton>
                     </Box>
                   </Box>
                 )

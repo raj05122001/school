@@ -71,7 +71,7 @@ const LoginPage = () => {
         Cookies.set("REFRESH_TOKEN", refresh, { expires: 30 }); // Store refresh token in cookies
         const accessToken = decodeToken(access);
         // Redirect user after successful login
-        if (redirectTo) {
+        if (redirectTo && redirectTo !== "/login") {
           router.replace(redirectTo);
         } else {
           if (accessToken?.role === "TEACHER") {
