@@ -48,6 +48,8 @@ const LectureAssignment = ({ id, isDarkMode, class_ID, isEdit }) => {
   const [isLoadingRewrite, setIsLoadingRewrite] = useState(false);
   const hasFetchedData = useRef(false); // Prevent multiple fetch calls
   const [openAccordian, setOpenAccordian] = useState(false);
+  const [activeAccordion, setActiveAccordion] = React.useState(null);
+
 
   const lectureID = id;
 
@@ -327,7 +329,7 @@ const LectureAssignment = ({ id, isDarkMode, class_ID, isEdit }) => {
                       onChange={onChange}
                     />
                   </Box>
-                ) : openAccordian ? (
+                ) : activeAccordion === assignment?.id ? (
                   <Box
                     key={assignment.id}
                     sx={{
@@ -428,7 +430,7 @@ const LectureAssignment = ({ id, isDarkMode, class_ID, isEdit }) => {
                             onClick={() => setEditedAssignmentId(assignment.id)}
                             style={{ cursor: "pointer" }}
                           />
-                          <IconButton onClick={() => setOpenAccordian(false)}>
+                          <IconButton onClick={() => setActiveAccordion(activeAccordion === assignment?.id ? null : assignment?.id)}>
                           <IoIosArrowUp />
                         </IconButton>
                         </Box>
@@ -466,7 +468,7 @@ const LectureAssignment = ({ id, isDarkMode, class_ID, isEdit }) => {
                       p: 2,
                       justifyContent: "space-between",
                     }}
-                    onClick={() => setOpenAccordian(true)}
+                    onClick={() => setActiveAccordion(activeAccordion === assignment?.id ? null : assignment?.id)}
                   >
                     <Box sx={{ display: "flex" }}>
                       <Typography variant="body1">
