@@ -284,9 +284,11 @@ const CheckAssignment = ({ assignment, index, fetchAssignmentAnswer }) => {
             "&:hover": {
               bgcolor: "rgba(0,0,0,0.6)",
             },
+            width: 40,
+            height: 40,
           }}
         >
-          ✕
+          <span style={{fontSize:"16px"}}>X</span>
         </IconButton>
         {content}
       </Box>
@@ -298,9 +300,7 @@ const CheckAssignment = ({ assignment, index, fetchAssignmentAnswer }) => {
       <Card
         sx={{
           borderRadius: 2,
-          boxShadow: isDarkMode
-            ? "0px 6px 15px rgba(0, 0, 0, 0.4)"
-            : "0px 4px 10px #ADD8E6",
+          boxShadow: isChecked ? ("0px 2px 10px #38ba47"):("0px 2px 10px #ff9b85"),
           backgroundColor: isDarkMode ? "rgba(255, 255, 255, 0.1)" : "#fff",
           mb: 3,
         }}
@@ -333,7 +333,7 @@ const CheckAssignment = ({ assignment, index, fetchAssignmentAnswer }) => {
                 color: isDarkMode ? "#e0e0e0" : "text.secondary",
               }}
             >
-              {dayjs(assignment?.updated_at).format("DD-MM-YYYY hh:mm")}
+             <i>Submission Date:</i> {dayjs(assignment?.updated_at).format("DD-MM-YYYY hh:mm A")}
             </Typography>
             {open ? (
               <IconButton>
@@ -486,7 +486,7 @@ const CheckAssignment = ({ assignment, index, fetchAssignmentAnswer }) => {
               }}
               onClick={() => setOpen(true)}
             >
-              <Typography variant="body1" gutterBottom color={primaryColor} sx={{ fontWeight: 600 }}>
+              <Typography variant="body1" gutterBottom color={primaryColor} sx={{ fontWeight: 600}}>
                 <TextWithMath
                   text={
                     assignment.assignment_que.assignment_text?.length > 200
