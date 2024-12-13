@@ -90,13 +90,13 @@ const Assignment = () => {
           <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
             <MdAssignment size={30} color={primaryColor} />
             <Typography variant="h4" color={primaryColor}>
-              Lecture Assignment
+              Lecture Assessment
             </Typography>
           </Box>
         }
       />
     ),
-    [classValue, subject, searchQuery, month, lectureType]
+    [classValue, subject, searchQuery, month, lectureType,isDarkMode]
   );
   return (
     <Box sx={{ width: "100%", height: "100%" }}>

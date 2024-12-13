@@ -4,13 +4,15 @@ import WaveSurferPlayer from "./WaveSurferPlayer";
 import stc from "string-to-color";
 import { getBreakpoint } from "@/api/apiHelper";
 
-const AudioPlayer = ({ audio, id, duration }) => {
+const AudioPlayer = ({ audio, id=0, duration=0, isShowBrekpoint = true }) => {
   const [startTime, setStartTime] = useState(0);
   const [playerTalk, setPlayerTalk] = useState([]);
   const [avtarName, setAvtarName] = useState("");
 
   useEffect(() => {
-    fetchBreakPoint();
+    if (isShowBrekpoint && id) {
+      fetchBreakPoint();
+    }
   }, []);
 
   const jsonData = (value) => {
@@ -24,10 +26,10 @@ const AudioPlayer = ({ audio, id, duration }) => {
   const fetchBreakPoint = async () => {
     try {
       const apiResponse = await getBreakpoint(id);
-      const breakPoint =jsonData(apiResponse?.data?.data?.break_point)
-        // apiResponse?.data?.data?.break_point?.length > 0
-        //   ? JSON.parse(apiResponse?.data?.data?.break_point)
-        //   : [];
+      const breakPoint = jsonData(apiResponse?.data?.data?.break_point);
+      // apiResponse?.data?.data?.break_point?.length > 0
+      //   ? JSON.parse(apiResponse?.data?.data?.break_point)
+      //   : [];
       setPlayerTalk(breakPoint);
     } catch (error) {
       console.error(error);
@@ -67,7 +69,7 @@ const AudioPlayer = ({ audio, id, duration }) => {
         <Box sx={{ flex: 1 }}>
           <WaveSurferPlayer
             playerTalk={playerTalk}
-            url={`https://dev-vidyaai.ultimeet.io${audio}`}
+            url={audio}
             avtarName={avtarName}
             startTime={startTime}
             setStartTime={setStartTime}

@@ -144,7 +144,7 @@ const LecturePage = ({ params }) => {
           <Box sx={{ display: "flex", flexDirection: "column", gap: 2 }}>
             {lectureData?.video_src === "PDF" ? (
               <AudioPlayer
-                audio={lectureData?.audio}
+                audio={`https://dev-vidyaai.ultimeet.io${lectureData?.audio}`}
                 duration={lectureData?.duration}
                 id={id}
               />
