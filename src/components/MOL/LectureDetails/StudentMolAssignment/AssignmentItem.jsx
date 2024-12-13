@@ -261,64 +261,72 @@ const AssignmentItem = ({
           >
             {data?.overall_feedback}
           </Box>
-          <Typography
-            variant="body1"
-            sx={{
-              fontSize: "18px",
-              marginTop: 4,
-              textAlign: "center",
-              marginBottom: 2,
-              color: "#04052e",
-            }}
-          >
-            <VscActivateBreakpoints style={{ marginRight: 4 }} />
-            Feedback Points
-          </Typography>
-          <Box
-            sx={{
-              backgroundColor: "#EADDCA",
-              color: "#4A0404",
-              padding: 4,
-              borderRadius: 4,
-              boxShadow: "0px 4px 10px #a1865d",
-              fontSize: "15px",
-            }}
-          >
-            <ul style={{ lineHeight: "1.8" }}>
-              {data?.feedback_points?.map((point, index) => (
-                <li key={index}>{point}</li>
-              ))}
-            </ul>
-          </Box>
-          <Typography
-            variant="body1"
-            sx={{
-              fontSize: "18px",
-              marginTop: 4,
-              textAlign: "center",
-              marginBottom: 2,
-              color: "#04052e",
-            }}
-          >
-            <VscActivateBreakpoints style={{ marginRight: 4 }} />
-            Improvement Points
-          </Typography>
-          <Box
-            sx={{
-              backgroundColor: "#EADDCA",
-              color: "#4A0404",
-              padding: 4,
-              borderRadius: 4,
-              boxShadow: "0px 4px 10px #a1865d",
-              fontSize: "15px",
-            }}
-          >
-            <ul style={{ lineHeight: "1.8" }}>
-              {data?.improvement_points?.map((point, index) => (
-                <li key={index}>{point}</li>
-              ))}
-            </ul>
-          </Box>
+          {data?.feedback_points?.length > 0 && (
+            <>
+              <Typography
+                variant="body1"
+                sx={{
+                  fontSize: "18px",
+                  marginTop: 4,
+                  textAlign: "center",
+                  marginBottom: 2,
+                  color: "#04052e",
+                }}
+              >
+                <VscActivateBreakpoints style={{ marginRight: 4 }} />
+                Feedback Points
+              </Typography>
+              <Box
+                sx={{
+                  backgroundColor: "#edfced",
+                  color: "#174d17",
+                  padding: 4,
+                  borderRadius: 4,
+                  boxShadow: "0px 4px 10px #21ed21",
+                  fontSize: "15px",
+                }}
+              >
+                <ul style={{ lineHeight: "1.8" }}>
+                  {data?.feedback_points?.map((point, index) => (
+                    <li key={index}>{point}</li>
+                  ))}
+                </ul>
+              </Box>
+            </>
+          )}
+          {data?.improvement_points?.length > 0 && (
+            <>
+              <Typography
+                variant="body1"
+                sx={{
+                  fontSize: "18px",
+                  marginTop: 4,
+                  textAlign: "center",
+                  marginBottom: 2,
+                  color: "#04052e",
+                }}
+              >
+                <VscActivateBreakpoints style={{ marginRight: 4 }} />
+                Improvement Points
+              </Typography>
+              <Box
+                sx={{
+                  backgroundColor: "#EADDCA",
+                  color: "#4A0404",
+                  padding: 4,
+                  borderRadius: 4,
+                  boxShadow: "0px 4px 10px #a1865d",
+                  fontSize: "15px",
+                }}
+              >
+                <ul style={{ lineHeight: "1.8" }}>
+                  {data?.improvement_points?.map((point, index) => (
+                    <li key={index}>{point}</li>
+                  ))}
+                </ul>
+              </Box>
+            </>
+          )}
         </>
       );
     } catch (error) {
@@ -354,17 +362,17 @@ const AssignmentItem = ({
         display: "flex",
         borderRadius: 4,
         flexDirection: "column",
-        backgroundColor:
-          isSubmit === true
-            ? "#ACE1AF"
-            : shouldRenderAccordion
-            ? "#e8e2c3"
-            : "#ffe0e0",
+        // backgroundColor:
+        //   isSubmit === true
+        //     ? "#ACE1AF"
+        //     : shouldRenderAccordion
+        //     ? "#e8e2c3"
+        //     : "#ffe0e0",
         boxShadow:
-        isSubmit === true
+          isSubmit === true
             ? "0px 4px 10px #38ba47"
             : shouldRenderAccordion
-            ? "0px 4px 10px #bfb999"
+            ? "0px 4px 10px #151bb3"
             : "0px 4px 10px #ba5038",
         p: 2,
       }}
@@ -518,7 +526,7 @@ const AssignmentItem = ({
               <MdDescription />
               <input
                 hidden
-                accept=".pdf,.doc,.docx,.txt,.xlsx,.xls"
+                accept=".pdf,.doc,.docx,.txt,.xlsx,.xls,.pptx"
                 type="file"
               />
             </IconButton>

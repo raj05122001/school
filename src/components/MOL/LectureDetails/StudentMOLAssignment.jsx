@@ -87,9 +87,9 @@ const StudentMOLAssignment = ({ id, isDarkMode, class_ID }) => {
     );
   }
   const legendItems = [
-    { label: "Fully Submitted", color: "#38ba47" },
-    { label: "Re-Submit to Teacher", color: "#151bb3" },
-    { label: "Not Attempted", color: "#ba5038" },
+    { label: "Fully Submitted", color: "#77ed84" },
+    { label: "Re-Submit to Teacher", color: "#696ff5" },
+    { label: "Not Attempted", color: "#c96f5b" },
   ];
   return (
     <Box
