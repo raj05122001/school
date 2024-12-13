@@ -35,6 +35,7 @@ import { VscFeedback } from "react-icons/vsc";
 import { VscActivateBreakpoints } from "react-icons/vsc";
 import { BASE_URL_MEET } from "@/constants/apiconfig";
 import { BsDownload } from "react-icons/bs";
+import { IoIosArrowDown, IoIosArrowUp } from "react-icons/io";
 
 const ColorLinearProgress = styled(LinearProgress)(({ theme, value }) => {
   let color = "#FF0000"; // Default: Red for low scores
@@ -68,6 +69,7 @@ const AssignmentItem = ({
   teacherComments,
   fetchAssignments,
 }) => {
+  const [openAccordian, setOpenAccordian] = useState(false);
   const [answerDescription, setAnswerDescription] = useState("");
   const [selectedFile, setSelectedFile] = useState(null);
   const [fileType, setFileType] = useState("");
@@ -356,318 +358,369 @@ const AssignmentItem = ({
     document.body.removeChild(link);
   };
   return (
-    <Box
-      sx={{
-        mb: 4,
-        display: "flex",
-        borderRadius: 4,
-        flexDirection: "column",
-        // backgroundColor:
-        //   isSubmit === true
-        //     ? "#ACE1AF"
-        //     : shouldRenderAccordion
-        //     ? "#e8e2c3"
-        //     : "#ffe0e0",
-        boxShadow:
-          isSubmit === true
-            ? "0px 14px 24px #38ba47"
-            : shouldRenderAccordion
-            ? "0px 12px 24px #151bb3"
-            : "0px 12px 24px #ba5038",
-        p: 2,
-      }}
-    >
-      <Box sx={{ display: "flex" }}>
-        <Typography variant="body1">
-          {String.fromCharCode(65 + index)}.&nbsp;
-        </Typography>
-        <Box mt={0.3}>
-          <TextWithMath text={assignment.assignment_text} />
-          <Button onClick={() => !open && setOpen(true)}>Need Guidance</Button>
-          {open ? (
-            <NeedMoreGuide
-              assignmentId={assignment.id}
-              open={open}
-              setOpen={setOpen}
-            />
-          ) : (
-            ""
-          )}
-        </Box>
-      </Box>
-      <Box sx={{ display: "flex", justifyContent: "space-between" }}>
-        <Typography variant="body2" sx={{ mt: 1, fontWeight: "bold" }}>
-          Total Marks: {assignment.assignment_mark}
-        </Typography>
-        {assignment.assignment_attachment && (
-          <Button
-            variant="outlined"
-            startIcon={<BsDownload />}
-            sx={{
-              backgroundColor: "#f0f4fa",
-              color: "#36454F",
-              ":hover": {
-                backgroundColor: "#e3e3e3",
-                color: "#000",
-              },
-            }}
-            onClick={() => downloadFile(assignment.assignment_attachment)}
-          >
-            Download
-          </Button>
-        )}
-      </Box>
-
-      <Box sx={{ marginTop: 2 }}>
-        {shouldRenderAccordion && (
-          <Accordion
-            sx={{
-              backgroundColor: "rgba(255, 255, 255, 0.2)",
-              p: 1,
-              mt: 1,
-              borderRadius: "12px !important",
-              boxShadow: "0px 4px 10px #adc0ff",
-            }}
-          >
-            <AccordionSummary
-              expandIcon={<FaAngleDown />}
-              aria-controls="panel2-content"
-              id="panel2-header"
-            >
-              <Box sx={{ display: "flex" }}>
-                <GiBullseye style={{ marginRight: 3, fontSize: "24px" }} />
-                <Typography variant="body1" sx={{ fontSize: "16px" }}>
-                  AI assessed result
-                </Typography>
-              </Box>
-            </AccordionSummary>
-            <AccordionDetails>
-              <Typography>
-                <GrScorecard style={{ marginRight: "4px" }} />
-                <strong>Marks Scored:</strong> {result?.data?.score}/
-                {assignment.assignment_mark}
-              </Typography>
-              {result?.data?.score !== undefined &&
-                assignment.assignment_mark && (
-                  <ColorLinearProgress
-                    variant="determinate"
-                    sx={{ height: "6px" }}
-                    value={
-                      (result?.data?.score / assignment.assignment_mark) * 100
-                    }
-                  />
-                )}
-              <Typography
-                variant="subtitle1"
-                sx={{ marginTop: 2, fontSize: "18px" }}
-              >
-                <strong>
-                  <PiChalkboardTeacher style={{ marginRight: "4px" }} />
-                  Comments
-                </strong>
-                <br />
-              </Typography>
-              {jsonData(result?.data?.comment)}
-            </AccordionDetails>
-          </Accordion>
-        )}
-      </Box>
-
-      {isSubmit === false && (
-        <TextField
-          fullWidth
-          variant="outlined"
-          placeholder="Describe your answer here..."
-          sx={{ mt: 2, mb: 2 }}
-          onChange={(e) => setAnswerDescription(e.target.value)}
-          disabled={isSubmitted}
-          value={answerDescription}
-        />
-      )}
-
-      {isSubmit === false && !selectedFile && (
-        <Stack direction="row" spacing={1}>
-          <Tooltip title="Image">
-            <IconButton
-              color="primary"
-              component="label"
-              onChange={(e) => handleFileSelect(e, "IMAGE")}
-            >
-              <FaPhotoVideo />
-              <input hidden accept="image/*" type="file" />
-            </IconButton>
-          </Tooltip>
-          <Tooltip title="Audio">
-            <IconButton
-              color="primary"
-              component="label"
-              onChange={(e) => handleFileSelect(e, "AUDIO")}
-            >
-              <FaFileAudio />
-              <input hidden accept="audio/*" type="file" />
-            </IconButton>
-          </Tooltip>
-          <Tooltip title="Video">
-            <IconButton
-              color="primary"
-              component="label"
-              onChange={(e) => handleFileSelect(e, "VIDEO")}
-            >
-              <FaRegFileVideo />
-              <input hidden accept="video/*" type="file" />
-            </IconButton>
-          </Tooltip>
-          <Tooltip title="Document">
-            <IconButton
-              color="primary"
-              component="label"
-              onChange={(e) => handleFileSelect(e, "FILE")}
-            >
-              <MdDescription />
-              <input
-                hidden
-                accept=".pdf,.doc,.docx,.txt,.xlsx,.xls,.pptx"
-                type="file"
-              />
-            </IconButton>
-          </Tooltip>
-        </Stack>
-      )}
-
-      {isSubmit === false && selectedFile && (
+    <>
+      {openAccordian ? (
         <Box
-          position="relative"
-          display="inline-block"
-          p={1}
-          mt={1}
           sx={{
-            borderRadius: 2,
-            boxShadow: 1,
-            overflow: "hidden",
-            backgroundColor: isDarkMode ? "#424242" : "#f5f5f5",
-            width: 60,
-            height: 60,
+            mb: 4,
             display: "flex",
-            justifyContent: "center",
-            alignItems: "center",
+            borderRadius: 4,
+            flexDirection: "column",
+            // backgroundColor:
+            //   isSubmit === true
+            //     ? "#ACE1AF"
+            //     : shouldRenderAccordion
+            //     ? "#e8e2c3"
+            //     : "#ffe0e0",
+            boxShadow:
+              isSubmit === true
+                ? "0px 14px 24px #38ba47"
+                : shouldRenderAccordion
+                ? "0px 12px 24px #151bb3"
+                : "0px 12px 24px #ba5038",
+            p: 2,
           }}
         >
-          <FilePreview file={selectedFile} fileType={fileType} />
-
-          <Tooltip title="Remove File">
-            <IconButton
-              size="small"
-              color="error"
-              onClick={removeSelectedFile}
-              sx={{
-                position: "absolute",
-                top: 0,
-                right: 0,
-                backgroundColor: "rgba(255, 255, 255, 0.7)",
-                "&:hover": {
-                  backgroundColor: "rgba(255, 255, 255, 0.9)",
-                },
-              }}
-            >
-              <MdClose size={14} />
-            </IconButton>
-          </Tooltip>
-        </Box>
-      )}
-
-      {isSubmit === false &&
-        (uploadProgress === 100 || answerDescription ? (
-          <Button
-            variant="contained"
-            color="primary"
-            onClick={
-              assignmentStatus === "data-found" ? handleReSubmit : handleSubmit
-            }
-            sx={{ mt: 2 }}
-            disabled={submitting || (!answerDescription && !selectedFile)}
-          >
-            {submitting ? "Submitting..." : "Submit Assignment"}
-          </Button>
-        ) : (
-          <Box position="relative" width="100%" sx={{ mt: 2 }}>
-            <BorderLinearProgress
-              variant="determinate"
-              value={uploadProgress}
-            />
-            <Box
-              position="absolute"
-              top={0}
-              left={0}
-              bottom={0}
-              right={0}
-              display="flex"
-              alignItems="center"
-              justifyContent="center"
-            >
-              <Typography variant="body1" color="textPrimary">
-                {!selectedFile && !answerDescription
-                  ? isSubmitted
-                    ? "Please re-upload a file or enter a description to proceed for resubmitting."
-                    : "Please upload a file or enter a description to proceed."
-                  : uploadProgress < 100
-                  ? `Uploading... ${Math.round(uploadProgress)}%`
-                  : "Upload complete! You can now submit your assignment."}
-              </Typography>
+          <Box sx={{ display: "flex",justifyContent:'space-between',flexDirection:'row' }}>
+          <Box sx={{ display: "flex" }}>
+            <Typography variant="body1">
+              {String.fromCharCode(65 + index)}.&nbsp;
+            </Typography>
+            <Box mt={0.3}>
+              <TextWithMath text={assignment.assignment_text} />
+              <Button onClick={() => !open && setOpen(true)}>
+                Need Guidance
+              </Button>
+              {open ? (
+                <NeedMoreGuide
+                  assignmentId={assignment.id}
+                  open={open}
+                  setOpen={setOpen}
+                />
+              ) : (
+                ""
+              )}
             </Box>
           </Box>
-        ))}
-      {isSubmit === true &&
-        teacherComments !== null &&
-        marksObtained !== null && (
-          <Accordion
-            sx={{
-              backgroundColor: "rgba(255, 255, 255, 0.2)",
-              p: 1,
-              mt: 1,
-              borderRadius: "12px !important",
-              boxShadow: "0px 4px 10px #adc0ff",
-            }}
-          >
-            <AccordionSummary
-              expandIcon={<FaAngleDown />}
-              aria-controls="panel2-content"
-              id="panel2-header"
-            >
-              <Box sx={{ display: "flex" }}>
-                <GiBullseye style={{ marginRight: 3, fontSize: "24px" }} />
-                <Typography variant="body1" sx={{ fontSize: "16px" }}>
-                  Teacher Assessed Result
-                </Typography>
-              </Box>
-            </AccordionSummary>
-            <AccordionDetails>
-              <Typography>
-                <GrScorecard style={{ marginRight: "4px" }} />
-                <strong>Marks Scored:</strong> {marksObtained}/
-                {assignment.assignment_mark}
-              </Typography>
-              {marksObtained !== undefined && assignment.assignment_mark && (
-                <ColorLinearProgress
-                  variant="determinate"
-                  sx={{ height: "6px" }}
-                  value={(marksObtained / assignment.assignment_mark) * 100}
-                />
-              )}
-              <Typography
-                variant="subtitle1"
-                sx={{ marginTop: 2, fontSize: "18px" }}
+          <Box>
+          <IconButton onClick={()=>setOpenAccordian(false)}>
+                <IoIosArrowUp />
+              </IconButton>
+          </Box>
+          </Box>
+          <Box sx={{ display: "flex", justifyContent: "space-between" }}>
+            <Typography variant="body2" sx={{ mt: 1, fontWeight: "bold" }}>
+              Total Marks: {assignment.assignment_mark}
+            </Typography>
+            {assignment.assignment_attachment && (
+              <Button
+                variant="outlined"
+                startIcon={<BsDownload />}
+                sx={{
+                  backgroundColor: "#f0f4fa",
+                  color: "#36454F",
+                  ":hover": {
+                    backgroundColor: "#e3e3e3",
+                    color: "#000",
+                  },
+                }}
+                onClick={() => downloadFile(assignment.assignment_attachment)}
               >
-                <strong>
-                  <PiChalkboardTeacher style={{ marginRight: "4px" }} />
-                  Comments
-                </strong>
-                <br />
-              </Typography>
-              {teacherComments}
-            </AccordionDetails>
-          </Accordion>
-        )}
-    </Box>
+                Download
+              </Button>
+            )}
+          </Box>
+
+          <Box sx={{ marginTop: 2 }}>
+            {shouldRenderAccordion && (
+              <Accordion
+                sx={{
+                  backgroundColor: "rgba(255, 255, 255, 0.2)",
+                  p: 1,
+                  mt: 1,
+                  borderRadius: "12px !important",
+                  boxShadow: "0px 4px 10px #adc0ff",
+                }}
+              >
+                <AccordionSummary
+                  expandIcon={<FaAngleDown />}
+                  aria-controls="panel2-content"
+                  id="panel2-header"
+                >
+                  <Box sx={{ display: "flex" }}>
+                    <GiBullseye style={{ marginRight: 3, fontSize: "24px" }} />
+                    <Typography variant="body1" sx={{ fontSize: "16px" }}>
+                      AI assessed result
+                    </Typography>
+                  </Box>
+                </AccordionSummary>
+                <AccordionDetails>
+                  <Typography>
+                    <GrScorecard style={{ marginRight: "4px" }} />
+                    <strong>Marks Scored:</strong> {result?.data?.score}/
+                    {assignment.assignment_mark}
+                  </Typography>
+                  {result?.data?.score !== undefined &&
+                    assignment.assignment_mark && (
+                      <ColorLinearProgress
+                        variant="determinate"
+                        sx={{ height: "6px" }}
+                        value={
+                          (result?.data?.score / assignment.assignment_mark) *
+                          100
+                        }
+                      />
+                    )}
+                  <Typography
+                    variant="subtitle1"
+                    sx={{ marginTop: 2, fontSize: "18px" }}
+                  >
+                    <strong>
+                      <PiChalkboardTeacher style={{ marginRight: "4px" }} />
+                      Comments
+                    </strong>
+                    <br />
+                  </Typography>
+                  {jsonData(result?.data?.comment)}
+                </AccordionDetails>
+              </Accordion>
+            )}
+          </Box>
+
+          {isSubmit === false && (
+            <TextField
+              fullWidth
+              variant="outlined"
+              placeholder="Describe your answer here..."
+              sx={{ mt: 2, mb: 2 }}
+              onChange={(e) => setAnswerDescription(e.target.value)}
+              disabled={isSubmitted}
+              value={answerDescription}
+            />
+          )}
+
+          {isSubmit === false && !selectedFile && (
+            <Stack direction="row" spacing={1}>
+              <Tooltip title="Image">
+                <IconButton
+                  color="primary"
+                  component="label"
+                  onChange={(e) => handleFileSelect(e, "IMAGE")}
+                >
+                  <FaPhotoVideo />
+                  <input hidden accept="image/*" type="file" />
+                </IconButton>
+              </Tooltip>
+              <Tooltip title="Audio">
+                <IconButton
+                  color="primary"
+                  component="label"
+                  onChange={(e) => handleFileSelect(e, "AUDIO")}
+                >
+                  <FaFileAudio />
+                  <input hidden accept="audio/*" type="file" />
+                </IconButton>
+              </Tooltip>
+              <Tooltip title="Video">
+                <IconButton
+                  color="primary"
+                  component="label"
+                  onChange={(e) => handleFileSelect(e, "VIDEO")}
+                >
+                  <FaRegFileVideo />
+                  <input hidden accept="video/*" type="file" />
+                </IconButton>
+              </Tooltip>
+              <Tooltip title="Document">
+                <IconButton
+                  color="primary"
+                  component="label"
+                  onChange={(e) => handleFileSelect(e, "FILE")}
+                >
+                  <MdDescription />
+                  <input
+                    hidden
+                    accept=".pdf,.doc,.docx,.txt,.xlsx,.xls,.pptx"
+                    type="file"
+                  />
+                </IconButton>
+              </Tooltip>
+            </Stack>
+          )}
+
+          {isSubmit === false && selectedFile && (
+            <Box
+              position="relative"
+              display="inline-block"
+              p={1}
+              mt={1}
+              sx={{
+                borderRadius: 2,
+                boxShadow: 1,
+                overflow: "hidden",
+                backgroundColor: isDarkMode ? "#424242" : "#f5f5f5",
+                width: 60,
+                height: 60,
+                display: "flex",
+                justifyContent: "center",
+                alignItems: "center",
+              }}
+            >
+              <FilePreview file={selectedFile} fileType={fileType} />
+
+              <Tooltip title="Remove File">
+                <IconButton
+                  size="small"
+                  color="error"
+                  onClick={removeSelectedFile}
+                  sx={{
+                    position: "absolute",
+                    top: 0,
+                    right: 0,
+                    backgroundColor: "rgba(255, 255, 255, 0.7)",
+                    "&:hover": {
+                      backgroundColor: "rgba(255, 255, 255, 0.9)",
+                    },
+                  }}
+                >
+                  <MdClose size={14} />
+                </IconButton>
+              </Tooltip>
+            </Box>
+          )}
+
+          {isSubmit === false &&
+            (uploadProgress === 100 || answerDescription ? (
+              <Button
+                variant="contained"
+                color="primary"
+                onClick={
+                  assignmentStatus === "data-found"
+                    ? handleReSubmit
+                    : handleSubmit
+                }
+                sx={{ mt: 2 }}
+                disabled={submitting || (!answerDescription && !selectedFile)}
+              >
+                {submitting ? "Submitting..." : "Submit Assignment"}
+              </Button>
+            ) : (
+              <Box position="relative" width="100%" sx={{ mt: 2 }}>
+                <BorderLinearProgress
+                  variant="determinate"
+                  value={uploadProgress}
+                />
+                <Box
+                  position="absolute"
+                  top={0}
+                  left={0}
+                  bottom={0}
+                  right={0}
+                  display="flex"
+                  alignItems="center"
+                  justifyContent="center"
+                >
+                  <Typography variant="body1" color="textPrimary">
+                    {!selectedFile && !answerDescription
+                      ? isSubmitted
+                        ? "Please re-upload a file or enter a description to proceed for resubmitting."
+                        : "Please upload a file or enter a description to proceed."
+                      : uploadProgress < 100
+                      ? `Uploading... ${Math.round(uploadProgress)}%`
+                      : "Upload complete! You can now submit your assignment."}
+                  </Typography>
+                </Box>
+              </Box>
+            ))}
+          {isSubmit === true &&
+            teacherComments !== null &&
+            marksObtained !== null && (
+              <Accordion
+                sx={{
+                  backgroundColor: "rgba(255, 255, 255, 0.2)",
+                  p: 1,
+                  mt: 1,
+                  borderRadius: "12px !important",
+                  boxShadow: "0px 4px 10px #adc0ff",
+                }}
+              >
+                <AccordionSummary
+                  expandIcon={<FaAngleDown />}
+                  aria-controls="panel2-content"
+                  id="panel2-header"
+                >
+                  <Box sx={{ display: "flex" }}>
+                    <GiBullseye style={{ marginRight: 3, fontSize: "24px" }} />
+                    <Typography variant="body1" sx={{ fontSize: "16px" }}>
+                      Teacher Assessed Result
+                    </Typography>
+                  </Box>
+                </AccordionSummary>
+                <AccordionDetails>
+                  <Typography>
+                    <GrScorecard style={{ marginRight: "4px" }} />
+                    <strong>Marks Scored:</strong> {marksObtained}/
+                    {assignment.assignment_mark}
+                  </Typography>
+                  {marksObtained !== undefined &&
+                    assignment.assignment_mark && (
+                      <ColorLinearProgress
+                        variant="determinate"
+                        sx={{ height: "6px" }}
+                        value={
+                          (marksObtained / assignment.assignment_mark) * 100
+                        }
+                      />
+                    )}
+                  <Typography
+                    variant="subtitle1"
+                    sx={{ marginTop: 2, fontSize: "18px" }}
+                  >
+                    <strong>
+                      <PiChalkboardTeacher style={{ marginRight: "4px" }} />
+                      Comments
+                    </strong>
+                    <br />
+                  </Typography>
+                  {teacherComments}
+                </AccordionDetails>
+              </Accordion>
+            )}
+        </Box>
+      ) : (
+        <Box
+          sx={{
+            mb: 4,
+            display: "flex",
+            borderRadius: 4,
+            flexDirection: "row",
+            boxShadow:
+              isSubmit === true
+                ? "0px 14px 24px #38ba47"
+                : shouldRenderAccordion
+                ? "0px 12px 24px #151bb3"
+                : "0px 12px 24px #ba5038",
+            p: 2,
+            justifyContent: "space-between",
+          }}
+          onClick={()=>setOpenAccordian(true)}
+        >
+          <Box sx={{ display: "flex" }}>
+            <Typography variant="body1">
+              {String.fromCharCode(65 + index)}.&nbsp;
+            </Typography>
+            <Box mt={0.3}>
+              <TextWithMath text={assignment.assignment_text?.length>200 ? `${assignment.assignment_text?.slice(0,200)}...`:assignment.assignment_text} />
+            </Box>
+          </Box>
+          <Box>
+            <IconButton>
+              <IoIosArrowDown />
+            </IconButton>
+          </Box>
+        </Box>
+      )}
+    </>
   );
 };
 

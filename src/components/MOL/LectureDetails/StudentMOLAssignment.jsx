@@ -105,7 +105,7 @@ const StudentMOLAssignment = ({ id, isDarkMode, class_ID }) => {
         overflowY: "auto",
         height: "100%",
         minHeight: 400,
-        maxHeight: 450,
+        maxHeight: 500,
       }}
     >
       <MathJax.Context input="tex">

@@ -213,7 +213,7 @@ const LectureAssignment = ({ id, isDarkMode, class_ID, isEdit }) => {
             overflowY: "auto",
             height: "100%",
             minHeight: 400,
-            maxHeight: 450,
+            maxHeight: 500,
             width: "100%",
           }}
         >
@@ -242,7 +242,7 @@ const LectureAssignment = ({ id, isDarkMode, class_ID, isEdit }) => {
             overflowY: "auto",
             height: "100%",
             minHeight: 400,
-            maxHeight: 450,
+            maxHeight: 500,
             width: "100%",
           }}
         >

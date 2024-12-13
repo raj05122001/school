@@ -90,7 +90,7 @@ const LectureMCQ = ({ id, isDarkMode }) => {
         overflowY: "auto",
         height: "100%",
         minHeight: 400,
-        maxHeight: 450,
+        maxHeight: 500,
         width: "100%",
       }}
     >
