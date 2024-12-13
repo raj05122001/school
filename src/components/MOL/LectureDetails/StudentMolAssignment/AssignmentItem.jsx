@@ -370,10 +370,10 @@ const AssignmentItem = ({
         //     : "#ffe0e0",
         boxShadow:
           isSubmit === true
-            ? "0px 4px 10px #38ba47"
+            ? "0px 14px 24px #38ba47"
             : shouldRenderAccordion
-            ? "0px 4px 10px #151bb3"
-            : "0px 4px 10px #ba5038",
+            ? "0px 12px 24px #151bb3"
+            : "0px 12px 24px #ba5038",
         p: 2,
       }}
     >
