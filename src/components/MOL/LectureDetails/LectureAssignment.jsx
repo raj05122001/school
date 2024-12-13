@@ -200,6 +200,11 @@ const LectureAssignment = ({ id, isDarkMode, class_ID, isEdit }) => {
     document.body.removeChild(link);
   };
 
+  const legendItems = [
+    { label: "Assigned", color: "#30a347" },
+    { label: "Not Assigned", color: "#d1cc3f" },
+  ];
+
   return (
     <>
       {loading ? (
@@ -249,6 +254,24 @@ const LectureAssignment = ({ id, isDarkMode, class_ID, isEdit }) => {
             width: "100%",
           }}
         >
+        <Typography component="div" style={{ display: 'flex', gap: '8px', margin: 10 }}>
+                    {legendItems.map((item, index) => (
+                        <Box key={index} display="flex" alignItems="center">
+                            <Box
+                                sx={{
+                                    width: 16,
+                                    height: 16,
+                                    backgroundColor: item.color,
+                                    borderRadius: '4px',
+                                    marginRight: '8px',
+                                }}
+                            />
+                            <Typography variant="body2" color="textPrimary">
+                                {item.label}
+                            </Typography>
+                        </Box>
+                    ))}
+                </Typography>
           <MathJax.Context input="tex">
             <>
               <Box
@@ -314,7 +337,7 @@ const LectureAssignment = ({ id, isDarkMode, class_ID, isEdit }) => {
                       borderRadius: 4,
                       display: "flex",
                       flexDirection: "column",
-                      boxShadow: "0px 2px 8px #1389f0",
+                      boxShadow: assignment?.is_assigned ? "0px 2px 8px #30a347":"0px 2px 8px #a39f30",
                     }}
                   >
                   <Box sx={{display:"flex", justifyContent:"space-between", gap:8, alignItems:"center"}}>
@@ -439,7 +462,7 @@ const LectureAssignment = ({ id, isDarkMode, class_ID, isEdit }) => {
                       display: "flex",
                       borderRadius: 4,
                       flexDirection: "row",
-                      boxShadow: "0px 2px 8px #1389f0",
+                      boxShadow: assignment?.is_assigned ? "0px 2px 8px #30a347":"0px 2px 8px #a39f30",
                       p: 2,
                       justifyContent: "space-between",
                     }}

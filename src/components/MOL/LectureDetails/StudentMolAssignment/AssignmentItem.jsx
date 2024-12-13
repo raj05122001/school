@@ -10,7 +10,7 @@ import {
   Accordion,
   AccordionSummary,
   AccordionDetails,
-  CircularProgress
+  CircularProgress,
 } from "@mui/material";
 import { FaPhotoVideo, FaFileAudio, FaRegFileVideo } from "react-icons/fa";
 import { MdClose, MdDescription } from "react-icons/md";
@@ -86,7 +86,7 @@ const AssignmentItem = ({
     !excludedTypes.includes(assignmentType);
 
   const fetchAssessmentResult = async () => {
-    setLoading(true)
+    setLoading(true);
     try {
       const response = await getStudentAssignmentComment(
         assignment?.id,
@@ -379,39 +379,45 @@ const AssignmentItem = ({
             //     : "#ffe0e0",
             boxShadow:
               isSubmit === true
-                ? "0px 14px 24px #38ba47"
+                ? "0px 2px 10px #38ba47"
                 : shouldRenderAccordion
-                ? "0px 12px 24px #151bb3"
-                : "0px 12px 24px #ba5038",
+                ? "0px 2px 10px #151bb3"
+                : "0px 2px 10px #ba5038",
             p: 2,
           }}
         >
-          <Box sx={{ display: "flex",justifyContent:'space-between',flexDirection:'row' }}>
-          <Box sx={{ display: "flex" }}>
-            <Typography variant="body1">
-              {String.fromCharCode(65 + index)}.&nbsp;
-            </Typography>
-            <Box mt={0.3}>
-              <TextWithMath text={assignment.assignment_text} />
-              <Button onClick={() => !open && setOpen(true)}>
-                Need Guidance
-              </Button>
-              {open ? (
-                <NeedMoreGuide
-                  assignmentId={assignment.id}
-                  open={open}
-                  setOpen={setOpen}
-                />
-              ) : (
-                ""
-              )}
+          <Box
+            sx={{
+              display: "flex",
+              justifyContent: "space-between",
+              flexDirection: "row",
+            }}
+          >
+            <Box sx={{ display: "flex" }}>
+              <Typography variant="body1">
+                {String.fromCharCode(65 + index)}.&nbsp;
+              </Typography>
+              <Box mt={0.3}>
+                <TextWithMath text={assignment.assignment_text} />
+                <Button onClick={() => !open && setOpen(true)}>
+                  Need Guidance
+                </Button>
+                {open ? (
+                  <NeedMoreGuide
+                    assignmentId={assignment.id}
+                    open={open}
+                    setOpen={setOpen}
+                  />
+                ) : (
+                  ""
+                )}
+              </Box>
             </Box>
-          </Box>
-          <Box>
-          <IconButton onClick={()=>setOpenAccordian(false)}>
+            <Box>
+              <IconButton onClick={() => setOpenAccordian(false)}>
                 <IoIosArrowUp />
               </IconButton>
-          </Box>
+            </Box>
           </Box>
           <Box sx={{ display: "flex", justifyContent: "space-between" }}>
             <Typography variant="body2" sx={{ mt: 1, fontWeight: "bold" }}>
@@ -461,38 +467,43 @@ const AssignmentItem = ({
                 </AccordionSummary>
                 <AccordionDetails>
                   {loading ? (
-                            <Box sx={{ display: "flex", justifyContent: "center", py: 2 }}>
-                              <CircularProgress />
-                            </Box>
-                          ) : <>
-                          <Typography>
-                    <GrScorecard style={{ marginRight: "4px" }} />
-                    <strong>Marks Scored:</strong> {result?.data?.score}/
-                    {assignment.assignment_mark}
-                  </Typography>
-                  {result?.data?.score !== undefined &&
-                    assignment.assignment_mark && (
-                      <ColorLinearProgress
-                        variant="determinate"
-                        sx={{ height: "6px" }}
-                        value={
-                          (result?.data?.score / assignment.assignment_mark) *
-                          100
-                        }
-                      />
-                    )}
-                  <Typography
-                    variant="subtitle1"
-                    sx={{ marginTop: 2, fontSize: "18px" }}
-                  >
-                    <strong>
-                      <PiChalkboardTeacher style={{ marginRight: "4px" }} />
-                      Comments
-                    </strong>
-                    <br />
-                  </Typography>
-                  {jsonData(result?.data?.comment)}
-                          </>}
+                    <Box
+                      sx={{ display: "flex", justifyContent: "center", py: 2 }}
+                    >
+                      <CircularProgress />
+                    </Box>
+                  ) : (
+                    <>
+                      <Typography>
+                        <GrScorecard style={{ marginRight: "4px" }} />
+                        <strong>Marks Scored:</strong> {result?.data?.score}/
+                        {assignment.assignment_mark}
+                      </Typography>
+                      {result?.data?.score !== undefined &&
+                        assignment.assignment_mark && (
+                          <ColorLinearProgress
+                            variant="determinate"
+                            sx={{ height: "6px" }}
+                            value={
+                              (result?.data?.score /
+                                assignment.assignment_mark) *
+                              100
+                            }
+                          />
+                        )}
+                      <Typography
+                        variant="subtitle1"
+                        sx={{ marginTop: 2, fontSize: "18px" }}
+                      >
+                        <strong>
+                          <PiChalkboardTeacher style={{ marginRight: "4px" }} />
+                          Comments
+                        </strong>
+                        <br />
+                      </Typography>
+                      {jsonData(result?.data?.comment)}
+                    </>
+                  )}
                 </AccordionDetails>
               </Accordion>
             )}
@@ -707,21 +718,27 @@ const AssignmentItem = ({
             flexDirection: "row",
             boxShadow:
               isSubmit === true
-                ? "0px 14px 24px #38ba47"
+                ? "0px 2px 10px #38ba47"
                 : shouldRenderAccordion
-                ? "0px 12px 24px #151bb3"
-                : "0px 12px 24px #ba5038",
+                ? "0px 2px 10px #151bb3"
+                : "0px 2px 10px #ba5038",
             p: 2,
             justifyContent: "space-between",
           }}
-          onClick={()=>setOpenAccordian(true)}
+          onClick={() => setOpenAccordian(true)}
         >
           <Box sx={{ display: "flex" }}>
             <Typography variant="body1">
               {String.fromCharCode(65 + index)}.&nbsp;
             </Typography>
             <Box mt={0.3}>
-              <TextWithMath text={assignment.assignment_text?.length>200 ? `${assignment.assignment_text?.slice(0,200)}...`:assignment.assignment_text} />
+              <TextWithMath
+                text={
+                  assignment.assignment_text?.length > 200
+                    ? `${assignment.assignment_text?.slice(0, 200)}...`
+                    : assignment.assignment_text
+                }
+              />
             </Box>
           </Box>
           <Box>
