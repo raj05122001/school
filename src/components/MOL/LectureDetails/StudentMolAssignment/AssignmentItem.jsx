@@ -10,6 +10,7 @@ import {
   Accordion,
   AccordionSummary,
   AccordionDetails,
+  CircularProgress
 } from "@mui/material";
 import { FaPhotoVideo, FaFileAudio, FaRegFileVideo } from "react-icons/fa";
 import { MdClose, MdDescription } from "react-icons/md";
@@ -79,11 +80,13 @@ const AssignmentItem = ({
   const [result, setResult] = useState({});
   const excludedTypes = ["VIDEO", "AUDIO", "IMAGE", "LINK"];
   const [assignmentStatus, setAssignmentStatus] = useState("");
+  const [loading, setLoading] = useState(false);
   const shouldRenderAccordion =
     assignmentStatus === "data-found" &&
     !excludedTypes.includes(assignmentType);
 
   const fetchAssessmentResult = async () => {
+    setLoading(true)
     try {
       const response = await getStudentAssignmentComment(
         assignment?.id,
@@ -93,6 +96,8 @@ const AssignmentItem = ({
       setResult(data); // Store parsed data
     } catch (error) {
       console.error("Error fetching result", error);
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -455,7 +460,12 @@ const AssignmentItem = ({
                   </Box>
                 </AccordionSummary>
                 <AccordionDetails>
-                  <Typography>
+                  {loading ? (
+                            <Box sx={{ display: "flex", justifyContent: "center", py: 2 }}>
+                              <CircularProgress />
+                            </Box>
+                          ) : <>
+                          <Typography>
                     <GrScorecard style={{ marginRight: "4px" }} />
                     <strong>Marks Scored:</strong> {result?.data?.score}/
                     {assignment.assignment_mark}
@@ -482,6 +492,7 @@ const AssignmentItem = ({
                     <br />
                   </Typography>
                   {jsonData(result?.data?.comment)}
+                          </>}
                 </AccordionDetails>
               </Accordion>
             )}
