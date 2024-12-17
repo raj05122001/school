@@ -104,8 +104,8 @@ const LecturePage = ({ params }) => {
   );
   const commentSection = useMemo(() => <CommentsSection id={id} />, [id]);
   const personalisedRecommendations = useMemo(
-    () => <PersonalisedRecommendations id={id} />,
-    [id]
+    () => <PersonalisedRecommendations id={id} marksData={marksData} />,
+    [id, marksData]
   );
   const lectureAttachment = useMemo(
     () => <LectureAttachments lectureId={id} isDarkMode={isDarkMode} />,
