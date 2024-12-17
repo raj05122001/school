@@ -95,6 +95,18 @@ const LectureDetails = ({
       >
         <b>Lecture Details</b>
         <br />
+        <span
+          style={{
+            fontSize: "16px",
+            color: isDarkMode ? "#F0EAD6" : "#36454F",
+          }}
+        >
+          (
+          <i>
+            This is an AI generated content. The teacher should verify it.
+          </i>
+          )
+        </span>
       </Typography>
 
       <Tabs

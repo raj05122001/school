@@ -186,7 +186,7 @@ const TopicAccordion = ({
   const [myApproach, setMyApproach] = useState(selectedApproach);
 
   const approachOptions = [
-    "Theoritacaly",
+    "Theoretically",
     "Through Practical Example",
     "Through Real Life Example",
     "Through Case Study",
