@@ -72,8 +72,7 @@ const LectureOverview = ({
         >
           (
           <i>
-            The summary and highlights are AI-generated. Feel free to edit them
-            as necessary
+            This is an AI generated content. The teacher should verify it.
           </i>
           )
         </span>

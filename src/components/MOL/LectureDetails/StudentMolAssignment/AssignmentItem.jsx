@@ -462,6 +462,8 @@ const AssignmentItem = ({
                     <GiBullseye style={{ marginRight: 3, fontSize: "24px" }} />
                     <Typography variant="body1" sx={{ fontSize: "16px" }}>
                       AI assessed result
+                      <br />
+                      <i style={{fontSize:"12px"}}>(This is an AI based result for your imporvement. The final score will be provided by the teacher post resubmission.)</i>
                     </Typography>
                   </Box>
                 </AccordionSummary>
