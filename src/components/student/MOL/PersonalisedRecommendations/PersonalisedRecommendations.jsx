@@ -71,6 +71,8 @@ const PersonalisedRecommendations = ({ id, marksData }) => {
     }
   };
 
+  const isSummary = section==="SUMMARY" || section==="HIGHLIGHTS"
+
   console.log("Selected Topic", selectedTopic);
 
   return (
@@ -123,6 +125,8 @@ const PersonalisedRecommendations = ({ id, marksData }) => {
                 id={id}
                 section={section}
                 selectedApproach={selectedApproach}
+                isApiCall={true}
+                isSummary={isSummary}
               />
               <Typography variant="body1" color={"#630330"}>
                 <strong>✦ Approach:</strong>{" "}
@@ -155,6 +159,7 @@ const PersonalisedRecommendations = ({ id, marksData }) => {
               id={id}
               section={section}
               selectedApproach={selectedApproach}
+              isSummary={isSummary}
             />
           ))
         ) : (
@@ -167,7 +172,14 @@ const PersonalisedRecommendations = ({ id, marksData }) => {
 
 export default PersonalisedRecommendations;
 
-const TopicAccordion = ({ topic, id, section, selectedApproach }) => {
+const TopicAccordion = ({
+  topic,
+  id,
+  section,
+  selectedApproach,
+  isApiCall = false,
+  isSummary = false
+}) => {
   const { isDarkMode, primaryColor, secondaryColor } = useThemeContext();
   const [data, setData] = useState({});
   const [loading, setLoading] = useState(false);
@@ -180,11 +192,11 @@ const TopicAccordion = ({ topic, id, section, selectedApproach }) => {
     "Through Case Study",
   ];
 
-  // useEffect(() => {
-  //   if (myApproach) {
-  //     fetchQuery();
-  //   }
-  // }, [myApproach]); // Fetch whenever the approach changes
+  useEffect(() => {
+    if (isApiCall || isSummary) {
+      fetchQuery(selectedApproach);
+    }
+  }, [isApiCall, isSummary]);
 
   const handleChange = (event) => {
     setMyApproach(event.target.value); // Update parent's state
@@ -223,7 +235,7 @@ const TopicAccordion = ({ topic, id, section, selectedApproach }) => {
         expandIcon={<FaChevronDown />} // Using react-icons here
       >
         <Typography variant="body1" color={primaryColor}>
-          {topic}
+        {isSummary ?  `${topic.slice(0,200)}...` : topic}
         </Typography>
       </AccordionSummary>
       <AccordionDetails
@@ -263,7 +275,7 @@ const TopicAccordion = ({ topic, id, section, selectedApproach }) => {
                 <MenuItem
                   key={index}
                   value={option}
-                  sx={{fontSize: "0.875rem"}}
+                  sx={{ fontSize: "0.875rem" }}
                 >
                   {option}
                 </MenuItem>
@@ -272,7 +284,14 @@ const TopicAccordion = ({ topic, id, section, selectedApproach }) => {
           </FormControl>
           <Button
             variant="outlined"
-            sx={{color: isDarkMode ? "#1d3254":"primary", border: !isDarkMode && "none", borderColor: isDarkMode ? "#1d3254":"none", borderRadius: 4, boxShadow: "0px 2px 6px #666aa1", ":hover":{backgroundColor:"#4066a3", color:"#fff"} }}
+            sx={{
+              color: isDarkMode ? "#1d3254" : "primary",
+              border: !isDarkMode && "none",
+              borderColor: isDarkMode ? "#1d3254" : "none",
+              borderRadius: 4,
+              boxShadow: "0px 2px 6px #666aa1",
+              ":hover": { backgroundColor: "#4066a3", color: "#fff" },
+            }}
             onClick={() => fetchQuery(myApproach)}
           >
             Explanation <IoSend style={{ marginLeft: 2, fontSize: "18px" }} />
@@ -303,11 +322,11 @@ const TopicAccordion = ({ topic, id, section, selectedApproach }) => {
           </Card>
         ) : (
           <>
-          <Box display={"flex"} justifyContent={"center"} gap={1}>
-          <Typography textAlign={"center"}>No data available</Typography>
-          <TbMoodEmpty style={{fontSize:"22px"}}/>
-          </Box>
-            
+            <Box display={"flex"} justifyContent={"center"} gap={1}>
+              <Typography textAlign={"center"}>No data available</Typography>
+              <TbMoodEmpty style={{ fontSize: "22px" }} />
+            </Box>
+
             <Typography
               textAlign={"center"}
               sx={{ fontSize: "14px", fontStyle: "italic" }}
