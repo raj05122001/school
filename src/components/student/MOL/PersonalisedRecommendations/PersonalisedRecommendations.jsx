@@ -18,13 +18,20 @@ import {
   Box,
   Skeleton,
   useTheme,
+  InputLabel,
+  FormControl,
+  MenuItem,
+  Select,
+  Button,
 } from "@mui/material";
 import { FaChevronDown } from "react-icons/fa"; // Importing icon from react-icons
 import MathJax from "react-mathjax2";
 import { VscPreview } from "react-icons/vsc";
 import { MdSelfImprovement, MdRecommend } from "react-icons/md";
+import { IoSend } from "react-icons/io5";
+import { TbMoodEmpty } from "react-icons/tb";
 
-const PersonalisedRecommendations = ({ id }) => {
+const PersonalisedRecommendations = ({ id, marksData }) => {
   const { isDarkMode, primaryColor, secondaryColor } = useThemeContext();
   const [section, setSection] = useState("");
   const [topics, setTopics] = useState([]);
@@ -33,13 +40,17 @@ const PersonalisedRecommendations = ({ id }) => {
 
   useEffect(() => {
     fetchSection();
-  }, []);
+  }, [marksData]);
+
+  console.log("Marks Data", marksData);
 
   const fetchSection = async () => {
     try {
       const response = await getPersonalisedRecommendations(id);
-      setSection(response?.data?.data?.[0]);
-      fetchTopic(response?.data?.data?.[0]);
+      if (response?.data?.data !== "NOT FOUND") {
+        setSection(response?.data?.data?.[0]);
+        fetchTopic(response?.data?.data?.[0]);
+      }
     } catch (error) {
       console.error(error);
     }
@@ -59,6 +70,8 @@ const PersonalisedRecommendations = ({ id }) => {
       console.error(error);
     }
   };
+
+  console.log("Selected Topic", selectedTopic);
 
   return (
     <Container
@@ -81,40 +94,49 @@ const PersonalisedRecommendations = ({ id }) => {
         Recommendations
       </Typography>
 
-      {selectedTopic && (
-        <Card
-          variant="outlined"
-          sx={{
-            mb: 3,
-            backgroundColor: "rgba(255, 255, 255, 0.2)",
-            borderRadius: 6,
-            pl: 2,
-            boxShadow: "0px 4px 10px #ADD8E6",
-          }}
-        >
-          <CardContent sx={{}}>
-            <Typography variant="h6" color={"#483248"}>
-              <VscPreview style={{ marginRight: 2 }} />
-              Previously Selected
-            </Typography>
-            <TopicAccordion
-              topic={selectedTopic}
-              id={id}
-              section={section}
-              selectedApproach={selectedApproach}
-            />
-            <Typography variant="body1" color={"#630330"}>
-              <strong>✦ Approach:</strong>{" "}
-              <span style={{ color: "#51414F" }}>
-                {selectedApproach || "None"}
-              </span>
-            </Typography>
-            <Typography variant="body1" color={"#630330"}>
-              <strong>✦ Section:</strong>{" "}
-              <span style={{ color: "#51414F" }}>{section || "None"}</span>
-            </Typography>
-          </CardContent>
-        </Card>
+      {marksData?.viewed_highlights === false &&
+      marksData?.viewed_notes === false &&
+      marksData?.viewed_summary === false &&
+      marksData?.viewed_summary === false ? (
+        <Typography variant="h6" textAlign={"center"}>
+          We are analysing your activity for Personalised Recommendation.
+        </Typography>
+      ) : (
+        selectedTopic && (
+          <Card
+            variant="outlined"
+            sx={{
+              mb: 3,
+              backgroundColor: "rgba(255, 255, 255, 0.2)",
+              borderRadius: 6,
+              pl: 2,
+              boxShadow: "0px 4px 10px #ADD8E6",
+            }}
+          >
+            <CardContent sx={{}}>
+              <Typography variant="h6" color={"#483248"}>
+                <VscPreview style={{ marginRight: 2 }} />
+                Previously Selected
+              </Typography>
+              <TopicAccordion
+                topic={selectedTopic}
+                id={id}
+                section={section}
+                selectedApproach={selectedApproach}
+              />
+              <Typography variant="body1" color={"#630330"}>
+                <strong>✦ Approach:</strong>{" "}
+                <span style={{ color: "#51414F" }}>
+                  {selectedApproach || "None"}
+                </span>
+              </Typography>
+              <Typography variant="body1" color={"#630330"}>
+                <strong>✦ Section:</strong>{" "}
+                <span style={{ color: "#51414F" }}>{section || "None"}</span>
+              </Typography>
+            </CardContent>
+          </Card>
+        )
       )}
       <Box display={"flex"} gap={1}>
         <MdRecommend style={{ fontSize: "32px" }} />
@@ -124,19 +146,21 @@ const PersonalisedRecommendations = ({ id }) => {
         </Typography>
       </Box>
 
-      {topics.length > 0 ? (
-        topics?.map((topic, index) => (
-          <TopicAccordion
-            key={index}
-            topic={topic}
-            id={id}
-            section={section}
-            selectedApproach={selectedApproach}
-          />
-        ))
-      ) : (
-        <Typography>No topics available.</Typography>
-      )}
+      <Box sx={{ maxHeight: 400, overflowY: "auto" }}>
+        {topics.length > 0 ? (
+          topics?.map((topic, index) => (
+            <TopicAccordion
+              key={index}
+              topic={topic}
+              id={id}
+              section={section}
+              selectedApproach={selectedApproach}
+            />
+          ))
+        ) : (
+          <Typography>No topics available.</Typography>
+        )}
+      </Box>
     </Container>
   );
 };
@@ -147,15 +171,33 @@ const TopicAccordion = ({ topic, id, section, selectedApproach }) => {
   const { isDarkMode, primaryColor, secondaryColor } = useThemeContext();
   const [data, setData] = useState({});
   const [loading, setLoading] = useState(false);
+  const [myApproach, setMyApproach] = useState(selectedApproach);
 
-  const fetchQuery = async () => {
+  const approachOptions = [
+    "Theoritacaly",
+    "Through Practical Example",
+    "Through Real Life Example",
+    "Through Case Study",
+  ];
+
+  // useEffect(() => {
+  //   if (myApproach) {
+  //     fetchQuery();
+  //   }
+  // }, [myApproach]); // Fetch whenever the approach changes
+
+  const handleChange = (event) => {
+    setMyApproach(event.target.value); // Update parent's state
+  };
+
+  const fetchQuery = async (myApproach) => {
     setLoading(true);
     try {
       const formData = {
         lecture_id: id,
         section_identified: section,
         topic_selected: topic,
-        approach_selected: selectedApproach,
+        approach_selected: myApproach,
       };
       const response = await getQuery(formData);
       setData(response?.data?.data);
@@ -168,7 +210,7 @@ const TopicAccordion = ({ topic, id, section, selectedApproach }) => {
 
   return (
     <Accordion
-      onChange={(event, expanded) => expanded && fetchQuery()}
+      // onChange={(event, expanded) => expanded && fetchQuery()}
       sx={{
         backgroundColor: "rgba(255, 255, 255, 0.2)",
         borderRadius: 2,
@@ -184,7 +226,58 @@ const TopicAccordion = ({ topic, id, section, selectedApproach }) => {
           {topic}
         </Typography>
       </AccordionSummary>
-      <AccordionDetails>
+      <AccordionDetails
+        sx={{ boxShadow: "0px 2px 6px #666aa1", borderRadius: 4 }}
+      >
+        <Box sx={{ display: "flex", gap: 2, m: 2, p: 2 }}>
+          <FormControl
+            sx={{
+              width: "230px",
+              backgroundColor: "#daf0da",
+              borderRadius: 2,
+              boxShadow: "0px 2px 6px #666aa1",
+              "& .MuiOutlinedInput-notchedOutline": {
+                display: "none", // Removes the outline
+              },
+            }}
+          >
+            <InputLabel
+              id="approach-select-label"
+              sx={{ fontSize: "14px", fontStyle: "bold", color: "#000000" }}
+            >
+              Select Approach
+            </InputLabel>
+            <Select
+              labelId="approach-select-label"
+              value={myApproach}
+              onChange={handleChange}
+              label="Select Approach"
+              size="small"
+              sx={{
+                fontSize: "0.875rem",
+                height: "100%",
+                ":hover": { backgroundColor: "#81b581" },
+              }}
+            >
+              {approachOptions.map((option, index) => (
+                <MenuItem
+                  key={index}
+                  value={option}
+                  sx={{fontSize: "0.875rem"}}
+                >
+                  {option}
+                </MenuItem>
+              ))}
+            </Select>
+          </FormControl>
+          <Button
+            variant="outlined"
+            sx={{color: isDarkMode ? "#1d3254":"primary", border: !isDarkMode && "none", borderColor: isDarkMode ? "#1d3254":"none", borderRadius: 4, boxShadow: "0px 2px 6px #666aa1", ":hover":{backgroundColor:"#4066a3", color:"#fff"} }}
+            onClick={() => fetchQuery(myApproach)}
+          >
+            Explanation <IoSend style={{ marginLeft: 2, fontSize: "18px" }} />
+          </Button>
+        </Box>
         {loading ? (
           <Box sx={{ display: "flex", justifyContent: "center", py: 2 }}>
             <CircularProgress />
@@ -209,7 +302,20 @@ const TopicAccordion = ({ topic, id, section, selectedApproach }) => {
             </CardContent>
           </Card>
         ) : (
-          <Typography>No data available.</Typography>
+          <>
+          <Box display={"flex"} justifyContent={"center"} gap={1}>
+          <Typography textAlign={"center"}>No data available</Typography>
+          <TbMoodEmpty style={{fontSize:"22px"}}/>
+          </Box>
+            
+            <Typography
+              textAlign={"center"}
+              sx={{ fontSize: "14px", fontStyle: "italic" }}
+            >
+              Kindly click on Explain button to show details regarding the
+              topic.
+            </Typography>
+          </>
         )}
       </AccordionDetails>
     </Accordion>
