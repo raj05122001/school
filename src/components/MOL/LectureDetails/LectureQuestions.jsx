@@ -83,7 +83,7 @@ const LectureQuestions = ({ id, isDarkMode }) => {
             {displayedQuestion?.map((item, index) => (
               <Box key={index} sx={{ mb: 2 }}>
                 <Typography variant="subtitle1" fontWeight="bold">
-                  <MathJax.Text text={item.title} />
+                  <TextWithMath text={item.title} />
                 </Typography>
                 <ul>
                   {item.questions.map((question, qIndex) => (

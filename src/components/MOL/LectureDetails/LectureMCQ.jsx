@@ -43,7 +43,7 @@ const LectureMCQ = ({ id, isDarkMode }) => {
       let validJson = options
         .replace(/^\[|\]$/g, '') // Remove the surrounding brackets temporarily
         .split(',') // Split each option by commas
-        .map(option => option.trim().replace(/^'/, '"').replace(/'$/, '"')) // Replace single quotes around each option with double quotes
+        .map(option => option?.trim().replace(/^'/, '"').replace(/'$/, '"')) // Replace single quotes around each option with double quotes
         .join(','); // Join the items back into a comma-separated string
   
       // Wrap the modified string back into an array format
@@ -136,7 +136,7 @@ const LectureMCQ = ({ id, isDarkMode }) => {
                   <List sx={{ padding: 0 }}>
                     {" "}
                     {/* Remove padding for nested list */}
-                    {parseOptions(item.options)?.map((option, index) => (
+                    {parseOptions(item?.options)?.map((option, index) => (
                       <ListItem key={index} sx={{ padding: 0 }}>
                         {" "}
                         {/* Remove padding for nested items */}
@@ -176,13 +176,13 @@ const LectureMCQ = ({ id, isDarkMode }) => {
                      sx={{marginTop:0.4}}
                       variant="span"
                     >
-                    <MathJax.Text text={item.answer} />
+                    <MathJax.Text text={item?.answer} />
                     </Typography>
 
                   </Box>
                 </ListItem>
               ))}
-              {visibleCount < quizData.length && (
+              {visibleCount < quizData?.length && (
                 <Button
                   variant="contained"
                   onClick={() => setVisibleCount((prevCount) => prevCount + 5)}
