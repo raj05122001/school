@@ -42,7 +42,7 @@ const LectureNotes = ({
     const fetchLectureNotes = async () => {
       try {
         const response = await getLectureNotes(id);
-        setNotes(JSON.parse(response.data.lecture_note));
+        setNotes(JSON.parse(response?.data.lecture_note));
       } catch (err) {
         setError(err);
       } finally {
@@ -75,13 +75,13 @@ const LectureNotes = ({
 
       // Find the note matching the specified noteId and extract its notes content
       const updatedNoteData = updatedNotesArray.find(
-        (item) => item.id === noteId
+        (item) => item?.id === noteId
       )?.notes;
 
       if (updatedNoteData) {
         setNotes((prevNotes) =>
           prevNotes?.map((note) =>
-            note.id === noteId ? { ...note, notes: updatedNoteData } : note
+            note?.id === noteId ? { ...note, notes: updatedNoteData } : note
           )
         );
         toast.success("Notes updated successfully");
@@ -97,7 +97,7 @@ const LectureNotes = ({
     }
   };
 
-  const displayedNotes = notes.slice(0, visibleCount);
+  const displayedNotes = notes?.slice(0, visibleCount);
 
   // if (loading) {
   //   return (
@@ -112,12 +112,12 @@ const LectureNotes = ({
 
   useEffect(() => {
     const handleScrollAndUpdate = async () => {
-      if (!isStudent || marksData?.viewed_notes || updateCalled.current) {
+      if (!isStudent || marksData?.viewed_notes || updateCalled?.current) {
         return;
       }
 
       if (notesBoxRef.current) {
-        const { scrollTop, scrollHeight, clientHeight } = notesBoxRef.current;
+        const { scrollTop, scrollHeight, clientHeight } = notesBoxRef?.current;
         if (
           scrollHeight > clientHeight &&
           scrollTop + clientHeight >= scrollHeight - 5
@@ -129,17 +129,17 @@ const LectureNotes = ({
       }
     };
 
-    notesBoxRef.current?.addEventListener("scroll", handleScrollAndUpdate);
-    notesBoxRef.current?.addEventListener("mouseenter", handleScrollAndUpdate);
-    notesBoxRef.current?.addEventListener("mouseleave", handleScrollAndUpdate);
+    notesBoxRef?.current?.addEventListener("scroll", handleScrollAndUpdate);
+    notesBoxRef?.current?.addEventListener("mouseenter", handleScrollAndUpdate);
+    notesBoxRef?.current?.addEventListener("mouseleave", handleScrollAndUpdate);
 
     return () => {
-      notesBoxRef.current?.removeEventListener("scroll", handleScrollAndUpdate);
-      notesBoxRef.current?.removeEventListener(
+      notesBoxRef?.current?.removeEventListener("scroll", handleScrollAndUpdate);
+      notesBoxRef?.current?.removeEventListener(
         "mouseenter",
         handleScrollAndUpdate
       );
-      notesBoxRef.current?.removeEventListener(
+      notesBoxRef?.current?.removeEventListener(
         "mouseleave",
         handleScrollAndUpdate
       );
@@ -201,19 +201,19 @@ const LectureNotes = ({
         <MathJax.Context input="tex">
           <>
             {displayedNotes?.map((note) => (
-              <Box key={note.id} sx={{ mb: 2 }}>
+              <Box key={note?.id} sx={{ mb: 2 }}>
                 <Box
                   display="flex"
                   alignItems="center"
                   justifyContent="space-between"
                 >
                   <Typography sx={{ fontWeight: "bold", fontSize: "18px" }}>
-                    <MathJax.Text text={note.title} />
+                    <TextWithMath text={note?.title} />
                   </Typography>
-                  {!showTextFields[note.id] ? (
+                  {!showTextFields[note?.id] ? (
                     <Button
                       variant="outlined"
-                      onClick={() => handleMoreInsightClick(note.id)}
+                      onClick={() => handleMoreInsightClick(note?.id)}
                       sx={{
                         whiteSpace: "nowrap", // Prevent text wrapping
                         minHeight: "36px", // Set a consistent button height
@@ -228,18 +228,18 @@ const LectureNotes = ({
                       <TextField
                         variant="outlined"
                         size="small"
-                        value={insightInputs[note.id] || ""}
+                        value={insightInputs[note?.id] || ""}
                         onChange={(e) =>
                           setInsightInputs({
                             ...insightInputs,
-                            [note.id]: e.target.value,
+                            [note?.id]: e.target.value,
                           })
                         }
                         placeholder="Type your query..."
                         sx={{ mr: 1 }}
                       />
                       <IconButton
-                        onClick={() => sendInfo(note.id)}
+                        onClick={() => sendInfo(note?.id)}
                         color="primary"
                       >
                         <IoMdSend />
@@ -250,7 +250,7 @@ const LectureNotes = ({
                 {/* Check and remove leading ** symbols from notes */}
                 <Typography variant="subtitle2">
                   <TextWithMath
-                    text={note.notes
+                    text={note?.notes
                       .replace(/^\*\*\s*/, "")
                       .replace(/\\n/g, "\n")}
                   />

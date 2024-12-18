@@ -266,7 +266,7 @@ const AssignmentItem = ({
               fontSize: "15px",
             }}
           >
-            {data?.overall_feedback}
+            <TextWithMath text={data?.overall_feedback} />
           </Box>
           {data?.feedback_points?.length > 0 && (
             <>
@@ -295,7 +295,7 @@ const AssignmentItem = ({
               >
                 <ul style={{ lineHeight: "1.8" }}>
                   {data?.feedback_points?.map((point, index) => (
-                    <li key={index}>{point}</li>
+                    <li key={index}><TextWithMath text={point} /></li>
                   ))}
                 </ul>
               </Box>
@@ -328,7 +328,7 @@ const AssignmentItem = ({
               >
                 <ul style={{ lineHeight: "1.8" }}>
                   {data?.improvement_points?.map((point, index) => (
-                    <li key={index}>{point}</li>
+                    <li key={index}><TextWithMath text={point} /></li>
                   ))}
                 </ul>
               </Box>
@@ -339,7 +339,7 @@ const AssignmentItem = ({
     } catch (error) {
       return (
         <Typography variant="subtitle2" sx={{ fontSize: "15px" }}>
-          {value}
+          <TextWithMath text={value} />
         </Typography>
       );
     }
@@ -684,15 +684,15 @@ const AssignmentItem = ({
                   <Typography>
                     <GrScorecard style={{ marginRight: "4px" }} />
                     <strong>Marks Scored:</strong> {marksObtained}/
-                    {assignment.assignment_mark}
+                    {assignment?.assignment_mark}
                   </Typography>
                   {marksObtained !== undefined &&
-                    assignment.assignment_mark && (
+                    assignment?.assignment_mark && (
                       <ColorLinearProgress
                         variant="determinate"
                         sx={{ height: "6px" }}
                         value={
-                          (marksObtained / assignment.assignment_mark) * 100
+                          (marksObtained / assignment?.assignment_mark) * 100
                         }
                       />
                     )}
@@ -706,7 +706,7 @@ const AssignmentItem = ({
                     </strong>
                     <br />
                   </Typography>
-                  {teacherComments}
+                  <TextWithMath text={teacherComments} />
                 </AccordionDetails>
               </Accordion>
             )}

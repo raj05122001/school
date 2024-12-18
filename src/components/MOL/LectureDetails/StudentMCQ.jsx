@@ -24,16 +24,16 @@ const StudentMCQ = ({ id, isDarkMode }) => {
       try {
         const response = await getLectureQuiz(id); // Fetching quiz data using the provided id
         if (response.success) {
-          setQuizData(response.data); // Set the fetched data to state
+          setQuizData(response?.data); // Set the fetched data to state
         }
         const quizResponse = await getQuizResponse(id);
-        if (quizResponse.success) {
+        if (quizResponse?.success) {
             // Store already answered quiz IDs
-            const answeredQuestions = quizResponse.data.answered_quiz.reduce((acc, item) => {
-              acc[item.quiz.id] = {
-                yourAnswer: item.your_answer,
-                correctAnswer: item.quiz.answer,
-                isCorrect: item.is_correct,
+            const answeredQuestions = quizResponse?.data?.answered_quiz?.reduce((acc, item) => {
+              acc[item?.quiz?.id] = {
+                yourAnswer: item?.your_answer,
+                correctAnswer: item?.quiz?.answer,
+                isCorrect: item?.is_correct,
               };
               return acc;
             }, {});
@@ -94,12 +94,12 @@ const StudentMCQ = ({ id, isDarkMode }) => {
       const response = await getQuizResponse(id);
       if (response.success) {
         const quizResponse = await getQuizResponse(id);
-        if (quizResponse.success) {
-            const responseData = quizResponse.data.answered_quiz.reduce((acc, item) => {
-              acc[item.quiz.id] = {
-                yourAnswer: item.your_answer,
-                correctAnswer: item.quiz.answer,
-                isCorrect: item.is_correct,
+        if (quizResponse?.success) {
+            const responseData = quizResponse?.data?.answered_quiz.reduce((acc, item) => {
+              acc[item?.quiz?.id] = {
+                yourAnswer: item?.your_answer,
+                correctAnswer: item?.quiz?.answer,
+                isCorrect: item?.is_correct,
               };
               return acc;
             }, {});
@@ -111,7 +111,7 @@ const StudentMCQ = ({ id, isDarkMode }) => {
     }
   };
 
-  const displayedNotes = quizData.slice(0, visibleCount);
+  const displayedNotes = quizData?.slice(0, visibleCount);
 
   if (loading) {
     return (
@@ -158,11 +158,11 @@ const StudentMCQ = ({ id, isDarkMode }) => {
                   <Typography sx={{ textAlign: "left", marginRight: 1 }}>
                     {questionIndex + 1}.
                   </Typography>
-                  <TextWithMath text={item.question} />
+                  <TextWithMath text={item?.question} />
                 </Box>
                 <RadioGroup
-                  value={selectedAnswers[item.id] || ""}
-                  onChange={(e) => handleOptionChange(item.id, e.target.value)}
+                  value={selectedAnswers[item?.id] || ""}
+                  onChange={(e) => handleOptionChange(item?.id, e.target.value)}
                 >
                   {parseOptions(item.options)?.map((option, index) => (
                     <FormControlLabel
@@ -174,16 +174,16 @@ const StudentMCQ = ({ id, isDarkMode }) => {
                           <Typography variant="body2" sx={{ textAlign: "left" }}>
                             {getLabel(index)}
                           </Typography>
-                          <MathJax.Text text={option} />
+                          <TextWithMath text={option} />
                         </Box>
                       }
                     />
                   ))}
                 </RadioGroup>
-                {!submittedAnswers[item.id] && (
+                {!submittedAnswers[item?.id] && (
                   <Button
                     variant="outlined"
-                    onClick={() => handleSubmitAnswer(item.id)}
+                    onClick={() => handleSubmitAnswer(item?.id)}
                     sx={{ mt: 1 }}
                   >
                     Submit
@@ -192,13 +192,13 @@ const StudentMCQ = ({ id, isDarkMode }) => {
                 {submittedAnswers[item.id] && (
                   <Box display="flex" alignItems="center" marginTop={"4px"} sx={{ fontSize: "16px" }}>
                     <Typography sx={{ fontWeight: "bold", textAlign: "left", fontSize: "16px" }}>
-                      Your Answer: 
+                      Your Answer: &nbsp;
                     </Typography>
-                    <MathJax.Text text={submittedAnswers[item.id].yourAnswer} />
+                    <MathJax.Text text={submittedAnswers[item?.id].yourAnswer} />
                     <Typography sx={{ fontWeight: "bold", textAlign: "left", fontSize: "16px", ml: 2 }}>
-                      Correct Answer: 
+                      Correct Answer: &nbsp;
                     </Typography>
-                    <MathJax.Text text={submittedAnswers[item.id].correctAnswer} />
+                    <TextWithMath text={submittedAnswers[item?.id]?.correctAnswer} />
                   </Box>
                 )}
               </ListItem>

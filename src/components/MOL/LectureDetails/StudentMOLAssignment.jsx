@@ -159,8 +159,6 @@ const StudentMOLAssignment = ({ id, isDarkMode, class_ID }) => {
             />
             )
           })}
-          
-          {console.log("Assignments", assignments[3])}
         </>
       </MathJax.Context>
       {/* Snackbar for notifications */}
