@@ -564,7 +564,7 @@ const AssignmentItem = ({
                   <MdDescription />
                   <input
                     hidden
-                    accept=".pdf,.doc,.docx,.txt,.xlsx,.xls,.pptx"
+                    accept=".pdf,.doc,.docx,.txt,.xlsx,.xls,.pptx,.zip"
                     type="file"
                   />
                 </IconButton>
