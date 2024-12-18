@@ -30,6 +30,7 @@ import { VscPreview } from "react-icons/vsc";
 import { MdSelfImprovement, MdRecommend } from "react-icons/md";
 import { IoSend } from "react-icons/io5";
 import { TbMoodEmpty } from "react-icons/tb";
+import TextWithMath from "@/commonComponents/TextWithMath/TextWithMath";
 
 const PersonalisedRecommendations = ({ id, marksData }) => {
   const { isDarkMode, primaryColor, secondaryColor } = useThemeContext();
@@ -235,7 +236,7 @@ const TopicAccordion = ({
         expandIcon={<FaChevronDown />} // Using react-icons here
       >
         <Typography variant="body1" color={primaryColor}>
-        {isSummary ?  `${topic.slice(0,200)}...` : topic}
+        {isSummary ? <TextWithMath text={`${topic.slice(0,200)}...`} /> : <TextWithMath text={topic} />}
         </Typography>
       </AccordionSummary>
       <AccordionDetails
@@ -313,11 +314,12 @@ const TopicAccordion = ({
           >
             <CardContent color={secondaryColor}>
               <Typography variant="h6" color={primaryColor}>
-                {data.title}
+                <TextWithMath text={data.title} />
               </Typography>
-              {data.explanation && (
+              {/* {data.explanation && (
                 <FormattedText text={data.explanation} color={primaryColor} />
-              )}
+              )} */}
+              {data?.explanation && <TextWithMath text={data.explanation} />}
             </CardContent>
           </Card>
         ) : (
@@ -366,9 +368,10 @@ const FormattedText = ({ text, color }) => {
         // LaTeX content
         const cleanedLatex = chunk.replace(/\n/g, " ");
         return (
-          <MathJax.Node key={i} inline>
-            {cleanedLatex}
-          </MathJax.Node>
+          // <MathJax.Node key={i} inline>
+          //   {cleanedLatex}
+          // </MathJax.Node>
+          <TextWithMath key={i} text={cleanedLatex} />
         );
       } else {
         // Non-LaTeX content
