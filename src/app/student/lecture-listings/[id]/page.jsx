@@ -140,7 +140,7 @@ const LecturePage = ({ params }) => {
 
       <Grid container spacing={2}>
         {/* Main Content */}
-        <Grid item xs={12} md={8} lg={8}>
+        <Grid item xs={12} sm={12} md={12} lg={8}>
           <Box sx={{ display: "flex", flexDirection: "column", gap: 2 }}>
             {lectureData?.video_src === "PDF" ? (
               <AudioPlayer
@@ -161,12 +161,18 @@ const LecturePage = ({ params }) => {
         </Grid>
 
         {/* Sidebar */}
-        <Grid item xs={12} md={4} lg={4}>
+        <Grid item xs={12} sm={12} md={12} lg={4}>
           <Box sx={{ display: "flex", flexDirection: "column", gap: 2 }}>
-            {lectureAnalytics}
-            {lectureAttachment}
-            {ratingSection}
-            {commentSection}
+            <Grid container spacing={2}>
+              <Grid item xs={12} sm={12} md={6} lg={12}>
+                {lectureAnalytics}
+                {lectureAttachment}
+              </Grid>
+              <Grid item xs={12} sm={12} md={6} lg={12}>
+                {ratingSection}
+                {commentSection}
+              </Grid>
+            </Grid>
           </Box>
         </Grid>
       </Grid>
