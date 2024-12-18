@@ -171,10 +171,10 @@ const StudentMCQ = ({ id, isDarkMode }) => {
                       control={<Radio />}
                       label={
                         <Box display="flex" alignItems="center" sx={{ fontSize: "14px" }}>
-                          <Typography variant="body2" sx={{ textAlign: "left" }}>
+                          {/* <Typography variant="body2" sx={{ textAlign: "left" }}>
                             {getLabel(index)}
-                          </Typography>
-                          <TextWithMath text={option} />
+                          </Typography> */}
+                          <MathJax.Text text={option} />
                         </Box>
                       }
                     />
@@ -198,7 +198,7 @@ const StudentMCQ = ({ id, isDarkMode }) => {
                     <Typography sx={{ fontWeight: "bold", textAlign: "left", fontSize: "16px", ml: 2 }}>
                       Correct Answer: &nbsp;
                     </Typography>
-                    <TextWithMath text={submittedAnswers[item?.id]?.correctAnswer} />
+                    <MathJax.Text text={submittedAnswers[item?.id]?.correctAnswer} />
                   </Box>
                 )}
               </ListItem>

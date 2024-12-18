@@ -2,7 +2,7 @@ import { Box, Typography } from "@mui/material";
 import React from "react";
 import MathJax from "react-mathjax2";
 
-const TextWithMath = ({ text}) => {
+const TextWithMath = ({ text }) => {
   const isArray = Array.isArray(text);
   const textArray = isArray ? text : [text];
 
@@ -10,7 +10,7 @@ const TextWithMath = ({ text}) => {
 
   const replaceString = (data) => {
     return data
-      .replace(/\[(.*?)\]/g, <span style="font-weight: 600">[$1]</span>)
+      .replace(/\*\*(.*?)\*\*/g, "<strong>$1</strong>")
       .replace(/\\(.?)\\*/g, "<strong>$1</strong>")
       .replace(/#/g, "")
       .replace(/`/g, "")
@@ -20,7 +20,7 @@ const TextWithMath = ({ text}) => {
       .replace(/\\\\/g, "");
   };
 
-  const processText = (part) => {   
+  const processText = (part) => {
     const chunks = part.split(latexRegex).filter(Boolean);
     return chunks?.map((chunk, i) => {
       if (i % 2 === 1) {

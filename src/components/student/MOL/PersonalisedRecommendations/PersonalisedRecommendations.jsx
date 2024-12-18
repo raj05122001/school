@@ -316,9 +316,10 @@ const TopicAccordion = ({
               <Typography variant="h6" color={primaryColor}>
                 <TextWithMath text={data.title} />
               </Typography>
-              {data.explanation && (
+              {/* {data.explanation && (
                 <FormattedText text={data.explanation} color={primaryColor} />
-              )}
+              )} */}
+              {data?.explanation && <TextWithMath text={data.explanation} />}
             </CardContent>
           </Card>
         ) : (
