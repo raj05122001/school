@@ -31,6 +31,7 @@ import * as yup from "yup";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { useMediaQuery } from "@mui/material";
 import { MdVisibility, MdVisibilityOff } from "react-icons/md";
+import Logo from "@/commonComponents/Logo/Logo";
 
 // Define keyframes for animation
 const textAnimation = {
@@ -82,10 +83,12 @@ const SignupPage = () => {
       .string()
       .oneOf([yup.ref("newPassword"), null], "Passwords must match")
       .required("Confirm Password is required"),
-    subject: yup
-      .number()
-      .typeError("Please select/fill class before submitting")
-      .required("Please select/fill class before submitting"),
+    subject:
+      !isTeacher &&
+      yup
+        .number()
+        .typeError("Please select/fill class before submitting")
+        .required("Please select/fill class before submitting"),
   });
 
   const {
@@ -161,7 +164,6 @@ const SignupPage = () => {
   const onSubmit = async (data) => {
     setLoading(true);
     setServerError(null);
-    console.log("Selected department:", data.department);
     const payload = {
       full_name: data.name,
       email: data.email,
@@ -250,16 +252,11 @@ const SignupPage = () => {
             >
               Welcome to
               <br />
-              <Image
-                src="/vidyaAIlogo.png"
-                alt="VidyaAI Logo"
-                width={40}
-                height={40}
-                style={{ display: "inline-block" }}
-              />
-              <span style={{ color: "#454B1B" }}> VidyaAI</span>
+              <Box sx={{ p: 1 }}>
+                <Logo />
+              </Box>
             </Typography>
-            <Typography variant="h5" sx={{ mt: 2, color: "#191970" }}>
+            <Typography variant="h5" sx={{ mt: 1, color: "#191970" }}>
               Your AI-powered Learning Companion
             </Typography>
           </Box>

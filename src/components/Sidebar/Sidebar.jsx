@@ -34,6 +34,7 @@ import { useThemeContext } from "@/hooks/ThemeContext";
 import { decodeToken } from "react-jwt";
 import UserImage from "@/commonComponents/UserImage/UserImage";
 import { AppContextProvider } from "@/app/main";
+import Logo from "@/commonComponents/Logo/Logo";
 
 const drawerWidth = 240;
 const miniDrawerWidth = 60;
@@ -85,27 +86,7 @@ const Sidebar = ({ open, setOpen }) => {
             }}
           >
             {open && (
-              <Typography
-                variant="h5"
-                sx={{
-                  color: "#fff",
-                  fontWeight: "bold",
-                  letterSpacing: "0.5px",
-                }}
-              >
-                VidyaAI
-                <Typography
-                  variant="h5"
-                  component="span"
-                  sx={{
-                    color: "#00c853",
-                    ml: 0.2,
-                    fontWeight: "bold",
-                  }}
-                >
-                  ►
-                </Typography>
-              </Typography>
+              <Logo />
             )}
             <IconButton
               onClick={handleDrawerToggle}

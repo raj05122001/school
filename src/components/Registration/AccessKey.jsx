@@ -6,6 +6,7 @@ import { useSearchParams, useRouter, usePathname } from "next/navigation";
 import { getOneTimePassword } from "@/api/apiHelper";
 import toast from "react-hot-toast";
 import { useMediaQuery } from "@mui/material";
+import Logo from "@/commonComponents/Logo/Logo";
 
 const textAnimation = {
   "@keyframes slideFade": {
@@ -87,29 +88,6 @@ const AccessKey = () => {
         ...textAnimation,
       }}
     >
-      {/* Logo */}
-      <Typography
-        variant="h5"
-        sx={{
-          color: "#1976d2",
-          fontWeight: "bold",
-          letterSpacing: "0.5px",
-          mb: 2,
-        }}
-      >
-        VidyaAI
-        <Typography
-          variant="h5"
-          component="span"
-          sx={{
-            color: "#00c853",
-            ml: 0.2,
-            fontWeight: "bold",
-          }}
-        >
-          ►
-        </Typography>
-      </Typography>
 
       {/* Signup Form */}
       <Box
@@ -121,6 +99,7 @@ const AccessKey = () => {
         }}
       >
         <Typography component="h1" variant="h5" sx={{ textAlign: "center" }}>
+          <Logo />
           Signup to create an account
         </Typography>
         <Box

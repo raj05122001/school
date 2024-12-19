@@ -7,6 +7,7 @@ import AccessKey from "@/components/Registration/AccessKey";
 import VerifyOtp from "@/components/Registration/VerifyOtp";
 import UserData from "@/components/Registration/UserData";
 import { useMediaQuery } from "@mui/material";
+import Logo from "@/commonComponents/Logo/Logo";
 
 // Keyframes for the text animation
 const textAnimation = {
@@ -38,52 +39,49 @@ const RegistationPage = () => {
       }}
     >
       {/* Left Side with Gradient Background */}
-      {!isMobile && <Grid
-        item
-        xs={false}
-        sm={4}
-        md={6}
-        sx={{
-          // background: "linear-gradient(to bottom right, #1976d2, #00c853)",
-          backgroundImage: "url('/loginBG3.jpg')", // Add background image
-          backgroundSize: "cover", // Ensure the image covers the entire page
-          backgroundPosition: "center", // Center the image
-          position: "relative", // Ensures the overlay text is positioned correctly
-        }}
-      >
-        {/* Overlay Text */}
-        <Box
+      {!isMobile && (
+        <Grid
+          item
+          xs={false}
+          sm={4}
+          md={6}
           sx={{
-            position: "absolute",
-            top: "25%",
-            left: "25%",
-            // transform: "translate(-50%, -50%)",
-            color: "#fff",
-            textAlign: "left",
-            animation: "slideFade 1s ease-in-out",
-            ...textAnimation,
+            // background: "linear-gradient(to bottom right, #1976d2, #00c853)",
+            backgroundImage: "url('/loginBG3.jpg')", // Add background image
+            backgroundSize: "cover", // Ensure the image covers the entire page
+            backgroundPosition: "center", // Center the image
+            position: "relative", // Ensures the overlay text is positioned correctly
           }}
         >
-          <Typography
-            variant="h3"
-            sx={{ fontWeight: "bold", color: "#EDEADE" }}
+          {/* Overlay Text */}
+          <Box
+            sx={{
+              position: "absolute",
+              top: "25%",
+              left: "25%",
+              // transform: "translate(-50%, -50%)",
+              color: "#fff",
+              textAlign: "left",
+              animation: "slideFade 1s ease-in-out",
+              ...textAnimation,
+            }}
           >
-            Welcome to
-            <br />
-            <Image
-              src="/vidyaAIlogo.png"
-              alt="VidyaAI Logo"
-              width={40} // Adjust width as needed
-              height={40} // Adjust height as needed
-              style={{ display: "inline-block" }} // Optional: to align properly
-            />
-            <span style={{ color: "#454B1B" }}> VidyaAI</span>
-          </Typography>
-          <Typography variant="h5" sx={{ mt: 2, color: "#191970" }}>
-            Your AI-powered Learning Companion
-          </Typography>
-        </Box>
-      </Grid>}
+            <Typography
+              variant="h3"
+              sx={{ fontWeight: "bold", color: "#EDEADE" }}
+            >
+              Welcome to
+              <br />
+              <Box sx={{ p: 1 }}>
+                <Logo />
+              </Box>
+            </Typography>
+            <Typography variant="h5" sx={{ mt: 1, color: "#191970" }}>
+              Your AI-powered Learning Companion
+            </Typography>
+          </Box>
+        </Grid>
+      )}
 
       {/* Right Side Login Form */}
       {accesskey && email && verifyotp ? (
