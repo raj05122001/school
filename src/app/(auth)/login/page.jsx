@@ -21,6 +21,7 @@ import { loginApi } from "@/api/apiHelper";
 import { decodeToken } from "react-jwt";
 import Image from "next/image";
 import { MdVisibility, MdVisibilityOff } from "react-icons/md";
+import Logo from "@/commonComponents/Logo/Logo";
 
 // Keyframes for the text animation
 const textAnimation = {
@@ -140,16 +141,11 @@ const LoginPage = () => {
           >
             Welcome to
             <br />
-            <Image
-              src="/vidyaAIlogo.png"
-              alt="VidyaAI Logo"
-              width={40} // Adjust width as needed
-              height={40} // Adjust height as needed
-              style={{ display: "inline-block" }} // Optional: to align properly
-            />
-            <span style={{ color: "#454B1B" }}> VidyaAI</span>
+            <Box sx={{p:1}}>
+              <Logo />
+            </Box>
           </Typography>
-          <Typography variant="h5" sx={{ mt: 2, color: "#191970" }}>
+          <Typography variant="h5" sx={{ mt: 1, color: "#191970" }}>
             Your AI-powered Learning Companion
           </Typography>
         </Box>
@@ -177,34 +173,9 @@ const LoginPage = () => {
           ...textAnimation,
         }}
       >
-        {/* Logo */}
-        <Typography
-          variant="h5"
-          sx={{
-            color: "#1976d2",
-            fontWeight: "bold",
-            letterSpacing: "0.5px",
-            mb: 2,
-          }}
-        >
-          VidyaAI
-          <Typography
-            variant="h5"
-            component="span"
-            sx={{
-              color: "#00c853",
-              ml: 0.2,
-              fontWeight: "bold",
-            }}
-          >
-            ►
-          </Typography>
-        </Typography>
-
         {/* Login Form */}
         <Box
           sx={{
-            mt: 1,
             width: "100%",
             maxWidth: 400,
             // border: "1px solid black",
@@ -212,6 +183,7 @@ const LoginPage = () => {
           }}
         >
           <Typography component="h1" variant="h5" fontWeight={"bold"} sx={{ textAlign: "center", color:"#36454F" }}>
+          <Logo />
             Sign in to your account
           </Typography>
           <Box
