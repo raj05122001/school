@@ -1061,4 +1061,24 @@ export default class apiServices {
       .then((Response) => Response)
       .catch((error) => console.error(error));
   };
+
+  public deleteCompletedLecture = (lectureId) => {
+    const toastId = toast.loading("Loading...");
+    return this.axiosInstance
+      .delete(`/api/v1/lecture/${lectureId}/soft_delete/`)
+      .then((response) => {
+        toast.success("Lecture Successfully Deleted", {
+          id: toastId,
+          duration: Constants.toastTimer,
+        });
+        return response;
+      })
+      .catch((error) => {
+        toast.error(error?.response?.data?.message || "Something went wrong", {
+          id: toastId,
+          duration: Constants.toastTimer,
+        });
+        console.error("this is error", error);
+      });
+  };
 }
