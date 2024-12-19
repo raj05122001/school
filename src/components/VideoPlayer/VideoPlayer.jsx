@@ -301,6 +301,7 @@ export const Suggestion = ({ suggestionData }) => {
               display: "flex",
               alignItems: "center",
               justifyContent: "center",
+              position:'inherit'
             }}
           >
             ←
@@ -387,6 +388,7 @@ export const Suggestion = ({ suggestionData }) => {
               display: "flex",
               alignItems: "center",
               justifyContent: "center",
+              position:'inherit'
             }}
           >
             →

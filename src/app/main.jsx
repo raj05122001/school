@@ -129,38 +129,32 @@ const Main = ({ children }) => {
               </Box>
             </Box>
 
-            <Box position="fixed" bottom={4} right={4}>
-              {/* Chatbot Icon Button */}
-              <IconButton
-                onClick={() => {
-                  setUserInput("");
-                  setIsOpenChatBot((prev) => !prev);
-                }}
-                size="large"
-                color="primary"
-              >
-                <Image
-                  className="cursor-pointer"
-                  src="/chatbot.png"
-                  alt="chat bot"
-                  width={50}
-                  height={50}
-                />
-              </IconButton>
-
-              {/* Chatbot Component */}
-              {isOpenChatBot && (
-                // <ChatBot
-                //   suggestionInput={userInput}
-                //   setIsOpenChatBot={setIsOpenChatBot}
-                //   isOpenChatBot={isOpenChatBot}
-                // />
-                <NewChatbot
-                  suggestionInput={userInput}
-                  setIsOpenChatBot={setIsOpenChatBot}
-                />
-              )}
-            </Box>
+            {pathname.includes("lecture-listings/") && (
+              <Box position="fixed" bottom={4} right={4}>
+                <IconButton
+                  onClick={() => {
+                    setUserInput("");
+                    setIsOpenChatBot((prev) => !prev);
+                  }}
+                  size="large"
+                  color="primary"
+                >
+                  <Image
+                    className="cursor-pointer"
+                    src="/chatbot.png"
+                    alt="chat bot"
+                    width={50}
+                    height={50}
+                  />
+                </IconButton>
+                {isOpenChatBot && (
+                  <NewChatbot
+                    suggestionInput={userInput}
+                    setIsOpenChatBot={setIsOpenChatBot}
+                  />
+                )}
+              </Box>
+            )}
           </AppContextProvider.Provider>
         </ThemeProvider>
       )}
