@@ -37,6 +37,7 @@ import { decodeToken } from "react-jwt";
 import Cookies from "js-cookie";
 import { usePathname } from "next/navigation";
 import { RiArrowDropDownLine } from "react-icons/ri";
+import TextWithMath from "@/commonComponents/TextWithMath/TextWithMath";
 
 export default function NewChatbot({ suggestionInput, setIsOpenChatBot }) {
   const chatbotRef = useRef();
@@ -310,7 +311,7 @@ export default function NewChatbot({ suggestionInput, setIsOpenChatBot }) {
                             }}
                           >
                             <Typography variant="body2" color="text.secondary">
-                            <FormattedText text = {data?.bot_response} />
+                            <TextWithMath text = {data?.bot_response} />
                             </Typography>
                           </AccordionDetails>
                         </Accordion>
@@ -363,7 +364,7 @@ export default function NewChatbot({ suggestionInput, setIsOpenChatBot }) {
                         overflowX: "auto",
                       }}
                     >
-                      <FormattedText text={message.content} />
+                      <TextWithMath text={message.content} />
 
                       {message.links &&
                         message.links.map((link, idx) => (
@@ -576,80 +577,80 @@ export const VoiceToText = ({ setUserTextInput }) => {
   );
 };
 
-export const FormattedText = ({ text }) => {
-  const [isReadMore, setIsReadMore] = useState(false);
-  const isArray = Array.isArray(text);
-  const textArray = isArray ? text : [text];
+// export const FormattedText = ({ text }) => {
+//   const [isReadMore, setIsReadMore] = useState(false);
+//   const isArray = Array.isArray(text);
+//   const textArray = isArray ? text : [text];
 
-  const latexRegex = /\\\[([\s\S]*?)\\\]/g;
+//   const latexRegex = /\\\[([\s\S]*?)\\\]/g;
 
-  const replaceString = (data) => {
-    return data
-      .replace(/\[(.*?)\]/g, `<span style="font-weight: 600">[$1]</span>`)
-      .replace(/\*\*(.*?)\*\*/g, "<strong>$1</strong>")
-      .replace(/#/g, "")
-      .replace(/`/g, "")
-      .replace(/(?<!\d)\. /g, ".<br>")
-      .replace(/\n/g, "<br>");
-  };
+//   const replaceString = (data) => {
+//     return data
+//       .replace(/\[(.*?)\]/g, `<span style="font-weight: 600">[$1]</span>`)
+//       .replace(/\*\*(.*?)\*\*/g, "<strong>$1</strong>")
+//       .replace(/#/g, "")
+//       .replace(/`/g, "")
+//       .replace(/(?<!\d)\. /g, ".<br>")
+//       .replace(/\n/g, "<br>");
+//   };
 
-  const processText = (part) => {
-    if (!part) return;
-    const chunks = part.split(latexRegex).filter(Boolean);
-    return chunks?.map((chunk, i) => {
-      if (i % 2 === 1) {
-        const cleanedLatex = chunk.replace(/\n/g, " ");
-        return (
-          <Typography
-            variant="span"
-            sx={{
-              fontSize: "1.25rem",
-              lineHeight: "1.75rem",
-              width: "100%",
-              overflowX: "auto",
-            }}
-            key={i}
-          >
-            <MathJax.Node key={i} inline>
-              {cleanedLatex}
-            </MathJax.Node>
-          </Typography>
-        );
-      } else {
-        // Non-LaTeX content, replace bold syntax
-        return (
-          <Typography
-            variant="span"
-            key={i}
-            dangerouslySetInnerHTML={{ __html: replaceString(chunk) }}
-          />
-        );
-      }
-    });
-  };
+//   const processText = (part) => {
+//     if (!part) return;
+//     const chunks = part.split(latexRegex).filter(Boolean);
+//     return chunks?.map((chunk, i) => {
+//       if (i % 2 === 1) {
+//         const cleanedLatex = chunk.replace(/\n/g, " ");
+//         return (
+//           <Typography
+//             variant="span"
+//             sx={{
+//               fontSize: "1.25rem",
+//               lineHeight: "1.75rem",
+//               width: "100%",
+//               overflowX: "auto",
+//             }}
+//             key={i}
+//           >
+//             <MathJax.Node key={i} inline>
+//               {cleanedLatex}
+//             </MathJax.Node>
+//           </Typography>
+//         );
+//       } else {
+//         // Non-LaTeX content, replace bold syntax
+//         return (
+//           <Typography
+//             variant="span"
+//             key={i}
+//             dangerouslySetInnerHTML={{ __html: replaceString(chunk) }}
+//           />
+//         );
+//       }
+//     });
+//   };
 
-  return (
-    <MathJax.Context input="tex">
-      <Box>
-        {textArray?.map((part, index) => (
-          <Box key={index}>
-            {processText(part?.slice(0, isReadMore ? part?.length : 300))}{" "}
-            {part?.length > 300 && (
-              <Typography
-                variant="span"
-                color="primary"
-                sx={{ cursor: "pointer", whiteSpace: "nowrap" }}
-                onClick={() => setIsReadMore((prev) => !prev)}
-              >
-                {isReadMore ? `Read less...` : `Read More...`}
-              </Typography>
-            )}
-          </Box>
-        ))}
-      </Box>
-    </MathJax.Context>
-  );
-};
+//   return (
+//     <MathJax.Context input="tex">
+//       <Box>
+//         {textArray?.map((part, index) => (
+//           <Box key={index}>
+//             {processText(part?.slice(0, isReadMore ? part?.length : 300))}{" "}
+//             {part?.length > 300 && (
+//               <Typography
+//                 variant="span"
+//                 color="primary"
+//                 sx={{ cursor: "pointer", whiteSpace: "nowrap" }}
+//                 onClick={() => setIsReadMore((prev) => !prev)}
+//               >
+//                 {isReadMore ? `Read less...` : `Read More...`}
+//               </Typography>
+//             )}
+//           </Box>
+//         ))}
+//       </Box>
+//     </MathJax.Context>
+//   );
+// };
 
 // export const ChatHistory = () => {
 //   <Box
