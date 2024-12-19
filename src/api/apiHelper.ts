@@ -617,3 +617,8 @@ export const reSubmitAssignment = async (assignmentId,formData) => {
   const apiInstance = new apiServices(axiosAPIInstance);
   return await apiInstance.reSubmitAssignment(assignmentId,formData);
 };
+
+export const deleteCompletedLecture = async (lectureId) => {
+  const apiInstance = new apiServices(axiosAPIInstance);
+  return await apiInstance.deleteCompletedLecture(lectureId);
+};
