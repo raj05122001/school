@@ -1,27 +1,23 @@
 import { Typography } from "@mui/material";
+import Image from "next/image";
 
-const Logo = ({ color = 'initial' }) => {
+const Logo = ({ color = "initial" }) => {
   return (
     <Typography
       variant="h5"
       sx={{
-        color: color === 'black' ? '#023020' : 'inherit',
+        color: color === "black" ? "#023020" : "inherit",
         fontWeight: "bold",
         letterSpacing: "0.5px",
       }}
     >
-      VidyaAI
-      <Typography
-        variant="h5"
-        component="span"
-        sx={{
-          color: "#00c853",
-          ml: 0.2,
-          fontWeight: "bold",
-        }}
-      >
-        ►
-      </Typography>
+      <Image
+        className="cursor-pointer"
+        src="/vidyaAIFulllogo.png"
+        alt="chat bot"
+        width={150}
+        height={30}
+      />
     </Typography>
   );
 };

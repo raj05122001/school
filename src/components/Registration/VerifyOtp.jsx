@@ -7,6 +7,7 @@ import { verifyOneTimePassword, resendOneTimePassword } from "@/api/apiHelper";
 import toast from "react-hot-toast";
 import {CircularProgress} from "@mui/material";
 import { useMediaQuery } from "@mui/material";
+import Logo from "@/commonComponents/Logo/Logo";
 
 const textAnimation = {
   "@keyframes slideFade": {
@@ -98,29 +99,6 @@ const VerifyOtp = () => {
         ...textAnimation,
       }}
     >
-      {/* Logo */}
-      <Typography
-        variant="h5"
-        sx={{
-          color: "#1976d2",
-          fontWeight: "bold",
-          letterSpacing: "0.5px",
-          mb: 2,
-        }}
-      >
-        VidyaAI
-        <Typography
-          variant="h5"
-          component="span"
-          sx={{
-            color: "#00c853",
-            ml: 0.2,
-            fontWeight: "bold",
-          }}
-        >
-          ►
-        </Typography>
-      </Typography>
 
       {/* OTP Verification Form */}
       <Box
@@ -132,6 +110,7 @@ const VerifyOtp = () => {
         }}
       >
         <Typography component="h1" variant="h5" sx={{ textAlign: "center" }}>
+        <Logo />
           Verify OTP to Continue
         </Typography>
         <Box
