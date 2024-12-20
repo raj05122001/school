@@ -41,10 +41,10 @@ const LectureMCQ = ({ id, isDarkMode }) => {
     try {
       // First, convert the single quotes around the array to double quotes
       let validJson = options
-        .replace(/^\[|\]$/g, '') // Remove the surrounding brackets temporarily
-        .split(',') // Split each option by commas
-        .map(option => option?.trim().replace(/^'/, '"').replace(/'$/, '"')) // Replace single quotes around each option with double quotes
-        .join(','); // Join the items back into a comma-separated string
+        ?.replace(/^\[|\]$/g, '') // Remove the surrounding brackets temporarily
+        ?.split(',') // Split each option by commas
+        ?.map(option => option?.trim()?.replace(/^'/, '"')?.replace(/'$/, '"')) // Replace single quotes around each option with double quotes
+        ?.join(','); // Join the items back into a comma-separated string
   
       // Wrap the modified string back into an array format
       validJson = `[${validJson}]`;

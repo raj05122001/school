@@ -39,7 +39,7 @@ const Articles = ({ lectureId }) => {
     try {
       const apiResponse = await getBreakpoint(lectureId);
       const breakPoint = JSON.parse(apiResponse?.data?.data?.break_point);
-      const mergedSummary = breakPoint.reduce(
+      const mergedSummary = breakPoint?.reduce(
         (acc, bp) => acc + bp.summary + "\n",
         ""
       );
@@ -85,19 +85,19 @@ const Articles = ({ lectureId }) => {
   };
 
   const processArticleContent = (content) => {
-    const lines = content.split("\n");
+    const lines = content?.split("\n");
     const headingRegex = /^(###|####|#####)\s+/;
     const boldRegex = /\*\*(.*?)\*\*/g;
 
     return lines?.map((line, index) => {
-      const formattedLine = line.replace(
+      const formattedLine = line?.replace(
         boldRegex,
         (match, p1) => `<strong>${p1}</strong>`
       );
       if (headingRegex.test(line)) {
         return (
           <Typography key={index} variant="h6" sx={{ mt: 2 }}>
-            {formattedLine.replace(headingRegex, "")}
+            {formattedLine?.replace(headingRegex, "")}
           </Typography>
         );
       } else {

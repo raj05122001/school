@@ -57,7 +57,7 @@ const OverviewSection = () => {
         >
           {userDetails?.role === "STUDENT"
             ? `Lectures For You`
-            : `Upcomming Lectures`}
+            : `Upcoming Lectures`}
         </Typography>
       </Box>
 

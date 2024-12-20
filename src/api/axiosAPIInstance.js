@@ -46,4 +46,4 @@ axiosAPIInstance.interceptors.request.use(
 
 export default axiosAPIInstance;
 
-export const replaceStringQutes = (token) => token ? token.replace(/"/g, '') : '';
+export const replaceStringQutes = (token) => token ? token?.replace(/"/g, '') : '';

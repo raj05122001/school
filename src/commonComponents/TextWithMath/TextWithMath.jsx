@@ -10,21 +10,21 @@ const TextWithMath = ({ text }) => {
 
   const replaceString = (data) => {
     return data
-      .replace(/\*\*(.*?)\*\*/g, "<strong>$1</strong>")
-      .replace(/\\(.?)\\*/g, "<strong>$1</strong>")
-      .replace(/#/g, "")
-      .replace(/`/g, "")
-      .replace(/(?<!\d)\. /g, ".<br>")
-      .replace(/\n/g, "<br>")
-      .replace(/\\/g, "")
-      .replace(/\\\\/g, "");
+      ?.replace(/\*\*(.*?)\*\*/g, "<strong>$1</strong>")
+      ?.replace(/\\(.?)\\*/g, "<strong>$1</strong>")
+      ?.replace(/#/g, "")
+      ?.replace(/`/g, "")
+      ?.replace(/(?<!\d)\. /g, ".<br>")
+      ?.replace(/\n/g, "<br>")
+      ?.replace(/\\/g, "")
+      ?.replace(/\\\\/g, "");
   };
 
   const processText = (part) => {
-    const chunks = part.split(latexRegex).filter(Boolean);
+    const chunks = part?.split(latexRegex)?.filter(Boolean);
     return chunks?.map((chunk, i) => {
       if (i % 2 === 1) {
-        const cleanedLatex = chunk.replace(/\n/g, " ").replace(/\\\\/g, "\\");
+        const cleanedLatex = chunk?.replace(/\n/g, " ")?.replace(/\\\\/g, "\\");
         return (
           <Typography
             variant="span"

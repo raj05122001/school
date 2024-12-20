@@ -52,7 +52,7 @@ function Page() {
   const handleOptionChange = (index, value) => {
     setNewQuestion((prevQuestion) => ({
       ...prevQuestion,
-      options: prevQuestion.options.map((option, i) =>
+      options: prevQuestion?.options?.map((option, i) =>
         i === index ? value : option
       ),
     }));
@@ -76,19 +76,19 @@ function Page() {
   const deleteQuestion = (index) => {
     setQuiz((prevQuiz) => ({
       ...prevQuiz,
-      questions: prevQuiz.questions.filter((_, i) => i !== index),
+      questions: prevQuiz?.questions?.filter((_, i) => i !== index),
     }));
   };
 
   // Filter and categorize questions into sections
-  const sectionAQuestions = quiz.questions.filter(
+  const sectionAQuestions = quiz?.questions?.filter(
     (question) => question.type === "multiple-choice"
   );
-  const sectionBQuestions = quiz.questions.filter(
+  const sectionBQuestions = quiz?.questions?.filter(
     (question) => question.type === "descriptive" && question.points <= 4
   );
-  const sectionCQuestions = quiz.questions.filter(
-    (question) => question.type === "descriptive" && question.points > 4
+  const sectionCQuestions = quiz?.questions?.filter(
+    (question) => question?.type === "descriptive" && question?.points > 4
   );
 
   return (
@@ -132,7 +132,7 @@ function Page() {
               boxShadow: "0 4px 12px rgba(0,0,0,0.1)",
             }}
           >
-            {sectionAQuestions.map((question, index) => (
+            {sectionAQuestions?.map((question, index) => (
               <Box
                 key={index}
                 sx={{
@@ -146,7 +146,7 @@ function Page() {
                 <Typography variant="h6" gutterBottom>
                   Question {index + 1}: {question.text}
                 </Typography>
-                {question.options.map((option, opIndex) => (
+                {question?.options?.map((option, opIndex) => (
                   <Typography key={opIndex} sx={{ ml: 2 }}>
                     {String.fromCharCode(65 + opIndex)}. {option}
                   </Typography>
@@ -179,7 +179,7 @@ function Page() {
               boxShadow: "0 4px 12px rgba(0,0,0,0.1)",
             }}
           >
-            {sectionBQuestions.map((question, index) => (
+            {sectionBQuestions?.map((question, index) => (
               <Box
                 key={index}
                 sx={{
@@ -221,7 +221,7 @@ function Page() {
               boxShadow: "0 4px 12px rgba(0,0,0,0.1)",
             }}
           >
-            {sectionCQuestions.map((question, index) => (
+            {sectionCQuestions?.map((question, index) => (
               <Box
                 key={index}
                 sx={{
@@ -283,8 +283,8 @@ function Page() {
             variant="outlined"
           />
 
-          {newQuestion.type === "multiple-choice" &&
-            newQuestion.options.map((option, opIndex) => (
+          {newQuestion?.type === "multiple-choice" &&
+            newQuestion?.options?.map((option, opIndex) => (
               <TextField
                 key={opIndex}
                 fullWidth

@@ -93,7 +93,7 @@ const Feedback = ({ lectureId, data, fetchgetFeedback }) => {
       </Box>
 
       <Box sx={{ display: "flex", gap: { xs: 1, sm: 2 } }}>
-        {feedbackOptions.map(({ icon: Icon, text, color, value }, index) => (
+        {feedbackOptions?.map(({ icon: Icon, text, color, value }, index) => (
           <Tooltip key={index} title={text} arrow>
             <IconButton
               onClick={() => onSubmitFeedback(value)}

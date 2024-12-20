@@ -92,7 +92,7 @@ const LectureTypeDropDown = ({ handleSelectType,lectureType }) => {
             value={selectedType}
             onChange={handleTypeChange}
           >
-            {lecture_type.map((type, index) => (
+            {lecture_type?.map((type, index) => (
               <FormControlLabel
                 key={index}
                 value={type.key}

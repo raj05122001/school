@@ -84,7 +84,7 @@ const MyAssignmentAnalytics = () => {
                 paddingAngle={1}
                 dataKey="value"
               >
-                {data.map((entry, index) => (
+                {data?.map((entry, index) => (
                   <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
                 ))}
               </Pie>

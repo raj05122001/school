@@ -9,7 +9,7 @@ export const getInitials = (name) => {
     return "";
   }
   let initials;
-  const nameSplit = name.split(" ");
+  const nameSplit = name?.split(" ");
   const nameLength = nameSplit.length;
   if (nameLength > 1) {
     initials =
@@ -271,7 +271,7 @@ export const replaceSpeaker = (text) => {
   if (!(text?.match(/^Unidentified ([A-Za-z0-9_]+)(?:,([^@]+@[^,\s]+))?( .+)?$/))) {
     return text?.split(',')[0]
   }
-  return text?.split(',')[0].replace(/SPEAKER_(\d+)/g, function (match, digits) {
+  return text?.split(',')[0]?.replace(/SPEAKER_(\d+)/g, function (match, digits) {
     const numericValue = parseInt(digits, 10);
 
     if (numericValue >= 0 && numericValue < 24) {

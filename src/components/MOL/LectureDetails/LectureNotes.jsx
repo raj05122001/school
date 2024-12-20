@@ -251,8 +251,8 @@ const LectureNotes = ({
                 <Typography variant="subtitle2">
                   <TextWithMath
                     text={note?.notes
-                      .replace(/^\*\*\s*/, "")
-                      .replace(/\\n/g, "\n")}
+                      ?.replace(/^\*\*\s*/, "")
+                      ?.replace(/\\n/g, "\n")}
                   />
                 </Typography>
               </Box>

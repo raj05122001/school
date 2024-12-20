@@ -73,14 +73,14 @@ const LoginPage = () => {
         const accessToken = decodeToken(access);
         // Redirect user after successful login
         if (redirectTo && redirectTo !== "/login") {
-          router.replace(redirectTo);
+          router?.replace(redirectTo);
         } else {
           if (accessToken?.role === "TEACHER") {
-            router.replace("/teacher/dashboard");
+            router?.replace("/teacher/dashboard");
           } else if (accessToken?.role === "STUDENT") {
-            router.replace("/student/dashboard");
+            router?.replace("/student/dashboard");
           } else {
-            router.replace("/admin/dashboard");
+            router?.replace("/admin/dashboard");
           }
         }
 

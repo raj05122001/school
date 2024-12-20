@@ -345,7 +345,7 @@ export default function NewChatbot({ suggestionInput, setIsOpenChatBot }) {
                     }}
                   >
                     <List sx={{ width: "100%" }}>
-                      {oldChats.map((data, index) => (
+                      {oldChats?.map((data, index) => (
                         <Accordion
                           key={data?.id}
                           sx={{
@@ -412,7 +412,7 @@ export default function NewChatbot({ suggestionInput, setIsOpenChatBot }) {
               ref={graphRef}
             >
               {chatHistory.length > 0 ? (
-                chatHistory.map((message, index) => (
+                chatHistory?.map((message, index) => (
                   <Box
                     key={index}
                     sx={{
@@ -438,8 +438,8 @@ export default function NewChatbot({ suggestionInput, setIsOpenChatBot }) {
                     >
                       <TextWithMath text={message.content} />
 
-                      {message.links &&
-                        message.links.map((link, idx) => (
+                      {message?.links &&
+                        message?.links?.map((link, idx) => (
                           <Typography variant="caption" key={idx}>
                             <a
                               href={link}
@@ -581,9 +581,9 @@ export const VoiceToText = ({ setUserTextInput }) => {
         recognition.lang = "en-US";
 
         recognition.onresult = (event) => {
-          const speechToText = Array.from(event.results)
-            .map((result) => result[0].transcript)
-            .join("");
+          const speechToText = Array?.from(event.results)
+            ?.map((result) => result[0].transcript)
+            ?.join("");
           setUserTextInput(speechToText);
           setIsRecording(false);
         };

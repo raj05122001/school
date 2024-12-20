@@ -37,7 +37,7 @@ const AudioPlayer = ({ audio, id=0, duration=0, isShowBrekpoint = true }) => {
   };
 
   const transformTalkData = useCallback((startTime, endTime) => {
-    return startTime.map((item, index) => ({
+    return startTime?.map((item, index) => ({
       time: item,
       endTime: endTime[index],
     }));

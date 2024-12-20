@@ -153,7 +153,7 @@ const TeacherFilters = ({
         </Grid>
 
         <Grid container spacing={3}>
-          {["class", "subject"].map((field, index) => (
+          {["class", "subject"]?.map((field, index) => (
             <Grid item xs={12} sm={6} md={isAssignment ? 4 : 3} key={field}>
               <Autocomplete
                 freeSolo
@@ -271,7 +271,16 @@ const TeacherFilters = ({
                   ...currentStyles,
                   width: "100%",
                   padding: 0,
+                  "& .MuiOutlinedInput-root": {
+                    color: isDarkMode ? "#84878a" : "#000000",
+                  },
+                  "& .MuiInputBase-input::placeholder": {
+                    color: isDarkMode ? "#84878a" : "#000000", // Alternative placeholder styling
+                  },
                   "& .MuiOutlinedInput-notchedOutline": { border: "none" },
+                  "& .MuiSvgIcon-root": {
+                    color: isDarkMode ? "#84878a" : "#000000", // Calendar icon color
+                  },
                 }}
               />
             </Grid>
