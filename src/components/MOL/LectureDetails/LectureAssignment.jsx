@@ -137,7 +137,7 @@ const LectureAssignment = ({ id, isDarkMode, class_ID, isEdit }) => {
       lecture_class: class_ID,
       is_assigned: 1,
     };
-    console.log("File is", file);
+
     if (file) {
       formData.assignment_attachment = file;
     }

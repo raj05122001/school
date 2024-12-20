@@ -43,8 +43,6 @@ const PersonalisedRecommendations = ({ id, marksData }) => {
     fetchSection();
   }, [marksData]);
 
-  console.log("Marks Data", marksData);
-
   const fetchSection = async () => {
     try {
       const response = await getPersonalisedRecommendations(id);
@@ -73,8 +71,6 @@ const PersonalisedRecommendations = ({ id, marksData }) => {
   };
 
   const isSummary = section==="SUMMARY" || section==="HIGHLIGHTS"
-
-  console.log("Selected Topic", selectedTopic);
 
   return (
     <Container

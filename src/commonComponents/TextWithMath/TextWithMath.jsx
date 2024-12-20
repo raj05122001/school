@@ -2,7 +2,7 @@ import { Box, Typography } from "@mui/material";
 import React from "react";
 import MathJax from "react-mathjax2";
 
-const TextWithMath = ({ text, con = false }) => {
+const TextWithMath = ({ text}) => {
   const isArray = Array.isArray(text);
   const textArray = isArray ? text : [text];
 
@@ -42,9 +42,6 @@ const TextWithMath = ({ text, con = false }) => {
       const latexContent = p2 || p3;
       if (latexContent) {
         const cleanedLatex = latexContent?.replace(/\n/g, " ")?.replace(/\\\\/g, "\\");
-        if (con) {
-          console.log("cleanedLatex : ", cleanedLatex);
-        }
         elements.push(
           <Typography
             variant="span"

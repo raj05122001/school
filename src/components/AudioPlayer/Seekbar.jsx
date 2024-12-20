@@ -6,8 +6,6 @@ const Seekbar = ({ data, time, onClickonUser, totalTime }) => {
   const [hoveredIndex, setHoveredIndex] = useState(null);
   const [showTooltip, setShowTooltip] = useState(false);
 
-  console.log("data : ", data);
-
   const [anchorEl, setAnchorEl] = React.useState(null);
 
   const handlePopoverOpen = (event) => {
