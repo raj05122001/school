@@ -175,7 +175,7 @@ const StudentMCQ = ({ id, isDarkMode }) => {
                             {getLabel(index)}
                           </Typography> */}
                           {/* <MathJax.Text text={option} inline/> */}
-                          <TextWithMath text={option} />
+                          <TextWithMath text={option} con={true} />
                         </Box>
                       }
                     />
