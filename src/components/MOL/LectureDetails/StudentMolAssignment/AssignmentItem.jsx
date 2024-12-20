@@ -295,7 +295,9 @@ const AssignmentItem = ({
               >
                 <ul style={{ lineHeight: "1.8" }}>
                   {data?.feedback_points?.map((point, index) => (
-                    <li key={index}><TextWithMath text={point} /></li>
+                    <li key={index}>
+                      <TextWithMath text={point} />
+                    </li>
                   ))}
                 </ul>
               </Box>
@@ -328,7 +330,9 @@ const AssignmentItem = ({
               >
                 <ul style={{ lineHeight: "1.8" }}>
                   {data?.improvement_points?.map((point, index) => (
-                    <li key={index}><TextWithMath text={point} /></li>
+                    <li key={index}>
+                      <TextWithMath text={point} />
+                    </li>
                   ))}
                 </ul>
               </Box>
@@ -399,23 +403,11 @@ const AssignmentItem = ({
               </Typography>
               <Box mt={0.3}>
                 <TextWithMath text={assignment.assignment_text} />
-                <Button onClick={() => !open && setOpen(true)}>
-                  Need Guidance
-                </Button>
-                {open ? (
-                  <NeedMoreGuide
-                    assignmentId={assignment.id}
-                    open={open}
-                    setOpen={setOpen}
-                  />
-                ) : (
-                  ""
-                )}
               </Box>
             </Box>
             <Box>
               <IconButton onClick={() => setOpenAccordian(false)}>
-                <IoIosArrowUp />
+                <IoIosArrowUp style={{color: isDarkMode ? "#fff" : "#000000"}} />
               </IconButton>
             </Box>
           </Box>
@@ -423,23 +415,50 @@ const AssignmentItem = ({
             <Typography variant="body2" sx={{ mt: 1, fontWeight: "bold" }}>
               Total Marks: {assignment.assignment_mark}
             </Typography>
-            {assignment.assignment_attachment && (
+            <Box sx={{ display: "flex", gap: 2 }}>
+              {assignment.assignment_attachment && (
+                <Button
+                  variant="contained"
+                  startIcon={<BsDownload style={{ padding: 1 }} />}
+                  sx={{
+                    color: isDarkMode ? "#fff" : "#000",
+                    backgroundColor: isDarkMode ? "#507dba" : "#89CFF0",
+                    p: 1,
+                    fontSize: "12px",
+                    ":hover": {
+                      color: "#fff",
+                    },
+                  }}
+                  onClick={() => downloadFile(assignment.assignment_attachment)}
+                >
+                  Download
+                </Button>
+              )}
               <Button
-                variant="outlined"
-                startIcon={<BsDownload />}
+                variant="contained"
+                onClick={() => !open && setOpen(true)}
                 sx={{
-                  backgroundColor: "#f0f4fa",
-                  color: "#36454F",
+                  color: isDarkMode ? "#fff" : "#000",
+                  backgroundColor: isDarkMode ? "#507dba" : "#89CFF0",
+                  p: 1,
+                  fontSize: "12px",
                   ":hover": {
-                    backgroundColor: "#e3e3e3",
-                    color: "#000",
+                    color: "#fff",
                   },
                 }}
-                onClick={() => downloadFile(assignment.assignment_attachment)}
               >
-                Download
+                Need Guidance
               </Button>
-            )}
+              {open ? (
+                <NeedMoreGuide
+                  assignmentId={assignment.id}
+                  open={open}
+                  setOpen={setOpen}
+                />
+              ) : (
+                ""
+              )}
+            </Box>
           </Box>
 
           <Box sx={{ marginTop: 2 }}>
@@ -460,10 +479,14 @@ const AssignmentItem = ({
                 >
                   <Box sx={{ display: "flex" }}>
                     <GiBullseye style={{ marginRight: 3, fontSize: "24px" }} />
-                    <Typography variant="body1" sx={{ fontSize: "16px" }}>
+                    <Typography variant="body1" sx={{ fontSize: "16px", color: isDarkMode ? "#f0f1f2": "#282929" }}>
                       AI assessed result
                       <br />
-                      <i style={{fontSize:"12px"}}>(This is an AI based result for your imporvement. The final score will be provided by the teacher post resubmission.)</i>
+                      <i style={{ fontSize: "12px" }}>
+                        (This is an AI based result for your imporvement. The
+                        final score will be provided by the teacher post
+                        resubmission.)
+                      </i>
                     </Typography>
                   </Box>
                 </AccordionSummary>
@@ -510,15 +533,67 @@ const AssignmentItem = ({
               </Accordion>
             )}
           </Box>
+          {isSubmit === false &&
+            (uploadProgress === 100 || answerDescription ? (
+              <Button
+                variant="contained"
+                color="primary"
+                onClick={
+                  assignmentStatus === "data-found"
+                    ? handleReSubmit
+                    : handleSubmit
+                }
+                sx={{ mt: 2 }}
+                disabled={submitting || (!answerDescription && !selectedFile)}
+              >
+                {submitting ? "Submitting..." : "Submit Assignment"}
+              </Button>
+            ) : (
+              <Box position="relative" width="100%" sx={{ mt: 2 }}>
+                <BorderLinearProgress
+                  variant="determinate"
+                  value={uploadProgress}
+                />
+                <Box
+                  position="absolute"
+                  top={0}
+                  left={0}
+                  bottom={0}
+                  right={0}
+                  display="flex"
+                  alignItems="center"
+                  justifyContent="center"
+                >
+                  <Typography variant="body1" color="textPrimary">
+                    {!selectedFile && !answerDescription
+                      ? isSubmitted
+                        ? "Please re-upload a file or enter a description to proceed for resubmitting."
+                        : "Please upload a file or enter a description to proceed."
+                      : uploadProgress < 100
+                      ? `Uploading... ${Math.round(uploadProgress)}%`
+                      : "Upload complete! You can now submit your assignment."}
+                  </Typography>
+                </Box>
+              </Box>
+            ))}
 
           {isSubmit === false && (
             <TextField
               fullWidth
               variant="outlined"
               placeholder="Describe your answer here..."
-              sx={{ mt: 2, mb: 2 }}
+              sx={{
+                mt: 2,
+                mb: 2,
+                "& .MuiOutlinedInput-root": {
+                  color: "#fff",
+                },
+                "& .MuiInputBase-input::placeholder": {
+                  color: "#fff", // Alternative placeholder styling
+                },
+              }}
               onChange={(e) => setAnswerDescription(e.target.value)}
-              disabled={isSubmitted}
+              disabled={isSubmit}
               value={answerDescription}
             />
           )}
@@ -612,50 +687,6 @@ const AssignmentItem = ({
               </Tooltip>
             </Box>
           )}
-
-          {isSubmit === false &&
-            (uploadProgress === 100 || answerDescription ? (
-              <Button
-                variant="contained"
-                color="primary"
-                onClick={
-                  assignmentStatus === "data-found"
-                    ? handleReSubmit
-                    : handleSubmit
-                }
-                sx={{ mt: 2 }}
-                disabled={submitting || (!answerDescription && !selectedFile)}
-              >
-                {submitting ? "Submitting..." : "Submit Assignment"}
-              </Button>
-            ) : (
-              <Box position="relative" width="100%" sx={{ mt: 2 }}>
-                <BorderLinearProgress
-                  variant="determinate"
-                  value={uploadProgress}
-                />
-                <Box
-                  position="absolute"
-                  top={0}
-                  left={0}
-                  bottom={0}
-                  right={0}
-                  display="flex"
-                  alignItems="center"
-                  justifyContent="center"
-                >
-                  <Typography variant="body1" color="textPrimary">
-                    {!selectedFile && !answerDescription
-                      ? isSubmitted
-                        ? "Please re-upload a file or enter a description to proceed for resubmitting."
-                        : "Please upload a file or enter a description to proceed."
-                      : uploadProgress < 100
-                      ? `Uploading... ${Math.round(uploadProgress)}%`
-                      : "Upload complete! You can now submit your assignment."}
-                  </Typography>
-                </Box>
-              </Box>
-            ))}
           {isSubmit === true &&
             teacherComments !== null &&
             marksObtained !== null && (
@@ -675,7 +706,7 @@ const AssignmentItem = ({
                 >
                   <Box sx={{ display: "flex" }}>
                     <GiBullseye style={{ marginRight: 3, fontSize: "24px" }} />
-                    <Typography variant="body1" sx={{ fontSize: "16px" }}>
+                    <Typography variant="body1" sx={{ fontSize: "16px", color: isDarkMode ? "#f0f1f2": "#282929" }}>
                       Teacher Assessed Result
                     </Typography>
                   </Box>
@@ -745,7 +776,7 @@ const AssignmentItem = ({
           </Box>
           <Box>
             <IconButton>
-              <IoIosArrowDown />
+              <IoIosArrowDown style={{color: isDarkMode ? "#fff" : "#000000"}} />
             </IconButton>
           </Box>
         </Box>

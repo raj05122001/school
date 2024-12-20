@@ -50,7 +50,6 @@ const LectureAssignment = ({ id, isDarkMode, class_ID, isEdit }) => {
   const [openAccordian, setOpenAccordian] = useState(false);
   const [activeAccordion, setActiveAccordion] = React.useState(null);
 
-
   const lectureID = id;
 
   const checker = Number(userDetails?.teacher_id);
@@ -256,24 +255,27 @@ const LectureAssignment = ({ id, isDarkMode, class_ID, isEdit }) => {
             width: "100%",
           }}
         >
-        <Typography component="div" style={{ display: 'flex', gap: '8px', margin: 10 }}>
-                    {legendItems.map((item, index) => (
-                        <Box key={index} display="flex" alignItems="center">
-                            <Box
-                                sx={{
-                                    width: 16,
-                                    height: 16,
-                                    backgroundColor: item.color,
-                                    borderRadius: '4px',
-                                    marginRight: '8px',
-                                }}
-                            />
-                            <Typography variant="body2" color="textPrimary">
-                                {item.label}
-                            </Typography>
-                        </Box>
-                    ))}
+          <Typography
+            component="div"
+            style={{ display: "flex", gap: "8px", margin: 10 }}
+          >
+            {legendItems.map((item, index) => (
+              <Box key={index} display="flex" alignItems="center">
+                <Box
+                  sx={{
+                    width: 16,
+                    height: 16,
+                    backgroundColor: item.color,
+                    borderRadius: "4px",
+                    marginRight: "8px",
+                  }}
+                />
+                <Typography variant="body2" color="textPrimary">
+                  {item.label}
                 </Typography>
+              </Box>
+            ))}
+          </Typography>
           <MathJax.Context input="tex">
             <>
               <Box
@@ -339,110 +341,130 @@ const LectureAssignment = ({ id, isDarkMode, class_ID, isEdit }) => {
                       borderRadius: 4,
                       display: "flex",
                       flexDirection: "column",
-                      boxShadow: assignment?.is_assigned ? "0px 2px 8px #30a347":"0px 2px 8px #a39f30",
+                      boxShadow: assignment?.is_assigned
+                        ? "0px 2px 8px #30a347"
+                        : "0px 2px 8px #a39f30",
                     }}
                   >
-                  <Box sx={{display:"flex", justifyContent:"space-between", gap:8, alignItems:"center"}}>
-                  <Typography variant="h6">
-                    Question {String.fromCharCode(65 + index)}&nbsp;
-                  </Typography>
-                  {isEdit && (
-                      <Box
-                        sx={{
-                          display: "flex",
-                          gap: 1,
-                          justifyContent: "space-evenly",
-                          alignItems: "center",
-                        }}
-                      >
-                      <Box
+                    <Box
                       sx={{
                         display: "flex",
-                        alignItems: "center",
                         justifyContent: "space-between",
-                        mt: "auto",
+                        gap: 8,
+                        alignItems: "center",
                       }}
                     >
-                   <span style={{marginRight:2}}>Marks:</span> 
-                      <TextField
-                        type="number"
-                        InputLabelProps={{
-                          style: { color: isDarkMode ? "#d7e4fc" : "" },
-                        }}
-                        InputProps={{
-                          sx: {
-                            backdropFilter: "blur(10px)",
-                            backgroundColor: "rgba(255, 255, 255, 0.5)",
-                            "& .MuiOutlinedInput-notchedOutline": {},
-                          },
-                        }}
-                        value={assignment.assignment_mark}
-                        onChange={(e) =>
-                          handleMarkChange(
-                            assignment.id,
-                            Number(e.target.value)
-                          )
-                        }
-                        variant="outlined"
-                        size="small"
-                        sx={{ width: 80, mr: 1 }}
-                      />
-                    </Box>
-                        <Box sx={{ display: "flex", gap: 1}}>
-                          {assignment.assignment_attachment && (
-                            <Button
-                              variant="outlined"
-                              startIcon={<BsDownload />}
-                              sx={{
-                                backgroundColor: "#f0f4fa",
-                                color: "#36454F",
-                                ":hover": {
-                                  backgroundColor: "#e3e3e3",
-                                  color: "#000",
-                                },
-                              }}
-                              onClick={() =>
-                                downloadFile(assignment.assignment_attachment)
-                              }
-                            >
-                              Download
-                            </Button>
-                          )}
-                          <Button
-                            variant="contained"
-                            onClick={() => handleUpdateAssignment(assignment)}
+                      <Typography variant="h6">
+                        Question {String.fromCharCode(65 + index)}&nbsp;
+                      </Typography>
+                      {isEdit && (
+                        <Box
+                          sx={{
+                            display: "flex",
+                            gap: 1,
+                            justifyContent: "space-evenly",
+                            alignItems: "center",
+                          }}
+                        >
+                          <Box
                             sx={{
-                              // backgroundColor: assignment.is_assigned
-                              //   ? "green"
-                              //   : "#89CFF0",
-                              backgroundColor: assignment?.is_assigned
-                                ? "#92d689"
-                                : "#89CFF0",
-                              color: "white",
+                              display: "flex",
+                              alignItems: "center",
+                              justifyContent: "space-between",
+                              mt: "auto",
                             }}
                           >
-                            {assignment.is_assigned ? "Assigned" : "Assign"}
-                          </Button>
+                            <span style={{ marginRight: 2 }}>Marks:</span>
+                            <TextField
+                              type="number"
+                              InputLabelProps={{
+                                style: { color: isDarkMode ? "#d7e4fc" : "" },
+                              }}
+                              InputProps={{
+                                sx: {
+                                  backdropFilter: "blur(10px)",
+                                  backgroundColor: "rgba(255, 255, 255, 0.5)",
+                                  "& .MuiOutlinedInput-notchedOutline": {},
+                                },
+                              }}
+                              value={assignment.assignment_mark}
+                              onChange={(e) =>
+                                handleMarkChange(
+                                  assignment.id,
+                                  Number(e.target.value)
+                                )
+                              }
+                              variant="outlined"
+                              size="small"
+                              sx={{ width: 80, mr: 1 }}
+                            />
+                          </Box>
+                          <Box sx={{ display: "flex", gap: 1 }}>
+                            {assignment.assignment_attachment && (
+                              <Button
+                                variant="contained"
+                                startIcon={<BsDownload style={{ padding: 1 }}/>}
+                                sx={{
+                                  color: isDarkMode ? "#fff" : "#000",
+                                  backgroundColor: isDarkMode
+                                    ? "#507dba"
+                                    : "#89CFF0",
+                                  p: 1,
+                                  fontSize: "12px",
+                                  ":hover": {
+                                    color: "#fff",
+                                  },
+                                }}
+                                onClick={() =>
+                                  downloadFile(assignment.assignment_attachment)
+                                }
+                              >
+                                Download
+                              </Button>
+                            )}
+                            <Button
+                              variant="contained"
+                              onClick={() => handleUpdateAssignment(assignment)}
+                              sx={{
+                                // backgroundColor: assignment.is_assigned
+                                //   ? "green"
+                                //   : "#89CFF0",
+                                backgroundColor: assignment?.is_assigned
+                                  ? "#92d689"
+                                  : "#89CFF0",
+                                color: "white",
+                              }}
+                            >
+                              {assignment.is_assigned ? "Assigned" : "Assign"}
+                            </Button>
+                          </Box>
+                          <Box sx={{ display: "flex", alignItems: "center" }}>
+                            <FaEdit
+                              size={24}
+                              onClick={() =>
+                                setEditedAssignmentId(assignment.id)
+                              }
+                              style={{ cursor: "pointer" }}
+                            />
+                            <IconButton
+                              onClick={() =>
+                                setActiveAccordion(
+                                  activeAccordion === assignment?.id
+                                    ? null
+                                    : assignment?.id
+                                )
+                              }
+                            >
+                              <IoIosArrowUp style={{color: isDarkMode ? "#fff" : "#000000"}}/>
+                            </IconButton>
+                          </Box>
                         </Box>
-                        <Box sx={{display:"flex", alignItems:"center"}}>
-                          <FaEdit
-                            size={24}
-                            onClick={() => setEditedAssignmentId(assignment.id)}
-                            style={{ cursor: "pointer" }}
-                          />
-                          <IconButton onClick={() => setActiveAccordion(activeAccordion === assignment?.id ? null : assignment?.id)}>
-                          <IoIosArrowUp />
-                        </IconButton>
-                        </Box>
-                      </Box>
-                    )}
-                  </Box>
-                    <Box sx={{marginY:2}}>
-                    <Divider />
+                      )}
                     </Box>
-                  
-                    
-                    
+                    <Box sx={{ marginY: 2 }}>
+                      <Divider />
+                    </Box>
+
                     <Box sx={{ display: "flex" }}>
                       {/* <Typography
                         variant="body1"
@@ -454,7 +476,6 @@ const LectureAssignment = ({ id, isDarkMode, class_ID, isEdit }) => {
                         <TextWithMath text={assignment.assignment_text} />
                       </Box>
                     </Box>
-                    
                   </Box>
                 ) : (
                   <Box
@@ -464,11 +485,19 @@ const LectureAssignment = ({ id, isDarkMode, class_ID, isEdit }) => {
                       display: "flex",
                       borderRadius: 4,
                       flexDirection: "row",
-                      boxShadow: assignment?.is_assigned ? "0px 2px 8px #30a347":"0px 2px 8px #a39f30",
+                      boxShadow: assignment?.is_assigned
+                        ? "0px 2px 8px #30a347"
+                        : "0px 2px 8px #a39f30",
                       p: 2,
                       justifyContent: "space-between",
                     }}
-                    onClick={() => setActiveAccordion(activeAccordion === assignment?.id ? null : assignment?.id)}
+                    onClick={() =>
+                      setActiveAccordion(
+                        activeAccordion === assignment?.id
+                          ? null
+                          : assignment?.id
+                      )
+                    }
                   >
                     <Box sx={{ display: "flex" }}>
                       <Typography variant="body1">
@@ -489,7 +518,7 @@ const LectureAssignment = ({ id, isDarkMode, class_ID, isEdit }) => {
                     </Box>
                     <Box>
                       <IconButton>
-                        <IoIosArrowDown />
+                        <IoIosArrowDown  style={{color: isDarkMode ? "#fff" : "#000000"}}/>
                       </IconButton>
                     </Box>
                   </Box>

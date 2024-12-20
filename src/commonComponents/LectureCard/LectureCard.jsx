@@ -449,7 +449,7 @@ export function BasicModal({ open, setOpen, id, getAllLecture = () => {} }) {
               multiple
               hidden
               ref={inputVideoRef}
-              accept="application/pdf, application/msword, application/vnd.openxmlformats-officedocument.wordprocessingml.document, text/plain,.zip"
+              accept="application/pdf, application/msword, application/vnd.openxmlformats-officedocument.wordprocessingml.document, text/plain,.zip,.rar,.ppt,.pptx"
               onChange={handleFileChange}
             />
           </Button>
