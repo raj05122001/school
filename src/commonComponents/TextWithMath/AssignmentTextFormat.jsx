@@ -11,17 +11,19 @@ const AssignmentTextFormat = ({ text }) => {
 
   const replaceString = (data) => {
     return data
-      .replace(/\*\*(.*?)\*\*/g, "<strong>$1</strong>")
-      .replace(/\\(.?)\\*/g, "<strong>$1</strong>")
-      .replace(/#/g, "")
-      .replace(/`/g, "")
-      .replace(/(?<!\d)\. /g, ".<br>")
-      .replace(/[:\n]+/g, "<br>")
-      // .replace(/;/g, ";<br>")
-      .replace(/\\/g, "")
-      .replace(/\\\\/g, "")
-      .replace(/\[([^\]]+)\]/g, '<strong>$1</strong>');
+      ?.replace(/\*\*(.*?)\*\*/g, "<strong>$1</strong>")
+      ?.replace(/\\(.?)\\*/g, "<strong>$1</strong>")
+      ?.replace(/#/g, "")
+      ?.replace(/`/g, "")
+      ?.replace(/(?<!\d)\. /g, ".<br><br>")
+      ?.replace(/:/g, " :<br><br>")
+      ?.replace(/\n/g, " ")
+      ?.replace(/\\/g, "")
+      ?.replace(/\\\\/g, "")
+      ?.replace(/\[([^\]]+)\]/g, '<strong>[$1]</strong>')
   };
+ 
+ 
 
   const processText = (part) => {
     const elements = [];
