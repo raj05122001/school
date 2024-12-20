@@ -82,7 +82,7 @@ const VideoPlayer = ({ id }) => {
       setMarkers(breakPoint);
 
       setSuggestionData(
-        breakPoint.map((topic) => ({
+        breakPoint?.map((topic) => ({
           originalTitle: topic.gist,
           lowercaseTitle: topic.gist.toLowerCase(),
         }))
@@ -265,7 +265,7 @@ export const Suggestion = ({ suggestionData }) => {
   const containerRef = useRef(null);
 
   const uniqueTitles = [
-    ...new Set(suggestionData.map((topic) => topic.lowercaseTitle)),
+    ...new Set(suggestionData?.map((topic) => topic.lowercaseTitle)),
   ];
 
   const scrollContainer = (direction) => {
@@ -323,7 +323,7 @@ export const Suggestion = ({ suggestionData }) => {
           scrollbarWidth: "none",
         }}
       >
-        {uniqueTitles.map((lowercaseTitle, index) => {
+        {uniqueTitles?.map((lowercaseTitle, index) => {
           const originalTitle = suggestionData.find(
             (s) => s.lowercaseTitle === lowercaseTitle
           ).originalTitle;

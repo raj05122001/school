@@ -61,7 +61,7 @@ const LectureScheduleTable = () => {
   }, []);
 
   const formatTime = (time) => {
-    const [hours, minutes] = time.split(":");
+    const [hours, minutes] = time?.split(":");
     const period = hours >= 12 ? "PM" : "AM";
     const adjustedHours = hours % 12 || 12; // Convert 0 to 12 for 12 AM
     return `${adjustedHours}:${minutes} ${period}`;

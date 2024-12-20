@@ -211,7 +211,7 @@ const CheckAssignment = ({ assignment, index, fetchAssignmentAnswer }) => {
   const renderFileOverlay = () => {
     if (!selectedFile) return null;
 
-    const extension = selectedFile.split(".").pop()?.toLowerCase();
+    const extension = selectedFile?.split(".").pop()?.toLowerCase();
     let content;
 
     if (extension === "pdf") {

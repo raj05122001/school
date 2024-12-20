@@ -128,7 +128,7 @@ const CalendarComponent = ({ maxHeight = "585px" }) => {
         eventContent={eventContent}
         datesSet={(dateInfo) => {
           const viewTitle = dateInfo.view.getCurrentData().viewTitle;
-          const [month, year] = viewTitle.split(" ");
+          const [month, year] = viewTitle?.split(" ");
           const monthNumber = monthStringToNumber(month);
           setCurrentMonth([monthNumber.toString(), year]);
         }}
@@ -144,8 +144,8 @@ export const CalendarSkeleton = () => (
     <Skeleton width={100} height={30} className="mb-4" />
     <div className="grid grid-cols-7 gap-2">
       {Array(5)
-        .fill()
-        .map((_, i) => (
+        ?.fill()
+        ?.map((_, i) => (
           <Skeleton key={i} height={100} className="rounded" />
         ))}
     </div>

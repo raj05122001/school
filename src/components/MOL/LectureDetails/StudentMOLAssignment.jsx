@@ -42,7 +42,7 @@ const StudentMOLAssignment = ({ id, isDarkMode, class_ID }) => {
     try {
       const response = await getLectureAssignment(id);
       if (response.success && response?.data.success) {
-        const assignedAssignments = response?.data?.data.filter(
+        const assignedAssignments = response?.data?.data?.filter(
           (assignment) => assignment.is_assigned
         );
         dispatch({ type: "FETCH_SUCCESS", payload: assignedAssignments });
@@ -80,7 +80,7 @@ const StudentMOLAssignment = ({ id, isDarkMode, class_ID }) => {
     return (
       <Box sx={{ p: 3, width: "100%" }}>
         <Skeleton variant="rectangular" height={40} sx={{ mb: 2 }} />
-        {[...Array(7)].map((_, index) => (
+        {[...Array(7)]?.map((_, index) => (
           <Skeleton key={index} variant="text" height={30} sx={{ mb: 1 }} />
         ))}
       </Box>
@@ -120,7 +120,7 @@ const StudentMOLAssignment = ({ id, isDarkMode, class_ID }) => {
             </Typography>
           </Box>
           <Typography component="div" style={{ display: 'flex', gap: '8px', margin: 10 }}>
-            {legendItems.map((item, index) => (
+            {legendItems?.map((item, index) => (
                 <Box key={index} display="flex" alignItems="center">
                     <Box
                         sx={{
@@ -137,7 +137,7 @@ const StudentMOLAssignment = ({ id, isDarkMode, class_ID }) => {
                 </Box>
             ))}
         </Typography>
-          {assignments.map((assignment, index) => {
+          {assignments?.map((assignment, index) => {
             const submitStatus = assignmentType?.find((val)=>val?.assignment_que?.id===assignment.id)?.is_submitted || false
             console.log("assignment are", assignment)
             return (

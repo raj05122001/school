@@ -56,10 +56,10 @@ const StudentMCQ = ({ id, isDarkMode }) => {
     try {
       // First, convert the single quotes around the array to double quotes
       let validJson = options
-        .replace(/^\[|\]$/g, '') // Remove the surrounding brackets temporarily
-        .split(',') // Split each option by commas
-        .map(option => option.trim().replace(/^'/, '"').replace(/'$/, '"')) // Replace single quotes around each option with double quotes
-        .join(','); // Join the items back into a comma-separated string
+        ?.replace(/^\[|\]$/g, '') // Remove the surrounding brackets temporarily
+        ?.split(',') // Split each option by commas
+        ?.map(option => option?.trim()?.replace(/^'/, '"')?.replace(/'$/, '"')) // Replace single quotes around each option with double quotes
+        ?.join(','); // Join the items back into a comma-separated string
   
       // Wrap the modified string back into an array format
       validJson = `[${validJson}]`;
@@ -95,7 +95,7 @@ const StudentMCQ = ({ id, isDarkMode }) => {
       if (response.success) {
         const quizResponse = await getQuizResponse(id);
         if (quizResponse?.success) {
-            const responseData = quizResponse?.data?.answered_quiz.reduce((acc, item) => {
+            const responseData = quizResponse?.data?.answered_quiz?.reduce((acc, item) => {
               acc[item?.quiz?.id] = {
                 yourAnswer: item?.your_answer,
                 correctAnswer: item?.quiz?.answer,
@@ -117,7 +117,7 @@ const StudentMCQ = ({ id, isDarkMode }) => {
     return (
       <Box sx={{ p: 3, width: "100%" }}>
         <Skeleton variant="rectangular" height={40} sx={{ mb: 2 }} />
-        {[...Array(7)].map((_, index) => (
+        {[...Array(7)]?.map((_, index) => (
           <Skeleton key={index} variant="text" height={30} sx={{ mb: 1 }} />
         ))}
       </Box>
@@ -164,7 +164,7 @@ const StudentMCQ = ({ id, isDarkMode }) => {
                   value={selectedAnswers[item?.id] || ""}
                   onChange={(e) => handleOptionChange(item?.id, e.target.value)}
                 >
-                  {parseOptions(item.options)?.map((option, index) => (
+                  {parseOptions(item?.options)?.map((option, index) => (
                     <FormControlLabel
                       key={index}
                       value={option}

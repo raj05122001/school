@@ -148,7 +148,7 @@ const Page = () => {
             freeSolo
             id="class"
             disableClearable
-            options={classOptions?.map((option) => option.name)}
+            options={classOptions?.map((option) => option?.name)}
             value={selectedOptions?.name || ""} // Set value to the class name only
             onChange={(event, newValue) => {
               const selected = classOptions.find(

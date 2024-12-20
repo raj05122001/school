@@ -33,7 +33,7 @@ const LectureAnalytics = () => {
   const fetchCommentWatchtimeGraph = async () => {
     try {
       const response = await commentWatchtimeGraph("");
-      const transformedData = response?.data?.data.map((item) => ({
+      const transformedData = response?.data?.data?.map((item) => ({
         ...item,
         watchtime_count: (item.watchtime_count / 60).toFixed(2), // Convert to minutes
       }));

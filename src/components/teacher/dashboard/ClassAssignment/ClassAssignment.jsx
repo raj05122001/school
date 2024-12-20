@@ -144,7 +144,7 @@ const ClassAssignment = ({selectedOptions}) => {
 
       {/* Right Cards */}
       <Grid item xs={12} container sm={5} spacing={2}>
-        {[0, 50, 80].map((range, index) => (
+        {[0, 50, 80]?.map((range, index) => (
           <Grid item xs={12} sm={4} key={index}>
             <Box
               sx={{
@@ -202,7 +202,7 @@ export const BubblePattern = () => (
       { top: 15, left: 75, size: 15, color: "#84cc16" },
       { top: 60, left: 70, size: 30, color: "#a3e635" },
       { top: 40, left: 100, size: 20, color: "#65a30d" },
-    ].map((bubble, index) => (
+    ]?.map((bubble, index) => (
       <FaCircle
         key={index}
         style={{

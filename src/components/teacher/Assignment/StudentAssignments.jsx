@@ -31,7 +31,7 @@ const StudentAssignments = ({ listData }) => {
       </Typography>
       <Grid container spacing={3}>
         {listData?.data?.length > 0 ? (
-          listData?.data.map((assignment, index) => (
+          listData?.data?.map((assignment, index) => (
             <Grid item xs={12} key={index}>
               <Card
                 sx={{

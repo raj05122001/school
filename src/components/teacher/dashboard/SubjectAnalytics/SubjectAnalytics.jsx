@@ -74,7 +74,7 @@ const SubjectAnalytics = () => {
         fill={isDarkMode ? "#fff" : "#000"}
         style={{ fontSize: isSmallScreen ? "10px" : "12px" }}
       >
-        {lines.map((line, index) => (
+        {lines?.map((line, index) => (
           <tspan key={index} x={x} dy={index * 12}>
             {line}
           </tspan>

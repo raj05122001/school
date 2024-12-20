@@ -82,12 +82,12 @@ const LectureAttachments = ({ lectureId, isDarkMode }) => {
   };
 
   const getFileName = (path = "") => {
-    const pathSplited = path.split("/");
-    return pathSplited.pop();
+    const pathSplited = path?.split("/");
+    return pathSplited?.pop();
   };
 
   const downloadFile = (path) => {
-    const downloadPath = path.startsWith("http")
+    const downloadPath = path?.startsWith("http")
       ? path
       : `${BASE_URL_MEET}${path}`;
     const link = document?.createElement("a");

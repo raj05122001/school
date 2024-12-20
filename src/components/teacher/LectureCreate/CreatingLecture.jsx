@@ -144,7 +144,7 @@ const CreatingLecture = ({
             Array.isArray(response?.data?.data)
           ) {
             // Filter out subjects that have empty or null names
-            const validSubjects = response?.data?.data.filter(
+            const validSubjects = response?.data?.data?.filter(
               (subject) => subject?.name && subject?.name.trim() !== ""
             );
 
@@ -466,7 +466,7 @@ const CreatingLecture = ({
                     },
                   }}
                 >
-                  {lecture_type.map((value) => (
+                  {lecture_type?.map((value) => (
                     <MenuItem key={value?.key} value={value?.key}>
                       <Box
                         sx={{ display: "flex", alignItems: "center", gap: 1 }}

@@ -156,7 +156,7 @@ const LectureDetails = ({
         <Tab label="MCQ" />
         <Tab label="Questions" />
         <Tab label="Assignment" />
-        <Tab label="Referrence" />
+        <Tab label="Reference" />
       </Tabs>
 
       {/* Render tab content conditionally based on selected tab */}

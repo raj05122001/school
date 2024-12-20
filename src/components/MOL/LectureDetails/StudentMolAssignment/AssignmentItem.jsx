@@ -243,31 +243,35 @@ const AssignmentItem = ({
       const data = value ? JSON.parse(value) : value;
       return (
         <>
-          <Typography
-            variant="body1"
-            sx={{
-              fontSize: "18px",
-              marginBottom: 2,
-              textAlign: "center",
-              color: "#04052e",
-            }}
-          >
-            <VscFeedback style={{ marginRight: 4 }} />
-            Overall Feedback
-          </Typography>
-          <Box
-            sx={{
-              backgroundColor: "#E0F0FE",
-              color: "#1d1924",
-              padding: 4,
-              borderRadius: 4,
-              backdropFilter: "blur(10px)",
-              boxShadow: "0px 2px 8px #1389f0",
-              fontSize: "15px",
-            }}
-          >
-            <TextWithMath text={data?.overall_feedback} />
-          </Box>
+          {data?.overall_feedback > 0 && (
+            <>
+              <Typography
+                variant="body1"
+                sx={{
+                  fontSize: "18px",
+                  marginBottom: 2,
+                  textAlign: "center",
+                  color: "#04052e",
+                }}
+              >
+                <VscFeedback style={{ marginRight: 4 }} />
+                Overall Feedback
+              </Typography>
+              <Box
+                sx={{
+                  backgroundColor: "#E0F0FE",
+                  color: "#1d1924",
+                  padding: 4,
+                  borderRadius: 4,
+                  backdropFilter: "blur(10px)",
+                  boxShadow: "0px 2px 8px #1389f0",
+                  fontSize: "15px",
+                }}
+              >
+                <TextWithMath text={data?.overall_feedback} />
+              </Box>
+            </>
+          )}
           {data?.feedback_points?.length > 0 && (
             <>
               <Typography
@@ -350,12 +354,12 @@ const AssignmentItem = ({
   };
 
   const getFileName = (path = "") => {
-    const pathSplited = path.split("/");
-    return pathSplited.pop();
+    const pathSplited = path?.split("/");
+    return pathSplited?.pop();
   };
 
   const downloadFile = (path) => {
-    const downloadPath = path.startsWith("http")
+    const downloadPath = path?.startsWith("http")
       ? path
       : `${BASE_URL_MEET}${path}`;
     const link = document?.createElement("a");
@@ -364,7 +368,7 @@ const AssignmentItem = ({
     link.download = getFileName(path);
     document.body.appendChild(link);
     link.click();
-    document.body.removeChild(link);
+    document?.body?.removeChild(link);
   };
   return (
     <>
@@ -407,7 +411,9 @@ const AssignmentItem = ({
             </Box>
             <Box>
               <IconButton onClick={() => setOpenAccordian(false)}>
-                <IoIosArrowUp style={{color: isDarkMode ? "#fff" : "#000000"}} />
+                <IoIosArrowUp
+                  style={{ color: isDarkMode ? "#fff" : "#000000" }}
+                />
               </IconButton>
             </Box>
           </Box>
@@ -479,7 +485,13 @@ const AssignmentItem = ({
                 >
                   <Box sx={{ display: "flex" }}>
                     <GiBullseye style={{ marginRight: 3, fontSize: "24px" }} />
-                    <Typography variant="body1" sx={{ fontSize: "16px", color: isDarkMode ? "#f0f1f2": "#282929" }}>
+                    <Typography
+                      variant="body1"
+                      sx={{
+                        fontSize: "16px",
+                        color: isDarkMode ? "#f0f1f2" : "#282929",
+                      }}
+                    >
                       AI assessed result
                       <br />
                       <i style={{ fontSize: "12px" }}>
@@ -706,7 +718,13 @@ const AssignmentItem = ({
                 >
                   <Box sx={{ display: "flex" }}>
                     <GiBullseye style={{ marginRight: 3, fontSize: "24px" }} />
-                    <Typography variant="body1" sx={{ fontSize: "16px", color: isDarkMode ? "#f0f1f2": "#282929" }}>
+                    <Typography
+                      variant="body1"
+                      sx={{
+                        fontSize: "16px",
+                        color: isDarkMode ? "#f0f1f2" : "#282929",
+                      }}
+                    >
                       Teacher Assessed Result
                     </Typography>
                   </Box>
@@ -776,7 +794,9 @@ const AssignmentItem = ({
           </Box>
           <Box>
             <IconButton>
-              <IoIosArrowDown style={{color: isDarkMode ? "#fff" : "#000000"}} />
+              <IoIosArrowDown
+                style={{ color: isDarkMode ? "#fff" : "#000000" }}
+              />
             </IconButton>
           </Box>
         </Box>

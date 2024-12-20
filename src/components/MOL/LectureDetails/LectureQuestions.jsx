@@ -86,7 +86,7 @@ const LectureQuestions = ({ id, isDarkMode }) => {
                   <TextWithMath text={item.title} />
                 </Typography>
                 <ul>
-                  {item.questions.map((question, qIndex) => (
+                  {item?.questions?.map((question, qIndex) => (
                     <li key={qIndex}>
                       <Typography variant="body2">
                         <TextWithMath text={question} />

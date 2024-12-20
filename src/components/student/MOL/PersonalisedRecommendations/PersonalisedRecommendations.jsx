@@ -272,7 +272,7 @@ const TopicAccordion = ({
                 ":hover": { backgroundColor: "#81b581" },
               }}
             >
-              {approachOptions.map((option, index) => (
+              {approachOptions?.map((option, index) => (
                 <MenuItem
                   key={index}
                   value={option}
@@ -351,19 +351,19 @@ const FormattedText = ({ text, color }) => {
 
   const replaceString = (data) => {
     return data
-      .replace(/\[(.*?)\]/g, `<span style="font-weight: 600">[$1]</span>`)
-      .replace(/\*\*(.*?)\*\*/g, "<strong>$1</strong>")
-      .replace(/#/g, "")
-      .replace(/`/g, "")
-      .replace(/\\/g, "")
-      .replace(/(?<!\d)\. /g, ".<br>")
-      .replace(/\n/g, "<br>");
+      ?.replace(/\[(.*?)\]/g, `<span style="font-weight: 600">[$1]</span>`)
+      ?.replace(/\*\*(.*?)\*\*/g, "<strong>$1</strong>")
+      ?.replace(/#/g, "")
+      ?.replace(/`/g, "")
+      ?.replace(/\\/g, "")
+      ?.replace(/(?<!\d)\. /g, ".<br>")
+      ?.replace(/\n/g, "<br>");
   };
 
   const processText = (part) => {
     if (!part) return null;
-    const chunks = part.split(latexRegex).filter(Boolean);
-    return chunks.map((chunk, i) => {
+    const chunks = part?.split(latexRegex)?.filter(Boolean);
+    return chunks?.map((chunk, i) => {
       if (i % 2 === 1) {
         // LaTeX content
         const cleanedLatex = chunk.replace(/\n/g, " ");
@@ -391,7 +391,7 @@ const FormattedText = ({ text, color }) => {
   return (
     <MathJax.Context input="tex" inline>
       <Box>
-        {textArray.map((part, index) => (
+        {textArray?.map((part, index) => (
           <Box key={index} color={color}>
             {processText(part)}
           </Box>

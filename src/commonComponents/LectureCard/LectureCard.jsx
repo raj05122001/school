@@ -310,7 +310,7 @@ export function BasicModal({ open, setOpen, id, getAllLecture = () => {} }) {
   };
 
   const handleRemoveFile = (index) => {
-    setFiles((prevFiles) => prevFiles.filter((_, idx) => idx !== index));
+    setFiles((prevFiles) => prevFiles?.filter((_, idx) => idx !== index));
   };
 
   const resetStates = () => {
@@ -412,7 +412,7 @@ export function BasicModal({ open, setOpen, id, getAllLecture = () => {} }) {
               width: "100%",
             }}
           >
-            {files.map((file, index) => (
+            {files?.map((file, index) => (
               <Box
                 key={index}
                 sx={{ display: "flex", alignItems: "center", mb: 1 }}

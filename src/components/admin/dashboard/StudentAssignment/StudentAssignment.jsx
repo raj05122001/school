@@ -201,7 +201,7 @@ const StudentAssignment = ({ selectedOptions }) => {
           </TableHead>
           <TableBody>
             {loading
-              ? Array.from(new Array(5)).map((_, index) => (
+              ? Array?.from(new Array(5))?.map((_, index) => (
                   <TableRow key={index}>
                     <TableCell>
                       <Skeleton variant="rectangular" width={120} height={30} />

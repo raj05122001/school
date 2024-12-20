@@ -36,7 +36,7 @@ const RatingSection = ({ id, isShowRating = false }) => {
     }
   };
 
-  const totalRatings = [1, 2, 3, 4, 5].reduce((sum, rating) => {
+  const totalRatings = [1, 2, 3, 4, 5]?.reduce((sum, rating) => {
     return sum + (data?.feedback_index?.[`Rating${rating}`] || 0);
   }, 0);
 
@@ -78,7 +78,7 @@ const RatingSection = ({ id, isShowRating = false }) => {
           <MdStar size={44} color="yellow" />
         </Box>
         <Stack spacing={1}>
-          {[5, 4, 3, 2, 1].map((star) => (
+          {[5, 4, 3, 2, 1]?.map((star) => (
             <Box key={star} sx={{ display: "flex", alignItems: "center" }}>
               <Typography
                 variant="body2"

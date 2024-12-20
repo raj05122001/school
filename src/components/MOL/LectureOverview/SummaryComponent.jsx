@@ -88,7 +88,7 @@ const SummaryComponent = ({
         "Initial JSON parsing failed, attempting to clean and retry."
       );
 
-      const cleanedData = data.replace(/\\"/g, '"').replace(/\\\\n/g, "\n");
+      const cleanedData = data?.replace(/\\"/g, '"')?.replace(/\\\\n/g, "\n");
 
       try {
         return JSON.parse(cleanedData);

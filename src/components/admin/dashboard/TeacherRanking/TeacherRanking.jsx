@@ -259,7 +259,7 @@ const TeacherRanking = () => {
                       </TableRow>
                     </TableHead>
                     <TableBody>
-                      {topTeachersArray.map((teacher, index) => (
+                      {topTeachersArray?.map((teacher, index) => (
                         <TableRow
                           key={index}
                           onClick={() =>
