@@ -151,7 +151,8 @@ const LectureMCQ = ({ id, isDarkMode }) => {
                           >
                             {getLabel(index)}&nbsp;&nbsp;
                           </Typography>
-                          <MathJax.Text text={option} />
+                          {/* <MathJax.Text text={option} inline/> */}
+                          <TextWithMath text={option} />
                         </Box>
                       </ListItem>
                     ))}
@@ -176,7 +177,7 @@ const LectureMCQ = ({ id, isDarkMode }) => {
                      sx={{marginTop:0.4}}
                       variant="span"
                     >
-                    <MathJax.Text text={item?.answer} />
+                    <TextWithMath text={item?.answer} />
                     </Typography>
 
                   </Box>
