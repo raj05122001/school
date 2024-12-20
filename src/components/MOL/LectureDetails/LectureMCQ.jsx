@@ -177,7 +177,7 @@ const LectureMCQ = ({ id, isDarkMode }) => {
                      sx={{marginTop:0.4}}
                       variant="span"
                     >
-                    <MathJax.Text text={item?.answer} />
+                    <TextWithMath text={item?.answer} />
                     </Typography>
 
                   </Box>
