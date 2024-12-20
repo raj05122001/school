@@ -88,7 +88,7 @@ const SummaryComponent = ({
         "Initial JSON parsing failed, attempting to clean and retry."
       );
 
-      const cleanedData = data.replace(/\\"/g, '"').replace(/\\\\n/g, "\n");
+      const cleanedData = data?.replace(/\\"/g, '"')?.replace(/\\\\n/g, "\n");
 
       try {
         return JSON.parse(cleanedData);
@@ -151,7 +151,7 @@ const SummaryComponent = ({
     formattedText = formattedText?.replace(
         /<img\s+([^>]*?)src="([^"]+)"([^>]*?)>/g,
         (match, beforeSrc, src, afterSrc) => {
-          return `<img ${beforeSrc}src="${src}" ${afterSrc} style="max-width: 800px; max-height: 400px; display: block; margin: auto;">`;
+          return `<img ${beforeSrc}src="${src}" ${afterSrc} style="max-width: 800px; max-height: 400px; display: block; margin: auto;" />`;
         }
      );
     

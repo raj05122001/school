@@ -89,7 +89,7 @@ const LectureRecorder = ({ open, closeDrawer, recordingData }) => {
   const getAudioSources = async () => {
     try {
       const devices = await navigator.mediaDevices.enumerateDevices();
-      const audioInputDevices = devices.filter(
+      const audioInputDevices = devices?.filter(
         (device) => device.kind === "audioinput"
       );
       if (audioInputDevices.length > 0) {

@@ -69,8 +69,8 @@ export default function NeedMoreGuide({ assignmentId, open, setOpen }) {
   // Function to render the carousel for `road_map_guide`
   const renderCarousel = (steps) => {
     const stepArray = steps
-    .split(/step_\d+:/)
-    .filter((step) => step.replace(/\n/g, "").trim() !== "");
+    ?.split(/step_\d+:/)
+    ?.filter((step) => step?.replace(/\n/g, "")?.trim() !== "");
 
     return (
       <Box
@@ -197,7 +197,7 @@ export default function NeedMoreGuide({ assignmentId, open, setOpen }) {
 
   // Function to render data
   const renderData = (data) => {
-    return Object.keys(data).map((key) => {
+    return Object?.keys(data)?.map((key) => {
       const value = data[key];
 
       if (key === "road_map_guide") {
@@ -288,12 +288,12 @@ export default function NeedMoreGuide({ assignmentId, open, setOpen }) {
 
   const replaceString = (data) => {
     return data
-      .replace(/\[(.*?)\]/g, <span style="font-weight: 600">[$1]</span>)
-      .replace(/#/g, "")
-      .replace(/`/g, "")
-      .replace(/(?<!\d)\. /g, `. <br>`)
-      .replace(/\n/g, `.<br>`)
-      .replace(/\\n/g, `<br>`); // Handle escaped \n
+      ?.replace(/\[(.*?)\]/g, <span style="font-weight: 600">[$1]</span>)
+      ?.replace(/#/g, "")
+      ?.replace(/`/g, "")
+      ?.replace(/(?<!\d)\. /g, `. <br>`)
+      ?.replace(/\n/g, `.<br>`)
+      ?.replace(/\\n/g, `<br>`); // Handle escaped \n
       // .replace(/\\(.?)\\*/g, "<strong>$1</strong>");
   };
 
@@ -311,7 +311,7 @@ export default function NeedMoreGuide({ assignmentId, open, setOpen }) {
   };
   // Function to handle conde snippet key rendering text with line breaks
   const renderCodeWithLineBreaks = (text) => {
-    return text.split("\\n").map((line, index) => (
+    return text?.split("\\n")?.map((line, index) => (
       <React.Fragment key={index}>
         {line}
         <br />
@@ -322,8 +322,8 @@ export default function NeedMoreGuide({ assignmentId, open, setOpen }) {
   // Function to format keys (optional)
   const formatKey = (key) => {
     return key
-      .replace(/_/g, " ")
-      .replace(/\b\w/g, (char) => char.toUpperCase());
+      ?.replace(/_/g, " ")
+      ?.replace(/\b\w/g, (char) => char.toUpperCase());
   };
 
   return (

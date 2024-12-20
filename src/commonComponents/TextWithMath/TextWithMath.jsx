@@ -11,25 +11,24 @@ const TextWithMath = ({ text, con = false }) => {
 
   const replaceString = (data) => {
     return data
-      .replace(/\*\*(.*?)\*\*/g, "<strong>$1</strong>")
-      .replace(/\\(.?)\\*/g, "<strong>$1</strong>")
-      .replace(/#/g, "")
-      .replace(/`/g, "")
-      .replace(/(?<!\d)\. /g, ".<br>")
-      .replace(/\n/g, "<br>")
-      .replace(/\\/g, "")
-      .replace(/\\\\/g, "")
-      .replace(/:/g, " :<br><br>");
+      ?.replace(/\*\*(.*?)\*\*/g, "<strong>$1</strong>")
+      ?.replace(/\\(.?)\\*/g, "<strong>$1</strong>")
+      ?.replace(/#/g, "")
+      ?.replace(/`/g, "")
+      ?.replace(/(?<!\d)\. /g, ".<br>")
+      ?.replace(/\n/g, "<br>")
+      ?.replace(/\\/g, "")
+      ?.replace(/\\\\/g, "");
   };
 
   const processText = (part) => {
     const elements = [];
     let lastIndex = 0;
 
-    part.replace(combinedRegex, (match, p1, p2, p3, offset) => {
+    part?.replace(combinedRegex, (match, p1, p2, p3, offset) => {
       // Add the text before the LaTeX expression
       if (lastIndex < offset) {
-        const textBefore = part.substring(lastIndex, offset);
+        const textBefore = part?.substring(lastIndex, offset);
         elements.push(
           <Typography
             variant="span"
@@ -42,7 +41,7 @@ const TextWithMath = ({ text, con = false }) => {
       // Determine which LaTeX delimiter was used
       const latexContent = p2 || p3;
       if (latexContent) {
-        const cleanedLatex = latexContent.replace(/\n/g, " ").replace(/\\\\/g, "\\");
+        const cleanedLatex = latexContent?.replace(/\n/g, " ")?.replace(/\\\\/g, "\\");
         if (con) {
           console.log("cleanedLatex : ", cleanedLatex);
         }
@@ -64,8 +63,8 @@ const TextWithMath = ({ text, con = false }) => {
     });
 
     // Add any remaining text after the last LaTeX expression
-    if (lastIndex < part.length) {
-      const remainingText = part.substring(lastIndex);
+    if (lastIndex < part?.length) {
+      const remainingText = part?.substring(lastIndex);
       elements.push(
         <Typography
           variant="span"

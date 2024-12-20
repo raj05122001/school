@@ -153,7 +153,7 @@ const AdminFilters = ({
         </Grid>
 
         <Grid container spacing={3}>
-          {["class", "subject"].map((field, index) => (
+          {["class", "subject"]?.map((field, index) => (
             <Grid item xs={12} sm={6} md={3} key={field}>
               <Autocomplete
                 freeSolo

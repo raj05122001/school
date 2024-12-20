@@ -55,7 +55,7 @@ export default function ChatBot({
 
   const processContent = (content) => {
     const urlRegex = /(https?:\/\/[^\s]+)/g;
-    return content.split(urlRegex).map((part, index) =>
+    return content?.split(urlRegex)?.map((part, index) =>
       part.match(urlRegex) ? (
         <a
           key={index}
@@ -74,8 +74,8 @@ export default function ChatBot({
 
   const showMoreText = (content, isReadMore) => {
     const text = content[0].slice(0, isReadMore ? content[0]?.length : 300);
-    const points = text.split(/(\d+\.\s+)/).filter(Boolean);
-    return points.map((point, index) => (
+    const points = text?.split(/(\d+\.\s+)/)?.filter(Boolean);
+    return points?.map((point, index) => (
       <Typography key={index} variant="body2" sx={{ mb: 2 }}>
         {point}
       </Typography>
@@ -215,7 +215,7 @@ export default function ChatBot({
         }}
       >
         {chatHistory.length > 0 ? (
-          chatHistory.map((message, index) => (
+          chatHistory?.map((message, index) => (
             <Box
               key={index}
               sx={{
@@ -259,10 +259,10 @@ export default function ChatBot({
                   </>
                 )}
               </Box>
-              {message.links && (
+              {message?.links && (
                 <Box mt={1}>
                   <Typography variant="body2">Reference:</Typography>
-                  {message.links.map((link, index) => (
+                  {message?.links?.map((link, index) => (
                     <Box key={index}>{processContent(link)}</Box>
                   ))}
                 </Box>

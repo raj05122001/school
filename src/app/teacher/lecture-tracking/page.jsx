@@ -174,7 +174,7 @@ const LectureTabs = () => {
       {filters}
 
       <Grid container spacing={2} sx={{ marginBottom: 2 }}>
-        {["COMPLETED", "UPCOMMING", "MISSED", "CANCELLED"].map((value) =>
+        {["COMPLETED", "UPCOMMING", "MISSED", "CANCELLED"]?.map((value) =>
           tabLoader ? (
             <Grid item xs={3} key={value} sx={{ position: "relative" }}>
               <Skeleton

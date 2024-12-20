@@ -184,12 +184,12 @@ const LectureAssignment = ({ id, isDarkMode, class_ID, isEdit }) => {
   };
 
   const getFileName = (path = "") => {
-    const pathSplited = path.split("/");
-    return pathSplited.pop();
+    const pathSplited = path?.split("/");
+    return pathSplited?.pop();
   };
 
   const downloadFile = (path) => {
-    const downloadPath = path.startsWith("http")
+    const downloadPath = path?.startsWith("http")
       ? path
       : `${BASE_URL_MEET}${path}`;
     const link = document?.createElement("a");
@@ -259,7 +259,7 @@ const LectureAssignment = ({ id, isDarkMode, class_ID, isEdit }) => {
             component="div"
             style={{ display: "flex", gap: "8px", margin: 10 }}
           >
-            {legendItems.map((item, index) => (
+            {legendItems?.map((item, index) => (
               <Box key={index} display="flex" alignItems="center">
                 <Box
                   sx={{
@@ -304,7 +304,7 @@ const LectureAssignment = ({ id, isDarkMode, class_ID, isEdit }) => {
                   Create
                 </Button>
               </Box>
-              {assignments.map((assignment, index) =>
+              {assignments?.map((assignment, index) =>
                 editedAssignmentId === assignment.id ? (
                   <Box sx={{ position: "relative" }} key={assignment.id}>
                     <Box

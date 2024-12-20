@@ -189,7 +189,7 @@ const CommentCard = ({
 
         {isShowReplyComment && (
           <Box mt={2} pl={1}>
-            {replies.slice(0, showRepliesCount).map((reply) => (
+            {replies.slice(0, showRepliesCount)?.map((reply) => (
               <ReplyCard
                 key={reply.id}
                 reply={reply}
@@ -331,7 +331,7 @@ const CommentsSection = ({ id }) => {
 
         <CardContent sx={{ maxHeight: "400px", overflowY: "auto" }}>
           {loading ? (
-            Array.from(new Array(3)).map((_, index) => (
+            Array.from(new Array(3))?.map((_, index) => (
               <CommentCard
                 key={index}
                 comment={{}}
@@ -341,8 +341,8 @@ const CommentsSection = ({ id }) => {
                 loading={loading}
               />
             ))
-          ) : commentData.length > 0 ? (
-            commentData.map((comment) => (
+          ) : commentData?.length > 0 ? (
+            commentData?.map((comment) => (
               <CommentCard
                 key={comment.id}
                 comment={comment}

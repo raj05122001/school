@@ -88,19 +88,19 @@ const HighlightsComponent = ({
   }, [lectureId]);
 
   const renderTextWithMathJax = (text) => {
-    const parts = text.split(/(\\\[.*?\\\]|\\\(.*?\\\))/g);
+    const parts = text?.split(/(\\\[.*?\\\]|\\\(.*?\\\))/g);
 
     return parts?.map((part, idx) => {
       if (part.match(/\\\[.*?\\\]/)) {
         return (
           <MathJax.Node key={idx} inline>
-            {part.replace(/\\\[|\\\]/g, "")}
+            {part?.replace(/\\\[|\\\]/g, "")}
           </MathJax.Node>
         );
       } else if (part.match(/\\\(.*?\\\)/)) {
         return (
           <MathJax.Node key={idx} inline>
-            {part.replace(/\\\(|\\\)/g, "")}
+            {part?.replace(/\\\(|\\\)/g, "")}
           </MathJax.Node>
         );
       } else {
@@ -154,7 +154,7 @@ const HighlightsComponent = ({
                         key={index}
                         sx={{ fontSize: "0.875rem" }}
                       >
-                        {renderTextWithMathJax(point.replace(/^- /, "").trim())}
+                        {renderTextWithMathJax(point?.replace(/^- /, "")?.trim())}
                       </Box>
                     ))}
                   </Box>

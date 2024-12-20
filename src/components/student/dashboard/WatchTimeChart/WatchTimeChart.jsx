@@ -120,7 +120,7 @@ function WatchTimeChart() {
             },
           }}
         >
-          {subjects.map((subject) => (
+          {subjects?.map((subject) => (
             <MenuItem key={subject.id} value={subject.id}>
               {subject.name.length > 20
                 ? `${subject.name.slice(0, 20)}...`
@@ -176,7 +176,7 @@ function WatchTimeChart() {
             fill="#8884d8"
             paddingAngle={0.5}
           >
-            {data.map((entry, index) => (
+            {data?.map((entry, index) => (
               <Cell key={`cell-${index}`} fill={entry.color} />
             ))}
           </Pie>

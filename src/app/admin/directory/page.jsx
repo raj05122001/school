@@ -37,7 +37,7 @@ const Page = () => {
       setFilteredTeacherData(teacherList);
 
       const uniqueDepartments = Array.from(
-        new Set(teacherList.map((item) => item.department?.name || ""))
+        new Set(teacherList?.map((item) => item.department?.name || ""))
       );
       setDepartmentOptions(uniqueDepartments);
     } catch (error) {
@@ -54,7 +54,7 @@ const Page = () => {
       setFilteredStudentData(studentList);
 
       const uniqueClasses = Array.from(
-        new Set(studentList.map((item) => item.user_class?.name || ""))
+        new Set(studentList?.map((item) => item.user_class?.name || ""))
       );
       setClassOptions(uniqueClasses);
     } catch (error) {
@@ -67,13 +67,13 @@ const Page = () => {
 
     if (tabValue === 0) {
       // Filter Student Data
-      const filteredData = studentData.filter(
+      const filteredData = studentData?.filter(
         (student) => student.user_class?.name === newValue
       );
       setFilteredStudentData(newValue ? filteredData : studentData);
     } else {
       // Filter Teacher Data
-      const filteredData = teacherData.filter(
+      const filteredData = teacherData?.filter(
         (teacher) => teacher.department?.name === newValue
       );
       setFilteredTeacherData(newValue ? filteredData : teacherData);
