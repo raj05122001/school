@@ -151,6 +151,16 @@ const AssignmentItem = ({
   };
 
   const handleSubmit = async () => {
+    if (!selectedFile) {
+      dispatch({
+        type: "SHOW_SNACKBAR",
+        payload: {
+          message: "Please upload a file before submitting your assignment.",
+          severity: "error",
+        },
+      });
+      return;
+    }
     setSubmitting(true);
     try {
       const formData = {
@@ -198,13 +208,23 @@ const AssignmentItem = ({
   };
 
   const handleReSubmit = async () => {
+    if (!selectedFile) {
+      dispatch({
+        type: "SHOW_SNACKBAR",
+        payload: {
+          message: "Please upload a file before resubmitting your assignment.",
+          severity: "error",
+        },
+      });
+      return;
+    }
     setSubmitting(true);
     try {
       const formData = {
         is_submitted: true,
         answer_link: selectedFile ? selectedFile.s3Location : null,
       };
-      const submitResponse = await reSubmitAssignment(assignment.id, formData);
+      const submitResponse = await reSubmitAssignment(assignment?.id, formData);
       if (submitResponse.data.success) {
         dispatch({ type: "SET_SUBMITTED", payload: assignment.id });
         dispatch({
@@ -244,7 +264,7 @@ const AssignmentItem = ({
       const data = value ? JSON.parse(value) : value;
       return (
         <>
-          {data?.overall_feedback > 0 && (
+          {data?.overall_feedback && (
             <>
               <Typography
                 variant="body1"
