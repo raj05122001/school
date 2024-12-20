@@ -174,7 +174,8 @@ const StudentMCQ = ({ id, isDarkMode }) => {
                           {/* <Typography variant="body2" sx={{ textAlign: "left" }}>
                             {getLabel(index)}
                           </Typography> */}
-                          <MathJax.Text text={option} inline />
+                          {/* <MathJax.Text text={option} inline/> */}
+                          <TextWithMath text={option} />
                         </Box>
                       }
                     />
