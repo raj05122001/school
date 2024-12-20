@@ -195,11 +195,11 @@ const StudentMCQ = ({ id, isDarkMode }) => {
                     <Typography sx={{ fontWeight: "bold", textAlign: "left", fontSize: "16px" }}>
                       Your Answer: &nbsp;
                     </Typography>
-                    <MathJax.Text text={submittedAnswers[item?.id].yourAnswer} />
+                    <TextWithMath text={submittedAnswers[item?.id].yourAnswer} />
                     <Typography sx={{ fontWeight: "bold", textAlign: "left", fontSize: "16px", ml: 2 }}>
                       Correct Answer: &nbsp;
                     </Typography>
-                    <MathJax.Text text={submittedAnswers[item?.id]?.correctAnswer} />
+                    <TextWithMath text={submittedAnswers[item?.id]?.correctAnswer} />
                   </Box>
                 )}
               </ListItem>
