@@ -43,7 +43,6 @@ const LecturePage = ({ params }) => {
       const apiResponse = await getLectureById(id);
       if (apiResponse?.data?.success) {
         setLectureData(apiResponse?.data?.data);
-        console.log("apiResponse?.data?.data : ", apiResponse?.data?.data);
       }
       setLoading(false);
     } catch (e) {

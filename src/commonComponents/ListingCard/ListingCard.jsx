@@ -28,8 +28,6 @@ const ListingCard = ({ data, onClick }) => {
     videoRef?.current?.pause();
   };
 
-  console.log("data : ", data);
-
   return (
     <Box
       p={2}
