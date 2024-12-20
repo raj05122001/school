@@ -18,8 +18,7 @@ const TextWithMath = ({ text, con = false }) => {
       .replace(/(?<!\d)\. /g, ".<br>")
       .replace(/\n/g, "<br>")
       .replace(/\\/g, "")
-      .replace(/\\\\/g, "")
-      .replace(/:/g, " :<br><br>");
+      .replace(/\\\\/g, "");
   };
 
   const processText = (part) => {
