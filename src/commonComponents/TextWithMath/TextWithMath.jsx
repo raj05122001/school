@@ -7,6 +7,7 @@ const TextWithMath = ({ text }) => {
   const textArray = isArray ? text : [text];
 
   const latexRegex = /\\\[([\s\S]*?)\\\]/g;
+  const combinedRegex = /(\$\$(.*?)\$\$|\\\[([\s\S]*?)\\\])/g;
 
   const replaceString = (data) => {
     return data
@@ -17,7 +18,8 @@ const TextWithMath = ({ text }) => {
       .replace(/(?<!\d)\. /g, ".<br>")
       .replace(/\n/g, "<br>")
       .replace(/\\/g, "")
-      .replace(/\\\\/g, "");
+      .replace(/\\\\/g, "")
+      .replace(/:/g, " :<br><br>");
   };
 
   const processText = (part) => {
