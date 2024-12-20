@@ -37,6 +37,7 @@ import { VscActivateBreakpoints } from "react-icons/vsc";
 import { BASE_URL_MEET } from "@/constants/apiconfig";
 import { BsDownload } from "react-icons/bs";
 import { IoIosArrowDown, IoIosArrowUp } from "react-icons/io";
+import AssignmentTextFormat from "@/commonComponents/TextWithMath/AssignmentTextFormat";
 
 const ColorLinearProgress = styled(LinearProgress)(({ theme, value }) => {
   let color = "#FF0000"; // Default: Red for low scores
@@ -268,7 +269,7 @@ const AssignmentItem = ({
                   fontSize: "15px",
                 }}
               >
-                <TextWithMath text={data?.overall_feedback} />
+                <AssignmentTextFormat text={data?.overall_feedback} />
               </Box>
             </>
           )}
@@ -300,7 +301,7 @@ const AssignmentItem = ({
                 <ul style={{ lineHeight: "1.8" }}>
                   {data?.feedback_points?.map((point, index) => (
                     <li key={index}>
-                      <TextWithMath text={point} />
+                      <AssignmentTextFormat text={point} />
                     </li>
                   ))}
                 </ul>
@@ -335,7 +336,7 @@ const AssignmentItem = ({
                 <ul style={{ lineHeight: "1.8" }}>
                   {data?.improvement_points?.map((point, index) => (
                     <li key={index}>
-                      <TextWithMath text={point} />
+                      <AssignmentTextFormat text={point} />
                     </li>
                   ))}
                 </ul>
@@ -347,7 +348,7 @@ const AssignmentItem = ({
     } catch (error) {
       return (
         <Typography variant="subtitle2" sx={{ fontSize: "15px" }}>
-          <TextWithMath text={value} />
+          <AssignmentTextFormat text={value} />
         </Typography>
       );
     }
@@ -406,7 +407,7 @@ const AssignmentItem = ({
                 {String.fromCharCode(65 + index)}.&nbsp;
               </Typography>
               <Box mt={0.3}>
-                <TextWithMath text={assignment.assignment_text} />
+                <AssignmentTextFormat text={assignment.assignment_text} />
               </Box>
             </Box>
             <Box>
@@ -593,15 +594,15 @@ const AssignmentItem = ({
             <TextField
               fullWidth
               variant="outlined"
-              placeholder="Describe your answer here..."
+              placeholder="Describe about your assignment here..."
               sx={{
                 mt: 2,
                 mb: 2,
                 "& .MuiOutlinedInput-root": {
-                  color: "#fff",
+                  color: isDarkMode ? "#fff" : "#000000",
                 },
                 "& .MuiInputBase-input::placeholder": {
-                  color: "#fff", // Alternative placeholder styling
+                  color: isDarkMode ? "#fff" : "#000000", // Alternative placeholder styling
                 },
               }}
               onChange={(e) => setAnswerDescription(e.target.value)}
@@ -609,6 +610,9 @@ const AssignmentItem = ({
               value={answerDescription}
             />
           )}
+          {isSubmit==-false && <Typography sx={{fontStyle:"italic", fontSize:"14px", mb:1}}>
+            <i>*Please upload file(s) while giving description.</i>
+          </Typography>}
 
           {isSubmit === false && !selectedFile && (
             <Stack direction="row" spacing={1}>
@@ -651,7 +655,7 @@ const AssignmentItem = ({
                   <MdDescription />
                   <input
                     hidden
-                    accept=".pdf,.doc,.docx,.txt,.xlsx,.xls,.pptx,.zip"
+                    accept=".pdf,.doc,.docx,.txt,.xlsx,.xls,.pptx"
                     type="file"
                   />
                 </IconButton>
@@ -755,7 +759,7 @@ const AssignmentItem = ({
                     </strong>
                     <br />
                   </Typography>
-                  <TextWithMath text={teacherComments} />
+                  <AssignmentTextFormat text={teacherComments} />
                 </AccordionDetails>
               </Accordion>
             )}
@@ -783,7 +787,7 @@ const AssignmentItem = ({
               {String.fromCharCode(65 + index)}.&nbsp;
             </Typography>
             <Box mt={0.3}>
-              <TextWithMath
+              <AssignmentTextFormat
                 text={
                   assignment.assignment_text?.length > 200
                     ? `${assignment.assignment_text?.slice(0, 200)}...`

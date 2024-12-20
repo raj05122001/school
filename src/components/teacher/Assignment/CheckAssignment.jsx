@@ -36,6 +36,7 @@ import { defaultLayoutPlugin } from "@react-pdf-viewer/default-layout";
 import "@react-pdf-viewer/core/lib/styles/index.css";
 import "@react-pdf-viewer/default-layout/lib/styles/index.css";
 import AudioPlayer from "@/components/AudioPlayer/AudioPlayer";
+import AssignmentTextFormat from "@/commonComponents/TextWithMath/AssignmentTextFormat";
 
 const CheckAssignment = ({ assignment, index, fetchAssignmentAnswer }) => {
   const { isDarkMode, primaryColor, secondaryColor } = useThemeContext();
@@ -352,7 +353,7 @@ const CheckAssignment = ({ assignment, index, fetchAssignmentAnswer }) => {
             <Divider sx={{ mb: 2 }} />
             <Box sx={{ display: "flex", justifyContent: "space-between" }}>
               <Typography variant="body1" gutterBottom color={primaryColor} sx={{ fontWeight: 600 }}>
-                <TextWithMath text={assignment.assignment_que.assignment_text} />
+                <AssignmentTextFormat text={assignment.assignment_que.assignment_text} />
               </Typography>
             </Box>
             <Typography
@@ -487,7 +488,7 @@ const CheckAssignment = ({ assignment, index, fetchAssignmentAnswer }) => {
               onClick={() => setOpen(true)}
             >
               <Typography variant="body1" gutterBottom color={primaryColor} sx={{ fontWeight: 600}}>
-                <TextWithMath
+                <AssignmentTextFormat
                   text={
                     assignment.assignment_que.assignment_text?.length > 200
                       ? `${assignment.assignment_que.assignment_text?.slice(0, 200)}...`

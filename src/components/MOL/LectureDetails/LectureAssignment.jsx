@@ -30,6 +30,7 @@ import { BsDownload } from "react-icons/bs";
 import TextWithMath from "@/commonComponents/TextWithMath/TextWithMath";
 import { BASE_URL_MEET } from "@/constants/apiconfig";
 import { IoIosArrowDown, IoIosArrowUp } from "react-icons/io";
+import AssignmentTextFormat from "@/commonComponents/TextWithMath/AssignmentTextFormat";
 
 const userDetails = decodeToken(Cookies.get("ACCESS_TOKEN"));
 
@@ -473,7 +474,7 @@ const LectureAssignment = ({ id, isDarkMode, class_ID, isEdit }) => {
                         }}
                       /> */}
                       <Box>
-                        <TextWithMath text={assignment.assignment_text} />
+                        <AssignmentTextFormat text={assignment.assignment_text} />
                       </Box>
                     </Box>
                   </Box>
@@ -504,7 +505,7 @@ const LectureAssignment = ({ id, isDarkMode, class_ID, isEdit }) => {
                         {String.fromCharCode(65 + index)}.&nbsp;
                       </Typography>
                       <Box mt={0.3}>
-                        <TextWithMath
+                        <AssignmentTextFormat
                           text={
                             assignment.assignment_text?.length > 200
                               ? `${assignment.assignment_text?.slice(
