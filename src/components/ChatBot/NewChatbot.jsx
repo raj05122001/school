@@ -59,6 +59,46 @@ export default function NewChatbot({ suggestionInput, setIsOpenChatBot }) {
   const lectureID = pathname?.split("/").pop(); // Extracts the last segment
   const sessionTitle = `${userName}${currentDate}`;
 
+  const resizeRef = useRef(null);
+  const [isResizing, setIsResizing] = useState(false);
+  const [dimensions, setDimensions] = useState({ width: 380, height: 520 });
+
+  const startResizing = (mouseDownEvent) => {
+    setIsResizing(true);
+    mouseDownEvent.preventDefault();
+  };
+
+  const stopResizing = () => {
+    setIsResizing(false);
+    window.removeEventListener("mousemove", onResize);
+    window.removeEventListener("mouseup", stopResizing);
+  };
+
+  const onResize = (mouseMoveEvent) => {
+    if (isResizing && chatbotRef.current) {
+      const rect = chatbotRef.current.getBoundingClientRect();
+      // Calculate new width and height based on mouse position relative to top-left
+      const newWidth = rect.width + (rect.left - mouseMoveEvent.clientX);
+      const newHeight = rect.height + (rect.top - mouseMoveEvent.clientY);
+
+      setDimensions({
+        width: Math.max(300, Math.min(newWidth, 1200)), // Set maxWidth as needed
+        height: Math.max(300, Math.min(newHeight, 800)), // Set maxHeight as needed
+      });
+    }
+  };
+
+  useEffect(() => {
+    if (isResizing) {
+      window.addEventListener("mousemove", onResize);
+      window.addEventListener("mouseup", stopResizing);
+    }
+    return () => {
+      window.removeEventListener("mousemove", onResize);
+      window.removeEventListener("mouseup", stopResizing);
+    };
+  }, [isResizing]);
+
   const handleCreateSession = async () => {
     try {
       const formData = new FormData();
@@ -109,10 +149,11 @@ export default function NewChatbot({ suggestionInput, setIsOpenChatBot }) {
   }, [isLoading]);
 
   const fetchOldChats = async () => {
-    const response = await getChatbotHistory();
-    const data = response?.data?.data || [];
-    setOldChats(data);
-  };
+          const response = await getChatbotHistory();
+      const data = response?.data?.data || [];
+      setOldChats(data);
+      };
+
   useEffect(() => {
     fetchOldChats();
   }, []);
@@ -137,7 +178,7 @@ export default function NewChatbot({ suggestionInput, setIsOpenChatBot }) {
       const linkArry = response.data?.reference_link || [];
       setChatHistory((prevChat) => [
         ...prevChat,
-        { role: "assistant", content: data, links: linkArry?.[0] },
+        { role: "assistant", content: data, links: linkArry },
       ]);
     } catch (error) {
       console.error(error);
@@ -149,22 +190,52 @@ export default function NewChatbot({ suggestionInput, setIsOpenChatBot }) {
     <Box
       sx={{
         bgcolor: "grey.200",
-        maxWidth: 380,
-        position: "fixed",
+        minWidth: 300,
+        minHeight: 300,
+        position: "fixed", // Set position to fixed
         bottom: 16,
         right: 16,
-        zIndex: 9999,
+        zIndex: 99990,
         borderRadius: 2,
-        height: "100%",
-        width: "100%",
-        maxHeight: 520,
+        width: dimensions.width,
+        height: dimensions.height,
         boxShadow:
           "rgba(50, 50, 93, 0.25) 0px 50px 100px -20px, rgba(0, 0, 0, 0.3) 0px 30px 60px -30px, rgba(10, 37, 64, 0.35) 0px -2px 6px 0px inset",
+        display: "flex",
+        flexDirection: "column",
+        overflow: "hidden", // Ensure content doesn't overflow
       }}
       ref={chatbotRef}
       component={Paper}
       elevation={3}
     >
+      {/* Resize Handle at Top-Left */}
+      <div
+        ref={resizeRef}
+        style={{
+          position: "absolute",
+          width: "20px",
+          height: "20px",
+          top: 0, // Positioned at top-left
+          left: 0,
+          cursor: "nwse-resize",
+          backgroundColor: "transparent",
+          zIndex: 10000, // Ensure it's on top
+        }}
+        onMouseDown={startResizing}
+      >
+        {/* Visual Indicator for Resizing */}
+        <Box
+          sx={{
+            width: "100%",
+            height: "100%",
+            backgroundColor: "grey.500",
+            opacity: 0.5,
+            borderBottomRightRadius: "4px",
+          }}
+        />
+      </div>
+
       <Grid container direction="column" sx={{ height: "100%" }}>
         {/* Header */}
         <Grid item>
@@ -176,6 +247,7 @@ export default function NewChatbot({ suggestionInput, setIsOpenChatBot }) {
               borderBottom: 1,
               borderColor: "grey.300",
               p: 2,
+              flexShrink: 0, // Prevent shrinking during resize
             }}
           >
             <Logo color="black" />
@@ -213,14 +285,14 @@ export default function NewChatbot({ suggestionInput, setIsOpenChatBot }) {
                   width: "60%",
                   border: "none",
                   borderRadius: 4,
-                  backgroundColor: "#AFE1AF", // Gold
+                  backgroundColor: "#AFE1AF", // Light Green
                   transition: "all 150ms ease-in-out",
                   color: "#003366", // Dark blue for text
 
                   ":hover": {
                     border: "none",
-                    backgroundColor: "#00A36C", // Slightly darker gold on hover
-                    boxShadow: "0 0 10px 0 #ECFFDC inset, 0 0 10px 4px #ECFFDC", // Matching hover color with gold shade
+                    backgroundColor: "#00A36C", // Darker Green on hover
+                    boxShadow: "0 0 10px 0 #00A36C inset, 0 0 10px 4px #00A36C",
                     color: "#fff",
                   },
                 }}
@@ -239,15 +311,15 @@ export default function NewChatbot({ suggestionInput, setIsOpenChatBot }) {
                       mb: 2,
                       width: "60%",
                       borderRadius: 4,
-                      backgroundColor: "#EADDCA", // Gold
+                      backgroundColor: "#EADDCA", // Light Brown
                       transition: "all 150ms ease-in-out",
                       color: "#003366", // Dark blue for text
                       border: "none",
                       ":hover": {
                         border: "none",
-                        backgroundColor: "#C19A6B", // Slightly darker gold on hover
+                        backgroundColor: "#C19A6B", // Darker Brown on hover
                         boxShadow:
-                          "0 0 10px 0 #F2D2BD inset, 0 0 10px 4px #F2D2BD", // Matching hover color with gold shade
+                          "0 0 10px 0 #C19A6B inset, 0 0 10px 4px #C19A6B",
                         color: "#fff",
                       },
                     }}
@@ -272,7 +344,7 @@ export default function NewChatbot({ suggestionInput, setIsOpenChatBot }) {
                       alignItems: "center",
                     }}
                   >
-                    <List>
+                    <List sx={{ width: "100%" }}>
                       {oldChats.map((data, index) => (
                         <Accordion
                           key={data?.id}
@@ -280,7 +352,7 @@ export default function NewChatbot({ suggestionInput, setIsOpenChatBot }) {
                             mb: 1,
                             borderRadius: 4,
                             backdropFilter: "blur(10px)",
-                            backgroundColor: "rgba(255, 255, 255, 0.2)",
+                            backgroundColor: "rgba(255, 255, 255, 0.8)",
                           }}
                         >
                           <AccordionSummary
@@ -289,7 +361,7 @@ export default function NewChatbot({ suggestionInput, setIsOpenChatBot }) {
                               color: "text.primary",
                               p: 2,
                               width: "100%",
-                              height: "100%"
+                              height: "100%",
                             }}
                           >
                             <Typography
@@ -311,7 +383,7 @@ export default function NewChatbot({ suggestionInput, setIsOpenChatBot }) {
                             }}
                           >
                             <Typography variant="body2" color="text.secondary">
-                            <TextWithMath text = {data?.bot_response} />
+                              <TextWithMath text={data?.bot_response} />
                             </Typography>
                           </AccordionDetails>
                         </Accordion>
@@ -392,7 +464,7 @@ export default function NewChatbot({ suggestionInput, setIsOpenChatBot }) {
                     color: "text.secondary",
                   }}
                 >
-                  <FaRobot size={50} sx={{ mb: 2 }} />
+                  <FaRobot size={50} style={{ marginBottom: '16px' }} />
                   <Typography variant="h6">Ask me any question</Typography>
                 </Box>
               )}
@@ -495,51 +567,53 @@ export default function NewChatbot({ suggestionInput, setIsOpenChatBot }) {
 export const VoiceToText = ({ setUserTextInput }) => {
   const [isRecording, setIsRecording] = useState(false);
   const [error, setError] = useState(null);
+  const recognitionRef = useRef(null);
 
-  let recognition;
+  useEffect(() => {
+    if (typeof window !== "undefined") {
+      const SpeechRecognition =
+        window.SpeechRecognition || window.webkitSpeechRecognition;
 
-  // Initialize SpeechRecognition
-  if (typeof window !== "undefined") {
-    const SpeechRecognition =
-      window.SpeechRecognition || window.webkitSpeechRecognition;
+      if (SpeechRecognition) {
+        const recognition = new SpeechRecognition();
+        recognition.continuous = false;
+        recognition.interimResults = false;
+        recognition.lang = "en-US";
 
-    if (SpeechRecognition) {
-      recognition = new SpeechRecognition();
-      recognition.continuous = false;
-      recognition.interimResults = false;
-      recognition.lang = "en-US";
+        recognition.onresult = (event) => {
+          const speechToText = Array.from(event.results)
+            .map((result) => result[0].transcript)
+            .join("");
+          setUserTextInput(speechToText);
+          setIsRecording(false);
+        };
 
-      recognition.onresult = (event) => {
-        const speechToText = Array.from(event.results)
-          .map((result) => result[0].transcript)
-          .join("");
-        setUserTextInput(speechToText);
-        setIsRecording(false);
-      };
+        recognition.onerror = (event) => {
+          setError("Error recognizing speech. Please try again.");
+          setIsRecording(false);
+        };
 
-      recognition.onerror = (event) => {
-        setError("Error recognizing speech. Please try again.");
-        setIsRecording(false);
-      };
-    } else {
-      setError("Speech Recognition API is not supported in this browser.");
+        recognitionRef.current = recognition;
+      } else {
+        setError("Speech Recognition API is not supported in this browser.");
+      }
     }
-  }
+  }, [setUserTextInput]);
 
   const startRecording = () => {
-    if (recognition) {
+    if (recognitionRef.current) {
       setError(null);
       setIsRecording(true);
-      recognition.start();
+      recognitionRef.current.start();
     } else {
       setError("Speech Recognition API is not supported in this browser.");
     }
   };
 
   const stopRecording = () => {
-    if (recognition) {
+    if (recognitionRef.current) {
       setIsRecording(false);
-      recognition.stop();
+      recognitionRef.current.stop();
     }
   };
 
@@ -576,129 +650,3 @@ export const VoiceToText = ({ setUserTextInput }) => {
     </Box>
   );
 };
-
-// export const FormattedText = ({ text }) => {
-//   const [isReadMore, setIsReadMore] = useState(false);
-//   const isArray = Array.isArray(text);
-//   const textArray = isArray ? text : [text];
-
-//   const latexRegex = /\\\[([\s\S]*?)\\\]/g;
-
-//   const replaceString = (data) => {
-//     return data
-//       .replace(/\[(.*?)\]/g, `<span style="font-weight: 600">[$1]</span>`)
-//       .replace(/\*\*(.*?)\*\*/g, "<strong>$1</strong>")
-//       .replace(/#/g, "")
-//       .replace(/`/g, "")
-//       .replace(/(?<!\d)\. /g, ".<br>")
-//       .replace(/\n/g, "<br>");
-//   };
-
-//   const processText = (part) => {
-//     if (!part) return;
-//     const chunks = part.split(latexRegex).filter(Boolean);
-//     return chunks?.map((chunk, i) => {
-//       if (i % 2 === 1) {
-//         const cleanedLatex = chunk.replace(/\n/g, " ");
-//         return (
-//           <Typography
-//             variant="span"
-//             sx={{
-//               fontSize: "1.25rem",
-//               lineHeight: "1.75rem",
-//               width: "100%",
-//               overflowX: "auto",
-//             }}
-//             key={i}
-//           >
-//             <MathJax.Node key={i} inline>
-//               {cleanedLatex}
-//             </MathJax.Node>
-//           </Typography>
-//         );
-//       } else {
-//         // Non-LaTeX content, replace bold syntax
-//         return (
-//           <Typography
-//             variant="span"
-//             key={i}
-//             dangerouslySetInnerHTML={{ __html: replaceString(chunk) }}
-//           />
-//         );
-//       }
-//     });
-//   };
-
-//   return (
-//     <MathJax.Context input="tex">
-//       <Box>
-//         {textArray?.map((part, index) => (
-//           <Box key={index}>
-//             {processText(part?.slice(0, isReadMore ? part?.length : 300))}{" "}
-//             {part?.length > 300 && (
-//               <Typography
-//                 variant="span"
-//                 color="primary"
-//                 sx={{ cursor: "pointer", whiteSpace: "nowrap" }}
-//                 onClick={() => setIsReadMore((prev) => !prev)}
-//               >
-//                 {isReadMore ? `Read less...` : `Read More...`}
-//               </Typography>
-//             )}
-//           </Box>
-//         ))}
-//       </Box>
-//     </MathJax.Context>
-//   );
-// };
-
-// export const ChatHistory = () => {
-//   <Box
-//     sx={{
-//       display: "flex",
-//       flexDirection: "column",
-//       alignItems: "center",
-//       width: "100%",
-//       height: "100%",
-//       overflow: "auto", // Scrollable old chats
-//     }}
-//   >
-//     <Box
-//       sx={{
-//         width: "90%",
-//         maxHeight: "60vh", // Restrict the height
-//         overflowY: "auto", // Enable scrolling
-//         bgcolor: "grey.100",
-//         borderRadius: 2,
-//         p: 2,
-//         boxShadow: "0px 4px 6px rgba(0, 0, 0, 0.1)",
-//       }}
-//     >
-//       <List>
-//         {oldChats.map(([sessionID, prompts]) => (
-//           <React.Fragment key={sessionID}>
-//             <ListItem disablePadding>
-//               <ListItemText
-//                 primary={`Session ID: ${sessionID}`}
-//                 secondaryTypographyProps={{
-//                   sx: { color: "text.secondary" },
-//                 }}
-//                 secondary={`Prompts (${prompts.length}):`}
-//               />
-//             </ListItem>
-//             <List sx={{ pl: 2 }}>
-//               {prompts.map((prompt, index) => (
-//                 <ListItem key={index} sx={{ py: 0.5 }}>
-//                   <Typography variant="body2" color="text.secondary">
-//                     {index + 1}. {prompt}
-//                   </Typography>
-//                 </ListItem>
-//               ))}
-//             </List>
-//             <Divider sx={{ my: 1 }} />
-//           </React.Fragment>
-//         ))}
-//       </List>
-//     </Box>
-//   </Box>;
-// };

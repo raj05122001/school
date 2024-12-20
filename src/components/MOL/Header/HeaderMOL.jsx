@@ -1,3 +1,4 @@
+import { useState, useEffect } from "react";
 import {
   Box,
   Typography,
@@ -6,6 +7,10 @@ import {
   Button,
   useTheme,
   Skeleton,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogTitle,
 } from "@mui/material";
 import DarkMode from "@/components/DarkMode/DarkMode";
 import { FaBell, FaUpload, FaDownload } from "react-icons/fa";
@@ -13,7 +18,11 @@ import UserImage from "@/commonComponents/UserImage/UserImage";
 import React from "react";
 import { useThemeContext } from "@/hooks/ThemeContext";
 import { MdPublishedWithChanges, MdUnpublished } from "react-icons/md";
-
+import { RiDeleteBin5Fill } from "react-icons/ri";
+import Cookies from "js-cookie";
+import { decodeToken } from "react-jwt";
+import { deleteCompletedLecture } from "@/api/apiHelper";
+import { useRouter } from "next/navigation";
 
 const HeaderMOL = ({
   lectureData,
@@ -24,12 +33,34 @@ const HeaderMOL = ({
 }) => {
   const { isDarkMode } = useThemeContext();
   const theme = useTheme();
+  const [dialogOpen, setDialogOpen] = useState(false)
+  const [userDetails, setUserDetails] = useState(null);
+
+  const router = useRouter()
+
+  useEffect(() => {
+    if (typeof window !== "undefined") {
+      const token = Cookies.get("ACCESS_TOKEN");
+      setUserDetails(token ? decodeToken(token) : {});
+    }
+  }, []);
 
   const formatDuration = (ms) => {
     const hours = Math.floor(ms / (1000 * 60 * 60));
     const minutes = Math.floor((ms % (1000 * 60 * 60)) / (1000 * 60));
     return `${hours}h ${minutes}m`;
   };
+
+  const handleDeleteLecture = async () =>{
+    try{
+      const deleteLecture = await deleteCompletedLecture(lectureData?.id)
+      if (deleteLecture?.data?.success){
+        router.push("/admin/lecture-listings")
+      }
+    }catch (error){
+      console.error(error)
+    }
+  }
 
   return (
     <Box
@@ -49,6 +80,23 @@ const HeaderMOL = ({
         }}
       >
         <Box sx={{ display: "flex", gap: 3, alignItems: "center" }}>
+          {userDetails?.role === "ADMIN" && (
+            <Button
+              variant="contained"
+              onClick={()=>setDialogOpen(!dialogOpen)}
+              sx={{
+                color: isDarkMode ? "#fff" : "#000",
+                backgroundColor: "#89CFF0",
+                p: 1,
+                fontSize: "12px",
+              }}
+            >
+              <RiDeleteBin5Fill
+                style={{ marginRight: 4, mb: 1, fontSize: "18px" }}
+              />{" "}
+              Delete Lecture
+            </Button>
+          )}
           {isEdit && !lectureData?.is_released && (
             <Button
               variant="contained"
@@ -62,9 +110,9 @@ const HeaderMOL = ({
               }
               sx={{
                 color: isDarkMode ? "#fff" : "#000",
-                backgroundColor:"#89CFF0",
-                p:1,
-                fontSize:"12px"
+                backgroundColor: "#89CFF0",
+                p: 1,
+                fontSize: "12px",
               }}
             >
               {lectureData?.is_released
@@ -212,6 +260,34 @@ const HeaderMOL = ({
           )}
         </Box>
       </Box>
+      <Dialog open={dialogOpen} onClose={() => setDialogOpen(!dialogOpen)}
+      sx={{
+        "& .MuiDialogContent-root": {
+          borderRadius: 4,
+        },
+        "& .MuiDialogTitle-root": {
+          fontSize:"16px",
+        },
+        // "& .MuiPaper-root": {
+        //   border: "2px solid #0096FF",
+        //   borderRadius: "12px",
+        // },
+      }}
+      >
+        <DialogTitle>
+          Are you sure you want to delete this lecture?
+        </DialogTitle>
+        <DialogActions>
+        <Box sx={{display:"flex", gap:4, justifyContent:"center", width:"100%"}}>
+          <Button onClick={() => setDialogOpen(!dialogOpen)} variant="outlined">
+              No
+            </Button>
+            <Button onClick={handleDeleteLecture} variant="contained">
+              Yes
+            </Button>
+        </Box>
+        </DialogActions>
+      </Dialog>
     </Box>
   );
 };
