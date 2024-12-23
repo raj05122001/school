@@ -296,6 +296,7 @@ const LectureCard = ({ lecture, getAllLecture = () => {} }) => {
 export default LectureCard;
 
 export function BasicModal({ open, setOpen, id, getAllLecture = () => {} }) {
+  const {isTrialAccount}=useContext(AppContextProvider)
   const inputVideoRef = useRef(null);
   const [files, setFiles] = useState([]);
   const [loading, setLoading] = useState(false);
@@ -321,9 +322,13 @@ export function BasicModal({ open, setOpen, id, getAllLecture = () => {} }) {
   };
 
   const handleFileChange = (e) => {
-    setError("");
-    const selectedFiles = Array.from(e.target.files);
-    setFiles(prev => [...prev, ...selectedFiles]);
+    if(isTrialAccount){
+      alert("You don't have access. This is a trial account.");
+    } else{
+      setError("");
+      const selectedFiles = Array.from(e.target.files);
+      setFiles(prev => [...prev, ...selectedFiles]);
+    }
   };
 
   const handleSubmit = async () => {

@@ -1,5 +1,5 @@
 "use client";
-import React, { useRef, useState } from "react";
+import React, { useContext, useRef, useState } from "react";
 import { FaVideo } from "react-icons/fa";
 import { IoIosCloseCircle } from "react-icons/io";
 import { FiFile } from "react-icons/fi";
@@ -18,6 +18,7 @@ import {
   RadioGroup,
   Box,
 } from "@mui/material";
+import { AppContextProvider } from "@/app/main";
 
 const AddVideoFile = ({
   videoAttachment,
@@ -29,6 +30,7 @@ const AddVideoFile = ({
   selectedOption,
   setSelectedOption,
 }) => {
+  const {isTrialAccount}=useContext(AppContextProvider)
   const inputVideoRef = useRef(null);
   const inputZipRef = useRef(null);
   const [zipFile, setZipFile] = useState(null);
@@ -273,7 +275,11 @@ const AddVideoFile = ({
             display: "flex",
             alignItems: "center",
           }}
-          onClick={!videoAttachment?.length ? handleOpen : null}
+          onClick={()=>{if(isTrialAccount){
+            alert("You don't have access. This is a trial account.");
+          } else{
+            !videoAttachment?.length ? handleOpen : null
+          }}}
         >
           {videoAttachment?.length > 0 ? (
             <Box

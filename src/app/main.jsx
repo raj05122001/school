@@ -17,6 +17,7 @@ import NewChatbot from "@/components/ChatBot/NewChatbot";
 export const AppContextProvider = createContext({});
 
 const Main = ({ children }) => {
+  const isTrialAccount=true
   const pathname = usePathname();
   const [open, setOpen] = useState(true);
   const [openRecordingDrawer, setOpenRecordingDrawer] = useState(false);
@@ -94,6 +95,7 @@ const Main = ({ children }) => {
               openCreateLecture,
               handleLectureRecord,
               handelChatBotText,
+              isTrialAccount,
             }}
           >
             <Box

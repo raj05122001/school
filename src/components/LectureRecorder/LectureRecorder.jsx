@@ -1,5 +1,5 @@
 "use client";
-import React, { useState, useRef, useEffect } from "react";
+import React, { useState, useRef, useEffect, useContext } from "react";
 import {
   Drawer,
   Box,
@@ -28,8 +28,10 @@ import {
 import { Upload } from "@aws-sdk/lib-storage";
 import RecorderErrorMessage from "./RecorderErrorMessage/RecorderErrorMessage";
 import { handleErrorResponse } from "@/helper/Helper";
+import { AppContextProvider } from "@/app/main";
 
 const LectureRecorder = ({ open, closeDrawer, recordingData }) => {
+  const {isTrialAccount}=useContext(AppContextProvider)
   const videoRef = useRef(null);
   const currentTimeLocal = new Date().toLocaleTimeString("en-GB", {
     hour: "2-digit",
@@ -878,7 +880,9 @@ const LectureRecorder = ({ open, closeDrawer, recordingData }) => {
               <Box sx={{ display: "flex", justifyContent: "flex-end" }}>
                 <Button
                   onClick={() => {
-                    if (!lectureStoped.stopRecording && !videoAttachment.length > 0) {
+                    if(isTrialAccount){
+                      alert("You don't have access. This is a trial account.");
+                    } else if (!lectureStoped.stopRecording && !videoAttachment.length > 0) {
                       setIsStopsubmit(true);
                       stopRecording();
                     } else {
