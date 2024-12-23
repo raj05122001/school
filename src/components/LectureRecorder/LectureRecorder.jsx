@@ -176,40 +176,38 @@ const LectureRecorder = ({ open, closeDrawer, recordingData }) => {
         };
 
         const options = {
-          partSize: 10 * 1024 * 1024, // 10 MB
-          queueSize: 4, // 4 parallel uploads
+          partSize: 10 * 1024 * 1024, 
+          queueSize: 4, 
         };
 
-        // Start time for calculating speed and remaining time
         let startTime = Date.now();
         let uploadedBytes = 0;
 
-        // Use `Upload` from `@aws-sdk/lib-storage`
         const upload = new Upload({
           client: s3,
           params,
           ...options,
-          // Progress tracking
-          leavePartsOnError: false, // Cleans up the parts on failure
-          onProgress: (progress) => {
-            const currentTime = Date.now();
-            const elapsedTime = (currentTime - startTime) / 1000; // seconds
-            uploadedBytes = progress.loaded;
-            const totalBytes = progress.total;
+          leavePartsOnError: false, 
+        });
 
-            const uploadSpeed = uploadedBytes / elapsedTime; // bytes per second
-            const remainingBytes = totalBytes - uploadedBytes;
-            const timeRemaining = remainingBytes / uploadSpeed; // seconds remaining
+        upload.on("httpUploadProgress", (progress) => {
+          const totalBytes = progress.total || 1;
 
-            const progressPercentage = Math.round(
-              (uploadedBytes / totalBytes) * 100
-            );
+          const currentTime = Date.now();
+          const elapsedTime = (currentTime - startTime) / 1000; 
+          uploadedBytes = progress.loaded;
 
-            // Update UI with progress, speed, and time remaining
-            setUploadProgress(progressPercentage);
-            setUploadSpeed((uploadSpeed / 1024 / 1024).toFixed(2)); // Speed in MB/s
-            setTimeRemaining(Math.round(timeRemaining)); // Time in seconds
-          },
+          const uploadSpeed = uploadedBytes / elapsedTime; 
+          const remainingBytes = totalBytes - uploadedBytes;
+          const timeRemaining = remainingBytes / uploadSpeed; 
+  
+          const progressPercentage = Math.round(
+            (uploadedBytes / totalBytes) * 100
+          );
+          setUploadProgress(progressPercentage);
+          setTimeRemaining(Math.round(timeRemaining));
+          setUploadSpeed((uploadSpeed / 1024 / 1024).toFixed(2));
+
         });
 
         const result = await upload.done();
