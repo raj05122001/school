@@ -96,7 +96,7 @@ const LecturePage = ({ params }) => {
         <Grid item xs={12} md={8} lg={8}>
           <Box sx={{ display: "flex", flexDirection: "column", gap: 2 }}>
           {lectureData?.video_src === "PDF" ? (
-              <AudioPlayer audio={`https://dev-vidyaai.ultimeet.io${lectureData?.audio}`} id={id} duration={lectureData?.duration}/>
+              <AudioPlayer audio={`${process.env.NEXT_PUBLIC_URL}${lectureData?.audio}`} id={id} duration={lectureData?.duration}/>
             ) : (
               <Box sx={{ maxHeight: "500px", width: "100%", height: 500 }}>
                 {videoPlayer}

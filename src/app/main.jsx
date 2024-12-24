@@ -17,7 +17,8 @@ import NewChatbot from "@/components/ChatBot/NewChatbot";
 export const AppContextProvider = createContext({});
 
 const Main = ({ children }) => {
-  const isTrialAccount=true
+  const isTrialAccount=process.env.NEXT_PUBLIC_iSTRIALACCOUNT==="true"? true : false
+
   const pathname = usePathname();
   const [open, setOpen] = useState(true);
   const [openRecordingDrawer, setOpenRecordingDrawer] = useState(false);
