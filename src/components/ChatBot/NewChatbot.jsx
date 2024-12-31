@@ -38,6 +38,7 @@ import Cookies from "js-cookie";
 import { usePathname } from "next/navigation";
 import { RiArrowDropDownLine } from "react-icons/ri";
 import TextWithMath from "@/commonComponents/TextWithMath/TextWithMath";
+import AssignmentTextFormat from "@/commonComponents/TextWithMath/AssignmentTextFormat";
 
 export default function NewChatbot({ suggestionInput, setIsOpenChatBot }) {
   const chatbotRef = useRef();
@@ -149,10 +150,10 @@ export default function NewChatbot({ suggestionInput, setIsOpenChatBot }) {
   }, [isLoading]);
 
   const fetchOldChats = async () => {
-          const response = await getChatbotHistory();
-      const data = response?.data?.data || [];
-      setOldChats(data);
-      };
+    const response = await getChatbotHistory();
+    const data = response?.data?.data || [];
+    setOldChats(data);
+  };
 
   useEffect(() => {
     fetchOldChats();
@@ -382,9 +383,15 @@ export default function NewChatbot({ suggestionInput, setIsOpenChatBot }) {
                               boxShadow: "0px 2px 4px rgba(0, 0, 0, 0.1)",
                             }}
                           >
-                            <Typography variant="body2" color="text.secondary">
+                            <Box
+                              sx={{
+                                minWidth: 300,
+                                width: 1.5*(dimensions.width/2),
+                                fontSize: "0.85rem"                              
+                              }}
+                            >
                               <TextWithMath text={data?.bot_response} />
-                            </Typography>
+                            </Box>
                           </AccordionDetails>
                         </Accordion>
                       ))}
@@ -464,7 +471,7 @@ export default function NewChatbot({ suggestionInput, setIsOpenChatBot }) {
                     color: "text.secondary",
                   }}
                 >
-                  <FaRobot size={50} style={{ marginBottom: '16px' }} />
+                  <FaRobot size={50} style={{ marginBottom: "16px" }} />
                   <Typography variant="h6">Ask me any question</Typography>
                 </Box>
               )}
