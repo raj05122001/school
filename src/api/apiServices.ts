@@ -27,9 +27,12 @@ export default class apiServices {
     return this.axiosInstance
       .post(`/api/v1/lecture/`, formData)
       .then((response) => {
+        toast.success("Lecture Created Successfully");
         return response;
       })
       .catch((error) => {
+        toast.error("Error creating lecture");
+        console.error(error);
         throw error;
       });
   };
@@ -38,9 +41,11 @@ export default class apiServices {
     return this.axiosInstance
       .patch(`/api/v1/lecture/${lectureId}/`, formData)
       .then((response) => {
+        toast.success("Lecture Updated Successfully");
         return response;
       })
       .catch((error) => {
+        toast.error("Error updating lecture");
         console.error(error);
         throw error;
       });

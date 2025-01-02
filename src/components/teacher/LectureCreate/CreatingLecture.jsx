@@ -47,7 +47,7 @@ const CreatingLecture = ({
   isEditMode = false,
 }) => {
   const { isDarkMode } = useThemeContext();
-
+  const [isLoading, setIsLoading] = useState(false)
   const [lectureSubject, setLectureSubject] = useState(null);
   const [subjectName, setSubjectName] = useState(null);
   const [lectureChapter, setLectureChapter] = useState(null);
@@ -68,6 +68,7 @@ const CreatingLecture = ({
   const [subjectOptions, setSubjectOptions] = useState([]);
   const [chapterOptions, setChapterOptions] = useState([]);
   const [topicOptions, setTopicOptions] = useState([]);
+
 
   const encodeURI = (value) => encodeURIComponent(value);
 
@@ -253,7 +254,7 @@ const CreatingLecture = ({
     if (file) {
       data.file = file;
     }
-
+    setIsLoading(true)
     try {
       if (isEditMode && lecture?.id) {
         // Call the updateLecture API when isEditMode is true
@@ -266,7 +267,6 @@ const CreatingLecture = ({
         }
       } else {
         // Call the createLecture API when not in edit mode
-
         const response = await createLecture(data);
 
         if (response.data.success) {
@@ -277,6 +277,8 @@ const CreatingLecture = ({
       }
     } catch (error) {
       console.error("Error creating lecture:", error);
+    } finally {
+      setIsLoading(false)
     }
   };
 
@@ -290,6 +292,11 @@ const CreatingLecture = ({
   };
 
   return (
+    isLoading ? (           
+      <Box className="overlay">
+        <Box className="loader"></Box>
+    </Box>        
+     ) :
     <Dialog
       open={open}
       onClose={handleClose}
@@ -297,7 +304,6 @@ const CreatingLecture = ({
       fullWidth
       sx={{
         "& .MuiDialogContent-root": {
-          // bgcolor: isDarkMode ? "#424242" : "white",
           color: isDarkMode ? "white" : "black",
           background: isDarkMode
             ? "linear-gradient(to top, #09203f 0%, #537895 100%)"
@@ -322,7 +328,7 @@ const CreatingLecture = ({
         },
       }}
     >
-      <DialogTitle
+     <DialogTitle
         sx={{
           bgcolor: isDarkMode ? "#424242" : "white",
           color: isDarkMode ? "white" : "black",
@@ -581,6 +587,7 @@ const CreatingLecture = ({
           </Grid>
         </form>
       </DialogContent>
+      
       <DialogActions
         sx={{
           background: isDarkMode
