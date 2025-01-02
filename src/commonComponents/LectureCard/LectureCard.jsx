@@ -36,6 +36,7 @@ import { useRouter } from "next/navigation";
 import { MdFileUpload, MdRemoveCircleOutline } from "react-icons/md";
 import { uploadS3Video } from "@/api/apiHelper";
 import { IoIosCloseCircle } from "react-icons/io";
+import toast from "react-hot-toast";
 
 const day = [
   "Sunday",
@@ -296,11 +297,12 @@ const LectureCard = ({ lecture, getAllLecture = () => {} }) => {
 export default LectureCard;
 
 export function BasicModal({ open, setOpen, id, getAllLecture = () => {} }) {
-  const {isTrialAccount}=useContext(AppContextProvider)
+  const { isTrialAccount } = useContext(AppContextProvider);
   const inputVideoRef = useRef(null);
   const [files, setFiles] = useState([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
 
   const handleClose = (event) => {
     event.stopPropagation();
@@ -322,12 +324,12 @@ export function BasicModal({ open, setOpen, id, getAllLecture = () => {} }) {
   };
 
   const handleFileChange = (e) => {
-    if(isTrialAccount){
+    if (isTrialAccount) {
       alert("You don't have access. This is a trial account.");
-    } else{
+    } else {
       setError("");
       const selectedFiles = Array.from(e.target.files);
-      setFiles(prev => [...prev, ...selectedFiles]);
+      setFiles((prev) => [...prev, ...selectedFiles]);
     }
   };
 
@@ -336,7 +338,7 @@ export function BasicModal({ open, setOpen, id, getAllLecture = () => {} }) {
       setError("No file selected. Please choose a Files to upload.");
       return;
     }
-
+    setIsLoading(true);
     try {
       setLoading(true);
       const formData = new FormData();
@@ -345,18 +347,25 @@ export function BasicModal({ open, setOpen, id, getAllLecture = () => {} }) {
         formData.append("pdf", file);
       });
       await uploadS3Video(id, formData);
+      toast.success("Lecture has been uploaded")
       resetStates();
       getAllLecture();
       setOpen(false);
     } catch (error) {
+      toast.error("Failed to create lecture")
       console.error(error);
-      setError("Failed to upload files. Please try again.");
+      setError("Failed to upload files");
     } finally {
       setLoading(false);
+      setIsLoading(false);
     }
   };
 
-  return (
+  return isLoading ? (
+    <Box className="overlay">
+      <Box className="loader"></Box>
+    </Box>
+  ) : (
     <Dialog
       open={open}
       onClose={handleClose}
