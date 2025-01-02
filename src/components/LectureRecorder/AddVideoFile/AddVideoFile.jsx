@@ -30,7 +30,7 @@ const AddVideoFile = ({
   selectedOption,
   setSelectedOption,
 }) => {
-  const {isTrialAccount}=useContext(AppContextProvider)
+  const { isTrialAccount } = useContext(AppContextProvider);
   const inputVideoRef = useRef(null);
   const inputZipRef = useRef(null);
   const [zipFile, setZipFile] = useState(null);
@@ -108,7 +108,11 @@ const AddVideoFile = ({
 
   return (
     <Box>
-      <Dialog open={open} onClose={handleClose} PaperProps={{ style: { borderRadius: '16px' } }}>
+      <Dialog
+        open={open}
+        onClose={handleClose}
+        PaperProps={{ style: { borderRadius: "16px" } }}
+      >
         <Card
           sx={{
             boxShadow: "0px 4px 12px rgba(0, 0, 0, 0.1)",
@@ -118,11 +122,17 @@ const AddVideoFile = ({
           }}
         >
           <CardContent>
-            <Typography variant="h5" color="primary" fontWeight="bold" gutterBottom>
+            <Typography
+              variant="h5"
+              color="primary"
+              fontWeight="bold"
+              gutterBottom
+            >
               Add Video or ZIP File
             </Typography>
             <Typography variant="body2" color="textSecondary" gutterBottom>
-              Upload video files directly or a ZIP file containing video and audio.
+              Upload video files directly or a ZIP file containing video and
+              audio.
             </Typography>
             <Typography variant="subtitle1" fontWeight="bold">
               Select Video Source:
@@ -136,9 +146,17 @@ const AddVideoFile = ({
                   handleChangeValue();
                 }}
               >
-                <FormControlLabel value="vidya" control={<Radio />} label="Vidya AI ZIP" />
+                <FormControlLabel
+                  value="vidya"
+                  control={<Radio />}
+                  label="Vidya AI ZIP"
+                />
                 {/* <FormControlLabel value="youtube" control={<Radio />} label="YouTube Link" /> */}
-                <FormControlLabel value="other" control={<Radio />} label="Video Upload" />
+                <FormControlLabel
+                  value="other"
+                  control={<Radio />}
+                  label="Video Upload"
+                />
               </RadioGroup>
             </FormControl>
 
@@ -189,7 +207,13 @@ const AddVideoFile = ({
                 </label>
                 {videoAttachment?.length > 0 && (
                   <Box sx={{ marginTop: 2 }}>
-                    <Box sx={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+                    <Box
+                      sx={{
+                        display: "flex",
+                        justifyContent: "space-between",
+                        alignItems: "center",
+                      }}
+                    >
                       <Typography variant="body2">
                         {videoAttachment[0]?.name.length > 30
                           ? `${videoAttachment[0]?.name.slice(0, 30)}...`
@@ -199,7 +223,11 @@ const AddVideoFile = ({
                         size={26}
                         color="red"
                         onClick={removeVideoFile}
-                        style={{ cursor: "pointer", transition: "all 0.3s ease", "&:hover": { transform: "scale(1.2)" } }}
+                        style={{
+                          cursor: "pointer",
+                          transition: "all 0.3s ease",
+                          "&:hover": { transform: "scale(1.2)" },
+                        }}
                       />
                     </Box>
                   </Box>
@@ -235,15 +263,27 @@ const AddVideoFile = ({
                 </label>
                 {zipFile && (
                   <Box sx={{ marginTop: 2 }}>
-                    <Box sx={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+                    <Box
+                      sx={{
+                        display: "flex",
+                        justifyContent: "space-between",
+                        alignItems: "center",
+                      }}
+                    >
                       <Typography variant="body2">
-                        {zipFile?.name.length > 30 ? `${zipFile?.name.slice(0, 30)}...` : zipFile?.name}
+                        {zipFile?.name.length > 30
+                          ? `${zipFile?.name.slice(0, 30)}...`
+                          : zipFile?.name}
                       </Typography>
                       <IoIosCloseCircle
                         size={26}
                         color="red"
                         onClick={removeZipFile}
-                        style={{ cursor: "pointer", transition: "all 0.3s ease", "&:hover": { transform: "scale(1.2)" } }}
+                        style={{
+                          cursor: "pointer",
+                          transition: "all 0.3s ease",
+                          "&:hover": { transform: "scale(1.2)" },
+                        }}
                       />
                     </Box>
                   </Box>
@@ -275,11 +315,15 @@ const AddVideoFile = ({
             display: "flex",
             alignItems: "center",
           }}
-          onClick={()=>{if(isTrialAccount){
-            alert("You don't have access. This is a trial account.");
-          } else{
-            !videoAttachment?.length ? handleOpen : null
-          }}}
+          onClick={(event) => {
+            if (isTrialAccount) {
+              alert("You don't have access. This is a trial account.");
+            } else {
+              if (!videoAttachment?.length) {
+                handleOpen(event);
+              }
+            }
+          }}
         >
           {videoAttachment?.length > 0 ? (
             <Box
