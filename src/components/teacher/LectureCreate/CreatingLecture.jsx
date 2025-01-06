@@ -431,7 +431,7 @@ const CreatingLecture = ({
                 value={lectureDescription}
                 onChange={(e) => setLectureDescription(e.target.value)}
                 InputLabelProps={{
-                  style: { color: isDarkMode ? "#d7e4fc" : "" },
+                  style: { color: isDarkMode ? "#191970" : "" },
                 }}
                 multiline
                 rows={3}

@@ -20,6 +20,7 @@ import { FaRegFileExcel } from "react-icons/fa";
 export default function CreateLectureSchedule({ open, setOpen }) {
   const inputRef = useRef(null);
   const { isDarkMode, primaryColor } = useThemeContext();
+  const [loading, setLoading] = useState(false)
 
   const {
     register,
@@ -36,11 +37,14 @@ export default function CreateLectureSchedule({ open, setOpen }) {
     }
     const formData = new FormData();
     formData.append("File", addFile);
+    setLoading(true)
     try {
       await uploadExcelFile(formData);
       setOpen(false);
     } catch (error) {
       console.error(error);
+    }finally {
+      setLoading(false)
     }
   };
 
@@ -50,6 +54,11 @@ export default function CreateLectureSchedule({ open, setOpen }) {
   };
 
   return (
+    loading ? (           
+          <Box className="overlay">
+            <Box className="loader"></Box>
+        </Box>        
+         ) :
     <Fragment>
       <Dialog open={open} onClose={() => setOpen(false)} fullWidth maxWidth="xs"
       sx={{
