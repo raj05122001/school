@@ -43,7 +43,7 @@ const CustomAutocomplete = ({ options, onSelect, onChange, label, value, disable
           variant="outlined"
           onChange={(event) => handleChange(event.target.value)}
           InputLabelProps={{
-            style: { color: isDarkMode ? "#d7e4fc" : "" },
+            style: { color: isDarkMode ? "#191970" : "" },
           }}
           InputProps={{
             ...params.InputProps,
