@@ -44,6 +44,7 @@ const LectureScheduleTable = () => {
       setLoading(true); // Start loading
       if(userDetails?.role==="TEACHER"){
         const response = await getMyLectures("UPCOMMING");
+        console.log("Response for table", response)
         setLectureData(response?.data?.data?.lecture_data);
       }else{
         const response = await getLectureTracking("UPCOMMING");
@@ -68,6 +69,7 @@ const LectureScheduleTable = () => {
   };
 
   const handleChange = (event, value) => {
+    console.log("Value", value)
     router.push(`/teacher/lecture-schedule?activePage=${value}`);
   };
 
@@ -87,8 +89,10 @@ const LectureScheduleTable = () => {
     paginationSelectedColor: "#ffffff",
   };
 
+  console.log("Lecture Data", lectureData.data)
+
   return (
-    <Box sx={{ p: 2 }} height="100vh">
+    <Box sx={{ p: 2, height:"100%", width:"100%" }} >
       {/* Show skeleton loader when loading */}
       {loading ? (
         <TableContainer component={Paper} className="blur_effect_card">
