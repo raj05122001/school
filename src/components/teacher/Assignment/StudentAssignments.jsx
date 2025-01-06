@@ -26,13 +26,13 @@ const StudentAssignments = ({ listData }) => {
   };
   return (
     <Box mt={4} px={2}>
-      <Typography variant="h6" color={isDarkMode ? "#f1f1f1" : "#000"} mb={4} fontFamily={"monospace"} fontWeight={"bold"} fontSize={"24px"}>
+      <Typography variant="h6" color={isDarkMode ? "#f1f1f1" : "#000"} mb={4} fontFamily={"monospace"} fontWeight={""} fontSize={"24px"}>
         Students Assignment Submission Details -
       </Typography>
-      <Grid container spacing={3}>
+      <Grid container spacing={3} sx={{display:"flex"}}>
         {listData?.data?.length > 0 ? (
           listData?.data?.map((assignment, index) => (
-            <Grid item xs={12} key={index}>
+            <Grid item xs={12} sm={6} key={index} sx={{ display: "flex", justifyContent: "center", alignItems:"center" }}>
               <Card
                 sx={{
                   backgroundColor: "rgba(255, 255, 255, 0.2)",
@@ -42,6 +42,7 @@ const StudentAssignments = ({ listData }) => {
                     ? "0px 6px 15px rgba(0, 0, 0, 0.4)"
                     : "0px 4px 10px #ADD8E6",
                   padding: "16px",
+                  width:"95%",
                 }}
                 onClick={() => handleRoute(assignment?.id)}
               >
