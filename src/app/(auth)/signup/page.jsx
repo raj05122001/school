@@ -60,6 +60,7 @@ const SignupPage = () => {
   const [departmentOptions, setDepartmentOptions] = useState([]);
   const [openDialog, setOpenDialog] = useState(false); // For Create Department Dialog
   const [newDepartment, setNewDepartment] = useState(""); // Input for new department
+  const [showDept, setShowDept] = useState(true);
   const isMobile = useMediaQuery("(max-width:600px)");
 
   const isTeacher = roleParam === "TEACHER";
@@ -500,49 +501,44 @@ const SignupPage = () => {
               {isTeacher ? (
                 // Department Autocomplete for Teachers
                 <>
-                  <Controller
-                    name="department"
-                    control={control}
-                    render={({
-                      field: { onChange, value },
-                      fieldState: { error },
-                    }) => (
-                      <Autocomplete
-                        options={departmentOptions}
-                        getOptionLabel={(option) =>
-                          typeof option === "string"
-                            ? option
-                            : option.name || option.value || ""
-                        }
-                        value={value}
-                        onChange={(event, newValue) => {
-                          onChange(newValue);
-                        }}
-                        renderInput={(params) => (
-                          <TextField
-                            {...params}
-                            label="Department"
-                            required
-                            margin="normal"
-                            error={!!error}
-                            helperText={error ? error.message : null}
-                            InputLabelProps={{
-                              shrink: true,
-                              style: { color: "#555" },
-                            }}
-                          />
-                        )}
-                      />
-                    )}
-                  />
-                  <Button
-                    variant="outlined"
-                    color="primary"
-                    onClick={() => setOpenDialog(!openDialog)} // Toggle TextField visibility
-                    sx={{ mt: 1 }}
-                  >
-                    {openDialog ? "Cancel" : "Create Department"}
-                  </Button>
+                  {!openDialog && (
+                    <Controller
+                      name="department"
+                      control={control}
+                      render={({
+                        field: { onChange, value },
+                        fieldState: { error },
+                      }) => (
+                        <Autocomplete
+                          options={departmentOptions}
+                          getOptionLabel={(option) =>
+                            typeof option === "string"
+                              ? option
+                              : option.name || option.value || ""
+                          }
+                          value={value}
+                          onChange={(event, newValue) => {
+                            onChange(newValue);
+                          }}
+                          renderInput={(params) => (
+                            <TextField
+                              {...params}
+                              label="Department"
+                              required
+                              margin="normal"
+                              error={!!error}
+                              helperText={error ? error.message : null}
+                              InputLabelProps={{
+                                shrink: true,
+                                style: { color: "#555" },
+                              }}
+                            />
+                          )}
+                        />
+                      )}
+                    />
+                  )}
+
                   {openDialog && (
                     <Box sx={{ mt: 2 }}>
                       <TextField
@@ -556,15 +552,35 @@ const SignupPage = () => {
                           style: { color: "#555" },
                         }}
                       />
-                      <Button
-                        variant="contained"
-                        color="primary"
-                        onClick={handleCreateDepartment}
-                        sx={{ mt: 1 }}
-                      >
-                        Submit
-                      </Button>
+                      <Box sx={{display:"flex", gap: 2}}>
+                        <Button
+                          variant="contained"
+                          color="primary"
+                          onClick={handleCreateDepartment}
+                          sx={{ mt: 1 }}
+                        >
+                          Submit
+                        </Button>
+                        <Button
+                          variant="outlined"
+                          color="secondary"
+                          onClick={() => setOpenDialog(false)} // Close dialog without submitting
+                          sx={{ mt: 1 }}
+                        >
+                          Cancel
+                        </Button>
+                      </Box>
                     </Box>
+                  )}
+                  {!openDialog && (
+                    <Button
+                      variant="outlined"
+                      color="primary"
+                      onClick={() => setOpenDialog(!openDialog)} // Toggle TextField visibility
+                      sx={{ mt: 2 }}
+                    >
+                      Create Department
+                    </Button>
                   )}
                 </>
               ) : (

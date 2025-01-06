@@ -39,11 +39,11 @@ const LectureScheduleTable = () => {
   const [loading, setLoading] = useState(true); // Loading state
   const activePage = parseInt(searchParams.get("activePage")) || 1;
 
-  const fetchLectureData = async () => {
+  const fetchLectureData = async (page = 1) => {
     try {
       setLoading(true); // Start loading
       if(userDetails?.role==="TEACHER"){
-        const response = await getMyLectures("UPCOMMING");
+        const response = await getMyLectures("UPCOMMING", "", "", page);
         console.log("Response for table", response)
         setLectureData(response?.data?.data?.lecture_data);
       }else{
@@ -58,8 +58,8 @@ const LectureScheduleTable = () => {
   };
   
   useEffect(() => {
-    fetchLectureData();
-  }, []);
+    fetchLectureData(activePage);
+  }, [activePage]);
 
   const formatTime = (time) => {
     const [hours, minutes] = time?.split(":");
