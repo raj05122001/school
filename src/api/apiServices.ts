@@ -436,7 +436,7 @@ export default class apiServices {
     return this.axiosInstance
       .post(`api/v1/dynamic_notes/?lecture_id=${lectureId}`, formData)
       .then((response) => {
-        toast.success("Updated Notes Successfully", {
+        toast.success("Notes updated Successfully", {
           id: toastInstance,
           duration: Constants.toastTimer,
         });
