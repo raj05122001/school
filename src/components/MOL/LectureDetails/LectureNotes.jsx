@@ -84,9 +84,8 @@ const LectureNotes = ({
             note?.id === noteId ? { ...note, notes: updatedNoteData } : note
           )
         );
-        toast.success("Notes updated successfully");
       } else {
-        throw new Error("Note data not found for the specified ID");
+        console.log("Error generating notes")
       }
     } catch (error) {
       toast.error("Failed to update notes");
