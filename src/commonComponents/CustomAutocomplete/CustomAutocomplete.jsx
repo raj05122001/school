@@ -55,7 +55,7 @@ const CustomAutocomplete = ({ options, onSelect, onChange, label, value, disable
             ...params.InputProps,
             type: "search",
             sx: {
-              color:"white",
+              color: isDarkMode ? "#d7e4fc" : "#000",
               backdropFilter: "blur(10px)",
               backgroundColor: isDarkMode ? "":"rgba(255, 255, 255, 0.5)",
               "& .MuiOutlinedInput-notchedOutline": {},
