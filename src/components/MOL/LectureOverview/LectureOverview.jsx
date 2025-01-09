@@ -5,6 +5,10 @@ import TextWithMath from "@/commonComponents/TextWithMath/TextWithMath";
 import SummaryComponent from "./SummaryComponent";
 import HighlightsComponent from "./HighlightsComponent";
 import { useThemeContext } from "@/hooks/ThemeContext";
+import Cookies from "js-cookie";
+import { decodeToken } from "react-jwt";
+
+const window = global?.window || {};
 
 const LectureOverview = ({
   lectureId,
@@ -18,6 +22,14 @@ const LectureOverview = ({
   const [summary, setSummary] = useState({});
   const [summaryId, setSummaryId] = useState("");
   const { isDarkMode } = useThemeContext();
+  const [userDetails, setUserDetails] = useState(null);
+
+  useEffect(() => {
+    if (typeof window !== "undefined") {
+      const token = Cookies.get("ACCESS_TOKEN");
+      setUserDetails(token ? decodeToken(token) : {});
+    }
+  }, []);
 
   const handleChange = (event, newValue) => {
     setValue(newValue);
@@ -70,11 +82,7 @@ const LectureOverview = ({
             color: isDarkMode ? "#F0EAD6" : "#36454F",
           }}
         >
-          (
-          <i>
-            This is an AI generated content. The teacher should verify it.
-          </i>
-          )
+        {userDetails?.role==="STUDENT" ? <i>(This is an AI generated content.)</i> : <i>(This is an AI generated content. The teacher should verify it.)</i> }
         </span>
       </Typography>
 
@@ -108,7 +116,7 @@ const LectureOverview = ({
               backgroundColor: "#e0e0e0",
               boxShadow: "0px 2px 8px rgba(0, 0, 0, 0.1)",
               borderRadius: "10px",
-              color:"black"
+              color: "black",
             },
             "&.Mui-selected": {
               backgroundColor: "#fff",
