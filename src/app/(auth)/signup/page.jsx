@@ -60,6 +60,7 @@ const SignupPage = () => {
   const [departmentOptions, setDepartmentOptions] = useState([]);
   const [openDialog, setOpenDialog] = useState(false); // For Create Department Dialog
   const [newDepartment, setNewDepartment] = useState(""); // Input for new department
+  const [showDept, setShowDept] = useState(true);
   const isMobile = useMediaQuery("(max-width:600px)");
 
   const isTeacher = roleParam === "TEACHER";
@@ -96,6 +97,7 @@ const SignupPage = () => {
     handleSubmit,
     setError,
     clearErrors,
+    setValue,
     formState: { errors },
   } = useForm({
     defaultValues: {
@@ -135,7 +137,7 @@ const SignupPage = () => {
       toast.error("Department name cannot be empty.");
       return;
     }
-    // Check if department already exists
+
     const departmentExists = departmentOptions.some(
       (dept) => dept.name.toLowerCase() === newDepartment.trim().toLowerCase()
     );
@@ -144,14 +146,16 @@ const SignupPage = () => {
       toast.error(`${newDepartment} department already exists.`);
       return;
     }
+
     try {
-      const response = await postDepartment({ name: newDepartment });
+      const response = await postDepartment({ name: newDepartment.trim() });
       if (response?.data?.success) {
         const newDept = response.data.data; // Assuming API returns the created department object
         setDepartmentOptions((prev) => [...prev, newDept]);
         toast.success("Department created successfully!");
-        setOpenDialog(false);
-        setNewDepartment(""); // Reset input
+        setNewDepartment("");
+        // Update the form field with the new department's ID
+        setValue("department", newDept.id);
       } else {
         toast.error("Failed to create department.");
       }
@@ -500,6 +504,9 @@ const SignupPage = () => {
               {isTeacher ? (
                 // Department Autocomplete for Teachers
                 <>
+                  
+                  <span style={{display:"flex",}}>
+                  <span style={{flexBasis: "80%", flexGrow: 0}}>
                   <Controller
                     name="department"
                     control={control}
@@ -508,15 +515,33 @@ const SignupPage = () => {
                       fieldState: { error },
                     }) => (
                       <Autocomplete
+                        freeSolo
                         options={departmentOptions}
                         getOptionLabel={(option) =>
                           typeof option === "string"
                             ? option
-                            : option.name || option.value || ""
+                            : option.name || ""
                         }
-                        value={value}
+                        value={
+                          departmentOptions.find((dept) => dept.id === value) ||
+                          null
+                        }
                         onChange={(event, newValue) => {
-                          onChange(newValue);
+                          if (typeof newValue === "string") {
+                            // For free solo input, set the name as value
+                            onChange(null); // Reset the value to null since the ID isn't available yet
+                            setNewDepartment(newValue); // Update state for creating a new department
+                          } else if (newValue && newValue.id) {
+                            // For selected department, set the ID
+                            onChange(newValue.id);
+                            setNewDepartment(""); // Clear new department since it's an existing one
+                          } else {
+                            onChange(null);
+                            setNewDepartment("");
+                          }
+                        }}
+                        onInputChange={(event, newInputValue) => {
+                          setNewDepartment(newInputValue); // Update new department input
                         }}
                         renderInput={(params) => (
                           <TextField
@@ -526,46 +551,26 @@ const SignupPage = () => {
                             margin="normal"
                             error={!!error}
                             helperText={error ? error.message : null}
-                            InputLabelProps={{
-                              shrink: true,
-                              style: { color: "#555" },
-                            }}
                           />
                         )}
                       />
                     )}
                   />
-                  <Button
-                    variant="outlined"
-                    color="primary"
-                    onClick={() => setOpenDialog(!openDialog)} // Toggle TextField visibility
-                    sx={{ mt: 1 }}
-                  >
-                    {openDialog ? "Cancel" : "Create Department"}
-                  </Button>
-                  {openDialog && (
-                    <Box sx={{ mt: 2 }}>
-                      <TextField
-                        label="New Department Name"
-                        fullWidth
-                        value={newDepartment}
-                        onChange={(e) => setNewDepartment(e.target.value)}
-                        margin="normal"
-                        InputLabelProps={{
-                          shrink: true,
-                          style: { color: "#555" },
-                        }}
-                      />
-                      <Button
-                        variant="contained"
-                        color="primary"
-                        onClick={handleCreateDepartment}
-                        sx={{ mt: 1 }}
-                      >
-                        Submit
-                      </Button>
-                    </Box>
-                  )}
+                  </span>
+                  
+                    <Button
+                      variant="contained"
+                      color="primary"
+                      onClick={handleCreateDepartment}
+                      sx={{flexBasis: "20%",flexGrow:0, m:2, p:2}}
+                    >
+                      Create
+                    </Button>
+                  </span>
+                  <span style={{ fontStyle: "italic", fontSize: "12px" }}>
+                     * Please click on Create button if it is not
+                      present in the list.
+                  </span>
                 </>
               ) : (
                 // Class Field for Students

@@ -153,6 +153,7 @@ const Page = () => {
           justifyContent: "space-between",
           alignItems: "center",
           mt: 6,
+          p:2
         }}
       >
         <Typography
@@ -163,6 +164,7 @@ const Page = () => {
             display: "flex",
             justifyContent: "center",
             alignItems: "center",
+            mt:4
           }}
         >
           Class Proficiency

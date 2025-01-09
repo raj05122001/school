@@ -52,7 +52,9 @@ const CalendarComponent = ({ maxHeight = "585px" }) => {
           currentMonth[1],
           currentMonth[0]
         );
-        apiResponse = response?.data?.data?.data;
+        console.log("Response",response)
+        apiResponse = response?.data?.data;
+        console.log("API Response",apiResponse)
       } else {
         const response = await getAllUpcommingByDate(
           currentMonth[1],
@@ -120,9 +122,10 @@ const CalendarComponent = ({ maxHeight = "585px" }) => {
         plugins={[dayGridPlugin, timeGridPlugin, interactionPlugin]}
         initialView="dayGridMonth"
         headerToolbar={{
-          left: "prev,next today",
+          left: "prev",
           center: "title",
-          right: "dayGridMonth,timeGridWeek,timeGridDay",
+          right: "next"
+          // right: "dayGridMonth,timeGridWeek,timeGridDay",
         }}
         events={calendarData}
         eventContent={eventContent}
@@ -131,6 +134,13 @@ const CalendarComponent = ({ maxHeight = "585px" }) => {
           const [month, year] = viewTitle?.split(" ");
           const monthNumber = monthStringToNumber(month);
           setCurrentMonth([monthNumber.toString(), year]);
+
+          // const startDate = new Date(dateInfo.start); // Start date of the current view
+          // const month = (startDate.getMonth() + 1).toString(); // Convert to 1-indexed month
+          // const year = startDate.getFullYear().toString();
+
+          // // Update the state with the start date's month and year
+          // setCurrentMonth([month, year]);
         }}
       />
     </div>

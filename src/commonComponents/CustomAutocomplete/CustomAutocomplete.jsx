@@ -44,13 +44,20 @@ const CustomAutocomplete = ({ options, onSelect, onChange, label, value, disable
           onChange={(event) => handleChange(event.target.value)}
           InputLabelProps={{
             style: { color: isDarkMode ? "#d7e4fc" : "" },
+            sx: {
+              "&.Mui-focused": {
+                fontSize: isDarkMode && "1.5rem", // Adjust font size when focused
+                color: isDarkMode ? "#d7e4fc" : "#000", // Adjust color if needed
+              },
+            },
           }}
           InputProps={{
             ...params.InputProps,
             type: "search",
             sx: {
+              color: isDarkMode ? "#d7e4fc" : "#000",
               backdropFilter: "blur(10px)",
-              backgroundColor: "rgba(255, 255, 255, 0.5)",
+              backgroundColor: isDarkMode ? "":"rgba(255, 255, 255, 0.5)",
               "& .MuiOutlinedInput-notchedOutline": {},
             },
           }}

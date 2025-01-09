@@ -117,26 +117,30 @@ const CoursePlaylist = ({ params }) => {
   return (
     <Box
       sx={{
-        padding: 4,
+        padding: 1,
         color: "#fff",
         minHeight: "100vh",
+        background:isDarkMode ? "" : "linear-gradient(to top, #dfe9f3 0%, white 100%)"
       }}
     >
+    
       <Box
-        sx={{ display: "flex", flexDirection: "row", gap: 2, height: "100%" }}
+        sx={{ display: "flex", flexDirection: "column", gap: 2, height: "100%", justifyContent:"center", alignItems:"center" }}
       >
         {/* Main Course Card */}
         <Card
           sx={{
-            width: 300,
+            marginTop:4,
+            width: "100%",
+            display:"flex",
             // backgroundColor: "rgba(255, 255, 255, 0.2)",
             color: isDarkMode ? "#f1f1f1" : "#000", // Text color based on theme
-            height: "100%",
+            height: "70%",
             borderRadius: "16px",
             fontFamily: varelaRound,
             background: isDarkMode
               ? "rgba(255, 255, 255, 0.2)"
-              : "linear-gradient(130deg, white 55%, #6495ED 75%)",
+              : "linear-gradient(to top, #f3e7e9 0%, #e3eeff 99%, #e3eeff 100%)",
           }}
         >
           <CardMedia
@@ -146,15 +150,16 @@ const CoursePlaylist = ({ params }) => {
             src={`https://d3515ggloh2j4b.cloudfront.net/videos/${id}.mp4`}
             //   controls={isHovered}
             sx={{
-              width: "100%",
-              height: "auto",
-              maxHeight: 230,
-              borderRadius: "16px 16px 0 0",
+              width: "20%",
+              height: "100%",
+              
+             
               backdropFilter: "blur(10px)",
               backgroundColor: "black",
             }}
           />
-          <CardContent>
+          <CardContent sx={{width:"100%"}}>
+          <Box sx={{ display: "flex", alignItems: "center", gap: 3 ,justifyContent:'space-between', width:"100%"}}>
             <Typography
               variant="h5"
               fontWeight="bold"
@@ -162,8 +167,47 @@ const CoursePlaylist = ({ params }) => {
               fontFamily={varelaRound}
             >
               <MdOutlineTopic /> {listData?.lecture?.title}
+              <hr />
             </Typography>
-            <hr />
+
+           <Box sx={{ display:"flex", justifyContent:"flex-end"}}>  
+           <TextField
+              id="global-search"
+              variant="outlined"
+              value={decodeURIComponent(globalSearch)}
+              placeholder="Global Search"
+              onChange={(e) =>
+                setGlobalSearch(encodeURIComponent(e.target.value))
+              }
+              InputProps={{
+                endAdornment: searchQuery && (
+                  <InputAdornment position="end">
+                    <IconButton
+                      onClick={() => {
+                        setGlobalSearch("");
+                      }}
+                    >
+                      <FaTimes size={18} />
+                    </IconButton>
+                  </InputAdornment>
+                ),
+                sx: {
+                  ...currentStyles,
+                  "& .MuiOutlinedInput-notchedOutline": { border: "none" },
+                  height:40
+                },
+              }}
+              sx={{
+                boxShadow: currentStyles.boxShadow,
+                borderRadius: 1,
+                width: "200px",
+              }}
+            />
+            <DarkMode />
+            <UserImage width={40} height={40} />
+           </Box> 
+
+          </Box>
             <Typography variant="subtitle1" marginTop={4}>
               <BsXDiamond /> <strong>Class:</strong>{" "}
               {listData?.lecture?.lecture_class?.name || "N/A"}
@@ -189,7 +233,7 @@ const CoursePlaylist = ({ params }) => {
         </Card>
 
         {/* Video List */}
-        <Box sx={{ flex: 1 }}>
+        <Box sx={{ flex: 1, width:"100%" }}>
           {/* <Box
             sx={{
               display: "flex",
@@ -243,42 +287,7 @@ const CoursePlaylist = ({ params }) => {
               <Tab label="Not Checked" />
             </Tabs>
           </Box> */}
-          <Box sx={{ display: "flex", alignItems: "center", gap: 3 ,justifyContent:'flex-end'}}>
-            <TextField
-              id="global-search"
-              variant="outlined"
-              value={decodeURIComponent(globalSearch)}
-              placeholder="Global Search"
-              onChange={(e) =>
-                setGlobalSearch(encodeURIComponent(e.target.value))
-              }
-              InputProps={{
-                endAdornment: searchQuery && (
-                  <InputAdornment position="end">
-                    <IconButton
-                      onClick={() => {
-                        setGlobalSearch("");
-                      }}
-                    >
-                      <FaTimes size={18} />
-                    </IconButton>
-                  </InputAdornment>
-                ),
-                sx: {
-                  ...currentStyles,
-                  "& .MuiOutlinedInput-notchedOutline": { border: "none" },
-                  height:40
-                },
-              }}
-              sx={{
-                boxShadow: currentStyles.boxShadow,
-                borderRadius: 1,
-                width: "200px",
-              }}
-            />
-            <DarkMode />
-            <UserImage width={40} height={40} />
-          </Box>
+
           <StudentAssignments
             listData={listData?.students}
             isDarkMode={isDarkMode}

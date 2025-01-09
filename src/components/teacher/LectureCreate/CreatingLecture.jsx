@@ -306,8 +306,9 @@ const CreatingLecture = ({
         "& .MuiDialogContent-root": {
           color: isDarkMode ? "white" : "black",
           background: isDarkMode
-            ? "linear-gradient(to top, #09203f 0%, #537895 100%)"
+            ? "radial-gradient(circle at 1.8% 4.8%,rgba(17, 23, 58, 0.8) 0%, rgba(58, 85, 148, 0.8) 90%)"
             : "linear-gradient(109.6deg, rgb(223, 234, 247) 11.2%, rgb(244, 248, 252) 91.1%)",
+          backdropFilter: "blur(10px)",
           // backgroundImage: "url('/create_lectureBG.jpg')", // Add background image
           // backgroundSize: "cover", // Ensure the image covers the entire page
           // backgroundPosition: "center", // Center the image
@@ -431,7 +432,13 @@ const CreatingLecture = ({
                 value={lectureDescription}
                 onChange={(e) => setLectureDescription(e.target.value)}
                 InputLabelProps={{
-                  style: { color: isDarkMode ? "#d7e4fc" : "" },
+                  sx: {
+                    color: isDarkMode ? "#d7e4fc" : "" ,
+              "&.Mui-focused": {
+                fontSize: isDarkMode && "1.5rem", // Adjust font size when focused
+                color: isDarkMode ? "#d7e4fc" : "#000", // Adjust color if needed
+              },
+            },
                 }}
                 multiline
                 rows={3}
@@ -439,7 +446,7 @@ const CreatingLecture = ({
                 InputProps={{
                   sx: {
                     backdropFilter: "blur(10px)",
-                    backgroundColor: "rgba(255, 255, 255, 0.5)",
+                    color: isDarkMode ? "#d7e4fc" : "" ,
                     "& .MuiOutlinedInput-notchedOutline": {},
                   },
                 }}
@@ -451,7 +458,7 @@ const CreatingLecture = ({
               <FormControl fullWidth required>
                 <InputLabel
                   id="lecture-type-label"
-                  sx={{ color: isDarkMode ? "#d7e4fc" : "" }}
+                  sx={{ color: isDarkMode ? "#d7e4fc" : "", fontSize: isDarkMode && "20px"}}
                 >
                   Lecture Type
                 </InputLabel>
@@ -462,8 +469,12 @@ const CreatingLecture = ({
                   label="Lecture Type"
                   sx={{
                     backdropFilter: "blur(10px)",
-                    backgroundColor: "rgba(255, 255, 255, 0.5)",
+                    fontSize:"16px",
+                    backgroundColor: "",
                     color: isDarkMode ? "#d7e4fc" : "", // Option text color
+                    "&.Mui-focused": {
+                color: isDarkMode ? "#d7e4fc" : "#000", // Adjust color if needed
+              },
                     "&.Mui-focused .MuiOutlinedInput-notchedOutline": {
                       borderColor: isDarkMode ? "#d7e4fc" : "", // Border color when focused
                     },
@@ -495,7 +506,7 @@ const CreatingLecture = ({
                   onChange={(newDate) => setLectureDate(newDate)}
                   sx={{
                     backdropFilter: "blur(10px)",
-                    backgroundColor: "rgba(255, 255, 255, 0.5)",
+                    backgroundColor: "",
                     color: isDarkMode ? "#d7e4fc" : "", // Option text color
                     "&.Mui-focused .MuiOutlinedInput-notchedOutline": {
                       borderColor: isDarkMode ? "#d7e4fc" : "", // Border color when focused
@@ -504,6 +515,7 @@ const CreatingLecture = ({
                       color: isDarkMode ? "#d7e4fc" : "", // Dropdown arrow color
                     },
                     "& .MuiInputLabel-root": {
+                      fontSize: isDarkMode && "20px",
                       color: isDarkMode ? "#d7e4fc" : "", // Label color
                     },
                     "& .MuiInputBase-input": {
@@ -525,7 +537,7 @@ const CreatingLecture = ({
                   value={lectureStartTime}
                   sx={{
                     backdropFilter: "blur(10px)",
-                    backgroundColor: "rgba(255, 255, 255, 0.5)",
+                    backgroundColor: "",
                     color: isDarkMode ? "#d7e4fc" : "", // Option text color
                     "&.Mui-focused .MuiOutlinedInput-notchedOutline": {
                       borderColor: isDarkMode ? "#d7e4fc" : "", // Border color when focused
@@ -535,6 +547,7 @@ const CreatingLecture = ({
                     },
                     "& .MuiInputLabel-root": {
                       color: isDarkMode ? "#d7e4fc" : "", // Label color
+                      fontSize: isDarkMode && "20px"
                     },
                     "& .MuiInputBase-input": {
                       color: isDarkMode ? "#d7e4fc" : "", // Input text (date value) color
