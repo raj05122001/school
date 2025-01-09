@@ -16,6 +16,9 @@ const TextWithMath = ({ text}) => {
       ?.replace(/#/g, "")
       ?.replace(/`/g, "")
       ?.replace(/(?<!\d)\. /g, ".<br>")
+      ?.replace(/\\\\n/g, "<br>")
+      ?.replace(/\\\n/g, "<br>")
+      ?.replace(/\\n/g, "<br>")
       ?.replace(/\n/g, "<br>")
       ?.replace(/\\/g, "")
       ?.replace(/\\\\/g, "");
