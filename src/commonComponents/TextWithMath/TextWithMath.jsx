@@ -12,14 +12,18 @@ const TextWithMath = ({ text}) => {
   const replaceString = (data) => {
     return data
       ?.replace(/\*\*(.*?)\*\*/g, "<strong>$1</strong>")
-      ?.replace(/\\(.?)\\*/g, "<strong>$1</strong>")
       ?.replace(/#/g, "")
       ?.replace(/`/g, "")
       ?.replace(/(?<!\d)\. /g, ".<br>")
+      ?.replace(/\\\\n\\\\n/g, "<br>")
+      ?.replace(/\\\n\\\n/g, "<br>")
+      ?.replace(/\\n\\n/g,"<br>")
+      ?.replace(/\n/g, "<br>")
       ?.replace(/\\\\n/g, "<br>")
       ?.replace(/\\\n/g, "<br>")
       ?.replace(/\\n/g, "<br>")
       ?.replace(/\n/g, "<br>")
+      ?.replace(/\\(.?)\\*/g, "<strong>$1</strong>")
       ?.replace(/\\/g, "")
       ?.replace(/\\\\/g, "");
   };
