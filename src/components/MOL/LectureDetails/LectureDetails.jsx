@@ -12,6 +12,8 @@ import Cookies from "js-cookie";
 import StudentMCQ from "./StudentMCQ";
 import StudentMOLAssignment from "./StudentMOLAssignment";
 
+const window = global?.window || {};
+
 const LectureDetails = ({
   id,
   classID,
@@ -23,8 +25,14 @@ const LectureDetails = ({
   const [value, setValue] = useState(0);
   const [loading, setLoading] = useState(true);
   const [decisionId, setDecisionId] = useState(null);
+  const [userDetails, setUserDetails] = useState(null);
 
-  const userDetails = decodeToken(Cookies.get("ACCESS_TOKEN"));
+  useEffect(() => {
+    if (typeof window !== "undefined") {
+      const token = Cookies.get("ACCESS_TOKEN");
+      setUserDetails(token ? decodeToken(token) : {});
+    }
+  }, []);
 
   const class_ID = classID;
 
@@ -72,7 +80,12 @@ const LectureDetails = ({
   );
   const memoizedLectureAssignment = useMemo(
     () => (
-      <LectureAssignment id={id} isDarkMode={isDarkMode} class_ID={class_ID} isEdit={true} />
+      <LectureAssignment
+        id={id}
+        isDarkMode={isDarkMode}
+        class_ID={class_ID}
+        isEdit={true}
+      />
     ),
     [id, isDarkMode, class_ID]
   );
@@ -101,11 +114,7 @@ const LectureDetails = ({
             color: isDarkMode ? "#F0EAD6" : "#36454F",
           }}
         >
-          (
-          <i>
-            This is an AI generated content. The teacher should verify it.
-          </i>
-          )
+          {userDetails?.role==="STUDENT" ? <i>(This is an AI generated content.)</i> : <i>(This is an AI generated content. The teacher should verify it.)</i> }
         </span>
       </Typography>
 
@@ -141,7 +150,7 @@ const LectureDetails = ({
               backgroundColor: "#e0e0e0",
               boxShadow: "0px 2px 8px rgba(0, 0, 0, 0.1)",
               borderRadius: "10px",
-              color:'black'
+              color: "black",
             },
             "&.Mui-selected": {
               backgroundColor: "#fff",

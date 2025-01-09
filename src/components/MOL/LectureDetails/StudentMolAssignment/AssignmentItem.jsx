@@ -398,6 +398,7 @@ const AssignmentItem = ({
           sx={{
             mb: 4,
             display: "flex",
+            position: "relative",
             borderRadius: 4,
             flexDirection: "column",
             // backgroundColor:
@@ -415,14 +416,47 @@ const AssignmentItem = ({
             p: 2,
           }}
         >
+          <label
+            style={{
+              position: "absolute",
+              backgroundColor: "red",
+              color: "white",
+              top: "-10px",
+              right: "10px",
+              backgroundColor:
+                isSubmit === true
+                  ? "#38ba47"
+                  : shouldRenderAccordion
+                  ? "#494ee9"
+                  : "#ba5038",
+              color: "white",
+              width:"150px",
+              textAlign:"center",
+              height:"30px",
+              padding: "6px 6px",
+              borderRadius: "4px",
+              fontSize: "12px",
+            }}
+          >
+            {isSubmit === true
+              ? "Fully Submitted"
+              : shouldRenderAccordion
+              ? "Re-submit to Teacher"
+              : "Not Attempted"}
+          </label>
           <Box
             sx={{
               display: "flex",
               justifyContent: "space-between",
               flexDirection: "row",
+              marginBottom:"8px",
+              border: "1px solid #d3d3d3",
+              padding: 2,
+              borderRadius:"6px",
+              fontSize:"14px"
             }}
           >
-            <Box sx={{ display: "flex" }}>
+            <Box sx={{ display: "flex", }}>
               <Typography variant="body1">
                 {String.fromCharCode(65 + index)}.&nbsp;
               </Typography>
@@ -438,8 +472,19 @@ const AssignmentItem = ({
               </IconButton>
             </Box>
           </Box>
-          <Box sx={{ display: "flex", justifyContent: "space-between" }}>
-            <Typography variant="body2" sx={{ mt: 1, fontWeight: "bold" }}>
+          <hr />
+          <Box sx={{ display: "flex", justifyContent: "space-between", marginTop:"8px" }}>
+            <Typography
+              variant="body2"
+              sx={{
+                  color: isDarkMode ? "#fff" : "#000",
+                  backgroundColor: isDarkMode ? "#f0dcf5" : "#f0dcf5",
+                  border: "1px solid #9a44ad",
+                  borderRadius:"4px",
+                  p: 1,
+                  fontSize: "14px",
+                }}
+            >
               Total Marks: {assignment.assignment_mark}
             </Typography>
             <Box sx={{ display: "flex", gap: 2 }}>
@@ -597,11 +642,11 @@ const AssignmentItem = ({
                   alignItems="center"
                   justifyContent="center"
                 >
-                  <Typography variant="body1" color="textPrimary">
+                  <Typography variant="subtitle1" sx={{ color: "#10120f", padding:"4px", fontSize:"15px"}}>
                     {!selectedFile && !answerDescription
                       ? isSubmitted
                         ? "Please re-upload a file or enter a description to proceed for resubmitting."
-                        : "Please upload a file or enter a description to proceed."
+                        : "Please upload a file or enter a description to proceed. (AI-assessment will only be done for documents)"
                       : uploadProgress < 100
                       ? `Uploading... ${Math.round(uploadProgress)}%`
                       : "Upload complete! You can now submit your assignment."}
@@ -630,9 +675,11 @@ const AssignmentItem = ({
               value={answerDescription}
             />
           )}
-          {isSubmit==-false && <Typography sx={{fontStyle:"italic", fontSize:"14px", mb:1}}>
-            <i>*Please upload file(s) while giving description.</i>
-          </Typography>}
+          {isSubmit == -false && (
+            <Typography sx={{ fontStyle: "italic", fontSize: "14px", mb: 1 }}>
+              <i>*Please upload file(s) while giving description.</i>
+            </Typography>
+          )}
 
           {isSubmit === false && !selectedFile && (
             <Stack direction="row" spacing={1}>
@@ -787,6 +834,7 @@ const AssignmentItem = ({
       ) : (
         <Box
           sx={{
+            position: "relative",
             mb: 4,
             display: "flex",
             borderRadius: 4,
@@ -802,7 +850,34 @@ const AssignmentItem = ({
           }}
           onClick={() => setOpenAccordian(true)}
         >
-          <Box sx={{ display: "flex" }}>
+          <label
+            style={{
+              position: "absolute",
+              color: "white",
+              top: "-10px",
+              right: "10px",
+              backgroundColor:
+                isSubmit === true
+                  ? "#38ba47"
+                  : shouldRenderAccordion
+                  ? "#494ee9"
+                  : "#ba5038",
+              color: "white",
+              width:"150px",
+              textAlign:"center",
+              height:"30px",
+              padding: "6px 6px",
+              borderRadius: "4px",
+              fontSize: "12px",
+            }}
+          >
+            {isSubmit === true
+              ? "Fully Submitted"
+              : shouldRenderAccordion
+              ? "Re-submit to Teacher"
+              : "Not Attempted"}
+          </label>
+          <Box sx={{ display: "flex", padding: 2, fontSize:"14px", }}>
             <Typography variant="body1">
               {String.fromCharCode(65 + index)}.&nbsp;
             </Typography>
@@ -835,9 +910,9 @@ export const BorderLinearProgress = styled(LinearProgress)(({ theme }) => ({
   height: 36,
   borderRadius: 5,
   [`&.${linearProgressClasses.colorPrimary}`]: {
-    backgroundColor: theme.palette.grey[200],
+    backgroundColor:  "#cce7ff", // Light blue for light mode
     ...theme.applyStyles("dark", {
-      backgroundColor: theme.palette.grey[800],
+      backgroundColor: "#003366", // Navy blue for dark mode
     }),
   },
   [`& .${linearProgressClasses.bar}`]: {
