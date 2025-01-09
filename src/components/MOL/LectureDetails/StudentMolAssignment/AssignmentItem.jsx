@@ -642,7 +642,7 @@ const AssignmentItem = ({
                   alignItems="center"
                   justifyContent="center"
                 >
-                  <Typography variant="subtitle1" sx={{ color: "#10120f", textAlign: "center", padding:"4px", fontSize:"14px"}}>
+                  <Typography variant="subtitle1" sx={{ color: "#10120f", padding:"4px", fontSize:"15px"}}>
                     {!selectedFile && !answerDescription
                       ? isSubmitted
                         ? "Please re-upload a file or enter a description to proceed for resubmitting."
@@ -907,8 +907,8 @@ const AssignmentItem = ({
 export default AssignmentItem;
 
 export const BorderLinearProgress = styled(LinearProgress)(({ theme }) => ({
-  height: 64,
-  borderRadius: 8,
+  height: 36,
+  borderRadius: 5,
   [`&.${linearProgressClasses.colorPrimary}`]: {
     backgroundColor:  "#cce7ff", // Light blue for light mode
     ...theme.applyStyles("dark", {
