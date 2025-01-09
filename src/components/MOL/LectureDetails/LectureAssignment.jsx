@@ -339,6 +339,7 @@ const LectureAssignment = ({ id, isDarkMode, class_ID, isEdit }) => {
                       mb: 2,
                       mt: 2,
                       p: 2,
+                      position:"relative",
                       borderRadius: 4,
                       display: "flex",
                       flexDirection: "column",
@@ -347,12 +348,36 @@ const LectureAssignment = ({ id, isDarkMode, class_ID, isEdit }) => {
                         : "0px 2px 8px #a39f30",
                     }}
                   >
+                  <label
+                      style={{
+                        position: "absolute",
+                        color: "white",
+                        top: "-10px",
+                        right: "10px",
+                        backgroundColor:
+                        assignment?.is_assigned
+                        ? "#30a347"
+                        : "#a39f30",
+                        color: "white",
+                        width: "150px",
+                        textAlign: "center",
+                        height: "30px",
+                        padding: "6px 6px",
+                        borderRadius: "4px",
+                        fontSize: "12px",
+                      }}
+                    >
+                      {assignment?.is_assigned
+                        ? "Assigned"
+                        : "Not Assigned"}
+                    </label>
                     <Box
                       sx={{
                         display: "flex",
                         justifyContent: "space-between",
                         gap: 8,
                         alignItems: "center",
+                        padding: 2
                       }}
                     >
                       <Typography variant="h6">
@@ -404,7 +429,9 @@ const LectureAssignment = ({ id, isDarkMode, class_ID, isEdit }) => {
                             {assignment.assignment_attachment && (
                               <Button
                                 variant="contained"
-                                startIcon={<BsDownload style={{ padding: 1 }}/>}
+                                startIcon={
+                                  <BsDownload style={{ padding: 1 }} />
+                                }
                                 sx={{
                                   color: isDarkMode ? "#fff" : "#000",
                                   backgroundColor: isDarkMode
@@ -456,7 +483,11 @@ const LectureAssignment = ({ id, isDarkMode, class_ID, isEdit }) => {
                                 )
                               }
                             >
-                              <IoIosArrowUp style={{color: isDarkMode ? "#fff" : "#000000"}}/>
+                              <IoIosArrowUp
+                                style={{
+                                  color: isDarkMode ? "#fff" : "#000000",
+                                }}
+                              />
                             </IconButton>
                           </Box>
                         </Box>
@@ -466,7 +497,7 @@ const LectureAssignment = ({ id, isDarkMode, class_ID, isEdit }) => {
                       <Divider />
                     </Box>
 
-                    <Box sx={{ display: "flex" }}>
+                    <Box sx={{ display: "flex", padding: 2 }}>
                       {/* <Typography
                         variant="body1"
                         dangerouslySetInnerHTML={{
@@ -474,7 +505,9 @@ const LectureAssignment = ({ id, isDarkMode, class_ID, isEdit }) => {
                         }}
                       /> */}
                       <Box>
-                        <AssignmentTextFormat text={assignment.assignment_text} />
+                        <AssignmentTextFormat
+                          text={assignment.assignment_text}
+                        />
                       </Box>
                     </Box>
                   </Box>
@@ -484,6 +517,7 @@ const LectureAssignment = ({ id, isDarkMode, class_ID, isEdit }) => {
                       mb: 4,
                       mt: 4,
                       display: "flex",
+                      position: "relative",
                       borderRadius: 4,
                       flexDirection: "row",
                       boxShadow: assignment?.is_assigned
@@ -500,7 +534,30 @@ const LectureAssignment = ({ id, isDarkMode, class_ID, isEdit }) => {
                       )
                     }
                   >
-                    <Box sx={{ display: "flex" }}>
+                    <label
+                      style={{
+                        position: "absolute",
+                        color: "white",
+                        top: "-10px",
+                        right: "10px",
+                        backgroundColor:
+                        assignment?.is_assigned
+                        ? "#30a347"
+                        : "#a39f30",
+                        color: "white",
+                        width: "150px",
+                        textAlign: "center",
+                        height: "30px",
+                        padding: "6px 6px",
+                        borderRadius: "4px",
+                        fontSize: "12px",
+                      }}
+                    >
+                      {assignment?.is_assigned
+                        ? "Assigned"
+                        : "Not Assigned"}
+                    </label>
+                    <Box sx={{ display: "flex", padding: 2,}}>
                       <Typography variant="body1">
                         {String.fromCharCode(65 + index)}.&nbsp;
                       </Typography>
@@ -519,7 +576,9 @@ const LectureAssignment = ({ id, isDarkMode, class_ID, isEdit }) => {
                     </Box>
                     <Box>
                       <IconButton>
-                        <IoIosArrowDown  style={{color: isDarkMode ? "#fff" : "#000000"}}/>
+                        <IoIosArrowDown
+                          style={{ color: isDarkMode ? "#fff" : "#000000" }}
+                        />
                       </IconButton>
                     </Box>
                   </Box>
