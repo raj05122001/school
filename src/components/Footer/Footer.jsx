@@ -81,7 +81,7 @@ const Footer = () => {
             Have a project or a question? We&apos;d love to hear from you.
           </Typography>
           <a
-            href="https://www.intellai.ai/contact"
+            href="https://www.indiqai.ai/"
             target="_blank"
             style={{ textDecoration: "none" }}
           >
@@ -97,7 +97,7 @@ const Footer = () => {
 
       <Box sx={{ marginTop: "40px", textAlign: "center" }}>
         <Typography variant="body2" sx={{ color: "#7a7a7a" }}>
-          © 2023 IntellAI. All rights reserved.
+          © 2023 IndiqAI. All rights reserved.
         </Typography>
         <Box
           underline="none"
