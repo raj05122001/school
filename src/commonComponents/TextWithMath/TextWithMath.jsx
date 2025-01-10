@@ -2,10 +2,10 @@ import { Box, Typography } from "@mui/material";
 import React from "react";
 import MathJax from "react-mathjax2";
 
-const TextWithMath = ({ text}) => {
+const TextWithMath = ({ text, color}) => {
   const isArray = Array.isArray(text);
   const textArray = isArray ? text : [text];
-
+  console.log("Color is", color)
   // Combined regex to match $$...$$ or \[...\]
   const combinedRegex = /(\$\$([\s\S]+?)\$\$|\\\[\s*([\s\S]+?)\s*\\\])/g;
 
@@ -52,7 +52,7 @@ const TextWithMath = ({ text}) => {
         elements.push(
           <Typography
             variant="span"
-            sx={{ fontSize: "1rem", lineHeight: "1rem" }}
+            sx={{ fontSize: "1rem", lineHeight: "1rem", }}
             key={`${offset}-math`}
           >
             <MathJax.Node inline key={`${offset}-math-node`}>
@@ -74,6 +74,7 @@ const TextWithMath = ({ text}) => {
           variant="span"
           key={`remaining-text`}
           dangerouslySetInnerHTML={{ __html: replaceString(remainingText) }}
+          sx={color ? { color } : {}}
         />
       );
     }

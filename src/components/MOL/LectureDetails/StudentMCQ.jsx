@@ -1,5 +1,15 @@
 import React, { useEffect, useState, useRef } from "react";
-import { Box, Typography, List, ListItem, Button, Skeleton, Radio, RadioGroup, FormControlLabel } from "@mui/material";
+import {
+  Box,
+  Typography,
+  List,
+  ListItem,
+  Button,
+  Skeleton,
+  Radio,
+  RadioGroup,
+  FormControlLabel,
+} from "@mui/material";
 import { getLectureQuiz, submitQuiz, getQuizResponse } from "@/api/apiHelper";
 import MathJax from "react-mathjax2";
 import { decodeToken } from "react-jwt";
@@ -15,9 +25,8 @@ const StudentMCQ = ({ id, isDarkMode }) => {
   const [quizResponses, setQuizResponses] = useState({});
   const hasFetchedData = useRef(false); // Prevent multiple fetch calls
 
-
   const userDetails = decodeToken(Cookies.get("ACCESS_TOKEN"));
-  const studentID = userDetails?.student_id
+  const studentID = userDetails?.student_id;
 
   useEffect(() => {
     const fetchQuizData = async () => {
@@ -28,17 +37,20 @@ const StudentMCQ = ({ id, isDarkMode }) => {
         }
         const quizResponse = await getQuizResponse(id);
         if (quizResponse?.success) {
-            // Store already answered quiz IDs
-            const answeredQuestions = quizResponse?.data?.answered_quiz?.reduce((acc, item) => {
+          // Store already answered quiz IDs
+          const answeredQuestions = quizResponse?.data?.answered_quiz?.reduce(
+            (acc, item) => {
               acc[item?.quiz?.id] = {
                 yourAnswer: item?.your_answer,
                 correctAnswer: item?.quiz?.answer,
                 isCorrect: item?.is_correct,
               };
               return acc;
-            }, {});
-            setSubmittedAnswers(answeredQuestions);
-          }
+            },
+            {}
+          );
+          setSubmittedAnswers(answeredQuestions);
+        }
       } catch (error) {
         console.error("Error fetching quiz data:", error);
       } finally {
@@ -56,11 +68,13 @@ const StudentMCQ = ({ id, isDarkMode }) => {
     try {
       // First, convert the single quotes around the array to double quotes
       let validJson = options
-        ?.replace(/^\[|\]$/g, '') // Remove the surrounding brackets temporarily
-        ?.split(',') // Split each option by commas
-        ?.map(option => option?.trim()?.replace(/^'/, '"')?.replace(/'$/, '"')) // Replace single quotes around each option with double quotes
-        ?.join(','); // Join the items back into a comma-separated string
-  
+        ?.replace(/^\[|\]$/g, "") // Remove the surrounding brackets temporarily
+        ?.split(",") // Split each option by commas
+        ?.map((option) =>
+          option?.trim()?.replace(/^'/, '"')?.replace(/'$/, '"')
+        ) // Replace single quotes around each option with double quotes
+        ?.join(","); // Join the items back into a comma-separated string
+
       // Wrap the modified string back into an array format
       validJson = `[${validJson}]`;
 
@@ -70,11 +84,10 @@ const StudentMCQ = ({ id, isDarkMode }) => {
       return [];
     }
   };
-  
 
   const getLabel = (index) => {
     const labels = ["a)", "b)", "c)", "d)", "e)"];
-    return labels[index] || `${index + 1})`; 
+    return labels[index] || `${index + 1})`;
   };
 
   const handleOptionChange = (questionId, option) => {
@@ -83,29 +96,34 @@ const StudentMCQ = ({ id, isDarkMode }) => {
 
   const handleSubmitAnswer = async (questionId) => {
     try {
-      const formData = [{
-        your_answer: selectedAnswers[questionId],
-        lecture: id,
-        answered_by: studentID,
-        quiz: questionId,
-      }];
+      const formData = [
+        {
+          your_answer: selectedAnswers[questionId],
+          lecture: id,
+          answered_by: studentID,
+          quiz: questionId,
+        },
+      ];
       await submitQuiz(formData, id);
 
       const response = await getQuizResponse(id);
       if (response.success) {
         const quizResponse = await getQuizResponse(id);
         if (quizResponse?.success) {
-            const responseData = quizResponse?.data?.answered_quiz?.reduce((acc, item) => {
+          const responseData = quizResponse?.data?.answered_quiz?.reduce(
+            (acc, item) => {
               acc[item?.quiz?.id] = {
                 yourAnswer: item?.your_answer,
                 correctAnswer: item?.quiz?.answer,
                 isCorrect: item?.is_correct,
               };
               return acc;
-            }, {});
-            setSubmittedAnswers((prev) => ({ ...prev, ...responseData }));
-          }
+            },
+            {}
+          );
+          setSubmittedAnswers((prev) => ({ ...prev, ...responseData }));
         }
+      }
     } catch (error) {
       console.error("Error submitting answer or fetching response:", error);
     }
@@ -154,7 +172,11 @@ const StudentMCQ = ({ id, isDarkMode }) => {
                   alignItems: "flex-start",
                 }}
               >
-                <Box display="flex" alignItems="center" sx={{ fontSize: "16px", fontWeight: "bold" }}>
+                <Box
+                  display="flex"
+                  alignItems="center"
+                  sx={{ fontSize: "16px", fontWeight: "bold" }}
+                >
                   <Typography sx={{ textAlign: "left", marginRight: 1 }}>
                     {questionIndex + 1}.
                   </Typography>
@@ -170,7 +192,11 @@ const StudentMCQ = ({ id, isDarkMode }) => {
                       value={option}
                       control={<Radio />}
                       label={
-                        <Box display="flex" alignItems="center" sx={{ fontSize: "14px" }}>
+                        <Box
+                          display="flex"
+                          alignItems="center"
+                          sx={{ fontSize: "14px" }}
+                        >
                           {/* <Typography variant="body2" sx={{ textAlign: "left" }}>
                             {getLabel(index)}
                           </Typography> */}
@@ -191,15 +217,44 @@ const StudentMCQ = ({ id, isDarkMode }) => {
                   </Button>
                 )}
                 {submittedAnswers[item.id] && (
-                  <Box display="flex" alignItems="center" marginTop={"4px"} sx={{ fontSize: "16px" }}>
-                    <Typography sx={{ fontWeight: "bold", textAlign: "left", fontSize: "16px" }}>
+                  <Box
+                    display="flex"
+                    alignItems="center"
+                    marginTop={"4px"}
+                    sx={{ fontSize: "16px" }}
+                  >
+                    <Typography
+                      sx={{
+                        fontWeight: "bold",
+                        textAlign: "left",
+                        fontSize: "16px",
+                      }}
+                    >
                       Your Answer: &nbsp;
                     </Typography>
-                    <TextWithMath text={submittedAnswers[item?.id].yourAnswer} />
-                    <Typography sx={{ fontWeight: "bold", textAlign: "left", fontSize: "16px", ml: 2 }}>
+                    <TextWithMath
+                      text={submittedAnswers[item?.id].yourAnswer}
+                      color={
+                        submittedAnswers[item?.id].yourAnswer ===
+                        submittedAnswers[item?.id]?.correctAnswer
+                          ? "green"
+                          : "red"
+                      }
+                    />
+                    <Typography
+                      sx={{
+                        fontWeight: "bold",
+                        textAlign: "left",
+                        fontSize: "16px",
+                        ml: 2,
+                      }}
+                    >
                       Correct Answer: &nbsp;
                     </Typography>
-                    <TextWithMath text={submittedAnswers[item?.id]?.correctAnswer} />
+                    <TextWithMath
+                      text={submittedAnswers[item?.id]?.correctAnswer}
+                      color={"green"}
+                    />
                   </Box>
                 )}
               </ListItem>
