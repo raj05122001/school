@@ -47,7 +47,7 @@ const LectureScheduleTable = () => {
         console.log("Response for table", response)
         setLectureData(response?.data?.data?.lecture_data);
       }else{
-        const response = await getLectureTracking("UPCOMMING");
+        const response = await getLectureTracking("UPCOMMING", "", "", page);
         setLectureData(response?.data);
       }
     } catch (error) {
