@@ -18,7 +18,9 @@ export const AppContextProvider = createContext({});
 
 const Main = ({ children }) => {
   const isTrialAccount=process.env.NEXT_PUBLIC_iSTRIALACCOUNT==="true"? true : false
-  const s3FileName=process.env.S3_FILE_NAME==="edu/"? "edu/" : ""
+  const s3FileName=process.env.NEXT_PUBLIC_FILE_NAME==="edu/"? "edu/" : ""
+
+  console.log("s3FileName : ",s3FileName)
 
   const pathname = usePathname();
   const [open, setOpen] = useState(true);
