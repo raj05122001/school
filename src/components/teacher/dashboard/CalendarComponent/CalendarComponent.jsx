@@ -8,6 +8,7 @@ import { useThemeContext } from "@/hooks/ThemeContext";
 import {
   getUpcommingMeetingByDate,
   getStudentUpcommingMeetingByDate,
+  getAllUpcommingByDate
 } from "@/api/apiHelper";
 import LecturePopover from "./LecturePopover";
 import { formatTime, LectureTyps } from "@/helper/Helper";
@@ -53,7 +54,7 @@ const CalendarComponent = ({ maxHeight = "585px" }) => {
           currentMonth[0]
         );
         console.log("Response",response)
-        apiResponse = response?.data?.data;
+        apiResponse = response?.data?.data?.data;
         console.log("API Response",apiResponse)
       } else {
         const response = await getAllUpcommingByDate(

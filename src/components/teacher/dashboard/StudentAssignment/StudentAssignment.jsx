@@ -12,34 +12,70 @@ import {
   Autocomplete,
   TextField,
   Skeleton,
+  Pagination,
 } from "@mui/material";
 import UserImage from "@/commonComponents/UserImage/UserImage";
 import { useThemeContext } from "@/hooks/ThemeContext";
 import { getStudentAssignment } from "@/api/apiHelper";
 import { FiAlertTriangle } from "react-icons/fi";
+import { useSearchParams, useRouter, usePathname } from "next/navigation";
+
+const darkModeStyles = {
+  backgroundColor: "#1a1a1a",
+  paginationItemColor: "#ffffff",
+  paginationBg: "#333333",
+  paginationSelectedBg: "#005bb5",
+  paginationSelectedColor: "#ffffff",
+};
+
+const lightModeStyles = {
+  backgroundColor: "#ffffff",
+  paginationItemColor: "#000000",
+  paginationBg: "#f0f0f0",
+  paginationSelectedBg: "#005bb5",
+  paginationSelectedColor: "#ffffff",
+};
 
 const StudentAssignment = ({ selectedOptions }) => {
   const { isDarkMode } = useThemeContext();
   const [data, setData] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [activePage, setActivePage] = useState(1);
+  const [totalPage, setTotalPage] = useState(1);
+  const searchParams = useSearchParams();
+  const router = useRouter();
+  const pathname = usePathname();
 
   useEffect(() => {
     if (selectedOptions?.class_id) {
       fetchStudentAssignment();
     }
-  }, [selectedOptions]);
+  }, [selectedOptions, activePage]);
+
+  const handleChange = (event, value) => {
+    setActivePage(value)
+  };
 
   const fetchStudentAssignment = async () => {
     setLoading(true);
     try {
-      const response = await getStudentAssignment(selectedOptions?.class_id,true);
+      const response = await getStudentAssignment(
+        selectedOptions?.class_id,
+        activePage,
+        5,
+        true
+      );
+      console.log(response?.data?.data);
       setData(response?.data?.data?.data);
+      setTotalPage(response?.data?.data?.total);
     } catch (error) {
       console.error(error);
     } finally {
       setLoading(false);
     }
   };
+
+  console.log("Total is", totalPage);
 
   const getRowColor = (score) => {
     if (score >= 80) return "#E6F4EA"; // Light green
@@ -91,51 +127,13 @@ const StudentAssignment = ({ selectedOptions }) => {
         >
           Student Proficiency
         </Typography>
-        {/* <Autocomplete
-          freeSolo
-          id="class"
-          disableClearable
-          options={classOptions?.map((option) => option.class_name)}
-          value={selectedOptions?.class_name || ""} // Set value to the class name only
-          onChange={(event, newValue) => {
-            const selected = classOptions.find(
-              (option) => option.class_name === newValue
-            );
-            setSelectedOptions(selected || null); // Set selected option object
-          }}
-          renderInput={(params) => (
-            <TextField
-              {...params}
-              placeholder="Search Class"
-              variant="outlined"
-              InputProps={{
-                ...params.InputProps,
-                type: "search",
-                sx: {
-                  backdropFilter: "blur(10px)",
-                  backgroundColor: "rgba(255, 255, 255, 0.2)",
-                  color: currentStyles.inputColor,
-                  height: 40,
-                  width: 200,
-                  "& .MuiOutlinedInput-notchedOutline": {
-                    border: "none",
-                  },
-                },
-              }}
-              sx={{
-                boxShadow: currentStyles.boxShadow,
-                borderRadius: 1,
-              }}
-            />
-          )}
-        /> */}
       </Box>
       <TableContainer
         component={Paper}
         sx={{
-          maxHeight: 420,
+          maxHeight: 500,
           minHeight: 380,
-          height:'100%',
+          height: "100%",
           borderRadius: "8px",
           overflow: "hidden",
           backdropFilter: "blur(10px)",
@@ -402,6 +400,41 @@ const StudentAssignment = ({ selectedOptions }) => {
           </Box>
         )}
       </TableContainer>
+      {data?.length > 0 && !loading && (
+          <Box
+            sx={{
+              display: "flex",
+              justifyContent: "center",
+              alignItems: "flex-end",
+              padding: 2,
+              marginTop: "auto",  
+            }}
+          >
+            <Pagination
+              page={activePage}
+              onChange={handleChange}
+              count={totalPage}
+              variant="outlined"
+              color="primary"
+              size="large"
+              sx={{
+                "& .MuiPaginationItem-root": {
+                  color: isDarkMode
+                    ? darkModeStyles.paginationItemColor
+                    : lightModeStyles.paginationItemColor,
+                },
+                "& .Mui-selected": {
+                  backgroundColor: isDarkMode
+                    ? darkModeStyles.paginationSelectedBg
+                    : lightModeStyles.paginationSelectedBg,
+                  color: isDarkMode
+                    ? darkModeStyles.paginationSelectedColor
+                    : lightModeStyles.paginationSelectedColor,
+                },
+              }}
+            />
+          </Box>
+        )}
     </Box>
   );
 };
