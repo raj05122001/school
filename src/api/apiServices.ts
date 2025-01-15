@@ -533,18 +533,18 @@ export default class apiServices {
   };
 
   public getLectureTracking = async (
-    status,
-    search,
-    type,
-    page,
-    size,
+    status="",
+    search="",
+    type="",
+    page=1,
+    size=10,
     getDate,
     subjectList = "",
     classList = ""
   ) => {
     return await this.axiosInstance
       .get(
-        `/api/v1/dashboard/all_lectures/?search=${search}&type=${type}&status=${status}&page=${page}&size=${size}${
+        `/api/v1/dashboard/all_lectures/?${search? `&search=${search}`:""}&type=${type}${status? `&status=${status}`:""}${page? `&page=${page}`:""}${size?`&size=${size}`:""}${
           getDate ? `&date=${getDate}` : ""
         }${subjectList ? `&subject=${subjectList}` : ""}${
           classList ? `&class=${classList}` : ""

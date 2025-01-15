@@ -4,6 +4,7 @@ import { useEffect, useState, useRef } from "react";
 import { FaInfoCircle } from "react-icons/fa";
 import MathJax from "react-mathjax2";
 import usePersonalisedRecommendations from "@/components/student/MOL/usePersonalisedRecommendations";
+import TextWithMath from "@/commonComponents/TextWithMath/TextWithMath";
 
 const HighlightsComponent = ({
   lectureId,
@@ -83,6 +84,8 @@ const HighlightsComponent = ({
     }
   };
 
+  console.log("Decisions", decisions)
+
   useEffect(() => {
     fetchHighlight();
   }, [lectureId]);
@@ -154,7 +157,8 @@ const HighlightsComponent = ({
                         key={index}
                         sx={{ fontSize: "0.875rem" }}
                       >
-                        {renderTextWithMathJax(point?.replace(/^- /, "")?.trim())}
+                      <TextWithMath text={point?.replace(/^- /, "")?.trim()} />
+                        {/* {renderTextWithMathJax()} */}
                       </Box>
                     ))}
                   </Box>
