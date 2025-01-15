@@ -413,11 +413,11 @@ export default class apiServices {
       .catch((error) => console.error(error));
   };
 
-  public getStudentAssignment = async (class_ids, isTeacher = false) => {
+  public getStudentAssignment = async (class_ids,page = 1, pageSize = 5, isTeacher = false) => {
     return await this.axiosInstance
       .get(
-        `/api/v1/dashboard/assignment-student-details/${class_ids}/${
-          isTeacher ? "?teacher=True" : ""
+        `/api/v1/dashboard/assignment-student-details/${class_ids}/?page=${page}&size=${pageSize}${
+          isTeacher ? "&teacher=True" : ""
         }`
       )
       .then((Response) => Response)

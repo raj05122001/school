@@ -217,9 +217,9 @@ export const getClassAssignment = async (class_ids,isTeacher=false) => {
   return await apiInstance.getClassAssignment(class_ids,isTeacher);
 };
 
-export const getStudentAssignment = async (class_ids,isTeacher=false) => {
+export const getStudentAssignment = async (class_ids,page,pageSize,isTeacher=false) => {
   const apiInstance = new apiServices(axiosAPIInstance);
-  return await apiInstance.getStudentAssignment(class_ids,isTeacher);
+  return await apiInstance.getStudentAssignment(class_ids,page,pageSize,isTeacher);
 };
 
 export const getStudentByGrade = async (class_ids, grade,teacher_id) => {
