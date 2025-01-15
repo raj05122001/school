@@ -89,8 +89,6 @@ const LectureScheduleTable = () => {
     paginationSelectedColor: "#ffffff",
   };
 
-  console.log("Lecture Data", lectureData.data)
-
   return (
     <Box sx={{ p: 2, height:"100%", width:"100%" }} >
       {/* Show skeleton loader when loading */}
