@@ -1,4 +1,4 @@
-import React, { useRef, useState } from "react";
+import React, { useContext, useRef, useState } from "react";
 import {
   Box,
   Card,
@@ -11,10 +11,12 @@ import { useThemeContext } from "@/hooks/ThemeContext";
 import { MdOutlineDateRange } from "react-icons/md";
 import LectureType from "../LectureType/LectureType";
 import Image from "next/image";
+import { AppContextProvider } from "@/app/main";
 
 const ListingCard = ({ data, onClick }) => {
   const { isDarkMode, primaryColor, secondaryColor } = useThemeContext();
   const videoRef = useRef(null);
+  const {s3FileName}=useContext(AppContextProvider)
 
   const [isHovered, setIsHovered] = useState(false);
 
@@ -59,7 +61,7 @@ const ListingCard = ({ data, onClick }) => {
             component="video"
             preload="auto"
             ref={videoRef}
-            src={`https://d3515ggloh2j4b.cloudfront.net/videos/${data?.id}.mp4`}
+            src={`https://d3515ggloh2j4b.cloudfront.net/videos/${s3FileName}${data?.id}.mp4`}
             controls={isHovered}
             sx={{
               width: "100%",

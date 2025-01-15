@@ -18,6 +18,7 @@ export const AppContextProvider = createContext({});
 
 const Main = ({ children }) => {
   const isTrialAccount=process.env.NEXT_PUBLIC_iSTRIALACCOUNT==="true"? true : false
+  const s3FileName=process.env.S3_FILE_NAME==="edu/"? "edu/" : ""
 
   const pathname = usePathname();
   const [open, setOpen] = useState(true);
@@ -97,6 +98,7 @@ const Main = ({ children }) => {
               handleLectureRecord,
               handelChatBotText,
               isTrialAccount,
+              s3FileName
             }}
           >
             <Box
