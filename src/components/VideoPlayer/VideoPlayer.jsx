@@ -59,14 +59,14 @@ const VideoPlayer = ({ id }) => {
   // Event handlers to update watch time
   const handleBeforeUnload = () => {
     if (playerRef.current) {
-      const currentTime = playerRef.current.currentTime();
+      const currentTime = playerRef?.current?.currentTime();
       updateVideoWatchtime(currentTime);
     }
   };
 
   const handleVisibilityChange = () => {
     if (document.visibilityState === "hidden" && playerRef.current) {
-      const currentTime = playerRef.current.currentTime();
+      const currentTime = playerRef?.current?.currentTime();
       updateVideoWatchtime(currentTime);
     }
   };
@@ -74,7 +74,7 @@ const VideoPlayer = ({ id }) => {
   // When the video is paused or ended, update the watch time immediately.
   const handleVideoPause = () => {
     if (playerRef.current) {
-      const currentTime = playerRef.current.currentTime();
+      const currentTime = playerRef?.current?.currentTime();
       updateVideoWatchtime(currentTime);
     }
   };
@@ -222,7 +222,7 @@ export const BreakpointPlayer = ({ markers, id, onPlayerReady, s3FileName }) => 
         el.innerHTML = `<span style="background-color: red;">${marker.gist}</span>`;
 
         el.onclick = function () {
-          playerRef.current.currentTime(marker.start / 1000);
+          playerRef?.current?.currentTime(marker.start / 1000);
         };
 
         // Append the marker element to the progress control bar
@@ -232,7 +232,7 @@ export const BreakpointPlayer = ({ markers, id, onPlayerReady, s3FileName }) => 
 
     // Additional event: update personalised data after 10 minutes
     playerRef.current.on("timeupdate", () => {
-      const currentTime = playerRef.current.currentTime();
+      const currentTime = playerRef?.current?.currentTime();
       if (
         currentTime >= 600 &&
         !updateDataTriggered.current &&
