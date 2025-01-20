@@ -49,9 +49,8 @@ const LoginPage = () => {
 
   const [error, setError] = useState(null);
 
-    // Determine screen size
+  // Determine screen size
   const isMobile = useMediaQuery("(max-width:600px)");
-
 
   const handleChange = (e) => {
     setFormData({
@@ -108,49 +107,6 @@ const LoginPage = () => {
         height: "100vh",
       }}
     >
-      {/* Left Side with Gradient Background */}
-      {!isMobile && <Grid
-        item
-        xs={false}
-        sm={4}
-        md={6}
-        sx={{
-          // background: "linear-gradient(to bottom right, #1976d2, #00c853)",
-          backgroundImage: "url('/loginBG3.jpg')", // Add background image
-          backgroundSize: "cover", // Ensure the image covers the entire page
-          backgroundPosition: "center", // Center the image
-          position: "relative", // Ensures the overlay text is positioned correctly
-        }}
-      >
-        {/* Overlay Text */}
-        <Box
-          sx={{
-            position: "absolute",
-            top: "25%",
-            left: "25%",
-            // transform: "translate(-50%, -50%)",
-            color: "#fff",
-            textAlign: "left",
-            animation: "slideFade 1s ease-in-out",
-            ...textAnimation,
-          }}
-        >
-          <Typography
-            variant="h3"
-            sx={{ fontWeight: "bold", color: "#EDEADE" }}
-          >
-            Welcome to
-            <br />
-            <Box sx={{p:1}}>
-              <Logo />
-            </Box>
-          </Typography>
-          <Typography variant="h5" sx={{ mt: 1, color: "#191970" }}>
-            Your AI-powered Learning Companion
-          </Typography>
-        </Box>
-      </Grid>}
-
       {/* Right Side Login Form */}
       <Grid
         item
@@ -160,12 +116,12 @@ const LoginPage = () => {
         component={Box}
         sx={{
           display: "flex",
+          position: "relative",
           flexDirection: "column",
           alignItems: "center",
           justifyContent: "center",
-          // backgroundColor: "#f7f9fc",
-          // background: "radial-gradient(circle at 10% 20%, rgba(216, 241, 230, 0.46) 0.1%, rgba(233, 226, 226, 0.28) 90.1%)",
-          background: `${isMobile ? "url('/mobileLoginBG2.jpg')" : "linear-gradient(135deg, #fdfcfb 0%, #e2d1c3 100%)"}`,
+          gap: "28px",
+          background: `${isMobile ? "url('/mobileLoginBG2.jpg')" : "#fff"}`,
           backgroundSize: "cover", // Ensure the image covers the entire page
           backgroundPosition: "center", // Center the image
           padding: 4,
@@ -173,23 +129,101 @@ const LoginPage = () => {
           ...textAnimation,
         }}
       >
+        {/* Logo top */}
+        <Box
+          sx={{
+            display: "flex",
+            position: "absolute",
+            top: 10,
+            width: "192px",
+            height: "46px",
+            alignItems: "center",
+            left: 10,
+            flexShrink: 0,
+            gap: "10.5px",
+          }}
+        >
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            width="35"
+            height="34"
+            viewBox="0 0 35 34"
+            fill="none"
+          >
+            <path
+              d="M0.0158748 8.81498C0.0101488 6.58575 0.00207896 4.43087 2.56751e-06 2.27598C-0.000926809 1.30917 0.25019 0.987796 1.17992 0.771177C1.56558 0.68132 1.95761 0.632127 2.35822 0.66857C3.88182 0.807144 4.11578 1.05925 4.11511 2.5749C4.11381 5.54717 4.21133 8.5237 4.08196 11.4903C3.98171 13.7894 4.66119 15.6491 6.18545 17.3604C9.06447 20.5925 11.8148 23.9391 14.6531 27.2081C16.2384 29.034 18.0485 29.0306 19.6321 27.1933C22.8627 23.445 26.0604 19.6681 29.2551 15.889C29.9215 15.1007 30.1383 14.1134 30.1415 13.1123C30.1534 9.34816 30.1338 5.58383 30.1065 1.81971C30.103 1.33881 30.3183 1.05519 30.723 0.923103C31.1191 0.793827 31.538 0.692037 31.9521 0.668189C33.7031 0.56733 34.2264 1.08319 34.2235 2.81512C34.2173 6.48091 34.1879 10.1471 34.2319 13.8123C34.2555 15.7759 33.6283 17.3728 32.2672 18.8255C28.3249 23.033 24.4615 27.3148 20.5892 31.5875C18.5375 33.8512 15.8937 33.9601 13.8237 31.7234C9.67074 27.2361 5.5585 22.7109 1.43501 18.1962C0.434631 17.1009 0.0271045 15.7715 0.0160334 14.3137C0.00230568 12.5057 0.0148049 10.6975 0.0158748 8.81498Z"
+              fill="#16AA54"
+            />
+            <path
+              d="M17.066 7.68108C18.7821 7.68108 20.1733 6.28991 20.1733 4.57381C20.1733 2.85772 18.7821 1.46655 17.066 1.46655C15.3499 1.46655 13.9587 2.85772 13.9587 4.57381C13.9587 6.28991 15.3499 7.68108 17.066 7.68108Z"
+              fill="#16AA54"
+            />
+            <path
+              d="M16.9762 22.8585C19.4536 22.8585 26.0051 13.9288 26.0051 10.8991C26.0051 10.0912 25.4696 9.43623 24.8089 9.43623L9.58457 9.43623C8.92394 9.43623 8.38837 10.0912 8.38837 10.8991C8.3884 13.9288 14.4989 22.8585 16.9762 22.8585Z"
+              fill="#16AA54"
+            />
+          </svg>
+          <Typography
+            className="Space-font-family"
+            sx={{
+              width: "147.63px",
+              height: "46px",
+              flexShrink: 0,
+              color: "var(--Primary_Green, #16AA54)",
+              fontSize:"34.23px",
+              fontStyle:"normal",
+              fontWeight: 500,
+              lineHeight: "normal",
+              letterSpacing:"-1.027px"
+            }}
+          >
+            VidyaAI
+          </Typography>
+        </Box>
         {/* Login Form */}
         <Box
           sx={{
             width: "100%",
-            maxWidth: 400,
+            maxWidth: "400px",
             // border: "1px solid black",
             p: 5,
           }}
         >
-          <Typography component="h1" variant="h5" fontWeight={"bold"} sx={{ textAlign: "center", color:"#36454F" }}>
-          <Logo />
-            Sign in to your account
+          <Typography
+            sx={{
+              color: "var(--Secondary_Black, #141514)",
+              textAlign: "center",
+              fontSize: "32px",
+              fontStyle: "normal",
+              fontWeight: 400,
+              lineHeight: "44.366px",
+            }}
+          >
+            Welcome to
+          </Typography>
+          <Typography
+            className="Space-font-family"
+            sx={{
+              color: "var(--Primary_Green, #16AA54)",
+              fontSize: "64px",
+              fontStyle: "normal",
+              fontWeight: 700,
+              lineHeight: "75.638px",
+              textAlign: "center",
+            }}
+          >
+            VidyaAI
           </Typography>
           <Box
             component="form"
             noValidate
-            sx={{ mt: 2 }}
+            sx={{
+              display: "flex",
+              flexDirection: "column",
+              alignItems: "flex-start",
+              gap: "14px",
+              padding: "28px 0px",
+            }}
             onSubmit={handleSubmit}
           >
             <TextField
@@ -197,7 +231,8 @@ const LoginPage = () => {
               required
               fullWidth
               id="email"
-              label="Email Address"
+              label="E-mail"
+              placeholder="E-mail"
               name="email"
               value={formData.email}
               onChange={handleChange}
@@ -206,11 +241,11 @@ const LoginPage = () => {
                 style: { color: "#555" },
               }}
               InputProps={{
-                style: { color: "#000" },
+                style: { color: "#000", borderRadius: "12px" },
               }}
               sx={{
                 backgroundColor: "#fff",
-                borderRadius: "5px",
+                borderRadius: "12px",
               }}
               variant="outlined" // Optionally use "filled" for a different style
             />
@@ -220,7 +255,8 @@ const LoginPage = () => {
               fullWidth
               name="password"
               label="Password"
-              type={showPassword ? 'text' : 'password'}
+              placeholder="Password"
+              type={showPassword ? "text" : "password"}
               id="password"
               value={formData.password}
               onChange={handleChange}
@@ -229,18 +265,18 @@ const LoginPage = () => {
                 style: { color: "#555" },
               }}
               InputProps={{
-                endAdornment: (
-                  <InputAdornment position="end">
-                    <IconButton
-                      aria-label="toggle password visibility"
-                      onClick={()=>handlePasswordVisibility()}
-                      edge="end"
-                    >
-                      {showPassword ?  <MdVisibilityOff /> : <MdVisibility />}
-                    </IconButton>
-                  </InputAdornment>
-                ),
-                style: { color: "#000" },
+                // endAdornment: (
+                //   <InputAdornment position="end">
+                //     <IconButton
+                //       aria-label="toggle password visibility"
+                //       onClick={() => handlePasswordVisibility()}
+                //       edge="end"
+                //     >
+                //       {showPassword ? <MdVisibilityOff /> : <MdVisibility />}
+                //     </IconButton>
+                //   </InputAdornment>
+                // ),
+                style: { color: "#000", borderRadius: "12px" },
               }}
               sx={{ backgroundColor: "#fff", borderRadius: "5px" }}
               variant="outlined"
@@ -253,11 +289,19 @@ const LoginPage = () => {
                 justifyContent: "space-between",
               }}
             >
-              <Grid item xs={6}>
+              <Grid item xs={6} className="Jakarta-font-family">
                 <FormControlLabel
                   control={<Checkbox value="remember" color="primary" />}
                   label="Remember me"
-                  sx={{ color: "#555" }}
+                  sx={{
+                    color: "var(--Text-color-2, #404145)",
+                    textAlign: "center",
+                    fontSize: "12px",
+                    fontStyle: "normal",
+                    fontWeight: 400,
+                    lineHeight: "118.185%",
+                    letterSpacing: "0.84px",
+                  }}
                 />
               </Grid>
               <Grid
@@ -268,8 +312,21 @@ const LoginPage = () => {
                   justifyContent: "flex-end",
                 }}
               >
-                <Link href="#" variant="body2" sx={{ color: "#1976d2" }}>
-                  Forgot password?
+                <Link
+                  href="#"
+                  variant="body2"
+                  sx={{
+                    color: "var(--Primary_Green, #16AA54)",
+                    textAlign: "right",
+                    fontSize: "14px",
+                    fontStyle: "normal",
+                    fontWeight: 700,
+                    lineHeight: "118.185%", // or simply "14.182px"
+                    letterSpacing: "0.84px",
+                    textDecoration: "none",
+                  }}
+                >
+                  Forgot password
                 </Link>
               </Grid>
             </Grid>
@@ -283,30 +340,141 @@ const LoginPage = () => {
               fullWidth
               variant="contained"
               sx={{
-                mt: 3,
-                mb: 2,
-                backgroundColor: "#1976d2",
-                ":hover": { backgroundColor: "#115293" },
+                display: "flex",
+                justifyContent: "center",
+                alignItems: "center",
+                height: "52px",
+                padding: "24px",
+                gap: "12px",
+                flexShrink: 0,
+                alignSelf: "stretch",
+                borderRadius: "12px",
+                background: "var(--Secondary_Black, #141514)",
+                textTransform: "none",
+                color: "#fff",
+                ":hover": { backgroundColor: "#fff", color: "black" },
               }}
             >
-              Sign In
+              <Typography
+                sx={{
+                  fontSize: "16px",
+                  fontStyle: "normal",
+                  fontWeight: 600,
+                  lineHeight: "normal",
+                }}
+              >
+                Log in
+              </Typography>
             </Button>
-            <Grid container justifyContent="center">
-              <Grid item>
-                <Typography variant="body2">
-                  Don&apos;t have an account?{" "}
-                  <Link
-                    onClick={() => router.push("/registration")}
-                    sx={{ color: "#1976d2", cursor: "pointer" }}
-                  >
-                    Sign Up
-                  </Link>
-                </Typography>
-              </Grid>
-            </Grid>
+            <Button
+              fullWidth
+              variant="contained"
+              onClick={() => router.push("/registration")}
+              sx={{
+                display: "flex",
+                justifyContent: "center",
+                alignItems: "center",
+                height: "52px",
+                padding: "24px",
+                gap: "12px",
+                flexShrink: 0,
+                alignSelf: "stretch",
+                borderRadius: "12px",
+                border: "1px solid var(--Secondary_Black, #141514)",
+                background: "var(--White-Color, #FFF)",
+                textTransform: "none",
+                color: "#000000",
+                ":hover": { backgroundColor: "#000000", color: "#fff" },
+              }}
+            >
+              <Typography
+                sx={{
+                  fontSize: "16px",
+                  fontStyle: "normal",
+                  fontWeight: 600,
+                  lineHeight: "normal",
+                }}
+              >
+                Sign up
+              </Typography>
+            </Button>
+            <Typography
+              sx={{
+                color: "var(--Text-color-2, #8C8F90)",
+                textAlign: "center",
+                fontStyle: "normal",
+                fontWeight: 400,
+                fontSize: "12px",
+                lineHeight: "normal",
+              }}
+            >
+              By signing in to VidyaAI you agree to our{" "}
+              <Link
+                onClick={() => router.push("/login")}
+                sx={{ color: "#1976d2", cursor: "pointer" }}
+              >
+                Terms and Privacy Policy
+              </Link>
+            </Typography>
           </Box>
         </Box>
+        <Box
+          sx={{
+            width: "832px",
+            height: "253px",
+            flexShrink: 0,
+            borderRadius: "832px",
+            background:
+              "linear-gradient(67deg, rgba(112, 255, 0, 0.28) 29.8%, rgba(18, 221, 0, 0.28) 80.94%)",
+            filter: "blur(66.95px)",
+          }}
+        ></Box>
       </Grid>
+
+      {/* Left Side with Gradient Background */}
+      {!isMobile && (
+        <Grid
+          item
+          xs={false}
+          sm={4}
+          md={6}
+          sx={{
+            // background: "linear-gradient(to bottom right, #1976d2, #00c853)",
+            backgroundImage: "url('/loginBG3.jpg')", // Add background image
+            backgroundSize: "cover", // Ensure the image covers the entire page
+            backgroundPosition: "center", // Center the image
+            position: "relative", // Ensures the overlay text is positioned correctly
+          }}
+        >
+          {/* Overlay Text */}
+          <Box
+            sx={{
+              position: "absolute",
+              top: "25%",
+              left: "25%",
+              // transform: "translate(-50%, -50%)",
+              color: "#fff",
+              textAlign: "left",
+              animation: "slideFade 1s ease-in-out",
+              ...textAnimation,
+            }}
+          >
+            <Typography
+              variant="h3"
+              sx={{ fontWeight: "bold", color: "#EDEADE" }}
+            >
+              Welcome to
+              <br />
+              <Box sx={{ p: 1 }}>
+                <Logo />
+              </Box>
+            </Typography>
+            <Typography variant="h5" sx={{ mt: 1, color: "#191970" }}>
+              Your AI-powered Learning Companion
+            </Typography>
+          </Box>
+        </Grid>
+      )}
     </Grid>
   );
 };
