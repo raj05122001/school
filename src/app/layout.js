@@ -1,4 +1,5 @@
 import { Inter } from "next/font/google";
+import '@fontsource/space-grotesk';
 import "./globals.css";
 import Main from "./main";
 

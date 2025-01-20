@@ -112,7 +112,7 @@ const LoginPage = () => {
         item
         xs={12}
         sm={8}
-        md={6}
+        md={7}
         component={Box}
         sx={{
           display: "flex",
@@ -164,17 +164,17 @@ const LoginPage = () => {
             />
           </svg>
           <Typography
-            className="Space-font-family"
             sx={{
               width: "147.63px",
               height: "46px",
               flexShrink: 0,
               color: "var(--Primary_Green, #16AA54)",
-              fontSize:"34.23px",
-              fontStyle:"normal",
+              fontSize: "34.23px",
+              fontStyle: "normal",
               fontWeight: 500,
               lineHeight: "normal",
-              letterSpacing:"-1.027px"
+              letterSpacing: "-1.027px",
+              fontFamily: "Space Grotesk, Arial, sans-serif",
             }}
           >
             VidyaAI
@@ -202,7 +202,6 @@ const LoginPage = () => {
             Welcome to
           </Typography>
           <Typography
-            className="Space-font-family"
             sx={{
               color: "var(--Primary_Green, #16AA54)",
               fontSize: "64px",
@@ -210,6 +209,7 @@ const LoginPage = () => {
               fontWeight: 700,
               lineHeight: "75.638px",
               textAlign: "center",
+              fontFamily: "Space Grotesk, Arial, sans-serif",
             }}
           >
             VidyaAI
@@ -226,61 +226,91 @@ const LoginPage = () => {
             }}
             onSubmit={handleSubmit}
           >
-            <TextField
-              margin="normal"
-              required
-              fullWidth
-              id="email"
-              label="E-mail"
-              placeholder="E-mail"
-              name="email"
-              value={formData.email}
-              onChange={handleChange}
-              InputLabelProps={{
-                shrink: true, // Ensures the label shrinks when value is present
-                style: { color: "#555" },
-              }}
-              InputProps={{
-                style: { color: "#000", borderRadius: "12px" },
-              }}
-              sx={{
-                backgroundColor: "#fff",
-                borderRadius: "12px",
-              }}
-              variant="outlined" // Optionally use "filled" for a different style
-            />
-            <TextField
-              margin="normal"
-              required
-              fullWidth
-              name="password"
-              label="Password"
-              placeholder="Password"
-              type={showPassword ? "text" : "password"}
-              id="password"
-              value={formData.password}
-              onChange={handleChange}
-              InputLabelProps={{
-                shrink: true, // Ensures the label shrinks when value is present
-                style: { color: "#555" },
-              }}
-              InputProps={{
-                // endAdornment: (
-                //   <InputAdornment position="end">
-                //     <IconButton
-                //       aria-label="toggle password visibility"
-                //       onClick={() => handlePasswordVisibility()}
-                //       edge="end"
-                //     >
-                //       {showPassword ? <MdVisibilityOff /> : <MdVisibility />}
-                //     </IconButton>
-                //   </InputAdornment>
-                // ),
-                style: { color: "#000", borderRadius: "12px" },
-              }}
-              sx={{ backgroundColor: "#fff", borderRadius: "5px" }}
-              variant="outlined"
-            />
+            <Box sx={{ width: "100%" }}>
+              <span
+                style={{
+                  color: "var(--Secondary_Black, #141514)",
+                  fontSize: "16px",
+                  fontStyle: "normal",
+                  fontWeight: 600,
+                  lineHeight: "118.18%",
+                  letterSpacing: "0.8px",
+                }}
+              >
+                E-mail
+              </span>
+              <TextField
+                margin="normal"
+                required
+                fullWidth
+                id="email"
+                // label="E-mail"
+                placeholder="E-mail"
+                name="email"
+                value={formData.email}
+                onChange={handleChange}
+                InputLabelProps={{
+                  shrink: true, // Ensures the label shrinks when value is present
+                  style: { color: "#555" },
+                }}
+                InputProps={{
+                  style: { color: "#000", borderRadius: "12px", margin: 0 },
+                }}
+                sx={{
+                  backgroundColor: "#fff",
+                  borderRadius: "12px",
+                  margin: 0,
+                }}
+                variant="outlined" // Optionally use "filled" for a different style
+              />
+            </Box>
+            <Box sx={{ width: "100%" }}>
+              <span
+                style={{
+                  color: "var(--Secondary_Black, #141514)",
+                  fontSize: "16px",
+                  fontStyle: "normal",
+                  fontWeight: 600,
+                  lineHeight: "118.18%",
+                  letterSpacing: "0.8px",
+                }}
+              >
+                Password
+              </span>
+              <TextField
+                margin="normal"
+                required
+                fullWidth
+                name="password"
+                // label="Password"
+                placeholder="Password"
+                type={showPassword ? "text" : "password"}
+                id="password"
+                value={formData.password}
+                onChange={handleChange}
+                InputLabelProps={{
+                  shrink: true, // Ensures the label shrinks when value is present
+                  style: { color: "#555" },
+                }}
+                InputProps={{
+                  // endAdornment: (
+                  //   <InputAdornment position="end">
+                  //     <IconButton
+                  //       aria-label="toggle password visibility"
+                  //       onClick={() => handlePasswordVisibility()}
+                  //       edge="end"
+                  //     >
+                  //       {showPassword ? <MdVisibilityOff /> : <MdVisibility />}
+                  //     </IconButton>
+                  //   </InputAdornment>
+                  // ),
+                  style: { color: "#000", borderRadius: "12px", margin: 0 },
+                }}
+                sx={{ backgroundColor: "#fff", borderRadius: "5px",margin: 0 }}
+                variant="outlined"
+              />
+            </Box>
+
             <Grid
               container
               sx={{
@@ -421,12 +451,14 @@ const LoginPage = () => {
         <Box
           sx={{
             width: "832px",
-            height: "253px",
+            height: "8%",
             flexShrink: 0,
             borderRadius: "832px",
             background:
               "linear-gradient(67deg, rgba(112, 255, 0, 0.28) 29.8%, rgba(18, 221, 0, 0.28) 80.94%)",
             filter: "blur(66.95px)",
+            position: "absolute",
+            bottom: 0,
           }}
         ></Box>
       </Grid>
@@ -437,7 +469,7 @@ const LoginPage = () => {
           item
           xs={false}
           sm={4}
-          md={6}
+          md={5}
           sx={{
             // background: "linear-gradient(to bottom right, #1976d2, #00c853)",
             backgroundImage: "url('/loginBG3.jpg')", // Add background image

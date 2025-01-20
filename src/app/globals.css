@@ -207,3 +207,11 @@ a {
 .Jakarta-font-family {
   font-family: 'Plus Jakarta Sans', sans-serif !important;
 }
+
+@font-face {
+  font-family: 'Space Grotesk';
+  src: url('/fonts/space-grotesk.woff2') format('woff2'),
+       url('/fonts/space-grotesk.woff') format('woff');
+  font-weight: 400;
+  font-style: normal;
+}

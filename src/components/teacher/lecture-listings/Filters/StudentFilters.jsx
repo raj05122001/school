@@ -120,7 +120,7 @@ const StudentFilters = ({
           color: currentStyles.color,
         }}
       >
-        <Grid
+        {/* <Grid
           container
           spacing={3}
           alignItems="center"
@@ -137,7 +137,7 @@ const StudentFilters = ({
             </IconButton>
             <UserImage width={40} height={40}/>
           </Box>
-        </Grid>
+        </Grid> */}
 
         <Grid container spacing={3}>
           <Grid item xs={12} sm={6} md={4}>
