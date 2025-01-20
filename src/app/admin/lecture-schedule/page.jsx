@@ -89,7 +89,7 @@ const Page = () => {
           </Grid>
           <Grid item>
             <Box display="flex" gap={2}>
-              <DarkMode />
+              {/* <DarkMode /> */}
               <Button
                 variant="contained"
                 color="primary"

@@ -133,7 +133,7 @@ const AdminFilters = ({
           color: currentStyles.color,
         }}
       >
-        <Grid
+        {/* <Grid
           container
           spacing={3}
           alignItems="center"
@@ -150,7 +150,7 @@ const AdminFilters = ({
             </IconButton>
             <UserImage width={40} height={40} />
           </Box>
-        </Grid>
+        </Grid> */}
 
         <Grid container spacing={3}>
           {["class", "subject"]?.map((field, index) => (
