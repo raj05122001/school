@@ -55,6 +55,7 @@ const Page = () => {
       spacing={3}
       height="100%"
       minHeight="100vh"
+      marginTop={0.5}
       padding={2}
       sx={{
         background: isDarkMode
