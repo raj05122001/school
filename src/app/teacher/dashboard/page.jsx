@@ -17,7 +17,7 @@ import SubjectAnalytics from "@/components/teacher/dashboard/SubjectAnalytics/Su
 import StrugglingExcelling from "@/components/teacher/dashboard/StrugglingExcelling/StrugglingExcelling";
 import OverallClassPerformance from "@/components/teacher/dashboard/OverallClassPerformance/OverallClassPerformance";
 import ClassStatistics from "@/components/teacher/dashboard/ClassStatistics/ClassStatistics";
-import GreetingCard from "@/components/teacher/dashboard/GreetingCard/GreetingCard";
+// import GreetingCard from "@/components/teacher/dashboard/GreetingCard/GreetingCard";
 import ProfileCard from "@/components/teacher/dashboard/ProfileCard/ProfileCard";
 import LectureDuration from "@/components/teacher/dashboard/LectureDuration/LectureDuration";
 import SubjectCompletion from "@/components/teacher/dashboard/SubjectCompletion/SubjectCompletion";
@@ -27,6 +27,7 @@ import ClassAssignment from "@/components/teacher/dashboard/ClassAssignment/Clas
 import StudentAssignment from "@/components/teacher/dashboard/StudentAssignment/StudentAssignment";
 import { getteacherClass } from "@/api/apiHelper";
 import { useThemeContext } from "@/hooks/ThemeContext";
+import GreetingCardNew from "@/components/admin/dashboard/GreetingCard/GreetingCardNew";
 
 const Page = () => {
   const { isDarkMode } = useThemeContext();
@@ -67,7 +68,7 @@ const Page = () => {
 
   const currentStyles = isDarkMode ? darkModeStyles : lightModeStyles;
 
-  const greetingCard = useMemo(() => <GreetingCard />, []);
+  // const greetingCard = useMemo(() => <GreetingCardNew />, []);
   const profileCard = useMemo(() => <ProfileCard />, []);
   const lectureDuration = useMemo(
     () => <LectureDuration averageDuration={averageDuration} />,
@@ -106,7 +107,7 @@ const Page = () => {
   return (
     <Box sx={{ flexGrow: 1, m: 2 }}>
       {/* Greeting Card */}
-      <Box>{greetingCard}</Box>
+      {/* <Box>{greetingCard}</Box> */}
 
       {/* Profile, Lecture Duration, Subject Completion */}
       <Grid container spacing={2} mt={3}>

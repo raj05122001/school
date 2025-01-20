@@ -56,6 +56,7 @@ const LectureManager = () => {
       spacing={3}
       height="100%"
       padding={2}
+      marginTop={0.5}
       sx={{
         background: isDarkMode
           ? "linear-gradient(177.9deg, rgb(58, 62, 88) 3.6%, rgb(119, 127, 148) 105.8%)"
