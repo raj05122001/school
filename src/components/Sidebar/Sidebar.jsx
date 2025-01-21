@@ -1,240 +1,49 @@
-import React,{useContext} from "react";
+import React, { useContext, useEffect, useState } from "react";
 import {
   Box,
   Drawer,
   List,
-  ListItem,
+  ListItemButton,
   ListItemIcon,
   ListItemText,
-  IconButton,
   Tooltip,
   Avatar,
   Typography,
+  Collapse,
+  Menu,
+  MenuItem,
+  IconButton,
+  ListItem,
 } from "@mui/material";
 import {
   MdDashboard,
-  MdCreate,
-  MdList,
-  MdTrackChanges,
   MdSchedule,
-  MdLogout,
-  MdMenu,
   MdPerson,
   MdVideoLibrary,
-  MdHelp,
   MdTask,
   MdAssignment,
+  MdLogout,
 } from "react-icons/md";
-import { PiExam } from "react-icons/pi";
 import { FaChalkboardTeacher } from "react-icons/fa";
-import { AiOutlinePlus } from "react-icons/ai";
 import Cookies from "js-cookie";
-import { useRouter,usePathname } from "next/navigation";
+import { useRouter, usePathname } from "next/navigation";
 import { useThemeContext } from "@/hooks/ThemeContext";
 import { decodeToken } from "react-jwt";
 import UserImage from "@/commonComponents/UserImage/UserImage";
 import { AppContextProvider } from "@/app/main";
 import Logo from "@/commonComponents/Logo/Logo";
+import { LuGraduationCap } from "react-icons/lu";
+import { HiOutlineChartBar } from "react-icons/hi2";
+import { HiOutlineDocumentDuplicate } from "react-icons/hi2";
+import {
+  IoIosArrowDown,
+  IoIosArrowForward,
+  IoIosArrowUp,
+} from "react-icons/io";
 
+// You may adjust widths as per your design
 const drawerWidth = 240;
 const miniDrawerWidth = 60;
-
-const Sidebar = ({ open, setOpen }) => {
-  const { isDarkMode, primaryColor, secondaryColor } = useThemeContext();
-  const { handleCreateLecture }=useContext(AppContextProvider)
-  const userDetails = decodeToken(Cookies.get("ACCESS_TOKEN"));
-  const router = useRouter();
-  const pathname=usePathname();
-  const iconSize = open ? 22 : 26;
-  const handleDrawerToggle = () => {
-    setOpen(!open);
-  };
-
-  const handleRoute = async () => {
-    document.body.style.overflow = "";
-    Cookies.remove("REFRESH_TOKEN");
-    Cookies.remove("ACCESS_TOKEN");
-    return router.push("/login");
-  };
-
-  return (
-    <Box sx={{ display: "flex" }}>
-      <Drawer
-        variant="permanent"
-        sx={{
-          width: open ? drawerWidth : miniDrawerWidth,
-          flexShrink: 0,
-          "& .MuiDrawer-paper": {
-            width: open ? drawerWidth : miniDrawerWidth,
-            transition: "width 0.3s",
-            overflowX: "hidden",
-            display: "flex",
-            flexDirection: "column",
-            justifyContent: "space-between",
-            backgroundColor: isDarkMode ? "black" : "#1e1e2d",
-            color: "#fff",
-            boxShadow: "2px 0 5px rgba(0,0,0,0.1)",
-          },
-        }}
-      >
-        <Box sx={{ padding: open ? "16px" : "8px" }}>
-          <Box
-            sx={{
-              display: "flex",
-              alignItems: "center",
-              justifyContent: open ? "space-between" : "center",
-            }}
-          >
-            {open && (
-              <Logo />
-            )}
-            <IconButton
-              onClick={handleDrawerToggle}
-              sx={{ color: "#fff", ml: open ? 2 : 0 }}
-            >
-              <MdMenu size={26} />
-            </IconButton>
-          </Box>
-
-          {/* Profile Section */}
-          {open ? (
-            <Box
-              sx={{
-                display: "flex",
-                alignItems: "center",
-                flexDirection: open ? "row" : "column",
-                backgroundColor: "#2c2c3c",
-                borderRadius: "8px",
-                p: open ? 2 : 1,
-                mt: 2,
-                mb: 3,
-                transition: "padding 0.3s",
-              }}
-            >
-              <Box sx={{ width: 48, height: 48, mb: open ? 0 : 1 }}>
-                <UserImage
-                  profilePic={userDetails?.profile_pic}
-                  name={userDetails?.full_name}
-                  width={48}
-                  height={48}
-                />
-              </Box>
-              <Typography variant="body1" sx={{ ml: 2, color: "#fff" }}>
-                {userDetails?.full_name}
-              </Typography>
-            </Box>
-          ) : (
-            <Box
-              sx={{
-                display: "flex",
-                justifyContent: "center",
-                alignItems: "center",
-                marginTop: 2,
-              }}
-            >
-              <UserImage
-                profilePic={userDetails?.profile_pic}
-                name={userDetails?.full_name}
-                width={36}
-                height={36}
-              />
-            </Box>
-          )}
-
-          <List>
-            {sidebarLinks.overview
-              ?.filter((val) => val.show.includes(userDetails?.role))
-              ?.map((item, index) => (
-                <Tooltip
-                  title={item.text}
-                  key={index}
-                  placement="right"
-                  disableHoverListener={open}
-                >
-                  <ListItem
-                    button
-                    sx={{
-                      boxShadow: pathname===item.href? "0 4px 30px rgba(0, 0, 0, 0.1)":"",
-                      backgroundColor:pathname===item.href? "rgba(255, 255, 255, 0.04)":"",
-                      padding: open ? "10px 16px" : "5px 10px",
-                      borderRadius: "8px",
-                      "&:hover": {
-                        backgroundColor: "#343446",
-                      },
-                      margin: "8px 0",
-                    }}
-                    onClick={() => {
-                      if (item.text === "Create Lecture") {
-                        handleCreateLecture("",false);
-                      } else {
-                        router.push(item.href);
-                      }
-                    }}
-                  >
-                    <ListItemIcon
-                      sx={{
-                        color: "#00c853",
-                        minWidth: open ? "unset" : "20px",
-                        justifyContent: "center",
-                        alignItems: "center",
-                        display: "flex",
-                      }}
-                    >
-                      {item.icon}
-                    </ListItemIcon>
-                    {open && (
-                      <ListItemText
-                        primary={item.text}
-                        sx={{ color: "#fff", ml: 2 }}
-                      />
-                    )}
-                  </ListItem>
-                </Tooltip>
-              ))}
-          </List>
-        </Box>
-
-        <Box sx={{ mb: 2 }}>
-          <Tooltip title="Logout" placement="right" disableHoverListener={open}>
-            <ListItem
-              button
-              sx={{
-                padding: open ? "10px 16px" : "5px 10px",
-                borderRadius: "8px",
-                "&:hover": {
-                  backgroundColor: "#343446",
-                },
-                margin: "8px 0",
-              }}
-              onClick={() => handleRoute()}
-            >
-              <ListItemIcon
-                sx={{
-                  color: "#f44336",
-                  minWidth: open ? "unset" : "40px",
-                  justifyContent: "center",
-                  alignItems: "center",
-                  display: "flex",
-                }}
-              >
-                <MdLogout size={iconSize} />
-              </ListItemIcon>
-              {open && (
-                <ListItemText primary="Logout" sx={{ color: "#fff", ml: 2 }} />
-              )}
-            </ListItem>
-          </Tooltip>
-        </Box>
-      </Drawer>
-
-      <Box component="main" sx={{ flexGrow: 1, p: 3 }}>
-        {/* Main content goes here */}
-      </Box>
-    </Box>
-  );
-};
-
-export default Sidebar;
 
 export const sidebarLinks = {
   overview: [
@@ -247,86 +56,414 @@ export const sidebarLinks = {
     {
       text: "Admin Dashboard",
       href: "/admin/dashboard",
-      icon: <MdDashboard size={22} />,
+      icon: <HiOutlineChartBar size={22} />,
       show: "ADMIN",
     },
     {
-      text: "Dashboard",
-      href: "/student/dashboard",
-      icon: <MdDashboard size={22} />,
-      show: "STUDENT",
+      text: "Lecture",
+      href: "",
+      icon: <HiOutlineDocumentDuplicate size={22} />,
+      show: "ADMIN",
+      children: [
+        {
+          text: "Lecture Listings",
+          href: "/admin/lecture-listings",
+          icon: <MdVideoLibrary size={22} />,
+          show: "ADMIN",
+        },
+        {
+          text: "Lecture Schedule",
+          href: "/admin/lecture-schedule",
+          icon: <MdSchedule size={22} />,
+          show: "ADMIN",
+        },
+        {
+          text: "Lecture Tracking",
+          href: "/admin/lecture-tracking",
+          icon: <MdTask size={22} />,
+          show: "ADMIN",
+        },
+      ],
     },
     {
       text: "Dashboard",
       href: "/teacher/dashboard",
-      icon: <FaChalkboardTeacher size={22} />,
+      icon: <HiOutlineChartBar size={22} />,
       show: "TEACHER",
     },
     {
-      text: "Create Lecture",
+      text: "Lecture",
       href: "",
-      icon: <AiOutlinePlus size={22} />,
+      icon: <HiOutlineDocumentDuplicate size={22} />,
       show: "TEACHER",
-    },
-    {
-      text: "Lecture Listings",
-      href: "/admin/lecture-listings",
-      icon: <MdVideoLibrary size={22} />,
-      show: "ADMIN",
-    },
-    {
-      text: "Lecture Listings",
-      href: "/teacher/lecture-listings",
-      icon: <MdVideoLibrary size={22} />,
-      show: "TEACHER",
-    },
-    {
-      text: "Lecture Listings",
-      href: "/student/lecture-listings",
-      icon: <MdVideoLibrary size={22} />,
-      show: "STUDENT",
-    },
-    {
-      text: "Lecture Tracking",
-      href: "/admin/lecture-tracking",
-      icon: <MdTask size={22} />,
-      show: "ADMIN",
-    },
-    {
-      text: "Lecture Tracking",
-      href: "/teacher/lecture-tracking",
-      icon: <MdTask size={22} />,
-      show: "TEACHER",
-    },
-    {
-      text: "Lecture Schedule",
-      href: "/teacher/lecture-schedule",
-      icon: <MdSchedule size={22} />,
-      show: "TEACHER",
+      children: [
+        {
+          text: "Lecture Listings",
+          href: "/teacher/lecture-listings",
+          icon: <MdVideoLibrary size={22} />,
+          show: "TEACHER",
+        },
+        {
+          text: "Lecture Schedule",
+          href: "/teacher/lecture-schedule",
+          icon: <MdSchedule size={22} />,
+          show: "TEACHER",
+        },
+        {
+          text: "Lecture Tracking",
+          href: "/teacher/lecture-tracking",
+          icon: <MdTask size={22} />,
+          show: "TEACHER",
+        },
+      ],
     },
     {
       text: "Assessment",
       href: "/teacher/assignment",
-      icon: <MdAssignment size={22} />,
+      icon: <LuGraduationCap size={22} />,
       show: "TEACHER",
     },
     {
-      text: "Lecture Schedule",
-      href: "/admin/lecture-schedule",
-      icon: <MdSchedule size={22} />,
-      show: "ADMIN",
+      text: "Dashboard",
+      href: "/student/dashboard",
+      icon: <HiOutlineChartBar size={22} />,
+      show: "STUDENT",
     },
-    // {
-    //   text: "Test Series",
-    //   href: "/quizcomponent",
-    //   icon: <MdAssignment size={22} />,
-    //   show: "STUDENT TEACHER",
-    // },
-    // {
-    //   text: "Create Quiz",
-    //   href: "/teacher/quiz",
-    //   icon: <PiExam size={22} />,
-    //   show: "STUDENT TEACHER",
-    // },
+    {
+      text: "Lecture Listings",
+      href: "/student/lecture-listings",
+      icon: <HiOutlineDocumentDuplicate size={22} />,
+      show: "STUDENT",
+    },
   ],
 };
+
+const Sidebar = ({ open, setOpen }) => {
+  const { isDarkMode, primaryColor, secondaryColor } = useThemeContext();
+  const { handleCreateLecture } = useContext(AppContextProvider);
+  const userDetails = decodeToken(Cookies.get("ACCESS_TOKEN"));
+  const router = useRouter();
+  const pathname = usePathname();
+
+  // Track which parent item is expanded
+  const [expandedItem, setExpandedItem] = useState(null);
+  const [anchorEl, setAnchorEl] = React.useState(null);
+
+  const handleChange = (event) => {
+    setAuth(event.target.checked);
+  };
+
+  const handleMenu = (event) => {
+    setAnchorEl(event.currentTarget);
+  };
+
+  const handleClose = () => {
+    setAnchorEl(null);
+  };
+
+  const handleRoute = async () => {
+    // Example: if you need a logout method
+    Cookies.remove("REFRESH_TOKEN");
+    Cookies.remove("ACCESS_TOKEN");
+    router.push("/login");
+  };
+
+  // Handle toggling a parent item
+  const handleItemClick = (index, item) => {
+    // If the item has children, toggle it
+    if (item.children) {
+      setExpandedItem(expandedItem === index ? null : index);
+    } else {
+      // Otherwise, navigate
+      router.push(item.href);
+    }
+  };
+
+  useEffect(() => {
+    if (
+      [
+        "/teacher/lecture-listings",
+        "/teacher/lecture-schedule",
+        "/teacher/lecture-tracking",
+      ].includes(pathname)
+    ) {
+      setExpandedItem(1);
+    }
+  }, []);
+
+  console.log("userDetails : ", userDetails);
+
+  return (
+    <Drawer
+      variant="permanent"
+      sx={{
+        width: open ? drawerWidth : miniDrawerWidth,
+        flexShrink: 0,
+        "& .MuiDrawer-paper": {
+          width: open ? drawerWidth : miniDrawerWidth,
+          transition: "width 0.3s",
+          overflowX: "hidden",
+          display: "flex",
+          flexDirection: "column",
+          justifyContent: "space-between",
+          backgroundColor: "white",
+          color: "black",
+        },
+      }}
+    >
+      {/* Logo / Top Section */}
+      <Box>
+        <Box
+          sx={{
+            display: "flex",
+            alignItems: "center",
+            justifyContent: open ? "space-between" : "center",
+            borderBottom: "1px solid #C1C1C1",
+            py: 2,
+            margin: "16px",
+          }}
+        >
+          {open && <Logo />}
+        </Box>
+
+        <Typography
+          sx={{
+            color: "#8C8F90",
+            fontWeight: 700,
+            fontSize: "14px",
+            lineHeight: "14.18px",
+            mt: 2,
+            paddingLeft: "16px",
+          }}
+        >
+          MAIN
+        </Typography>
+
+        {/* Sidebar Links */}
+        <List>
+          {sidebarLinks.overview
+            .filter((val) => val.show.includes(userDetails?.role))
+            .map((item, index) => {
+              const isOpen = expandedItem === index;
+
+              return (
+                <Box
+                  key={index}
+                  sx={{
+                    mb: 1,
+
+                    paddingLeft: "16px",
+                  }}
+                >
+                  <Tooltip
+                    title={item.text}
+                    placement="right"
+                    disableHoverListener={open}
+                  >
+                    <ListItemButton
+                      sx={{
+                        minHeight: 48,
+                        margin: "8px 0",
+                        pl: open ? 2 : 1,
+                        borderRight:
+                          pathname === item.href ||
+                          (item.text === "Lecture" &&
+                            [
+                              "/teacher/lecture-listings",
+                              "/teacher/lecture-schedule",
+                              "/teacher/lecture-tracking",
+                            ].includes(pathname))
+                            ? "4px solid #12DD00"
+                            : "none", // Use a solid color for the border
+                      }}
+                      onClick={() => handleItemClick(index, item)}
+                    >
+                      <ListItemIcon
+                        sx={{
+                          color:
+                            pathname === item.href ||
+                            (item.text === "Lecture" &&
+                              [
+                                "/teacher/lecture-listings",
+                                "/teacher/lecture-schedule",
+                                "/teacher/lecture-tracking",
+                              ].includes(pathname))
+                              ? "#16AA54"
+                              : "#8C8F90",
+                          minWidth: open ? "unset" : "20px",
+                          mr: open ? 2 : 0,
+                          display: "flex",
+                          justifyContent: "center",
+                          alignItems: "center",
+                        }}
+                      >
+                        {item.icon}
+                      </ListItemIcon>
+
+                      {/* Show the text only if drawer is open */}
+                      {open && (
+                        <ListItemText
+                          primary={item.text}
+                          sx={{
+                            color:
+                              pathname === item.href ||
+                              (item.text === "Lecture" &&
+                                [
+                                  "/teacher/lecture-listings",
+                                  "/teacher/lecture-schedule",
+                                  "/teacher/lecture-tracking",
+                                ].includes(pathname))
+                                ? "#16AA54"
+                                : "#8C8F90",
+                          }}
+                        />
+                      )}
+                      {item.text === "Lecture" &&
+                        (isOpen ? <IoIosArrowUp /> : <IoIosArrowDown />)}
+                    </ListItemButton>
+                  </Tooltip>
+
+                  {/* Collapse for children if they exist */}
+                  {item.children && (
+                    <Collapse in={isOpen} timeout="auto" unmountOnExit>
+                      <List component="div" disablePadding>
+                        {item.children
+                          .filter((val) => val.show.includes(userDetails?.role))
+                          .map((child, childIndex) => (
+                            <Tooltip
+                              title={child.text}
+                              key={childIndex}
+                              placement="right"
+                              disableHoverListener={open}
+                            >
+                              <ListItemButton
+                                sx={{
+                                  borderRadius: 2,
+                                  margin: "4px 0",
+                                  pl: open ? 4 : 2,
+                                }}
+                                onClick={() => router.push(child.href)}
+                              >
+                                {open && (
+                                  <ListItemText
+                                    primary={child.text}
+                                    sx={{
+                                      color:
+                                        pathname === child.href
+                                          ? "#16AA54"
+                                          : "#8C8F90",
+                                      ml: 2,
+                                    }}
+                                  />
+                                )}
+                              </ListItemButton>
+                            </Tooltip>
+                          ))}
+                      </List>
+                    </Collapse>
+                  )}
+                </Box>
+              );
+            })}
+        </List>
+      </Box>
+
+      {/* Profile Section */}
+      {open ? (
+        <Box>
+          <Box sx={{ borderTop: "1px solid #C1C1C1", marginX: "16px" }} />
+          <div>
+              <Box
+              onClick={handleMenu}
+                sx={{
+                  display: "flex",
+                  alignItems: "center",
+                  flexDirection: "row",
+                  // borderTop: "1px solid #C1C1C1",
+                  p: 2,
+                  mt: 2,
+                  mb: 1,
+                  // marginX: "16px",
+                  justifyContent: "space-between",
+                  cursor: "pointer",
+                }}
+              >
+                <Box sx={{ display: "flex", alignItems: "center" }}>
+                  <Box sx={{ width: 48, height: 48 }}>
+                    <UserImage
+                      profilePic={userDetails?.profile_pic}
+                      name={userDetails?.full_name}
+                      width={42}
+                      height={42}
+                    />
+                  </Box>
+                  <Box>
+                    <Typography
+                      variant="body1"
+                      sx={{
+                        color: "#282D32",
+                        fontWeight: 700,
+                        fontSize: "16px",
+                        lineHeight: "18.91px",
+                        fontFamily: "Inter-font-family",
+                      }}
+                    >
+                      {userDetails?.full_name}
+                    </Typography>
+                    <Typography
+                      variant="body1"
+                      sx={{
+                        color: "#404145",
+                        fontFamily: "Inter-font-family",
+                      }}
+                    >
+                      CCST
+                    </Typography>
+                  </Box>
+                </Box>
+                <Box>
+                  <IoIosArrowForward size={20} />
+                </Box>
+              </Box>
+            <Menu
+              id="menu-appbar"
+              anchorEl={anchorEl}
+              anchorOrigin={{
+                vertical: "top",
+                horizontal: "top",
+              }}
+              keepMounted
+              transformOrigin={{
+                vertical: "top",
+                horizontal: "top",
+              }}
+              open={Boolean(anchorEl)}
+              onClose={handleClose}
+            >
+              {userDetails?.role==="TEACHER"?<MenuItem onClick={()=>router.push("/teacher/myprofile")}>Profile</MenuItem>:""}
+              <MenuItem onClick={() => handleRoute()}>Logout</MenuItem>
+            </Menu>
+          </div>
+        </Box>
+      ) : (
+        <Box
+          sx={{
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
+            mt: 2,
+          }}
+        >
+          <UserImage
+            profilePic={userDetails?.profile_pic}
+            name={userDetails?.full_name}
+            width={36}
+            height={36}
+          />
+        </Box>
+      )}
+    </Drawer>
+  );
+};
+
+export default Sidebar;
