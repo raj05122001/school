@@ -37,7 +37,7 @@ const ListingCard = ({ data, onClick }) => {
       onClick={() => onClick(data?.id)}
     >
       <Card
-        className="blur_effect_card"
+        // className="blur_effect_card"
         sx={{
           display: "flex",
           flexDirection: "column",
@@ -93,37 +93,37 @@ const ListingCard = ({ data, onClick }) => {
           <Typography
             variant="h6"
             gutterBottom
-            sx={{ fontWeight: "bold", color: primaryColor }}
+            sx={{ fontWeight: "bold", color: primaryColor, fontFamily: "Inter, sans-serif" }}
           >
             {data?.title}
           </Typography>
           <Typography
             variant="body1"
             gutterBottom
-            sx={{ color: isDarkMode ? primaryColor : "#555" }}
+            sx={{ color: isDarkMode ? primaryColor : "#555", fontFamily: "Inter, sans-serif" }}
           >
             <strong>Class:</strong> {data?.lecture_class?.name}
           </Typography>
           <Typography
             variant="body1"
             gutterBottom
-            sx={{ color: isDarkMode ? primaryColor : "#555" }}
+            sx={{ color: isDarkMode ? primaryColor : "#555", fontFamily: "Inter, sans-serif" }}
           >
             <strong>Subject:</strong> {data?.chapter?.subject?.name}
           </Typography>
           <Typography
             variant="body1"
             gutterBottom
-            sx={{ color: isDarkMode ? primaryColor : "#555" }}
+            sx={{ color: isDarkMode ? primaryColor : "#555", fontFamily: "Inter, sans-serif" }}
           >
             <strong>Chapter:</strong> {data?.chapter?.chapter}
           </Typography>
           <Typography
             variant="body1"
             gutterBottom
-            sx={{ color: isDarkMode ? primaryColor : "#555" }}
+            sx={{ color: isDarkMode ? primaryColor : "#555", fontFamily: "Inter, sans-serif" }}
           >
-            <strong>Description:</strong> {data?.description}
+            <strong>Description:</strong> {data?.description || "N/A"}
           </Typography>
           <Grid container mt={"auto"} pt={2}>
             <Grid item xs={12} sm={8}>
@@ -132,7 +132,7 @@ const ListingCard = ({ data, onClick }) => {
                 <Typography
                   variant="body1"
                   gutterBottom
-                  sx={{ color: isDarkMode ? primaryColor : "#555" }}
+                  sx={{ color: isDarkMode ? primaryColor : "#555", fontFamily: "Inter, sans-serif" }}
                 >
                   {data?.schedule_date}
                 </Typography>

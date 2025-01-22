@@ -58,9 +58,10 @@ const LectureManager = () => {
       padding={2}
       marginTop={0.5}
       sx={{
-        background: isDarkMode
-          ? "linear-gradient(177.9deg, rgb(58, 62, 88) 3.6%, rgb(119, 127, 148) 105.8%)"
-          : "linear-gradient(180.3deg, rgb(221, 221, 221) 5.5%, rgb(110, 136, 161) 90.2%);",
+        // background: isDarkMode
+        //   ? "linear-gradient(177.9deg, rgb(58, 62, 88) 3.6%, rgb(119, 127, 148) 105.8%)"
+        //   : "linear-gradient(180.3deg, rgb(221, 221, 221) 5.5%, rgb(110, 136, 161) 90.2%);",
+        background:"#F3F5F7",
         // overflow: "hidden", // Add this line
       }}
     >

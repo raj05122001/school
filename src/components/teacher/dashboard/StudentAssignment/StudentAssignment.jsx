@@ -400,7 +400,7 @@ const StudentAssignment = ({ selectedOptions }) => {
           </Box>
         )}
       </TableContainer>
-      {data?.length > 0 && !loading && (
+      {data?.length > 0 && totalPage > 1 && !loading && (
           <Box
             sx={{
               display: "flex",

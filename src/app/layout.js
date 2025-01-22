@@ -17,7 +17,7 @@ export default function RootLayout({ children }) {
       <body
         suppressHydrationWarning
         className={inter.className}
-        style={{ height: "100%", width: "100%" }}
+        style={{ height: "100%", width: "100%", fontFamily: "Inter, sans-serif" }}
       >
         <Main>{children}</Main>
       </body>

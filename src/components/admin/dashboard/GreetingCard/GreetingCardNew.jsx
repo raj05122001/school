@@ -19,7 +19,7 @@ function GreetingCardNew() {
     }
   }, []);
 
-  const userName = userDetails?.full_name.split(" ")[0];
+  const userName = userDetails?.full_name?.split(" ")[0];
 
   return (
     <Box

@@ -52,9 +52,9 @@ function OverallClassPerformance() {
       <Typography
         variant="h6"
         textAlign={"center"}
-        fontWeight={"bold"}
+        fontWeight={"600"}
         p={2}
-        sx={{ color: isDarkMode ? "#FFFFF0" : "#36454F" }}
+        sx={{ color: "black", fontFamily: "Inter, sans-serif" }}
       >
         Overall Rating
       </Typography>
@@ -73,7 +73,7 @@ function OverallClassPerformance() {
           <YAxis tick={{ fill: isDarkMode ? "#FFFFF0" : "#36454F", fontSize:"12px" }} />
           <Tooltip />
           <Legend verticalAlign="top" />
-          <Bar dataKey="count" fill="#8884d8" />
+          <Bar dataKey="count" fill="#49cc4c" />
         </BarChart>
       </ResponsiveContainer>
     </Box>
