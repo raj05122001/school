@@ -92,7 +92,7 @@ const LectureCard = ({ lecture, getAllLecture = () => {} }) => {
 
   const dateSectionStyle = {
     minWidth: "80px",
-    backgroundColor: isDarkMode ? "#041E42" : "#e0f7fa",
+    backgroundColor: isDarkMode ? "#041E42" : "#d9ffd6",
     borderRadius: "12px 0 0 12px",
     display: "flex",
     flexDirection: "column",
@@ -109,7 +109,7 @@ const LectureCard = ({ lecture, getAllLecture = () => {} }) => {
 
   const iconStyle = {
     marginRight: "8px",
-    color: isDarkMode ? primaryColor : "#00796b",
+    color: isDarkMode ? primaryColor : "#4bb344",
   };
 
   const textStyle = {
@@ -136,13 +136,13 @@ const LectureCard = ({ lecture, getAllLecture = () => {} }) => {
         <Box sx={dateSectionStyle}>
           <Typography
             variant="h4"
-            sx={{ fontWeight: "bold", color: textStyle.color }}
+            sx={{ fontWeight: "700", fontFamily: "Inter, sans-serif", }}
           >
             {new Date(lecture?.schedule_date).getDate()}
           </Typography>
           <Typography
             variant="body2"
-            sx={{ color: isDarkMode ? primaryColor : "#00796b" }}
+            sx={{ fontFamily: "Inter, sans-serif", }}
           >
             {day[new Date(lecture?.schedule_date).getDay()]}
           </Typography>
@@ -151,7 +151,14 @@ const LectureCard = ({ lecture, getAllLecture = () => {} }) => {
           <Tooltip title={lecture?.title || ""} arrow placement="top-start">
             <Typography
               variant="h6"
-              sx={{ fontWeight: "bold", mb: 1, color: textStyle.color }}
+              sx={{
+                fontWeight: 700,
+                mb: 1,
+                fontFamily: "Inter, sans-serif",
+                fontSize: "16px",
+                fontStyle: "normal",
+                lineHeight: "normal",
+              }}
               noWrap
             >
               {lecture?.title?.length > 24
@@ -162,24 +169,24 @@ const LectureCard = ({ lecture, getAllLecture = () => {} }) => {
 
           <Box display="flex" alignItems="center" mb={1}>
             <FaCalendarAlt style={iconStyle} />
-            <Typography variant="body2" sx={{ color: textStyle.color }}>
+            <Typography variant="body2" sx={{ fontFamily: "Inter, sans-serif", }}>
               {lecture?.schedule_date}
             </Typography>
             <FaClock style={{ ...iconStyle, marginLeft: "16px" }} />
-            <Typography variant="body2" sx={{ color: textStyle.color }}>
+            <Typography variant="body2" sx={{ fontFamily: "Inter, sans-serif", }}>
               {lecture?.schedule_time}
             </Typography>
           </Box>
 
           <Box display="flex" alignItems="center" mb={1}>
             <FaGraduationCap style={iconStyle} />
-            <Typography variant="body2" sx={{ color: textStyle.color }}>
+            <Typography variant="body2" sx={{ fontFamily: "Inter, sans-serif", }}>
               {lecture?.lecture_class?.name}
             </Typography>
           </Box>
           <Box display="flex" alignItems="center" mb={1}>
             <FaBook style={iconStyle} />
-            <Typography variant="body2" sx={{ color: textStyle.color }}>
+            <Typography variant="body2" sx={{ fontFamily: "Inter, sans-serif", }}>
               {lecture?.chapter?.subject?.name}
             </Typography>
           </Box>
@@ -190,7 +197,7 @@ const LectureCard = ({ lecture, getAllLecture = () => {} }) => {
           >
             <Box display="flex" alignItems="center" mb={1}>
               <FaBookOpen style={iconStyle} />
-              <Typography variant="body2" sx={{ color: textStyle.color }}>
+              <Typography variant="body2" sx={{ fontFamily: "Inter, sans-serif", }}>
                 {lecture?.chapter?.chapter}
               </Typography>
             </Box>
@@ -347,12 +354,12 @@ export function BasicModal({ open, setOpen, id, getAllLecture = () => {} }) {
         formData.append("pdf", file);
       });
       await uploadS3Video(id, formData);
-      toast.success("Lecture has been uploaded")
+      toast.success("Lecture has been uploaded");
       resetStates();
       getAllLecture();
       setOpen(false);
     } catch (error) {
-      toast.error("Failed to create lecture")
+      toast.error("Failed to create lecture");
       console.error(error);
       setError("Failed to upload files");
     } finally {

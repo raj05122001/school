@@ -197,6 +197,7 @@ const LoginPage = () => {
               fontStyle: "normal",
               fontWeight: 400,
               lineHeight: "44.366px",
+              fontFamily: "Inter, sans-serif",
             }}
           >
             Welcome to
@@ -235,6 +236,7 @@ const LoginPage = () => {
                   fontWeight: 600,
                   lineHeight: "118.18%",
                   letterSpacing: "0.8px",
+                  fontFamily: "Inter, sans-serif"
                 }}
               >
                 E-mail
@@ -273,6 +275,7 @@ const LoginPage = () => {
                   fontWeight: 600,
                   lineHeight: "118.18%",
                   letterSpacing: "0.8px",
+                  fontFamily: "Inter, sans-serif"
                 }}
               >
                 Password
@@ -354,6 +357,7 @@ const LoginPage = () => {
                     lineHeight: "118.185%", // or simply "14.182px"
                     letterSpacing: "0.84px",
                     textDecoration: "none",
+                    fontFamily: "Inter, sans-serif"
                   }}
                 >
                   Forgot password
@@ -391,6 +395,7 @@ const LoginPage = () => {
                   fontStyle: "normal",
                   fontWeight: 600,
                   lineHeight: "normal",
+                  fontFamily: "Inter, sans-serif"
                 }}
               >
                 Log in
@@ -423,6 +428,7 @@ const LoginPage = () => {
                   fontStyle: "normal",
                   fontWeight: 600,
                   lineHeight: "normal",
+                  fontFamily: "Inter, sans-serif"
                 }}
               >
                 Sign up
@@ -436,12 +442,13 @@ const LoginPage = () => {
                 fontWeight: 400,
                 fontSize: "12px",
                 lineHeight: "normal",
+                fontFamily: "Inter, sans-serif"
               }}
             >
               By signing in to VidyaAI you agree to our{" "}
               <Link
                 onClick={() => router.push("/login")}
-                sx={{ color: "#1976d2", cursor: "pointer" }}
+                sx={{ color: "#1976d2", cursor: "pointer",  fontFamily: "Inter, sans-serif" }}
               >
                 Terms and Privacy Policy
               </Link>
@@ -471,15 +478,16 @@ const LoginPage = () => {
           sm={4}
           md={5}
           sx={{
+            flexShrink: 0,
             // background: "linear-gradient(to bottom right, #1976d2, #00c853)",
-            backgroundImage: "url('/loginBG3.jpg')", // Add background image
+            backgroundImage: "url('/loginImage.png')", // Add background image
             backgroundSize: "cover", // Ensure the image covers the entire page
             backgroundPosition: "center", // Center the image
             position: "relative", // Ensures the overlay text is positioned correctly
           }}
         >
           {/* Overlay Text */}
-          <Box
+          {/* <Box
             sx={{
               position: "absolute",
               top: "25%",
@@ -504,7 +512,7 @@ const LoginPage = () => {
             <Typography variant="h5" sx={{ mt: 1, color: "#191970" }}>
               Your AI-powered Learning Companion
             </Typography>
-          </Box>
+          </Box> */}
         </Grid>
       )}
     </Grid>
