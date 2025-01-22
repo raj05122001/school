@@ -4,7 +4,6 @@ import { GiDuration } from "react-icons/gi";
 
 function LectureDuration({ averageDuration }) {
   const avgDuration = averageDuration
-  console.log("average duration", avgDuration)
   return (
     <Card
       sx={{

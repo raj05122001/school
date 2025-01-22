@@ -29,6 +29,7 @@ import { getteacherClass } from "@/api/apiHelper";
 import { useThemeContext } from "@/hooks/ThemeContext";
 import GreetingCardNew from "@/components/admin/dashboard/GreetingCard/GreetingCardNew";
 import HeroCard from "@/components/teacher/dashboard/HeroCard/HeroCard";
+import ClassProf from "@/commonComponents/ClassProf/ClassProf";
 
 const Page = () => {
   const { isDarkMode } = useThemeContext();
@@ -91,10 +92,10 @@ const Page = () => {
   const classStatistics = useMemo(() => <ClassStatistics />, []);
   const lectureAnalytics = useMemo(() => <LectureAnalytics />, []);
   const subjectAnalytics = useMemo(() => <SubjectAnalytics />, []);
-  const classAssignment = useMemo(
-    () => <ClassAssignment selectedOptions={selectedOptions} />,
-    [selectedOptions]
-  );
+  // const classAssignment = useMemo(
+  //   () => <ClassAssignment selectedOptions={selectedOptions} />,
+  //   [selectedOptions]
+  // );
   const studentAssignment = useMemo(
     () => <StudentAssignment selectedOptions={selectedOptions} />,
     [selectedOptions]
@@ -125,7 +126,10 @@ const Page = () => {
           {subjectCompletion}
         </Grid>
       </Grid> */}
+      <Box sx={{display:"flex", gap:"16px"}}>
       <HeroCard averageDuration={averageDuration}/>
+      <ClassProf />
+      </Box>
 
       {/* Overview and Calendar */}
       <Grid container direction="row" spacing={2} mt={2}>
@@ -162,7 +166,7 @@ const Page = () => {
           p:2
         }}
       >
-        <Typography
+        {/* <Typography
           variant="h4"
           className={`${isDarkMode ? "dark-heading" : "light-heading"}`}
           component="div"
@@ -174,8 +178,8 @@ const Page = () => {
           }}
         >
           Class Proficiency
-        </Typography>
-        <Box sx={{ display: "flex", gap: 2, alignItems: "center" }}>
+        </Typography> */}
+        {/* <Box sx={{ display: "flex", gap: 2, alignItems: "center" }}>
           <Autocomplete
             freeSolo
             id="class"
@@ -214,46 +218,7 @@ const Page = () => {
               />
             )}
           />
-
-          {/* <Tabs
-            value={tabValue}
-            onChange={handleTabChange}
-            aria-label="lecture overview tabs"
-            indicatorColor="none"
-            sx={{
-              boxShadow: "0 4px 30px rgba(0, 0, 0, 0.1)",
-              backdropFilter: "blur(10px)",
-              backgroundColor: "rgba(255, 255, 255, 0.2)",
-              borderRadius: "10px",
-              display: "flex",
-              justifyContent: "center",
-              alignItems: "center",
-              ".MuiTabs-flexContainer": {
-                padding: "1px 10px",
-              },
-              ".MuiTab-root": {
-                color: "#333",
-                padding: "10px 10px",
-                minHeight: 0,
-                textAlign: "center",
-                color: isDarkMode && "#F0EAD6",
-                "&:hover": {
-                  backgroundColor: "#e0e0e0",
-                  borderRadius: "10px",
-                  color: "black",
-                },
-                "&.Mui-selected": {
-                  backgroundColor: "#e0e0e0",
-                  color: "#000",
-                  borderRadius: "10px",
-                },
-              },
-            }}
-          >
-            <Tab label={`Overall Class`} />
-            <Tab label={`My Class`} />
-          </Tabs> */}
-        </Box>
+        </Box> */}
       </Box>
       <Grid container direction="row" spacing={2} mt={1}>
         <Grid
@@ -261,7 +226,7 @@ const Page = () => {
           xs={9}
           sx={{ display: "flex", flexDirection: "column", gap: 2 }}
         >
-          {classAssignment}
+          {/* {classAssignment} */}
           {studentAssignment}
         </Grid>
         <Grid item xs={3}>

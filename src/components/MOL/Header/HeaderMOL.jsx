@@ -54,7 +54,7 @@ const HeaderMOL = ({
 
   const truncateText = (text, maxLength = 20) => {
     if (!text) return "N/A";
-    return text.length > maxLength ? `${text.slice(0, maxLength)}...` : text;
+    return text?.length > maxLength ? `${text?.slice(0, maxLength)}...` : text;
   };
 
   const handleDeleteLecture = async () =>{

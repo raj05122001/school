@@ -66,7 +66,6 @@ const LectureOverview = ({
     <Box sx={{ marginTop: "8px" }}>
       <Typography
         variant="h4"
-        fontFamily={"Nunito"}
         sx={{
           bgcolor: "",
           borderRadius: "8px",

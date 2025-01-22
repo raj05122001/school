@@ -296,17 +296,17 @@ const LoginPage = () => {
                   style: { color: "#555" },
                 }}
                 InputProps={{
-                  // endAdornment: (
-                  //   <InputAdornment position="end">
-                  //     <IconButton
-                  //       aria-label="toggle password visibility"
-                  //       onClick={() => handlePasswordVisibility()}
-                  //       edge="end"
-                  //     >
-                  //       {showPassword ? <MdVisibilityOff /> : <MdVisibility />}
-                  //     </IconButton>
-                  //   </InputAdornment>
-                  // ),
+                  endAdornment: (
+                    <InputAdornment position="end">
+                      <IconButton
+                        aria-label="toggle password visibility"
+                        onClick={() => handlePasswordVisibility()}
+                        edge="end"
+                      >
+                        {showPassword ? <MdVisibilityOff /> : <MdVisibility />}
+                      </IconButton>
+                    </InputAdornment>
+                  ),
                   style: { color: "#000", borderRadius: "12px", margin: 0 },
                 }}
                 sx={{ backgroundColor: "#fff", borderRadius: "5px",margin: 0 }}
@@ -480,7 +480,7 @@ const LoginPage = () => {
           sx={{
             flexShrink: 0,
             // background: "linear-gradient(to bottom right, #1976d2, #00c853)",
-            backgroundImage: "url('/loginImage.png')", // Add background image
+            backgroundImage: "url('/placeholder_login1.png')", // Add background image
             backgroundSize: "cover", // Ensure the image covers the entire page
             backgroundPosition: "center", // Center the image
             position: "relative", // Ensures the overlay text is positioned correctly

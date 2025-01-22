@@ -47,7 +47,7 @@ const OverviewSection = () => {
   };
 
   return (
-    <Box sx={{ flexGrow: 1, p: 2, height: "100%", maxHeight: 465 }}>
+    <Box sx={{ flexGrow: 1, p: 2, height: "100%", maxHeight: 465, backgroundColor:"var(--Website_color-white, #FFF)", borderRadius:"20px" }}>
       <Box sx={{ display: "flex", alignItems: "center", gap: 1, mb: 2 }}>
         <FaChalkboardTeacher size={26} style={{ ...iconStyle }} />
         <Typography
