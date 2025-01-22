@@ -28,6 +28,7 @@ import StudentAssignment from "@/components/teacher/dashboard/StudentAssignment/
 import { getteacherClass } from "@/api/apiHelper";
 import { useThemeContext } from "@/hooks/ThemeContext";
 import GreetingCardNew from "@/components/admin/dashboard/GreetingCard/GreetingCardNew";
+import HeroCard from "@/components/teacher/dashboard/HeroCard/HeroCard";
 
 const Page = () => {
   const { isDarkMode } = useThemeContext();
@@ -45,11 +46,14 @@ const Page = () => {
       setClassOptions(response?.data?.data?.class_subject_list);
       setSelectedOptions(response?.data?.data?.class_subject_list?.[0])
       setAverageDuration(response?.data?.data?.avg_duration);
+      console.log("Response", response?.data?.data)
     } catch (error) {
       console.error(error);
     }
   };
 
+
+  
   const darkModeStyles = {
     backgroundColor: "#1a1a1a",
     color: "#ffffff",
@@ -110,7 +114,7 @@ const Page = () => {
       {/* <Box>{greetingCard}</Box> */}
 
       {/* Profile, Lecture Duration, Subject Completion */}
-      <Grid container spacing={2} mt={3}>
+      {/* <Grid container spacing={2} mt={3}>
         <Grid item xs={12} sm={6} lg={5}>
           {profileCard}
         </Grid>
@@ -120,7 +124,8 @@ const Page = () => {
         <Grid item xs={12} lg={4}>
           {subjectCompletion}
         </Grid>
-      </Grid>
+      </Grid> */}
+      <HeroCard averageDuration={averageDuration}/>
 
       {/* Overview and Calendar */}
       <Grid container direction="row" spacing={2} mt={2}>

@@ -219,7 +219,7 @@ const Sidebar = ({ open, setOpen }) => {
             alignItems: "center",
             justifyContent: open ? "space-between" : "center",
             borderBottom: "1px solid #C1C1C1",
-            py: 2,
+            py: 1.35,
             margin: "16px",
           }}
         >
@@ -251,6 +251,7 @@ const Sidebar = ({ open, setOpen }) => {
                   key={index}
                   sx={{
                     mb: 1,
+                    fontFamily: "Inter, sans-serif",
 
                     paddingLeft: "16px",
                   }}
@@ -405,7 +406,7 @@ const Sidebar = ({ open, setOpen }) => {
                         fontWeight: 700,
                         fontSize: "16px",
                         lineHeight: "18.91px",
-                        fontFamily: "Inter-font-family",
+                        fontFamily: "Inter, sans-serif",
                       }}
                     >
                       {userDetails?.full_name}
@@ -414,7 +415,8 @@ const Sidebar = ({ open, setOpen }) => {
                       variant="body1"
                       sx={{
                         color: "#404145",
-                        fontFamily: "Inter-font-family",
+                        fontFamily: "Inter, sans-serif",
+                        fontSize:"12px"
                       }}
                     >
                       CCST

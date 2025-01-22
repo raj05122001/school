@@ -42,6 +42,7 @@ function GreetingCardNew() {
           width: "600px",
           height: "48px",
           fontSize: "28px",
+          fontFamily: "Inter, sans-serif",
           fontWeight: 700,
           //   backgroundColor: "red",
           paddingLeft: "12px",
@@ -83,7 +84,6 @@ function GreetingCardNew() {
           >
             <FiUpload style={{fontSize:"24px"}}/>
             <Typography
-              className="Inter-font-family"
               sx={{
                 color: "#fff",
                 textAlign: "center",
@@ -91,6 +91,7 @@ function GreetingCardNew() {
                 fontSize: "20px",
                 fontStyle: "normal",
                 fontWeight: 700,
+                fontFamily: "Inter, sans-serif",
                 lineHeight: "24px",
               }}
             >
@@ -154,13 +155,13 @@ function GreetingCardNew() {
               </svg>
             </span>
             <Typography
-              className="Inter-font-family"
               sx={{
                 color: "#fff",
                 textAlign: "center",
                 fontFeatureSettings: "'liga' off, 'clig' off",
                 fontSize: "20px",
                 fontStyle: "normal",
+                fontFamily: "Inter Tight, sans-serif",
                 fontWeight: 700,
                 lineHeight: "24px",
               }}
@@ -186,7 +187,6 @@ function GreetingCardNew() {
           >
             <IoPlayCircleOutline style={{color:"#fff", fontSize:"24px"}}/>
             <Typography
-              className="Inter-font-family"
               sx={{
                 color: "#fff",
                 textAlign: "center",
@@ -195,6 +195,7 @@ function GreetingCardNew() {
                 fontStyle: "normal",
                 fontWeight: 700,
                 lineHeight: "24px",
+                fontFamily: "Inter, sans-serif",
               }}
             >
               Watch
