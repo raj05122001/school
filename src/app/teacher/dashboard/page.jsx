@@ -265,14 +265,15 @@ const Page = () => {
           {studentAssignment}
         </Grid>
         <Grid item xs={3}>
-          {classWiseStudentRanking}
+          {/* {classWiseStudentRanking} */}
         </Grid>
       </Grid>
 
       {/* Lecture and Subject Analytics */}
       <Grid container spacing={2} mt={4}>
         <Grid item xs={12} md={6}>
-          {lectureAnalytics}
+          {/* {lectureAnalytics} */}
+          {classWiseStudentRanking}
         </Grid>
         <Grid item xs={12} md={6}>
           {subjectAnalytics}

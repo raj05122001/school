@@ -28,10 +28,12 @@ import {
   Skeleton,
   Autocomplete,
   TextField,
+  LinearProgress,
 } from "@mui/material";
 import { AiOutlineClose, AiOutlineUp, AiOutlineDown } from "react-icons/ai";
 import { decodeToken } from "react-jwt";
 import Cookies from "js-cookie";
+import { FaRankingStar } from "react-icons/fa6";
 
 const RADIAN = Math.PI / 180;
 
@@ -115,7 +117,7 @@ const ClassWiseStudentRanking = ({ selectedOptions }) => {
       tabValue === 0
         ? data.active_students_gradewise
         : data.inactive_students_gradewise;
-    return Object?.entries(gradewiseData)?.map(([key, value]) => ({
+    return gradewiseData && Object?.entries(gradewiseData)?.map(([key, value]) => ({
       name: key,
       value,
     }));
@@ -151,7 +153,8 @@ const ClassWiseStudentRanking = ({ selectedOptions }) => {
       }}
       className="blur_effect_card"
     >
-      <Box sx={{ display: "flex", justifyContent: "space-between", mb: 2 }}>
+      <Box sx={{ display: "flex", mb: 2,alignItems:'center',gap:1 }}>
+       <FaRankingStar color="#3B3D3B" size={22}/>
         <Typography
           variant="h6"
           className={`${isDarkMode ? "dark-heading" : "light-heading"}`}
@@ -164,178 +167,112 @@ const ClassWiseStudentRanking = ({ selectedOptions }) => {
       <Tabs
         value={tabValue}
         onChange={handleTabChange}
-        aria-label="lecture overview tabs"
-        indicatorColor="none"
+        aria-label="Status Tabs"
+        // indicatorColor="primary"
+        // textColor="primary"
         sx={{
-          // mt: 2,
-          ".MuiTabs-flexContainer": {
-            // gap: 2,
-            background:
-              isDarkMode &&
-              "linear-gradient(89.7deg, rgb(0, 0, 0) -10.7%, rgb(53, 92, 125) 88.8%)",
-            backgroundImage: isDarkMode ? "" : "url('/TabBG2.jpg')", // Add background image
-            backgroundSize: "cover", // Ensure the image covers the entire page
-            backgroundPosition: "center", // Center the image
-            padding: 1,
-            borderRadius: "12px",
-            display: "flex",
-            justifyContent: "center",
-            alignItems: "center",
-            gap: 1,
+          mb: 2,
+          "& .MuiTabs-flexContainer": {
+            // justifyContent: "center",
           },
-          ".MuiTab-root": {
-            color: "#333",
-            padding: "10px 10px",
-            minHeight: 0,
-            // marginTop: "8px",
-            textAlign: "center",
-            color: isDarkMode && "#F0EAD6",
-            "&:hover": {
-              backgroundColor: "#e0e0e0",
-              boxShadow: "0px 2px 8px rgba(0, 0, 0, 0.1)",
-              borderRadius: "10px",
-            },
+          "& .MuiTabs-indicator": {
+            backgroundColor: "transparent",
+          },
+
+          "& .MuiTab-root": {
+            color: isDarkMode ? "#fff" : "#8C8F90",
+            borderColor: isDarkMode ? "#555" : "transparent",
+            borderRadius: "8px",
+            fontWeight: 600,
+            fontSize: "16px",
+            lineHeight: "24.06px",
             "&.Mui-selected": {
-              backgroundColor: "#fff",
-              color: "#000",
-              boxShadow: "0px 6px 15px rgba(0, 0, 0, 0.2)",
-              borderRadius: "10px",
+              backgroundColor: "#F3F5F7",
+              color: isDarkMode ? "black" : "#3B3D3B",
             },
           },
         }}
       >
-        <Tab label={`Active (${data.active_students || 0})`} />
-        <Tab label={`Inactive (${data.inactive_students || 0})`} />
+        <Tab label={`Active`} />
+        <Tab label={`Inactive`} />
       </Tabs>
-      {loading ? (
-        <Box
-          sx={{
-            width: "100%",
-            height: 240,
-            mt: 4,
-            display: "flex",
-            justifyContent: "center",
-            alignItems: "center",
-          }}
-        >
-          <Skeleton variant="circular" width={240} height={240} />
-        </Box>
-      ) : (
-        Object.entries(data)?.length > 0 &&
-        (getChartData().every((item) => Number(item.value) === 0) ? (
+
+      <Box sx={{ display: "flex", flexDirection: "column", gap: 2 }}>
+        {getChartData()?.map((entry, index) => (
           <Box
+            key={index}
             sx={{
-              width: "100%",
-              height: 240,
-              mt: 0,
+              border: "1px solid #C1C1C1",
+              borderRadius: "8px",
+              padding: "11px 7px 11px 7px",
               display: "flex",
-              justifyContent: "center",
-              alignItems: "center",
-              position: "relative",
+              width: "100%",
+              // alignItems: "center",
+              gap: 8,
             }}
           >
-            <Skeleton variant="circular" width={240} height={240} />
-            <Typography
+            <Box
               sx={{
-                textAlign: "center",
-                position: "absolute",
-                top: "50%",
-                left: "50%",
-                transform: "translate(-50%, -50%)",
-                zIndex: 10,
+                width: "100%",
               }}
             >
-              0%
-            </Typography>
-          </Box>
-        ) : (
-          <Box sx={{ width: "100%", height: 240, mt: 4 }}>
-            <ResponsiveContainer width="100%" height="100%">
-              <PieChart>
-                <Pie
-                  data={getChartData()}
-                  cx="50%"
-                  cy="50%"
-                  labelLine={false}
-                  innerRadius={50}
-                  outerRadius={100}
-                  label={renderCustomizedLabel}
-                  dataKey="value"
-                >
-                  {getChartData()?.map((entry, index) => (
-                    <Cell
-                      key={`cell-${index}`}
-                      fill={mapData[entry.name]?.color}
-                    />
-                  ))}
-                </Pie>
-              </PieChart>
-            </ResponsiveContainer>
-          </Box>
-        ))
-      )}
-
-      {loading ? (
-        <Skeleton
-          variant="rectangular"
-          width="100%"
-          height={100}
-          sx={{ mt: 0 }}
-        />
-      ) : (
-        Object.entries(data)?.length > 0 && (
-          <Grid container spacing={2} mt={0}>
-            {getChartData()?.map((entry) => (
-              <Grid
-                item
-                xs={12}
-                sm={6}
-                md={6}
-                key={entry.name}
-                onClick={() => handleOpenModal(entry.name)}
+              <Typography
                 sx={{
-                  display: "flex",
-                  alignItems: "center",
-                  cursor: "pointer",
-                  padding: 2,
+                  fontWeight: 600,
+                  fontSize: "16px",
                 }}
               >
-                <Box
+                Grade {mapData[entry.name]?.grade}
+              </Typography>
+
+              <Box sx={{ flexGrow: 1 }}>
+                <LinearProgress
+                  variant="determinate"
+                  value={entry.value}
                   sx={{
-                    width: 14,
-                    height: 14,
-                    bgcolor: mapData[entry.name]?.color,
-                    borderRadius: "50%",
-                    mr: 2,
-                    boxShadow: "0px 2px 4px rgba(0, 0, 0, 0.2)",
+                    height: 8,
+                    borderRadius: 1,
+                    "& .MuiLinearProgress-bar": {
+                      backgroundColor:
+                        entry.name === "A"
+                          ? "#14AE5C"
+                          : entry.name === "B"
+                          ? "#FF9500"
+                          : entry.name === "C"
+                          ? "#FF3B30"
+                          : entry.name === "D"
+                          ? "#F4C242"
+                          : "#F45B5B",
+                    },
+                    "&.MuiLinearProgress-colorPrimary": {
+                      backgroundColor: "#E0E0E0", 
+                    },
                   }}
                 />
-                <Box>
-                  <Typography
-                    variant="body1"
-                    sx={{
-                      color: primaryColor,
-                      fontWeight: 600,
-                    }}
-                  >
-                    Grade: {mapData[entry.name]?.grade}
-                  </Typography>
-                  <Typography
-                    variant="h6"
-                    sx={{
-                      color: secondaryColor,
-                      fontWeight: "bold",
-                      mt: 0.5,
-                    }}
-                  >
-                    {entry.value}
-                  </Typography>
-                </Box>
-              </Grid>
-            ))}
-          </Grid>
-        )
-      )}
+              </Box>
+            </Box>
+            <Box
+              sx={{
+                display: "flex",
+                alignItems: "flex-end",
+                justifyContent: "flex-end",
+              }}
+            >
+              <Typography
+                sx={{
+                  fontWeight: 700,
+                  fontSize: "24px",
+                  color: "#3D3D3D",
+                  lineHeight:"32.91px"
+                }}
+              >
+                {entry.value}%
+              </Typography>
+            </Box>
+          </Box>
+        ))}
+      </Box>
+
       {modalOpen && (
         <StudentModal
           open={modalOpen}
