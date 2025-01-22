@@ -97,7 +97,7 @@ const VideoPlayer = ({ id }) => {
       document.removeEventListener("visibilitychange", handleVisibilityChange);
 
       // Optionally, update on component unmount as well
-      handleBeforeUnload();
+      // handleBeforeUnload();
     };
   }, [playerRef.current, id]);
 
@@ -184,6 +184,51 @@ export const BreakpointPlayer = ({ markers, id, onPlayerReady, s3FileName }) => 
   const videoRef = useRef(null);
   const playerRef = useRef(null);
   const updateDataTriggered = useRef(false);
+  const [duration, setDuration] = useState(0);
+
+  useEffect(() => {
+    const getDuration = (event) => {
+      event.target.currentTime = 0;
+      event.target.removeEventListener("timeupdate", getDuration);
+      setDuration(event.target.duration);
+    };
+
+    const handleLoadedMetadata = () => {
+      const video = videoRef.current;
+      setDuration(video.duration);
+      if (video.duration === Infinity || isNaN(Number(video.duration))) {
+        video.currentTime = 1e101;
+        video.addEventListener("timeupdate", getDuration);
+      }
+    };
+
+    const video = videoRef.current;
+    if (video) {
+      video.addEventListener("loadedmetadata", handleLoadedMetadata);
+    }
+
+    return () => {
+      if (video) {
+        video.removeEventListener("loadedmetadata", handleLoadedMetadata);
+        video.removeEventListener("timeupdate", getDuration);
+      }
+    };
+  }, []);
+
+  useEffect(() => {
+    if (videoRef.current) {
+      const handleLoadedMetadata = () => {
+        setDuration(videoRef.current.duration);
+      };
+
+      const videoNode = videoRef.current;
+      videoNode.addEventListener("loadedmetadata", handleLoadedMetadata);
+
+      return () => {
+        videoNode.removeEventListener("loadedmetadata", handleLoadedMetadata);
+      };
+    }
+  }, []);
 
   const updateData = async () => {
     try {
@@ -245,7 +290,7 @@ export const BreakpointPlayer = ({ markers, id, onPlayerReady, s3FileName }) => 
 
     return () => {
       if (playerRef.current) {
-        playerRef.current.dispose();
+        // playerRef.current.dispose();
       }
     };
   }, [markers, userDetails, id]);
