@@ -51,9 +51,7 @@ const OverviewSection = () => {
       <Box sx={{ display: "flex", alignItems: "center", gap: 1, mb: 2 }}>
         <FaChalkboardTeacher size={26} style={{ ...iconStyle }} />
         <Typography
-          variant="h4"
-          className={`${isDarkMode ? "dark-heading" : "light-heading"}`}
-          sx={{ fontWeight: "bold" }}
+          sx={{ fontWeight: 600, fontFamily: "Inter, sans-serif", fontSize:"22px", fontStyle:"normal", lineHeight:"normal"}}
         >
           {userDetails?.role === "STUDENT"
             ? `Lectures For You`

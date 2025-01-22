@@ -5,7 +5,7 @@ import { BASE_URL_MEET } from "@/constants/apiconfig";
 import { decodeToken } from "react-jwt";
 import Cookies from "js-cookie";
 
-const UserImage = ({ profilePic = "", name = "", width = 32, height = 32 }) => {
+const UserImage = ({ profilePic = "", name = "", width = 40, height = 40 }) => {
   const [imgError, setImgError] = useState(false);
   const stringAvatar = (name) => {
     return {
@@ -26,7 +26,7 @@ const UserImage = ({ profilePic = "", name = "", width = 32, height = 32 }) => {
             alt=""
             width={width}
             height={height}
-            style={{ borderRadius: "50%" }}
+            style={{ borderRadius: "40px" }}
             onError={() => setImgError(true)}
           />
         ) : (
@@ -41,7 +41,7 @@ const UserImage = ({ profilePic = "", name = "", width = 32, height = 32 }) => {
           alt="Profile"
           width={width}
           height={height}
-          style={{ borderRadius: "50%" }}
+          style={{ borderRadius: "40px" }}
           onError={() => setImgError(true)}
         />
       ) : (
