@@ -35,7 +35,7 @@ const VideoPlayer = ({ id }) => {
   // updateVideoWatchtime: This function sends the latest watch time to your backend.
   // It is used in multiple scenarios.
   const updateVideoWatchtime = async (time) => {
-    if (typeof time === "number" && time > 0) {
+    if (typeof time === "number" && time > 0 && userDetails?.student_id) {
       try {
         const formData = {
           lecture_id: id,
