@@ -240,7 +240,7 @@ const LectureCard = ({ lecture, getAllLecture = () => {} }) => {
                 <IconButton onClick={() => handleOpenUserMenu()} sx={{ p: 0 }}>
                   <FaCloudUploadAlt
                     style={{
-                      color: isDarkMode ? primaryColor : "#00796b",
+                      color: isDarkMode ? primaryColor : "#4bb344",
                       cursor: "pointer",
                     }}
                     size={23}
@@ -301,7 +301,7 @@ const LectureCard = ({ lecture, getAllLecture = () => {} }) => {
               >
                 <FaEdit
                   style={{
-                    color: isDarkMode ? primaryColor : "#00796b",
+                    color: isDarkMode ? primaryColor : "#4bb344",
                     cursor: "pointer",
                   }}
                   size={20}

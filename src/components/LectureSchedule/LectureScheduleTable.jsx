@@ -98,15 +98,13 @@ const LectureScheduleTable = () => {
             <TableHead>
               <TableRow
                 sx={{
-                  background: isDarkMode
-                    ? "radial-gradient(circle at 10% 20%, rgb(90, 92, 106) 0%, rgb(32, 45, 58) 81.3%)"
-                    : "linear-gradient(178.6deg, rgb(20, 36, 50) 11.8%, rgb(124, 143, 161) 83.8%)",
+                  background: "linear-gradient(120deg, #d4fc79 0%, #96e6a1 100%)",
                 }}
               >
                 {TABLE_HEAD?.map((head, index) => (
                   <TableCell
                     key={index}
-                    sx={{ color: isDarkMode ? "white" : "black" }}
+                    sx={{ color: isDarkMode ? "#000000" : "#fff" }}
                     className="px-6 py-3 text-left text-base font-medium uppercase tracking-wider"
                   >
                     {head}
@@ -140,15 +138,13 @@ const LectureScheduleTable = () => {
             <TableHead>
               <TableRow
                 sx={{
-                  background: isDarkMode
-                    ? "radial-gradient(circle at 10% 20%, rgb(90, 92, 106) 0%, rgb(32, 45, 58) 81.3%)"
-                    : "linear-gradient(178.6deg, rgb(20, 36, 50) 11.8%, rgb(124, 143, 161) 83.8%)",
+                  background: "linear-gradient(120deg, #d4fc79 0%, #96e6a1 100%)"
                 }}
               >
                 {TABLE_HEAD?.map((head) => (
                   <TableCell
                     key={head}
-                    sx={{ color: isDarkMode ? "white" : "#B2BEB5" }}
+                    sx={{ color: isDarkMode ? "white" : "#000000" }}
                     className="px-6 py-3 text-left text-base font-medium uppercase tracking-wider"
                   >
                     {head}
