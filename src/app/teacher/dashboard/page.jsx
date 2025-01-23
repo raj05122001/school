@@ -101,7 +101,7 @@ total_duration:0
   //   [selectedOptions]
   // );
   const studentAssignment = useMemo(
-    () => <StudentAssignment selectedOptions={selectedOptions} />,
+    () => <StudentAssignment />,
     [selectedOptions]
   );
   const classWiseStudentRanking = useMemo(
@@ -161,7 +161,7 @@ total_duration:0
         </Grid>
       </Grid> */}
 
-      <Box
+      {/* <Box
         sx={{
           display: "flex",
           justifyContent: "space-between",
@@ -170,7 +170,7 @@ total_duration:0
           p:2
         }}
       >
-        {/* <Typography
+        <Typography
           variant="h4"
           className={`${isDarkMode ? "dark-heading" : "light-heading"}`}
           component="div"
@@ -182,8 +182,8 @@ total_duration:0
           }}
         >
           Class Proficiency
-        </Typography> */}
-        {/* <Box sx={{ display: "flex", gap: 2, alignItems: "center" }}>
+        </Typography> 
+        <Box sx={{ display: "flex", gap: 2, alignItems: "center" }}>
           <Autocomplete
             freeSolo
             id="class"
@@ -222,21 +222,25 @@ total_duration:0
               />
             )}
           />
-        </Box> */}
+        </Box> 
+      </Box> */}
+      <Box sx={{marginY:"16px", width:"100%",}}>
+        {studentAssignment}
       </Box>
-      <Grid container direction="row" spacing={2} mt={1}>
+      
+      {/* <Grid container direction="row" spacing={2} mt={1}>
         <Grid
           item
-          xs={9}
-          sx={{ display: "flex", flexDirection: "column", gap: 2 }}
+          xs={10}
+          sx={{ display: "flex", flexDirection: "column", gap: 2, width:"100%" }}
         >
-          {/* {classAssignment} */}
+          {classAssignment}
           {studentAssignment}
         </Grid>
         <Grid item xs={3}>
-          {/* {classWiseStudentRanking} */}
+          {classWiseStudentRanking}
         </Grid>
-      </Grid>
+      </Grid> */}
 
       {/* Lecture and Subject Analytics */}
       <Grid container spacing={2} mt={4}>
