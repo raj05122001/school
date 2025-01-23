@@ -34,7 +34,10 @@ import ClassProf from "@/commonComponents/ClassProf/ClassProf";
 const Page = () => {
   const { isDarkMode } = useThemeContext();
   const [classOptions, setClassOptions] = useState([]);
-  const [averageDuration, setAverageDuration] = useState(0);
+  const [averageDuration, setAverageDuration] = useState({
+avg_duration:0,
+total_duration:0
+  });
   const [selectedOptions, setSelectedOptions] = useState(null);
 
   useEffect(() => {
@@ -46,7 +49,8 @@ const Page = () => {
       const response = await getteacherClass();
       setClassOptions(response?.data?.data?.class_subject_list);
       setSelectedOptions(response?.data?.data?.class_subject_list?.[0])
-      setAverageDuration(response?.data?.data?.avg_duration);
+      console.log("response?.data?.data : ",response?.data?.data)
+      setAverageDuration({avg_duration:response?.data?.data?.avg_duration,total_duration:response?.data?.data?.total_duration});
       console.log("Response", response?.data?.data)
     } catch (error) {
       console.error(error);

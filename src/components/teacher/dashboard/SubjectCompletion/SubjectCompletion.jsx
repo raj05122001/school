@@ -3,12 +3,17 @@ import React, { useEffect, useState } from "react";
 import { Box, Card, CardContent, Typography, Grid } from "@mui/material";
 import { PieChart, Pie, Cell, Legend } from "recharts";
 import { getSubjectCompletion } from "@/api/apiHelper";
+import CircularProgress, {
+  circularProgressClasses,
+} from '@mui/material/CircularProgress';
 
 const COLORS = ["#0088FE", "#FF8042"];
 
 function SubjectCompletion() {
   const [isClient, setIsClient] = useState(false);
   const [completionData, setCompletionData] = useState({});
+
+  console.log("completionData : ",completionData)
 
   const fetchSubjectCompletion = async () => {
     try {
@@ -29,10 +34,23 @@ function SubjectCompletion() {
 
   const data = [
     { name: "Completed", value: completionData?.Completion_percentage },
-    { name: "Pending", value: completionData?.pending_percentage },
+    { name: "Pending", value: completionData?.toal_lectures_count },
   ];
 
+  const perc=(completionData?.toal_lectures_count * completionData?.Completion_percentage)/100
+
   return (
+    <Box sx={{ position: 'relative' }}>
+      <FacebookCircularProgress value={perc}/>
+      <Box
+        sx={{
+          width:"100%",
+          position: 'absolute',
+          top: '49%',
+          left: '59%',
+          transform: 'translate(-50%, -50%)',
+        }}
+      >
     <Card
       sx={{
         maxWidth: "137.50px",
@@ -127,11 +145,52 @@ function SubjectCompletion() {
             lineHeight: "24px",
           }}
         >
-          {`${completionData?.completion_count} / ${completionData?.pending_count}`}
+          {`${completionData?.completion_count} / ${completionData?.toal_lectures_count}`}
         </Typography>
       </Box>
     </Card>
+    </Box>
+    </Box>
   );
 }
 
 export default SubjectCompletion;
+
+
+function FacebookCircularProgress({value=0}) {
+  return (
+    <Box sx={{ position: 'relative' }}>
+      <CircularProgress
+        variant="determinate"
+        sx={(theme) => ({
+          color: '#FFFFFF26',
+          ...theme.applyStyles('dark', {
+            color: '#FFFFFF26',
+          }),
+        })}
+        size={170}
+        thickness={2}
+        value={100}
+      />
+      <CircularProgress
+        variant="determinate"
+        disableShrink
+        sx={(theme) => ({
+          color: '#FFFFFF',
+          animationDuration: '550ms',
+          position: 'absolute',
+          left: 0,
+          [`& .${circularProgressClasses.circle}`]: {
+            strokeLinecap: 'round',
+          },
+          ...theme.applyStyles('dark', {
+            color: '#FFFFFF',
+          }),
+        })}
+        size={170}
+        thickness={2}
+        value={value}
+      />
+    </Box>
+  );
+}

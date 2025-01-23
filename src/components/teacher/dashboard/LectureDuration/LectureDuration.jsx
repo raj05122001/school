@@ -1,10 +1,24 @@
 import React from "react";
 import { Box, Card, CardContent, Typography } from "@mui/material";
 import { GiDuration } from "react-icons/gi";
+import CircularProgress, {
+  circularProgressClasses,
+} from '@mui/material/CircularProgress';
 
 function LectureDuration({ averageDuration }) {
-  const avgDuration = averageDuration
+  const perc=(averageDuration?.total_duration * averageDuration?.avg_duration)/100
   return (
+    <Box sx={{ position: 'relative' }}>
+      <FacebookCircularProgress value={perc}/>
+      <Box
+        sx={{
+          width:"100%",
+          position: 'absolute',
+          top: '49%',
+          left: '59%',
+          transform: 'translate(-50%, -50%)',
+        }}
+      >
     <Card
       sx={{
         maxWidth: "137.50px",
@@ -94,11 +108,52 @@ function LectureDuration({ averageDuration }) {
             lineHeight: "24px",
           }}
         >
-          {averageDuration} mins
+          {averageDuration?.avg_duration} mins
         </Typography>
       </Box>
+      
     </Card>
+    </Box>
+    </Box>
   );
 }
 
 export default LectureDuration;
+
+function FacebookCircularProgress({value=0}) {
+  return (
+    <Box sx={{ position: 'relative' }}>
+      <CircularProgress
+        variant="determinate"
+        sx={(theme) => ({
+          color: '#FFFFFF26',
+          ...theme.applyStyles('dark', {
+            color: '#FFFFFF26',
+          }),
+        })}
+        size={170}
+        thickness={2}
+        value={100}
+      />
+      <CircularProgress
+        variant="determinate"
+        disableShrink
+        sx={(theme) => ({
+          color: '#FFFFFF',
+          animationDuration: '550ms',
+          position: 'absolute',
+          left: 0,
+          [`& .${circularProgressClasses.circle}`]: {
+            strokeLinecap: 'round',
+          },
+          ...theme.applyStyles('dark', {
+            color: '#FFFFFF',
+          }),
+        })}
+        size={170}
+        thickness={2}
+        value={value}
+      />
+    </Box>
+  );
+}
