@@ -1,7 +1,7 @@
 "use client";
 import React, { useState, useEffect, useMemo } from "react";
 import { Box, Grid, Autocomplete, TextField, Typography } from "@mui/material";
-import GreetingCard from "@/components/admin/dashboard/GreetingCard/GreetingCard";
+// import GreetingCard from "@/components/admin/dashboard/GreetingCard/GreetingCard";
 import ClassWiseStudentRanking from "@/components/admin/dashboard/ClassWiseStudentRanking/ClassWiseStudentRanking";
 import ClassAssignment from "@/components/admin/dashboard/ClassAssignment/ClassAssignment";
 import StudentAssignment from "@/components/admin/dashboard/StudentAssignment/StudentAssignment";
@@ -67,7 +67,7 @@ const Page = () => {
 
   const currentStyles = isDarkMode ? darkModeStyles : lightModeStyles;
 
-  const greetingCard = useMemo(() => <GreetingCard />, []);
+  // const greetingCard = useMemo(() => <GreetingCard />, []);
   const totalLectures = useMemo(
     () => <TotalLectures countData={countData} loading={loading}/>,
     [countData, loading]
@@ -102,7 +102,7 @@ const Page = () => {
   return (
     <Box sx={{ flexGrow: 1, m: 2 }}>
       {/* Greeting Card */}
-      <Box>{greetingCard}</Box>
+      {/* <Box>{greetingCard}</Box> */}
 
       {/* Profile, Lecture Duration, Subject Completion */}
       <Grid container spacing={1} mt={3}>

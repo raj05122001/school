@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import {
   Box,
   Card,
@@ -18,24 +18,32 @@ import UserImage from "@/commonComponents/UserImage/UserImage";
 
 function ProfileCard() {
   const router = useRouter();
-  const userDetails = decodeToken(Cookies.get("ACCESS_TOKEN"));
+  const [userDetails, setUserDetails] = useState(null);
+  useEffect(() => {
+    if (typeof window !== "undefined") {
+      const token = Cookies.get("ACCESS_TOKEN");
+      setUserDetails(token ? decodeToken(token) : {});
+    }
+  }, []);
   return (
-    <Card
+    <Box
       sx={{
-        maxWidth: "full",
+        maxWidth: "249px",
         width: "100%",
-        height: "100%",
-        position: "relative",
+        height: "49px",
+        // position: "relative",
         display: "flex",
         alignItems: "center",
-        p: 2,
-        background: "linear-gradient(to top, #09203f 0%, #537895 100%)",
+        p: "4px",
+        background: "rgba(20, 21, 20, 0.15)",
         boxShadow: "0 4px 30px rgba(0, 0, 0, 0.1)",
-        borderRadius: "16px",
+        borderRadius: "55px",
+        flexShrink: 0,
+        gap: "12px",
       }}
     >
       {/* Edit Button */}
-      {userDetails?.role !== "STUDENT" && (
+      {/* {userDetails?.role !== "STUDENT" && (
         <IconButton
           aria-label="edit"
           sx={{ position: "absolute", top: 8, right: 8 }}
@@ -43,7 +51,7 @@ function ProfileCard() {
         >
           <FaEdit style={{ color: "white" }} />
         </IconButton>
-      )}
+      )} */}
 
       {/* Profile Picture */}
       {userDetails?.profile_pic ? (
@@ -55,41 +63,105 @@ function ProfileCard() {
           style={{ borderRadius: "50%", marginRight: 2 }}
         />
       ) : (
-        <Box sx={{ mr: 2 }}>
-          <UserImage width={100} height={100} name={userDetails?.full_name} />
+        <Box sx={{}}>
+          <UserImage width={40} height={40} name={userDetails?.full_name} />
         </Box>
       )}
 
       {/* Card Content */}
-      <CardContent sx={{ flexGrow: 1 }}>
+      <Box sx={{}}>
         {/* Teacher Name */}
         <Typography
-          gutterBottom
-          variant="h5"
-          component="div"
-          fontFamily={"monospace"}
-          fontWeight={"bold"}
-          color={"white"}
+          sx={{
+            color: "#fff",
+            fontFamily: "Inter, sans-serif",
+            fontSize: "14px",
+            fontStyle: "normal",
+            fontWeight: 700,
+            lineHeight: "14.99px",
+            alignSelf: "stretch",
+          }}
         >
           {capitalizeWords(userDetails?.full_name)}
         </Typography>
-        <Box sx={{ display: "flex", gap: 2 }}>
-          {/* Class and Department */}
-          {/* <Typography variant="body2" color={"white"}>
+
+        {/* Class and Department */}
+        {/* <Typography variant="body2" color={"white"}>
             Experience: {userDetails?.exp}
           </Typography> */}
 
-          {userDetails?.role === "STUDENT" ?<Typography variant="body2" color={"white"}>
-          🔹  Class: {userDetails?.class_name}
-          </Typography>:
-          <Typography variant="body2" color={"white"}>
-          🔹  Department: {userDetails?.department}
+        {userDetails?.role === "STUDENT" ? (
+          <Typography
+            sx={{
+              color: "#fff",
+              fontFamily: "Inter, sans-serif",
+              fontSize: "10px",
+              fontStyle: "normal",
+              fontWeight: 400,
+              lineHeight: "14.99px",
+              alignSelf: "stretch",
+            }}
+          >
+            {userDetails?.class_name}
           </Typography>
-          }
-             
-        </Box>
-      </CardContent>
-    </Card>
+        ) : (
+          <Typography
+            sx={{
+              color: "#fff",
+              fontFamily: "Inter, sans-serif",
+              fontSize: "10px",
+              fontStyle: "normal",
+              fontWeight: 400,
+              lineHeight: "14.99px",
+              alignSelf: "stretch",
+            }}
+          >
+            {userDetails?.department}
+          </Typography>
+        )}
+      </Box>
+      <svg
+        xmlns="http://www.w3.org/2000/svg"
+        width="1"
+        height="29"
+        viewBox="0 0 1 29"
+        fill="none"
+      >
+        <path
+          d="M0.376953 0.755737V28.2442"
+          stroke="white"
+          stroke-width="0.624738"
+        />
+      </svg>
+      <Box>
+        <Typography
+          sx={{
+            color: "#fff",
+            alignSelf: "stretch",
+            fontFamily: "Inter, sans-serif",
+            fontSize: "10px",
+            fontWeight: 400,
+            fontStyle: "normal",
+            lineHeight: "14.99px",
+          }}
+        >
+          {userDetails?.role && `${userDetails?.role.charAt(0).toUpperCase()}${userDetails?.role.slice(1).toLowerCase()}`}
+        </Typography>
+        <Typography 
+          sx={{
+            color: "#fff",
+            alignSelf: "stretch",
+            fontFamily: "Inter, sans-serif",
+            fontSize: "14px",
+            fontWeight: 700,
+            fontStyle: "normal",
+            lineHeight: "14.99px",
+          }}
+        >
+          Vidya AI
+        </Typography>
+      </Box>
+    </Box>
   );
 }
 

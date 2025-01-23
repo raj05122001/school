@@ -183,7 +183,7 @@ const LectureTabs = () => {
                   borderRadius: 10,
                   background: isDarkMode
                     ? "linear-gradient(178.6deg, rgb(20, 36, 50) 11.8%, rgb(124, 143, 161) 83.8%)"
-                    : "linear-gradient(to top, #dfe9f3 0%, white 100%)",
+                    : "linear-gradient(to top,rgb(224, 243, 223) 0%, white 100%)",
                 }}
                 width="100%"
                 height={100}
@@ -202,7 +202,7 @@ const LectureTabs = () => {
                   position: "relative",
                   background: isDarkMode
                     ? "linear-gradient(178.6deg, rgb(20, 36, 50) 11.8%, rgb(124, 143, 161) 83.8%)"
-                    : "linear-gradient(to top, #dfe9f3 0%, white 100%)",
+                    : "linear-gradient(to top, rgb(224, 243, 223) 0%, white 100%)",
                   display: "flex",
                   justifyContent: "space-between",
                   alignItems: "center",
@@ -293,7 +293,7 @@ const LectureTabs = () => {
                 sx={{
                   background: isDarkMode
                     ? "radial-gradient(circle at 10% 20%, rgb(87, 108, 117) 0%, rgb(37, 50, 55) 100.2%)"
-                    : "radial-gradient(circle at 18.7% 37.8%, rgb(250, 250, 250) 0%, rgb(225, 234, 238) 90%)",
+                    : "radial-gradient(circle at 18.7% 37.8%, rgb(250, 250, 250) 0%, rgb(227, 238, 225) 90%)",
                   position: "sticky",
                   top: 0,
                   zIndex: 1,

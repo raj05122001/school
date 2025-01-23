@@ -13,11 +13,15 @@ import ChatBot from "@/components/ChatBot/ChatBot";
 import { BsChatSquareText } from "react-icons/bs";
 import Image from "next/image";
 import NewChatbot from "@/components/ChatBot/NewChatbot";
+import GreetingCardNew from "@/components/admin/dashboard/GreetingCard/GreetingCardNew";
 
 export const AppContextProvider = createContext({});
 
 const Main = ({ children }) => {
   const isTrialAccount=process.env.NEXT_PUBLIC_iSTRIALACCOUNT==="true"? true : false
+  const s3FileName=process.env.NEXT_PUBLIC_FILE_NAME==="edu/"? "edu/" : ""
+
+  console.log("s3FileName : ",s3FileName)
 
   const pathname = usePathname();
   const [open, setOpen] = useState(true);
@@ -97,6 +101,7 @@ const Main = ({ children }) => {
               handleLectureRecord,
               handelChatBotText,
               isTrialAccount,
+              s3FileName
             }}
           >
             <Box
@@ -125,6 +130,9 @@ const Main = ({ children }) => {
                 />
               )}
               <Box sx={{ display: "flex", flexDirection: "column" }}>
+                <Box>
+                  <GreetingCardNew />
+                </Box>
                 {children}
                 <Box sx={{ mt: "auto" }}>
                   <Footer />

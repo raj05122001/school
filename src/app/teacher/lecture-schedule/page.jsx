@@ -56,10 +56,12 @@ const LectureManager = () => {
       spacing={3}
       height="100%"
       padding={2}
+      marginTop={0.5}
       sx={{
-        background: isDarkMode
-          ? "linear-gradient(177.9deg, rgb(58, 62, 88) 3.6%, rgb(119, 127, 148) 105.8%)"
-          : "linear-gradient(180.3deg, rgb(221, 221, 221) 5.5%, rgb(110, 136, 161) 90.2%);",
+        // background: isDarkMode
+        //   ? "linear-gradient(177.9deg, rgb(58, 62, 88) 3.6%, rgb(119, 127, 148) 105.8%)"
+        //   : "linear-gradient(180.3deg, rgb(221, 221, 221) 5.5%, rgb(110, 136, 161) 90.2%);",
+        background:"#F3F5F7",
         // overflow: "hidden", // Add this line
       }}
     >
@@ -73,7 +75,7 @@ const LectureManager = () => {
                 style={{
                   marginRight: 8,
                   marginBottom: 8,
-                  color: "#00adb5"
+                  color: "#448234"
                 }}
               />
               <Typography
@@ -88,19 +90,22 @@ const LectureManager = () => {
           </Grid>
           <Grid item>
             <Box display="flex" gap={2}>
-              <DarkMode />
+              {/* <DarkMode /> */}
               <Button
                 variant="contained"
                 color="primary"
                 onClick={handleOpenDialog}
                 sx={{
-                  backgroundColor: "#B9D9EB",
+                  textTransform:"none",
+                  backgroundColor: "#95e681",
+                  fontFamily: "Inter, sans-serif",
+                  fontSize:"18px",
                   transition: "all 150ms ease-in-out",
                   color: "#003366", // Dark blue for text
 
                   ":hover": {
-                    backgroundColor: "#6699CC", // Slightly darker
-                    boxShadow: "0 0 10px 0 #6699CC inset, 0 0 10px 4px #6699CC", // Matching hover color
+                    backgroundColor: "#69cc66", // Slightly darker
+                    boxShadow: "0 0 10px 0 #6fcc66 inset, 0 0 10px 4px #68cc66", // Matching hover color
                   },
                 }}
               >
@@ -111,13 +116,16 @@ const LectureManager = () => {
                 color="secondary"
                 onClick={() => downloadExcel()}
                 sx={{
-                  backgroundColor: "#B9D9EB",
+                  textTransform:"none",
+                  fontFamily: "Inter, sans-serif",
+                  fontSize:"18px",
+                  backgroundColor: "#95e681",
                   transition: "all 150ms ease-in-out",
                   color: "#003366", // Dark blue for text
 
                   ":hover": {
-                    backgroundColor: "#6699CC", // Slightly darker
-                    boxShadow: "0 0 10px 0 #6699CC inset, 0 0 10px 4px #6699CC", // Matching hover color
+                    backgroundColor: "#69cc66", // Slightly darker
+                    boxShadow: "0 0 10px 0 #6fcc66 inset, 0 0 10px 4px #68cc66", // Matching hover color
                   },
                 }}
               >
@@ -128,13 +136,16 @@ const LectureManager = () => {
                 color="secondary"
                 onClick={() => setOpen(true)}
                 sx={{
-                  backgroundColor: "#B9D9EB",
+                  textTransform:"none",
+                  fontFamily: "Inter, sans-serif",
+                  fontSize:"18px",
+                  backgroundColor: "#95e681",
                   transition: "all 150ms ease-in-out",
                   color: "#003366", // Dark blue for text
 
                   ":hover": {
-                    backgroundColor: "#6699CC", // Slightly darker
-                    boxShadow: "0 0 10px 0 #6699CC inset, 0 0 10px 4px #6699CC", // Matching hover color
+                    backgroundColor: "#69cc66", // Slightly darker
+                    boxShadow: "0 0 10px 0 #6fcc66 inset, 0 0 10px 4px #68cc66", // Matching hover color
                   },
                 }}
               >
@@ -157,11 +168,10 @@ const LectureManager = () => {
             value={tabValue}
             onChange={handleTabChange}
             sx={{
+              fontFamily: "Inter, sans-serif",
               ".MuiTabs-flexContainer": {
                 gap: 2,
-                background: isDarkMode
-                  ? "linear-gradient(177.9deg, rgb(58, 62, 88) 3.6%, rgb(119, 127, 148) 105.8%)"
-                  : "linear-gradient(180.3deg, rgb(221, 221, 221) 5.5%, rgb(110, 136, 161) 90.2%)",
+                background: "linear-gradient(120deg, #d4fc79 0%, #96e6a1 100%)",
                 padding: 1,
                 borderRadius: "12px",
                 justifyContent: "center",
