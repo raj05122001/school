@@ -1,4 +1,4 @@
-import React, { useRef, useState } from "react";
+import React, { useContext, useRef, useState } from "react";
 import {
   Box,
   Card,
@@ -11,10 +11,12 @@ import { useThemeContext } from "@/hooks/ThemeContext";
 import { MdOutlineDateRange } from "react-icons/md";
 import LectureType from "../LectureType/LectureType";
 import Image from "next/image";
+import { AppContextProvider } from "@/app/main";
 
 const ListingCard = ({ data, onClick }) => {
   const { isDarkMode, primaryColor, secondaryColor } = useThemeContext();
   const videoRef = useRef(null);
+  const {s3FileName}=useContext(AppContextProvider)
 
   const [isHovered, setIsHovered] = useState(false);
 
@@ -22,12 +24,10 @@ const ListingCard = ({ data, onClick }) => {
     setIsHovered(true);
     videoRef.current.play();
   };
-
   const handleMouseLeave = () => {
     setIsHovered(false);
     videoRef?.current?.pause();
   };
-
   return (
     <Box
       p={2}
@@ -35,7 +35,7 @@ const ListingCard = ({ data, onClick }) => {
       onClick={() => onClick(data?.id)}
     >
       <Card
-        className="blur_effect_card"
+        // className="blur_effect_card"
         sx={{
           display: "flex",
           flexDirection: "column",
@@ -59,7 +59,7 @@ const ListingCard = ({ data, onClick }) => {
             component="video"
             preload="auto"
             ref={videoRef}
-            src={`https://d3515ggloh2j4b.cloudfront.net/videos/${data?.id}.mp4`}
+            src={`https://d3515ggloh2j4b.cloudfront.net/videos/${s3FileName}${data?.id}.mp4`}
             controls={isHovered}
             sx={{
               width: "100%",
@@ -73,7 +73,6 @@ const ListingCard = ({ data, onClick }) => {
         ) : (
           <Image src={"/Your Lecture is.png"} width={200} height={230} style={{width:"100%",height: "auto", maxHeight: 230,}}/>
         )}
-
         <CardContent
           sx={{
             display: "flex",
@@ -91,37 +90,37 @@ const ListingCard = ({ data, onClick }) => {
           <Typography
             variant="h6"
             gutterBottom
-            sx={{ fontWeight: "bold", color: primaryColor }}
+            sx={{ fontWeight: "bold", color: primaryColor, fontFamily: "Inter, sans-serif" }}
           >
             {data?.title}
           </Typography>
           <Typography
             variant="body1"
             gutterBottom
-            sx={{ color: isDarkMode ? primaryColor : "#555" }}
+            sx={{ color: isDarkMode ? primaryColor : "#555", fontFamily: "Inter, sans-serif" }}
           >
             <strong>Class:</strong> {data?.lecture_class?.name}
           </Typography>
           <Typography
             variant="body1"
             gutterBottom
-            sx={{ color: isDarkMode ? primaryColor : "#555" }}
+            sx={{ color: isDarkMode ? primaryColor : "#555", fontFamily: "Inter, sans-serif" }}
           >
             <strong>Subject:</strong> {data?.chapter?.subject?.name}
           </Typography>
           <Typography
             variant="body1"
             gutterBottom
-            sx={{ color: isDarkMode ? primaryColor : "#555" }}
+            sx={{ color: isDarkMode ? primaryColor : "#555", fontFamily: "Inter, sans-serif" }}
           >
             <strong>Chapter:</strong> {data?.chapter?.chapter}
           </Typography>
           <Typography
             variant="body1"
             gutterBottom
-            sx={{ color: isDarkMode ? primaryColor : "#555" }}
+            sx={{ color: isDarkMode ? primaryColor : "#555", fontFamily: "Inter, sans-serif" }}
           >
-            <strong>Description:</strong> {data?.description}
+            <strong>Description:</strong> {data?.description || "N/A"}
           </Typography>
           <Grid container mt={"auto"} pt={2}>
             <Grid item xs={12} sm={8}>
@@ -130,7 +129,7 @@ const ListingCard = ({ data, onClick }) => {
                 <Typography
                   variant="body1"
                   gutterBottom
-                  sx={{ color: isDarkMode ? primaryColor : "#555" }}
+                  sx={{ color: isDarkMode ? primaryColor : "#555", fontFamily: "Inter, sans-serif" }}
                 >
                   {data?.schedule_date}
                 </Typography>
@@ -145,5 +144,4 @@ const ListingCard = ({ data, onClick }) => {
     </Box>
   );
 };
-
 export default ListingCard;
