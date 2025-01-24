@@ -1,7 +1,7 @@
 :root {
   --max-width: 1100px;
   --border-radius: 12px;
-  --font-sans: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
+  --font-sans: "Inter","Space Grotesk", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
     "Helvetica Neue", Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji",
     "Segoe UI Symbol";
   --font-serif: "Merriweather", Georgia, "Times New Roman", serif;
@@ -38,6 +38,7 @@ body {
 body {
   color: black;
   background-color: #f6f6f6;
+  font-family: 'Inter', sans-serif;
 }
 
 /* Scrollbar styles */
@@ -129,8 +130,9 @@ a {
 }
 
 .blur_effect_card {
-  backdrop-filter: blur(10px);
-  background-color: rgba(255, 255, 255, 0.2);
+  /* backdrop-filter: blur(10px);
+  background-color: rgba(255, 255, 255, 0.2); */
+  background-color: white;
   box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
   border-radius: 16px;
 }
@@ -193,4 +195,24 @@ a {
   align-items: center;
   justify-content: center;
   z-index: 9999;
+}
+
+.Inter-font-family {
+  font-family: 'Inter', sans-serif !important;
+}
+
+.Space-font-family {
+  font-family: 'Space Grotesk', sans-serif !important;
+}
+
+.Jakarta-font-family {
+  font-family: 'Plus Jakarta Sans', sans-serif !important;
+}
+
+@font-face {
+  font-family: 'Space Grotesk';
+  src: url('/fonts/space-grotesk.woff2') format('woff2'),
+       url('/fonts/space-grotesk.woff') format('woff');
+  font-weight: 400;
+  font-style: normal;
 }

@@ -11,6 +11,7 @@ import {
   DialogActions,
   DialogContent,
   DialogTitle,
+  Tooltip,
 } from "@mui/material";
 import DarkMode from "@/components/DarkMode/DarkMode";
 import { FaBell, FaUpload, FaDownload } from "react-icons/fa";
@@ -49,6 +50,11 @@ const HeaderMOL = ({
     const hours = Math.floor(ms / (1000 * 60 * 60));
     const minutes = Math.floor((ms % (1000 * 60 * 60)) / (1000 * 60));
     return `${hours}h ${minutes}m`;
+  };
+
+  const truncateText = (text, maxLength = 20) => {
+    if (!text) return "N/A";
+    return text?.length > maxLength ? `${text?.slice(0, maxLength)}...` : text;
   };
 
   const handleDeleteLecture = async () =>{
@@ -164,12 +170,11 @@ const HeaderMOL = ({
           ) : (
             <Typography
               variant="h4"
-              fontFamily={"monospace"}
-              sx={{ fontWeight: "bold" }}
+              sx={{ fontWeight: "bold", fontFamily: "Inter, sans-serif" }}
             >
               {lectureData?.title || "Lecture Topic"}
               <br />
-              <span style={{ fontSize: "16px", fontStyle: "italic" }}>
+              <span style={{ fontSize: "16px", fontFamily: "Inter, sans-serif", fontStyle: "italic" }}>
                 facilitated by VidyaAI
               </span>
             </Typography>
@@ -181,14 +186,16 @@ const HeaderMOL = ({
             {loading ? (
               <Skeleton width="80%" height={30} />
             ) : (
-              <Typography variant="subtitle1">
+              <Typography variant="subtitle1" sx={{fontFamily: "Inter, sans-serif"}}>
                 <strong>Description:</strong>{" "}
-                {lectureData?.description || "N/A"}
+                <Tooltip title={lectureData?.description || "Description not available"}>
+                  <span>{truncateText(lectureData?.description || "N/A")}</span>
+                </Tooltip>
               </Typography>
             )}
           </Box>
 
-          <Box sx={{ display: "flex", justifyContent: "space-between", mb: 1 }}>
+          <Box sx={{ display: "flex", justifyContent: "space-between", mb: 1, gap:"14px" }}>
             {loading ? (
               <>
                 <Skeleton width="20%" height={30} />
@@ -197,17 +204,23 @@ const HeaderMOL = ({
               </>
             ) : (
               <>
-                <Typography variant="subtitle1">
+                <Typography variant="subtitle1" sx={{fontFamily: "Inter, sans-serif", }}>
                   <strong>Class:</strong>{" "}
-                  {lectureData?.lecture_class?.name || "N/A"}
+                  <Tooltip title={lectureData?.lecture_class?.name || "Class name not available"}>
+                  <span>{truncateText(lectureData?.lecture_class?.name) || "N/A"}</span>
+                  </Tooltip>
                 </Typography>
-                <Typography variant="subtitle1" sx={{ textAlign: "center" }}>
+                <Typography variant="subtitle1" sx={{ textAlign: "center", fontFamily: "Inter, sans-serif", }}>
                   <strong>Subject:</strong>{" "}
-                  {lectureData?.chapter?.subject?.name || "N/A"}
+                  <Tooltip title={lectureData?.chapter?.subject?.name || "Subject name not available"}>
+                    <span>{truncateText(lectureData?.chapter?.subject?.name || "N/A")}</span>
+                  </Tooltip>
                 </Typography>
-                <Typography variant="subtitle1">
+                <Typography variant="subtitle1" sx={{fontFamily: "Inter, sans-serif",}}>
                   <strong>Chapter:</strong>{" "}
-                  {lectureData?.chapter?.chapter || "N/A"}
+                  <Tooltip title={lectureData?.chapter?.chapter || "Chapter name not available"}>
+                    <span>{truncateText(lectureData?.chapter?.chapter || "N/A")}</span>
+                  </Tooltip>
                 </Typography>
               </>
             )}
@@ -222,17 +235,17 @@ const HeaderMOL = ({
               </>
             ) : (
               <>
-                <Typography variant="subtitle1">
+                <Typography variant="subtitle1" sx={{fontFamily: "Inter, sans-serif", }}>
                   <strong>Duration:</strong>{" "}
                   {lectureData?.duration
                     ? formatDuration(lectureData?.duration)
                     : "N/A"}
                 </Typography>
-                <Typography variant="subtitle1">
+                <Typography variant="subtitle1" sx={{fontFamily: "Inter, sans-serif",}}>
                   <strong>Scheduled Date:</strong>{" "}
                   {lectureData?.schedule_date || "N/A"}
                 </Typography>
-                <Typography variant="subtitle1">
+                <Typography variant="subtitle1" sx={{fontFamily: "Inter, sans-serif",}}>
                   <strong>Scheduled Time:</strong>{" "}
                   {lectureData?.schedule_time || "N/A"}
                 </Typography>

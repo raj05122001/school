@@ -1,4 +1,6 @@
 import { Inter } from "next/font/google";
+import '@fontsource/space-grotesk';
+import '@fontsource/inter';
 import "./globals.css";
 import Main from "./main";
 
@@ -15,7 +17,7 @@ export default function RootLayout({ children }) {
       <body
         suppressHydrationWarning
         className={inter.className}
-        style={{ height: "100%", width: "100%" }}
+        style={{ height: "100%", width: "100%", fontFamily: "Inter, sans-serif" }}
       >
         <Main>{children}</Main>
       </body>

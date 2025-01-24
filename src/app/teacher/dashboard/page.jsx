@@ -17,7 +17,7 @@ import SubjectAnalytics from "@/components/teacher/dashboard/SubjectAnalytics/Su
 import StrugglingExcelling from "@/components/teacher/dashboard/StrugglingExcelling/StrugglingExcelling";
 import OverallClassPerformance from "@/components/teacher/dashboard/OverallClassPerformance/OverallClassPerformance";
 import ClassStatistics from "@/components/teacher/dashboard/ClassStatistics/ClassStatistics";
-import GreetingCard from "@/components/teacher/dashboard/GreetingCard/GreetingCard";
+// import GreetingCard from "@/components/teacher/dashboard/GreetingCard/GreetingCard";
 import ProfileCard from "@/components/teacher/dashboard/ProfileCard/ProfileCard";
 import LectureDuration from "@/components/teacher/dashboard/LectureDuration/LectureDuration";
 import SubjectCompletion from "@/components/teacher/dashboard/SubjectCompletion/SubjectCompletion";
@@ -27,11 +27,17 @@ import ClassAssignment from "@/components/teacher/dashboard/ClassAssignment/Clas
 import StudentAssignment from "@/components/teacher/dashboard/StudentAssignment/StudentAssignment";
 import { getteacherClass } from "@/api/apiHelper";
 import { useThemeContext } from "@/hooks/ThemeContext";
+import GreetingCardNew from "@/components/admin/dashboard/GreetingCard/GreetingCardNew";
+import HeroCard from "@/components/teacher/dashboard/HeroCard/HeroCard";
+import ClassProf from "@/commonComponents/ClassProf/ClassProf";
 
 const Page = () => {
   const { isDarkMode } = useThemeContext();
   const [classOptions, setClassOptions] = useState([]);
-  const [averageDuration, setAverageDuration] = useState(0);
+  const [averageDuration, setAverageDuration] = useState({
+avg_duration:0,
+total_duration:0
+  });
   const [selectedOptions, setSelectedOptions] = useState(null);
 
   useEffect(() => {
@@ -43,12 +49,16 @@ const Page = () => {
       const response = await getteacherClass();
       setClassOptions(response?.data?.data?.class_subject_list);
       setSelectedOptions(response?.data?.data?.class_subject_list?.[0])
-      setAverageDuration(response?.data?.data?.avg_duration);
+      console.log("response?.data?.data : ",response?.data?.data)
+      setAverageDuration({avg_duration:response?.data?.data?.avg_duration,total_duration:response?.data?.data?.total_duration});
+      console.log("Response", response?.data?.data)
     } catch (error) {
       console.error(error);
     }
   };
 
+
+  
   const darkModeStyles = {
     backgroundColor: "#1a1a1a",
     color: "#ffffff",
@@ -67,7 +77,7 @@ const Page = () => {
 
   const currentStyles = isDarkMode ? darkModeStyles : lightModeStyles;
 
-  const greetingCard = useMemo(() => <GreetingCard />, []);
+  // const greetingCard = useMemo(() => <GreetingCardNew />, []);
   const profileCard = useMemo(() => <ProfileCard />, []);
   const lectureDuration = useMemo(
     () => <LectureDuration averageDuration={averageDuration} />,
@@ -86,12 +96,12 @@ const Page = () => {
   const classStatistics = useMemo(() => <ClassStatistics />, []);
   const lectureAnalytics = useMemo(() => <LectureAnalytics />, []);
   const subjectAnalytics = useMemo(() => <SubjectAnalytics />, []);
-  const classAssignment = useMemo(
-    () => <ClassAssignment selectedOptions={selectedOptions} />,
-    [selectedOptions]
-  );
+  // const classAssignment = useMemo(
+  //   () => <ClassAssignment selectedOptions={selectedOptions} />,
+  //   [selectedOptions]
+  // );
   const studentAssignment = useMemo(
-    () => <StudentAssignment selectedOptions={selectedOptions} />,
+    () => <StudentAssignment />,
     [selectedOptions]
   );
   const classWiseStudentRanking = useMemo(
@@ -106,10 +116,10 @@ const Page = () => {
   return (
     <Box sx={{ flexGrow: 1, m: 2 }}>
       {/* Greeting Card */}
-      <Box>{greetingCard}</Box>
+      {/* <Box>{greetingCard}</Box> */}
 
       {/* Profile, Lecture Duration, Subject Completion */}
-      <Grid container spacing={2} mt={3}>
+      {/* <Grid container spacing={2} mt={3}>
         <Grid item xs={12} sm={6} lg={5}>
           {profileCard}
         </Grid>
@@ -119,7 +129,11 @@ const Page = () => {
         <Grid item xs={12} lg={4}>
           {subjectCompletion}
         </Grid>
-      </Grid>
+      </Grid> */}
+      <Box sx={{display:"flex", gap:"16px"}}>
+      <HeroCard averageDuration={averageDuration}/>
+      <ClassProf />
+      </Box>
 
       {/* Overview and Calendar */}
       <Grid container direction="row" spacing={2} mt={2}>
@@ -147,7 +161,7 @@ const Page = () => {
         </Grid>
       </Grid> */}
 
-      <Box
+      {/* <Box
         sx={{
           display: "flex",
           justifyContent: "space-between",
@@ -168,7 +182,7 @@ const Page = () => {
           }}
         >
           Class Proficiency
-        </Typography>
+        </Typography> 
         <Box sx={{ display: "flex", gap: 2, alignItems: "center" }}>
           <Autocomplete
             freeSolo
@@ -208,52 +222,17 @@ const Page = () => {
               />
             )}
           />
-
-          {/* <Tabs
-            value={tabValue}
-            onChange={handleTabChange}
-            aria-label="lecture overview tabs"
-            indicatorColor="none"
-            sx={{
-              boxShadow: "0 4px 30px rgba(0, 0, 0, 0.1)",
-              backdropFilter: "blur(10px)",
-              backgroundColor: "rgba(255, 255, 255, 0.2)",
-              borderRadius: "10px",
-              display: "flex",
-              justifyContent: "center",
-              alignItems: "center",
-              ".MuiTabs-flexContainer": {
-                padding: "1px 10px",
-              },
-              ".MuiTab-root": {
-                color: "#333",
-                padding: "10px 10px",
-                minHeight: 0,
-                textAlign: "center",
-                color: isDarkMode && "#F0EAD6",
-                "&:hover": {
-                  backgroundColor: "#e0e0e0",
-                  borderRadius: "10px",
-                  color: "black",
-                },
-                "&.Mui-selected": {
-                  backgroundColor: "#e0e0e0",
-                  color: "#000",
-                  borderRadius: "10px",
-                },
-              },
-            }}
-          >
-            <Tab label={`Overall Class`} />
-            <Tab label={`My Class`} />
-          </Tabs> */}
-        </Box>
+        </Box> 
+      </Box> */}
+      <Box sx={{marginY:"16px", width:"100%",}}>
+        {studentAssignment}
       </Box>
-      <Grid container direction="row" spacing={2} mt={1}>
+      
+      {/* <Grid container direction="row" spacing={2} mt={1}>
         <Grid
           item
-          xs={9}
-          sx={{ display: "flex", flexDirection: "column", gap: 2 }}
+          xs={10}
+          sx={{ display: "flex", flexDirection: "column", gap: 2, width:"100%" }}
         >
           {classAssignment}
           {studentAssignment}
@@ -261,12 +240,13 @@ const Page = () => {
         <Grid item xs={3}>
           {classWiseStudentRanking}
         </Grid>
-      </Grid>
+      </Grid> */}
 
       {/* Lecture and Subject Analytics */}
       <Grid container spacing={2} mt={4}>
         <Grid item xs={12} md={6}>
-          {lectureAnalytics}
+          {/* {lectureAnalytics} */}
+          {classWiseStudentRanking}
         </Grid>
         <Grid item xs={12} md={6}>
           {subjectAnalytics}

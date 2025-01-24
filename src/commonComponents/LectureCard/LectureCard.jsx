@@ -38,15 +38,7 @@ import { uploadS3Video } from "@/api/apiHelper";
 import { IoIosCloseCircle } from "react-icons/io";
 import toast from "react-hot-toast";
 
-const day = [
-  "Sunday",
-  "Monday",
-  "Tuesday",
-  "Wednesday",
-  "Thursday",
-  "Friday",
-  "Saturday",
-];
+const day = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
 
 const settings = ["Upload File", "Record or Upload Video"];
 
@@ -92,7 +84,7 @@ const LectureCard = ({ lecture, getAllLecture = () => {} }) => {
 
   const dateSectionStyle = {
     minWidth: "80px",
-    backgroundColor: isDarkMode ? "#041E42" : "#e0f7fa",
+    backgroundColor: isDarkMode ? "#041E42" : "#d9ffd6",
     borderRadius: "12px 0 0 12px",
     display: "flex",
     flexDirection: "column",
@@ -109,7 +101,7 @@ const LectureCard = ({ lecture, getAllLecture = () => {} }) => {
 
   const iconStyle = {
     marginRight: "8px",
-    color: isDarkMode ? primaryColor : "#00796b",
+    color: isDarkMode ? primaryColor : "#4bb344",
   };
 
   const textStyle = {
@@ -136,22 +128,30 @@ const LectureCard = ({ lecture, getAllLecture = () => {} }) => {
         <Box sx={dateSectionStyle}>
           <Typography
             variant="h4"
-            sx={{ fontWeight: "bold", color: textStyle.color }}
+            sx={{ fontWeight: "700", fontFamily: "Inter, sans-serif" }}
           >
             {new Date(lecture?.schedule_date).getDate()}
           </Typography>
-          <Typography
-            variant="body2"
-            sx={{ color: isDarkMode ? primaryColor : "#00796b" }}
-          >
+          <Typography variant="body2" sx={{ fontFamily: "Inter, sans-serif" }}>
             {day[new Date(lecture?.schedule_date).getDay()]}
           </Typography>
         </Box>
         <Box sx={lectureInfoStyle}>
-          <Tooltip title={lecture?.title || ""} arrow placement="top-start">
+          <Tooltip
+            title={`Title: ${lecture?.title || ""}`}
+            arrow
+            placement="top-start"
+          >
             <Typography
               variant="h6"
-              sx={{ fontWeight: "bold", mb: 1, color: textStyle.color }}
+              sx={{
+                fontWeight: 700,
+                mb: 1,
+                fontFamily: "Inter, sans-serif",
+                fontSize: "16px",
+                fontStyle: "normal",
+                lineHeight: "normal",
+              }}
               noWrap
             >
               {lecture?.title?.length > 24
@@ -162,35 +162,62 @@ const LectureCard = ({ lecture, getAllLecture = () => {} }) => {
 
           <Box display="flex" alignItems="center" mb={1}>
             <FaCalendarAlt style={iconStyle} />
-            <Typography variant="body2" sx={{ color: textStyle.color }}>
+            <Typography
+              variant="body2"
+              sx={{ fontFamily: "Inter, sans-serif" }}
+            >
               {lecture?.schedule_date}
             </Typography>
             <FaClock style={{ ...iconStyle, marginLeft: "16px" }} />
-            <Typography variant="body2" sx={{ color: textStyle.color }}>
+            <Typography
+              variant="body2"
+              sx={{ fontFamily: "Inter, sans-serif" }}
+            >
               {lecture?.schedule_time}
             </Typography>
           </Box>
 
           <Box display="flex" alignItems="center" mb={1}>
             <FaGraduationCap style={iconStyle} />
-            <Typography variant="body2" sx={{ color: textStyle.color }}>
-              {lecture?.lecture_class?.name}
+            <Typography
+              variant="body2"
+              sx={{ fontFamily: "Inter, sans-serif" }}
+            >
+              <Tooltip
+                title={`Class: ${lecture?.lecture_class?.name || ""}`}
+                arrow
+                placement="top-start"
+              >
+                <span>{lecture?.lecture_class?.name}</span>
+              </Tooltip>
             </Typography>
           </Box>
           <Box display="flex" alignItems="center" mb={1}>
             <FaBook style={iconStyle} />
-            <Typography variant="body2" sx={{ color: textStyle.color }}>
-              {lecture?.chapter?.subject?.name}
+            <Typography
+              variant="body2"
+              sx={{ fontFamily: "Inter, sans-serif" }}
+            >
+            <Tooltip
+                title={`Subject: ${lecture?.chapter?.subject?.name || ""}`}
+                arrow
+                placement="top-start"
+              >
+                <span>{lecture?.chapter?.subject?.name}</span>
+              </Tooltip>
             </Typography>
           </Box>
           <Tooltip
-            title={lecture?.chapter?.chapter || ""}
+            title={`Chapter: ${lecture?.chapter?.chapter || ""}`}
             arrow
             placement="top-start"
           >
             <Box display="flex" alignItems="center" mb={1}>
               <FaBookOpen style={iconStyle} />
-              <Typography variant="body2" sx={{ color: textStyle.color }}>
+              <Typography
+                variant="body2"
+                sx={{ fontFamily: "Inter, sans-serif" }}
+              >
                 {lecture?.chapter?.chapter}
               </Typography>
             </Box>
@@ -213,7 +240,7 @@ const LectureCard = ({ lecture, getAllLecture = () => {} }) => {
                 <IconButton onClick={() => handleOpenUserMenu()} sx={{ p: 0 }}>
                   <FaCloudUploadAlt
                     style={{
-                      color: isDarkMode ? primaryColor : "#00796b",
+                      color: isDarkMode ? primaryColor : "#4bb344",
                       cursor: "pointer",
                     }}
                     size={23}
@@ -274,7 +301,7 @@ const LectureCard = ({ lecture, getAllLecture = () => {} }) => {
               >
                 <FaEdit
                   style={{
-                    color: isDarkMode ? primaryColor : "#00796b",
+                    color: isDarkMode ? primaryColor : "#4bb344",
                     cursor: "pointer",
                   }}
                   size={20}
@@ -347,12 +374,12 @@ export function BasicModal({ open, setOpen, id, getAllLecture = () => {} }) {
         formData.append("pdf", file);
       });
       await uploadS3Video(id, formData);
-      toast.success("Lecture has been uploaded")
+      toast.success("Lecture has been uploaded");
       resetStates();
       getAllLecture();
       setOpen(false);
     } catch (error) {
-      toast.error("Failed to create lecture")
+      toast.error("Failed to create lecture");
       console.error(error);
       setError("Failed to upload files");
     } finally {

@@ -23,10 +23,13 @@ import {
   Card,
   ToggleButtonGroup,
   ToggleButton,
+  Rating,
+  LinearProgress,
 } from "@mui/material";
 import { AiOutlineClose } from "react-icons/ai";
 import { decodeToken } from "react-jwt";
 import Cookies from "js-cookie";
+import { FaRankingStar } from "react-icons/fa6";
 
 const RADIAN = Math.PI / 180;
 
@@ -141,48 +144,104 @@ const ClassWiseStudentRanking = ({ selectedOptions }) => {
       }}
       className="blur_effect_card"
     >
-      <Box sx={{ display: "flex", justifyContent: "space-between", mb: 2 }}>
-        <Typography
-          variant="h5"
-          sx={{
-            color: isDarkMode ? "#fff" : "#000",
-            fontWeight: 600,
-          }}
-        >
-          Student Ranking
-        </Typography>
-      </Box>
-
-      {/* Class Selection Toggle */}
-      <Box sx={{ display: "flex", justifyContent: "center" }}>
-        <ToggleButtonGroup
-          value={classTabValue}
-          exclusive
-          onChange={handleClassTabChange}
-          aria-label="Class Selection"
-          sx={{
-            mb: 3,
-            width: "100%", // Ensure the ToggleButtonGroup takes full width
-            "& .MuiToggleButtonGroup-grouped": {
-              flex: 1, // Make each ToggleButton take equal space
-            },
-            "& .MuiToggleButton-root": {
+      <Box
+        sx={{
+          display: "flex",
+          justifyContent: "space-between",
+          mb: 2,
+          alignItems: "center",
+        }}
+      >
+        <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            width="24"
+            height="24"
+            viewBox="0 0 24 24"
+            fill="none"
+          >
+            <path
+              d="M8.67 14H4C2.9 14 2 14.9 2 16V22H8.67V14Z"
+              stroke="#3B3D3B"
+              stroke-width="2"
+              stroke-miterlimit="10"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            />
+            <path
+              d="M13.3299 10H10.6599C9.55991 10 8.65991 10.9 8.65991 12V22H15.3299V12C15.3299 10.9 14.4399 10 13.3299 10Z"
+              stroke="#3B3D3B"
+              stroke-width="2"
+              stroke-miterlimit="10"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            />
+            <path
+              d="M20.0001 17H15.3301V22H22.0001V19C22.0001 17.9 21.1001 17 20.0001 17Z"
+              stroke="#3B3D3B"
+              stroke-width="2"
+              stroke-miterlimit="10"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            />
+            <path
+              d="M12.52 2.07007L13.05 3.13006C13.12 3.28006 13.31 3.42006 13.47 3.44006L14.43 3.60007C15.04 3.70007 15.19 4.15005 14.75 4.58005L14 5.33005C13.87 5.46005 13.8 5.70006 13.84 5.87006L14.05 6.79007C14.22 7.52007 13.83 7.80007 13.19 7.42007L12.29 6.89007C12.13 6.79007 11.86 6.79007 11.7 6.89007L10.8 7.42007C10.16 7.80007 9.76998 7.52007 9.93998 6.79007L10.15 5.87006C10.19 5.70006 10.12 5.45005 9.98999 5.33005L9.24999 4.59006C8.80999 4.15006 8.94999 3.71005 9.56999 3.61005L10.53 3.45007C10.69 3.42007 10.88 3.28007 10.95 3.14007L11.48 2.08005C11.77 1.50005 12.23 1.50007 12.52 2.07007Z"
+              stroke="#3B3D3B"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            />
+          </svg>
+          <Typography
+            variant="h5"
+            sx={{
               color: isDarkMode ? "#fff" : "#000",
-              borderColor: isDarkMode ? "#555" : "#ccc",
-              "&.Mui-selected": {
-                backgroundColor: primaryColor,
-                color: isDarkMode ? "black" : "white",
-              },
-            },
+              fontWeight: 600,
+            }}
+          >
+            Ranking
+          </Typography>
+        </Box>
+        {/* Class Selection Toggle */}
+        <Box
+          sx={{
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
           }}
         >
-          <ToggleButton value="Overall" aria-label="Overall Class">
-            Overall Class
-          </ToggleButton>
-          <ToggleButton value="MyClass" aria-label="My Class">
-            My Class
-          </ToggleButton>
-        </ToggleButtonGroup>
+          <ToggleButtonGroup
+            value={classTabValue}
+            exclusive
+            onChange={handleClassTabChange}
+            aria-label="Class Selection"
+            sx={{
+              width: "100%", // Ensure the ToggleButtonGroup takes full width
+              "& .MuiToggleButtonGroup-grouped": {
+                flex: 1, // Make each ToggleButton take equal space
+              },
+              "& .MuiToggleButton-root": {
+                color: isDarkMode ? "#fff" : "#8C8F90",
+                borderColor: isDarkMode ? "#555" : "transparent",
+                fontWeight: 600,
+                fontSize: "16px",
+                borderRadius: "8px",
+                lineHeight: "24.06px",
+                "&.Mui-selected": {
+                  backgroundColor: "#F3F5F7",
+                  color: isDarkMode ? "black" : "#3B3D3B",
+                },
+              },
+            }}
+          >
+            <ToggleButton value="Overall" aria-label="Overall Class">
+              Overall
+            </ToggleButton>
+            <ToggleButton value="MyClass" aria-label="My Class">
+              Class
+            </ToggleButton>
+          </ToggleButtonGroup>
+        </Box>
       </Box>
 
       {/* Active/Inactive Tabs */}
@@ -195,159 +254,106 @@ const ClassWiseStudentRanking = ({ selectedOptions }) => {
         sx={{
           mb: 2,
           "& .MuiTabs-flexContainer": {
-            justifyContent: "center",
+            // justifyContent: "center",
           },
+          "& .MuiTabs-indicator": {
+            backgroundColor: "transparent",
+          },
+
           "& .MuiTab-root": {
-            color: primaryColor,
+            color: isDarkMode ? "#fff" : "#8C8F90",
+            borderColor: isDarkMode ? "#555" : "transparent",
+            borderRadius: "8px",
             fontWeight: 600,
+            fontSize: "16px",
+            lineHeight: "24.06px",
             "&.Mui-selected": {
-              color: "#0984e3",
+              backgroundColor: "#F3F5F7",
+              color: isDarkMode ? "black" : "#3B3D3B",
             },
           },
         }}
       >
-        <Tab label={`Active (${data.active_students || 0})`} />
-        <Tab label={`Inactive (${data.inactive_students || 0})`} />
+        <Tab label={`Active`} />
+        <Tab label={`Inactive`} />
       </Tabs>
 
-      {/* Pie Chart */}
-      {loading ? (
-        <Box
-          sx={{
-            width: "100%",
-            height: 240,
-            mt: 4,
-            display: "flex",
-            justifyContent: "center",
-            alignItems: "center",
-          }}
-        >
-          <Skeleton variant="circular" width={240} height={240} />
-        </Box>
-      ) : Object.entries(data)?.length > 0 &&
-        getChartData().every((item) => Number(item.value) === 0) ? (
-        <Box
-          sx={{
-            width: "100%",
-            height: 240,
-            mt: 0,
-            display: "flex",
-            justifyContent: "center",
-            alignItems: "center",
-            position: "relative",
-          }}
-        >
-          <Typography
+      <Box sx={{ display: "flex", flexDirection: "column", gap: 2 }}>
+        {getChartData()?.map((entry, index) => (
+          <Box
+            key={index}
             sx={{
-              textAlign: "center",
-              position: "absolute",
-              fontSize: 24,
-              fontWeight: 600,
-              color: isDarkMode ? "#fff" : "#000",
+              border: "1px solid #C1C1C1",
+              borderRadius: "8px",
+              padding: "11px 7px 11px 7px",
+              display: "flex",
+              width: "100%",
+              // alignItems: "center",
+              gap: 8,
             }}
           >
-            No Data Available
-          </Typography>
-        </Box>
-      ) : (
-        <Box sx={{ width: "100%", height: 300, mt: 2 }}>
-          <ResponsiveContainer width="100%" height="100%">
-            <PieChart>
-              <Pie
-                data={getChartData()}
-                cx="50%"
-                cy="50%"
-                labelLine={false}
-                innerRadius={55}
-                outerRadius={110}
-                label={renderCustomizedLabel}
-                dataKey="value"
-              >
-                {getChartData()?.map((entry, index) => (
-                  <Cell
-                    key={`cell-${index}`}
-                    fill={mapData[entry.name]?.color}
-                  />
-                ))}
-              </Pie>
-              <Tooltip
-                contentStyle={{
-                  backgroundColor: isDarkMode ? "#333" : "#fff",
-                  borderRadius: 8,
-                }}
-                labelStyle={{
-                  color: isDarkMode ? "#fff" : "#000",
-                }}
-                itemStyle={{
-                  color: isDarkMode ? "#fff" : "#000",
-                }}
-              />
-            </PieChart>
-          </ResponsiveContainer>
-        </Box>
-      )}
-
-      {/* Grade Details */}
-      {loading ? (
-        <Skeleton
-          variant="rectangular"
-          width="100%"
-          height={100}
-          sx={{ mt: 2 }}
-        />
-      ) : (
-        Object.entries(data)?.length > 0 && (
-          <Grid container spacing={2} mt={2}>
-            {getChartData()?.map((entry) => (
-              <Grid
-                item
-                xs={12}
-                sm={6}
-                md={statusTabValue === 0 ? 4 : 6}
-                key={entry.name}
-                onClick={() => handleOpenModal(entry.name)}
+            <Box
+              sx={{
+                width: "100%",
+              }}
+            >
+              <Typography
                 sx={{
-                  display: "flex",
-                  alignItems: "center",
-                  cursor: "pointer",
-                  padding: 2,
+                  fontWeight: 600,
+                  fontSize: "16px",
                 }}
               >
-                <Box
+                Grade {mapData[entry.name]?.grade}
+              </Typography>
+
+              <Box sx={{ flexGrow: 1 }}>
+                <LinearProgress
+                  variant="determinate"
+                  value={entry.value}
                   sx={{
-                    width: 24,
-                    height: 24,
-                    bgcolor: mapData[entry.name]?.color,
-                    borderRadius: "50%",
-                    mr: 2,
-                    boxShadow: "0px 2px 4px rgba(0, 0, 0, 0.2)",
+                    height: 8,
+                    borderRadius: 1,
+                    "& .MuiLinearProgress-bar": {
+                      backgroundColor:
+                        entry.name === "A"
+                          ? "#14AE5C"
+                          : entry.name === "B"
+                          ? "#FF9500"
+                          : entry.name === "C"
+                          ? "#FF3B30"
+                          : entry.name === "D"
+                          ? "#F4C242"
+                          : "#F45B5B",
+                    },
+                    "&.MuiLinearProgress-colorPrimary": {
+                      backgroundColor: "#E0E0E0",
+                    },
                   }}
                 />
-                <Box>
-                  <Typography
-                    variant="subtitle1"
-                    sx={{
-                      color: isDarkMode ? "#fff" : "#000",
-                      fontWeight: 600,
-                    }}
-                  >
-                    Grade:{mapData[entry.name]?.grade}
-                  </Typography>
-                  <Typography
-                    variant="body2"
-                    sx={{
-                      color: isDarkMode ? "#ccc" : "#666",
-                      mt: 0.5,
-                    }}
-                  >
-                    {entry.value}
-                  </Typography>
-                </Box>
-              </Grid>
-            ))}
-          </Grid>
-        )
-      )}
+              </Box>
+            </Box>
+            <Box
+              sx={{
+                display: "flex",
+                alignItems: "flex-end",
+                justifyContent: "flex-end",
+              }}
+            >
+              <Typography
+                sx={{
+                  fontWeight: 700,
+                  fontSize: "24px",
+                  color: "#3D3D3D",
+                  lineHeight: "32.91px",
+                }}
+              >
+                {entry.value}%
+              </Typography>
+            </Box>
+          </Box>
+        ))}
+      </Box>
+
       {modalOpen && (
         <StudentModal
           open={modalOpen}

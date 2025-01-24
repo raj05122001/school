@@ -1,5 +1,5 @@
 "use client";
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import {
   Box,
   Typography,
@@ -35,6 +35,7 @@ import DarkMode from "@/components/DarkMode/DarkMode";
 import { FaBell, FaTimes } from "react-icons/fa";
 import UserImage from "@/commonComponents/UserImage/UserImage";
 import { usePathname, useSearchParams, useRouter } from "next/navigation";
+import { AppContextProvider } from "@/app/main";
 
 const varelaRound = Varela_Round({ weight: "400", subsets: ["latin"] });
 
@@ -55,6 +56,7 @@ const lightModeStyles = {
 };
 
 const CoursePlaylist = ({ params }) => {
+  const {s3FileName}=useContext(AppContextProvider)
   const { id } = params;
   const searchParams = useSearchParams();
   const router = useRouter();
@@ -147,7 +149,7 @@ const CoursePlaylist = ({ params }) => {
             component="video"
             preload="auto"
             //   ref={videoRef}
-            src={`https://d3515ggloh2j4b.cloudfront.net/videos/${id}.mp4`}
+            src={`https://d3515ggloh2j4b.cloudfront.net/videos/${s3FileName}${id}.mp4`}
             //   controls={isHovered}
             sx={{
               width: "20%",
