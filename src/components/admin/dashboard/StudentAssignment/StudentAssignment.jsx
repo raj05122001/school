@@ -186,7 +186,7 @@ const StudentAssignment = ({ selectedOptions }) => {
                   color: isDarkMode ? "#F9F6EE" : "#353935",
                 }}
               >
-                Working Towards
+                Improved
               </TableCell>
               <TableCell
                 align="center"
