@@ -31,7 +31,7 @@ import { handleErrorResponse } from "@/helper/Helper";
 import { AppContextProvider } from "@/app/main";
 
 const LectureRecorder = ({ open, closeDrawer, recordingData }) => {
-  const {isTrialAccount}=useContext(AppContextProvider)
+  const {isTrialAccount,s3FileName}=useContext(AppContextProvider)
   const videoRef = useRef(null);
   const currentTimeLocal = new Date().toLocaleTimeString("en-GB", {
     hour: "2-digit",
@@ -172,7 +172,7 @@ const LectureRecorder = ({ open, closeDrawer, recordingData }) => {
       try {
         const params = {
           Bucket: "vidya-ai-video",
-          Key: `videos/${recordingData.id}.mp4`,
+          Key: `videos/${s3FileName}${recordingData.id}.mp4`,
           Body: chunk,
           ContentType: "video/mp4",
         };
@@ -223,7 +223,7 @@ const LectureRecorder = ({ open, closeDrawer, recordingData }) => {
 
   const mergeChunks = async () => {
     await axios.post(
-      `https://9eg2j1kaxd.execute-api.ap-south-1.amazonaws.com/mergeVideo/${recordingData.id}`
+      `https://9eg2j1kaxd.execute-api.ap-south-1.amazonaws.com/mergeVideo/${recordingData.id}?folderType=${s3FileName==="edu/"?"edu":"vidya"}`
     );
   };
 
@@ -288,7 +288,7 @@ const LectureRecorder = ({ open, closeDrawer, recordingData }) => {
           const formData = new FormData();
           formData.append(
             "video_url",
-            `https://vidya-ai-video.s3.amazonaws.com/videos/${recordingData.id}.mp4`
+            `https://vidya-ai-video.s3.amazonaws.com/videos/${s3FileName}${recordingData.id}.mp4`
           );
           formData.append("video_src", "OTHERS");
           await uploadVideoToS3(videoAttachment[0]);

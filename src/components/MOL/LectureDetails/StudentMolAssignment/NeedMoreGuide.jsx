@@ -12,6 +12,7 @@ import {
   Typography,
   Paper,
   IconButton,
+  ListItem,
 } from "@mui/material";
 import { TbArrowGuide } from "react-icons/tb";
 import { CiCircleChevRight, CiCircleChevLeft } from "react-icons/ci";
@@ -20,10 +21,13 @@ import { FaCode } from "react-icons/fa";
 import { SiKnowledgebase } from "react-icons/si";
 import { GrTechnology } from "react-icons/gr";
 import { IoFootstepsSharp } from "react-icons/io5";
+import TextWithMath from "@/commonComponents/TextWithMath/TextWithMath";
 
 export default function NeedMoreGuide({ assignmentId, open, setOpen }) {
   const [data, setData] = useState({});
   const [loading, setLoading] = useState(true);
+  const [showStepDetails, setShowStepDetails] = useState(false);
+  const [stepIndex, setStepIndex] = useState(0);
   const hasFetchedData = useRef(false); // Prevent multiple fetch calls
   // const [currentStepIndex, setCurrentStepIndex] = useState(0);
   const containerRef = useRef(null);
@@ -35,11 +39,11 @@ export default function NeedMoreGuide({ assignmentId, open, setOpen }) {
       }
     }
   }, [assignmentId]);
-
   const fetchData = async () => {
     setLoading(true);
     try {
       const response = await getGuidance(assignmentId);
+      console.log("Response", response);
       const parsedData =
         typeof response?.data?.data === "string"
           ? JSON?.parse(response?.data?.data)
@@ -52,11 +56,11 @@ export default function NeedMoreGuide({ assignmentId, open, setOpen }) {
     }
   };
 
+  console.log("Data", data);
 
   const handleClose = () => {
     setOpen(false);
   };
-
   const scrollContainer = (direction) => {
     if (containerRef.current) {
       containerRef.current.scrollBy({
@@ -66,11 +70,16 @@ export default function NeedMoreGuide({ assignmentId, open, setOpen }) {
     }
   };
 
+  const handleStepClick = (index) => {
+    setShowStepDetails(true);
+    setStepIndex(index);
+    console.log("Status of showStepDetails:", showStepDetails);
+  };
   // Function to render the carousel for `road_map_guide`
   const renderCarousel = (steps) => {
-    const stepArray = steps
-    ?.split(/step_\d+:/)
-    ?.filter((step) => step?.replace(/\n/g, "")?.trim() !== "");
+    // const stepArray = steps
+    // ?.split(/step_\d+:/)
+    // ?.filter((step) => step?.replace(/\n/g, "")?.trim() !== "");
 
     return (
       <Box
@@ -128,10 +137,13 @@ export default function NeedMoreGuide({ assignmentId, open, setOpen }) {
             scrollbarWidth: "none",
           }}
         >
-          {stepArray.map((step, index) => (
+          {steps.map((step, index) => (
             <Paper
               key={index}
               elevation={3}
+              onClick={() => {
+                handleStepClick(index);
+              }}
               sx={{
                 minWidth: "300px",
                 padding: 2,
@@ -140,17 +152,25 @@ export default function NeedMoreGuide({ assignmentId, open, setOpen }) {
                 borderRadius: 4,
                 background: "linear-gradient(to top, #accbee 0%, #e7f0fd 100%)",
                 boxShadow: "0px 4px 10px #5d7aa1",
+                "&:hover": {
+                  cursor: "pointer",
+                },
               }}
             >
               <Typography variant="h6" gutterBottom textAlign={"center"}>
                 <IoFootstepsSharp />
                 Step {index + 1}
               </Typography>
-              <Typography>{renderWithLineBreaks(step)}</Typography>
+              <Typography
+                // variant="span"
+                textAlign={"center"}
+                dangerouslySetInnerHTML={{
+                  __html: replaceString(step?.step.trim()),
+                }}
+              />
             </Paper>
           ))}
         </Box>
-
         <IconButton
           onClick={() => scrollContainer(`right`)}
           // disabled={currentStepIndex === roadMapSteps.length - 1}
@@ -171,7 +191,6 @@ export default function NeedMoreGuide({ assignmentId, open, setOpen }) {
       </Box>
     );
   };
-
   // Typing effect for the text
   const TypingEffect = ({ text }) => {
     const [displayedText, setDisplayedText] = useState("");
@@ -187,7 +206,6 @@ export default function NeedMoreGuide({ assignmentId, open, setOpen }) {
       }, 10); // Adjust speed (50ms per character)
       return () => clearInterval(interval);
     }, [text]);
-
     return (
       <Typography variant="subtitle1" fontSize={"14px"}>
         {renderCodeWithLineBreaks(displayedText)}
@@ -196,22 +214,60 @@ export default function NeedMoreGuide({ assignmentId, open, setOpen }) {
   };
 
   // Function to render data
+
   const renderData = (data) => {
     return Object?.keys(data)?.map((key) => {
       const value = data[key];
 
-      if (key === "road_map_guide") {
+      if (key === "steps_with_context") {
+        console.log("Value for steps with context", value);
         return (
           <Box key={key} sx={{ marginBottom: "16px" }}>
             <Typography variant="h6" gutterBottom textAlign={"center"}>
               <RiRoadMapLine style={{ marginRight: 4 }} /> {formatKey(key)}
             </Typography>
             {renderCarousel(value)}
+            {showStepDetails === true && (
+              <Box>
+
+                  <Paper
+                    key={stepIndex}
+                    elevation={3}
+                    sx={{
+                      minWidth: "300px",
+                      padding: 2,
+                      textAlign: "left",
+                      whiteSpace: "pre-wrap",
+                      borderRadius: 4,
+                      background:
+                        "linear-gradient(to top, #accbee 0%, #e7f0fd 100%)",
+                      boxShadow: "0px 4px 10px #5d7aa1",
+                      "&:hover": {
+                        cursor: "pointer",
+                      },
+                    }}
+                  >
+                    <Typography variant="h6" gutterBottom textAlign={"center"}>
+                      <IoFootstepsSharp />
+                      Explanation for Step {stepIndex + 1}
+                    </Typography>
+                    {/* <Typography
+                      // variant="span"
+                      textAlign={"center"}
+                      dangerouslySetInnerHTML={{
+                        __html: replaceString(value[stepIndex]?.description.trim()),
+                      }}
+                    /> */}
+                    <TextWithMath text={value[stepIndex]?.description.trim()} />  
+                  </Paper>
+
+              </Box>
+            )}
           </Box>
         );
       }
 
-      if (key === "code_snippet_or_examples" && value !== "") {
+      if (key === "code_snippets_or_examples" && value !== "") {
         return (
           <Box key={key} sx={{ marginBottom: "16px" }}>
             <Typography variant="h6" gutterBottom textAlign={"center"}>
@@ -232,7 +288,7 @@ export default function NeedMoreGuide({ assignmentId, open, setOpen }) {
         );
       }
 
-      if (key === "concept_and_knowledge_required") {
+      if (key === "concepts_and_knowledge_required") {
         return (
           <Box key={key} sx={{ marginBottom: "16px" }}>
             <Typography variant="h6" gutterBottom textAlign={"center"}>
@@ -253,7 +309,7 @@ export default function NeedMoreGuide({ assignmentId, open, setOpen }) {
         );
       }
 
-      if (key === "technology_and_tools_options") {
+      if (key === "technology_or_tools_options") {
         return (
           <Box key={key} sx={{ marginBottom: "16px" }}>
             <Typography variant="h6" gutterBottom textAlign={"center"}>
@@ -274,7 +330,6 @@ export default function NeedMoreGuide({ assignmentId, open, setOpen }) {
           </Box>
         );
       }
-
       return (
         value !== "" && (
           <div key={key} style={{ marginBottom: "8px" }}>
@@ -285,7 +340,6 @@ export default function NeedMoreGuide({ assignmentId, open, setOpen }) {
       );
     });
   };
-
   const replaceString = (data) => {
     return data
       ?.replace(/\[(.*?)\]/g, <span style="font-weight: 600">[$1]</span>)
@@ -294,12 +348,12 @@ export default function NeedMoreGuide({ assignmentId, open, setOpen }) {
       ?.replace(/(?<!\d)\. /g, `. <br>`)
       ?.replace(/\n/g, `.<br>`)
       ?.replace(/\\n/g, `<br>`); // Handle escaped \n
-      // .replace(/\\(.?)\\*/g, "<strong>$1</strong>");
+    // .replace(/\\(.?)\\*/g, "<strong>$1</strong>");
   };
 
   // Function to handle rendering text with line breaks
   const renderWithLineBreaks = (text) => {
-    return text?.split("\\\\n")?.map((line, index) => (
+    return text.map((line, index) => (
       <React.Fragment key={index}>
         <Typography
           variant="span"
@@ -318,14 +372,12 @@ export default function NeedMoreGuide({ assignmentId, open, setOpen }) {
       </React.Fragment>
     ));
   };
-
   // Function to format keys (optional)
   const formatKey = (key) => {
     return key
       ?.replace(/_/g, " ")
       ?.replace(/\b\w/g, (char) => char.toUpperCase());
   };
-
   return (
     <Dialog
       open={open}

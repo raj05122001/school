@@ -1,5 +1,5 @@
 "use client";
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import {
   Box,
   Typography,
@@ -35,6 +35,7 @@ import DarkMode from "@/components/DarkMode/DarkMode";
 import { FaBell, FaTimes } from "react-icons/fa";
 import UserImage from "@/commonComponents/UserImage/UserImage";
 import { usePathname, useSearchParams, useRouter } from "next/navigation";
+import { AppContextProvider } from "@/app/main";
 
 const varelaRound = Varela_Round({ weight: "400", subsets: ["latin"] });
 
@@ -45,7 +46,6 @@ const darkModeStyles = {
   inputColor: "#ffffff",
   boxShadow: "0px 2px 5px rgba(255, 255, 255, 0.1)",
 };
-
 const lightModeStyles = {
   backgroundColor: "#ffffff",
   color: "#000000",
@@ -55,28 +55,25 @@ const lightModeStyles = {
 };
 
 const CoursePlaylist = ({ params }) => {
+  const {s3FileName}=useContext(AppContextProvider)
   const { id } = params;
   const searchParams = useSearchParams();
   const router = useRouter();
   const pathname = usePathname();
   const searchQuery = searchParams.get("globalSearch") || "";
   const [globalSearch, setGlobalSearch] = useState(searchQuery);
-
   const [listData, setListData] = useState({});
   const [listLoading, setListLoading] = useState(true);
   const { isDarkMode, primaryColor, secondaryColor } = useThemeContext();
   const [selectedTab, setSelectedTab] = useState(0); // State to manage selected tab
-
   const handleTabChange = (event, newValue) => {
     setSelectedTab(newValue);
   };
-
   useEffect(() => {
     if (id) {
       fetchAssignmentAnswer();
     }
   }, [id, searchQuery]);
-
   const fetchAssignmentAnswer = async () => {
     setListLoading(true);
     try {
@@ -88,7 +85,6 @@ const CoursePlaylist = ({ params }) => {
         "",
         searchQuery
       );
-
       if (apiResponse?.success) {
         setListData(apiResponse?.data);
       }
@@ -99,20 +95,15 @@ const CoursePlaylist = ({ params }) => {
       setListLoading(false);
     }
   };
-
   useEffect(() => {
     const delayDebounceFn = setTimeout(() => {
       handleChange(globalSearch);
     }, 500); 
-
     return () => clearTimeout(delayDebounceFn); 
   }, [globalSearch]);
-
-
   const handleChange = (value) => {
     router.push(`${pathname}?globalSearch=${value}`);
   };
-
   const currentStyles = isDarkMode ? darkModeStyles : lightModeStyles;
   return (
     <Box
@@ -147,7 +138,7 @@ const CoursePlaylist = ({ params }) => {
             component="video"
             preload="auto"
             //   ref={videoRef}
-            src={`https://d3515ggloh2j4b.cloudfront.net/videos/${id}.mp4`}
+            src={`https://d3515ggloh2j4b.cloudfront.net/videos/${s3FileName}${id}.mp4`}
             //   controls={isHovered}
             sx={{
               width: "20%",
@@ -169,7 +160,6 @@ const CoursePlaylist = ({ params }) => {
               <MdOutlineTopic /> {listData?.lecture?.title}
               <hr />
             </Typography>
-
            <Box sx={{ display:"flex", justifyContent:"flex-end"}}>  
            <TextField
               id="global-search"
@@ -206,7 +196,6 @@ const CoursePlaylist = ({ params }) => {
             <DarkMode />
             <UserImage width={40} height={40} />
            </Box> 
-
           </Box>
             <Typography variant="subtitle1" marginTop={4}>
               <BsXDiamond /> <strong>Class:</strong>{" "}
@@ -220,7 +209,6 @@ const CoursePlaylist = ({ params }) => {
               <BsXDiamond /> <strong>Chapter:</strong>{" "}
               {listData?.lecture?.chapter?.chapter || "N/A"}
             </Typography>
-
             <Typography variant="subtitle1">
               <BsXDiamond /> <strong>Scheduled Date:</strong>{" "}
               {listData?.lecture?.schedule_date || "N/A"}
@@ -231,7 +219,6 @@ const CoursePlaylist = ({ params }) => {
             </Typography>
           </CardContent>
         </Card>
-
         {/* Video List */}
         <Box sx={{ flex: 1, width:"100%" }}>
           {/* <Box
@@ -287,7 +274,6 @@ const CoursePlaylist = ({ params }) => {
               <Tab label="Not Checked" />
             </Tabs>
           </Box> */}
-
           <StudentAssignments
             listData={listData?.students}
             isDarkMode={isDarkMode}
@@ -297,5 +283,4 @@ const CoursePlaylist = ({ params }) => {
     </Box>
   );
 };
-
 export default CoursePlaylist;
