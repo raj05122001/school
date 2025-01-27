@@ -42,7 +42,8 @@ const Page = () => {
     try {
       const response = await getteacherClass();
       setClassOptions(response?.data?.data?.class_subject_list);
-      setSelectedOptions(response?.data?.data?.class_subject_list?.[0])
+      const findMCA=response?.data?.data?.class_subject_list?.find((val)=>val?.class_id===2)
+      setSelectedOptions(findMCA)
       setAverageDuration(response?.data?.data?.avg_duration);
     } catch (error) {
       console.error(error);
