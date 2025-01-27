@@ -356,7 +356,7 @@ const StudentAssignment = () => {
                     lineHeight: "normal",
                   }}
                 >
-                  Improved
+                  Can be Improved
                 </TableCell>
                 <TableCell
                   align="center"

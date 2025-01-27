@@ -260,6 +260,7 @@ const LectureRecorder = ({ open, closeDrawer, recordingData }) => {
         formData.append("start_time", startAndEndTime?.start_time);
         formData.append("end_time", startAndEndTime?.end_time);
         formData.append("duration", timer);
+        formData.append("video_src", "VIDYAAI");
 
         await uploadAudioFile(recordingData.id, formData);
         setLectureStoped({
