@@ -18,13 +18,14 @@ import Cookies from "js-cookie";
 import axios from "axios";
 import { BASE_URL_MEET } from "@/constants/apiconfig";
 
-const VideoPlayer = ({ id }) => {
-  const { s3FileName, handelChatBotText } = useContext(AppContextProvider);
+const VideoPlayer = ({ id, duration=1e101 }) => {
+  const { s3FileName } = useContext(AppContextProvider);
   const userDetails = decodeToken(Cookies.get("ACCESS_TOKEN"));
   const [markers, setMarkers] = useState([]);
   const [suggestionData, setSuggestionData] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const playerRef = useRef(null);
+
   useEffect(() => {
     if (id) {
       fetchBreakPoint();
@@ -32,7 +33,6 @@ const VideoPlayer = ({ id }) => {
   }, [id]);
 
   // updateVideoWatchtime: This function sends the latest watch time to your backend.
-  // It is used in multiple scenarios.
   const updateVideoWatchtime = async (time) => {
     if (typeof time === "number" && time > 0 && userDetails?.student_id) {
       try {
@@ -41,14 +41,15 @@ const VideoPlayer = ({ id }) => {
           timestamp: time,
           student_id: userDetails?.student_id,
         };
-
         // Create a Blob with "application/json" so your backend (Flask) can parse it correctly
         const blob = new Blob([JSON.stringify(formData)], {
           type: "application/json",
         });
-
         // Send the data using navigator.sendBeacon
-        navigator.sendBeacon(`${BASE_URL_MEET}/api/v1/dashboard/watchtime_data/`, blob);
+        navigator.sendBeacon(
+          `${BASE_URL_MEET}/api/v1/dashboard/watchtime_data/`,
+          blob
+        );
       } catch (error) {
         console.error("Error sending beacon:", error);
       }
@@ -80,23 +81,20 @@ const VideoPlayer = ({ id }) => {
 
   const handleVideoEnded = () => {
     if (playerRef.current) {
-      // On video end, you may want to record the full duration as the last watch time.
+      // On video end, record the full duration as the last watch time.
       updateVideoWatchtime(playerRef.current.duration());
     }
   };
 
   useEffect(() => {
-    // window.addEventListener("beforeunload", handleBeforeUnload);
+    window.addEventListener("beforeunload", handleBeforeUnload);
     window.addEventListener("pagehide", handleBeforeUnload);
     document.addEventListener("visibilitychange", handleVisibilityChange);
 
     return () => {
-      // window.removeEventListener("beforeunload", handleBeforeUnload);
+      window.removeEventListener("beforeunload", handleBeforeUnload);
       window.removeEventListener("pagehide", handleBeforeUnload);
       document.removeEventListener("visibilitychange", handleVisibilityChange);
-
-      // Optionally, update on component unmount as well
-      // handleBeforeUnload();
     };
   }, [playerRef.current, id]);
 
@@ -135,9 +133,10 @@ const VideoPlayer = ({ id }) => {
           player.on("ended", handleVideoEnded);
         }}
         s3FileName={s3FileName}
+        duration={duration}
       />
     ),
-    [markers, id, s3FileName]
+    [markers, id, s3FileName, duration]
   );
 
   return (
@@ -163,8 +162,18 @@ const VideoPlayer = ({ id }) => {
           </Box>
         </Box>
       ) : (
-        <Box sx={{ width: "100%", height: "90%" }}>{breakpointPlayer}</Box>
+        <Box sx={{ width: "100%", height: "90%" }}>
+          {breakpointPlayer}
+        </Box>
       )}
+
+      {/* Display the known duration (if provided as a prop) */}
+      {!isLoading && (
+        <Typography variant="subtitle2" mt={1} textAlign="center">
+          Video Duration: {formatDuration(duration/1000)}
+        </Typography>
+      )}
+
       {suggestionData?.length > 0 && (
         <Box height="10%">
           <Suggestion suggestionData={suggestionData} />
@@ -176,25 +185,28 @@ const VideoPlayer = ({ id }) => {
 
 export default VideoPlayer;
 
-export const BreakpointPlayer = ({ markers, id, onPlayerReady, s3FileName }) => {
+export const BreakpointPlayer = ({
+  markers,
+  id,
+  onPlayerReady,
+  s3FileName,
+  duration,
+}) => {
   const userDetails = decodeToken(Cookies.get("ACCESS_TOKEN"));
   const videoRef = useRef(null);
   const playerRef = useRef(null);
   const updateDataTriggered = useRef(false);
-  const [duration, setDuration] = useState(0);
 
   useEffect(() => {
     const getDuration = (event) => {
       event.target.currentTime = 0;
       event.target.removeEventListener("timeupdate", getDuration);
-      setDuration(event.target.duration);
     };
 
     const handleLoadedMetadata = () => {
       const video = videoRef.current;
-      setDuration(video.duration);
       if (video.duration === Infinity || isNaN(Number(video.duration))) {
-        video.currentTime = 1e101;
+        video.currentTime = duration/1000;
         video.addEventListener("timeupdate", getDuration);
       }
     };
@@ -210,22 +222,7 @@ export const BreakpointPlayer = ({ markers, id, onPlayerReady, s3FileName }) => 
         video.removeEventListener("timeupdate", getDuration);
       }
     };
-  }, []);
-
-  useEffect(() => {
-    if (videoRef.current) {
-      const handleLoadedMetadata = () => {
-        setDuration(videoRef.current.duration);
-      };
-
-      const videoNode = videoRef.current;
-      videoNode.addEventListener("loadedmetadata", handleLoadedMetadata);
-
-      return () => {
-        videoNode.removeEventListener("loadedmetadata", handleLoadedMetadata);
-      };
-    }
-  }, []);
+  }, [duration,videoRef]);
 
   const updateData = async () => {
     try {
@@ -245,20 +242,22 @@ export const BreakpointPlayer = ({ markers, id, onPlayerReady, s3FileName }) => 
     const videoElement = videoRef.current;
     playerRef.current = videojs(videoElement);
 
-    // Notify parent that the player is ready so that we can attach global event listeners
+    // Notify parent that the player is ready
     if (onPlayerReady) {
       onPlayerReady(playerRef.current);
     }
+
     playerRef.current.on("loadedmetadata", function () {
       const total = playerRef.current.duration();
       const progressControl = playerRef.current.controlBar.progressControl;
+
       markers.forEach((marker) => {
-        const left = (marker.start / 1000 / total) * 100 + "%";
+        const left = ((marker.start / 1000) / total) * 100 + "%";
         const el = document.createElement("div");
         el.className = "vjs-marker";
         el.style.left = left;
         el.dataset.time = marker.start / 1000;
-        // Using inline styling for the marker label; adjust as needed.
+        // Use inline styling for the marker label; adjust as needed.
         el.innerHTML = `<span style="background-color: red;">${marker.gist}</span>`;
 
         el.onclick = function () {
@@ -284,20 +283,23 @@ export const BreakpointPlayer = ({ markers, id, onPlayerReady, s3FileName }) => 
     });
 
     return () => {
-      if (playerRef.current) {
-        // playerRef.current.dispose();
-      }
+      // If you dispose here, the video might unmount on re-render
+      // If that's desired, uncomment:
+      // playerRef.current.dispose();
     };
-  }, [markers, userDetails, id]);
+  }, [markers, userDetails, id, onPlayerReady]);
 
   return (
     <video
       ref={videoRef}
       className="video-js"
       controls
-      preload="auto"
+      preload="metadata"
       style={{ width: "100%", height: "100%", borderRadius: 10 }}
-      data-setup='{ "html5": { "nativeTextTracks": true },"playbackRates" : [0.25, 0.5, 0.75, 1, 1.25, 1.5,1.75]}'
+      data-setup='{
+        "html5": { "nativeTextTracks": true },
+        "playbackRates" : [0.25, 0.5, 0.75, 1, 1.25, 1.5, 1.75]
+      }'
     >
       <source
         src={`https://d3515ggloh2j4b.cloudfront.net/videos/${s3FileName}${id}.mp4`}
@@ -306,6 +308,7 @@ export const BreakpointPlayer = ({ markers, id, onPlayerReady, s3FileName }) => 
     </video>
   );
 };
+
 export const Suggestion = ({ suggestionData }) => {
   const { handelChatBotText } = useContext(AppContextProvider);
   const containerRef = useRef(null);
@@ -441,3 +444,19 @@ export const Suggestion = ({ suggestionData }) => {
     </Grid>
   );
 };
+
+/**
+ * Helper function to format duration (in seconds) into "HH:MM:SS" or "MM:SS".
+ */
+function formatDuration(totalSeconds = 0) {
+  if (!totalSeconds || isNaN(totalSeconds)) return "00:00";
+  const hours = Math.floor(totalSeconds / 3600);
+  const minutes = Math.floor((totalSeconds % 3600) / 60);
+  const seconds = Math.floor(totalSeconds % 60);
+
+  const hh = hours > 0 ? String(hours).padStart(2, "0") + ":" : "";
+  const mm = String(minutes).padStart(2, "0");
+  const ss = String(seconds).padStart(2, "0");
+
+  return hh ? `${hh}${mm}:${ss}` : `${mm}:${ss}`;
+}

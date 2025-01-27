@@ -68,7 +68,7 @@ const LecturePage = ({ params }) => {
 
   const classID = lectureData?.lecture_class?.id;
 
-  const videoPlayer = useMemo(() => <VideoPlayer id={id} />, [id]);
+  const videoPlayer = useMemo(() => <VideoPlayer id={id} duration={lectureData?.duration} />, [id,lectureData?.duration]);
   const headerMOL = useMemo(
     () => (
       <HeaderMOL
