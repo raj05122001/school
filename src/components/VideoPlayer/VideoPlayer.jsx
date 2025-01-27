@@ -167,13 +167,6 @@ const VideoPlayer = ({ id, duration=1e101 }) => {
         </Box>
       )}
 
-      {/* Display the known duration (if provided as a prop) */}
-      {!isLoading && (
-        <Typography variant="subtitle2" mt={1} textAlign="center">
-          Video Duration: {formatDuration(duration/1000)}
-        </Typography>
-      )}
-
       {suggestionData?.length > 0 && (
         <Box height="10%">
           <Suggestion suggestionData={suggestionData} />
@@ -444,19 +437,3 @@ export const Suggestion = ({ suggestionData }) => {
     </Grid>
   );
 };
-
-/**
- * Helper function to format duration (in seconds) into "HH:MM:SS" or "MM:SS".
- */
-function formatDuration(totalSeconds = 0) {
-  if (!totalSeconds || isNaN(totalSeconds)) return "00:00";
-  const hours = Math.floor(totalSeconds / 3600);
-  const minutes = Math.floor((totalSeconds % 3600) / 60);
-  const seconds = Math.floor(totalSeconds % 60);
-
-  const hh = hours > 0 ? String(hours).padStart(2, "0") + ":" : "";
-  const mm = String(minutes).padStart(2, "0");
-  const ss = String(seconds).padStart(2, "0");
-
-  return hh ? `${hh}${mm}:${ss}` : `${mm}:${ss}`;
-}
