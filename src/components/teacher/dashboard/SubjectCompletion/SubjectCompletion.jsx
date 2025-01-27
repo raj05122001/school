@@ -145,7 +145,7 @@ function SubjectCompletion() {
             lineHeight: "24px",
           }}
         >
-          {`${completionData?.completion_count} / ${completionData?.toal_lectures_count}`}
+          {`${completionData?.completion_count || 0} / ${completionData?.toal_lectures_count || 0}`}
         </Typography>
       </Box>
     </Card>

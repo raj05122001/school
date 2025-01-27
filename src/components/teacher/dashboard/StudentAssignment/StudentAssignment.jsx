@@ -75,7 +75,8 @@ const StudentAssignment = () => {
         const response = await getteacherClass();
         console.log("Option Response", response)
         setClassOptions(response?.data?.data?.class_subject_list);
-        setSelectedOptions(response?.data?.data?.class_subject_list?.[0]);
+        const findMCA=response?.data?.data?.class_subject_list?.find((val)=>val?.class_id===2)
+        setSelectedOptions(findMCA);
       } catch (error) {
         console.error(error);
       }

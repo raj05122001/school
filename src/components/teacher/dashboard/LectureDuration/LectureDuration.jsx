@@ -93,7 +93,7 @@ function LectureDuration({ averageDuration }) {
             lineHeight: "24px",
           }}
         >
-          Avergae Duration
+          Average Duration
         </Typography>
 
         {/* Class and Department */}
@@ -108,7 +108,7 @@ function LectureDuration({ averageDuration }) {
             lineHeight: "24px",
           }}
         >
-          {averageDuration?.avg_duration} mins
+          {averageDuration?.avg_duration || 0} mins
         </Typography>
       </Box>
       
