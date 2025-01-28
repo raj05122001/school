@@ -190,33 +190,6 @@ export const BreakpointPlayer = ({
   const playerRef = useRef(null);
   const updateDataTriggered = useRef(false);
 
-  useEffect(() => {
-    const getDuration = (event) => {
-      event.target.currentTime = 0;
-      event.target.removeEventListener("timeupdate", getDuration);
-    };
-
-    const handleLoadedMetadata = () => {
-      const video = videoRef.current;
-      if (video.duration === Infinity || isNaN(Number(video.duration))) {
-        video.currentTime = duration/1000;
-        video.addEventListener("timeupdate", getDuration);
-      }
-    };
-
-    const video = videoRef.current;
-    if (video) {
-      video.addEventListener("loadedmetadata", handleLoadedMetadata);
-    }
-
-    return () => {
-      if (video) {
-        video.removeEventListener("loadedmetadata", handleLoadedMetadata);
-        video.removeEventListener("timeupdate", getDuration);
-      }
-    };
-  }, [duration,videoRef]);
-
   const updateData = async () => {
     try {
       const formData = {
