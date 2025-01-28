@@ -269,7 +269,7 @@ export const BreakpointPlayer = ({
       }'
     >
       <source
-        src={`https://d3515ggloh2j4b.cloudfront.net/videos/${s3FileName}${id}.mp4`}
+        src={`https://d3515ggloh2j4b.cloudfront.net/videos/${s3FileName}${id}.mp4?v=2`}
         type="video/mp4"
       />
     </video>
