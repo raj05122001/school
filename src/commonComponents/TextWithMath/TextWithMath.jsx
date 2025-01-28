@@ -2,10 +2,9 @@ import { Box, Typography } from "@mui/material";
 import React from "react";
 import MathJax from "react-mathjax2";
 
-const TextWithMath = ({ text, color}) => {
+const TextWithMath = ({ text, color, isShow = false}) => {
   const isArray = Array.isArray(text);
   const textArray = isArray ? text : [text];
-  console.log("Color is", color)
   // Combined regex to match $$...$$ or \[...\]
   const combinedRegex = /(\$\$([\s\S]+?)\$\$|\\\[\s*([\s\S]+?)\s*\\\])/g;
 
@@ -40,10 +39,15 @@ const TextWithMath = ({ text, color}) => {
           <Typography
             variant="span"
             key={`${offset}-text`}
+            sx={{color : color==="red"? "red" :color==="green"? "green":""}}
             dangerouslySetInnerHTML={{ __html: replaceString(textBefore) }}
           />
         );
       }
+      if(isShow){
+        console.log(color)
+      }
+      
 
       // Determine which LaTeX delimiter was used
       const latexContent = p2 || p3;
@@ -52,7 +56,7 @@ const TextWithMath = ({ text, color}) => {
         elements.push(
           <Typography
             variant="span"
-            sx={{ fontSize: "1rem", lineHeight: "1rem", }}
+            sx={{ fontSize: "1rem", lineHeight: "1rem", color : color==="red"? "red" :color==="green"? "green":""}}
             key={`${offset}-math`}
           >
             <MathJax.Node inline key={`${offset}-math-node`}>
@@ -74,7 +78,7 @@ const TextWithMath = ({ text, color}) => {
           variant="span"
           key={`remaining-text`}
           dangerouslySetInnerHTML={{ __html: replaceString(remainingText) }}
-          sx={color ? { color } : {}}
+          sx={{color : color==="red"? "red" :color==="green"? "green":""}}
         />
       );
     }
@@ -84,7 +88,7 @@ const TextWithMath = ({ text, color}) => {
 
   return (
     <MathJax.Context input="tex">
-      <Box>
+      <Box sx={{color : color==="red"? "red" :color==="green"? "green":""}}>
         {textArray?.map((part, index) => (
           <Box key={index}>{processText(part)}</Box>
         ))}
