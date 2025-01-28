@@ -63,7 +63,7 @@ const StudentMCQ = ({ id, isDarkMode }) => {
       fetchQuizData();
     }
   }, [id]);
-
+  
   const parseOptions = (options) => {
     try {
       // First, convert the single quotes around the array to double quotes
@@ -73,7 +73,7 @@ const StudentMCQ = ({ id, isDarkMode }) => {
         ?.map((option) =>
           option?.trim()?.replace(/^'/, '"')?.replace(/'$/, '"')
         ) // Replace single quotes around each option with double quotes
-        ?.join(","); // Join the items back into a comma-separated string
+        ?.join(", "); // Join the items back into a comma-separated string
 
       // Wrap the modified string back into an array format
       validJson = `[${validJson}]`;
@@ -222,7 +222,7 @@ const StudentMCQ = ({ id, isDarkMode }) => {
                     alignItems="center"
                     marginTop={"4px"}
                     sx={{ fontSize: "16px" }}
-                  >
+                  >                
                     <Typography
                       sx={{
                         fontWeight: "bold",
@@ -240,6 +240,7 @@ const StudentMCQ = ({ id, isDarkMode }) => {
                           ? "green"
                           : "red"
                       }
+                      isShow = {true}
                     />
                     <Typography
                       sx={{

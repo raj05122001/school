@@ -141,7 +141,7 @@ total_duration:0
           {overviewSection}
           {/* <Box mt={4}>{calendarComponent}</Box> */}
         </Grid>
-        <Grid item xs={12} md={3} mt={4}>
+        <Grid item xs={12} md={3}>
             <Grid item xs={12}>
               {overallClassPerformance}
             </Grid>

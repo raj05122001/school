@@ -93,28 +93,28 @@ const LectureAssignment = ({ id, isDarkMode, class_ID, isEdit }) => {
     );
   };
 
-  const handleUpdateAssignment = async (assignment) => {
+  const handleEditAssignment = async (assignment) => {
     setEditedAssignmentId(null);
     setError(null); // Clear any previous error messages
     const { id: assignment_id, assignment_mark, assignment_text } = assignment;
     const formData = {
       assignment_mark,
-      is_assigned: true,
+      is_assigned: false, // Ensure it's not assigned when editing
       assignment_id,
       assignment_text: editedText === "" ? assignment_text : editedText,
     };
-
+  
     try {
       const response = await updateLectureAssignment(
         assignment?.lecture.id,
         formData
       );
-
+  
       if (response?.data?.success) {
         setAssignments((prevAssignments) =>
           prevAssignments?.map((a) =>
             a?.id === assignment_id
-              ? { ...a, assignment_text: editedText, is_assigned: true }
+              ? { ...a, assignment_text: editedText } // Update only the text
               : a
           )
         );
@@ -128,6 +128,39 @@ const LectureAssignment = ({ id, isDarkMode, class_ID, isEdit }) => {
       setError("An error occurred while updating the assignment.");
     }
   };
+  
+  const handleAssignAssignment = async (assignment) => {
+    setError(null); // Clear any previous error messages
+    const { id: assignment_id, assignment_mark, assignment_text } = assignment;
+    const formData = {
+      assignment_mark,
+      is_assigned: true, // Assign the assignment
+      assignment_id,
+      assignment_text,
+    };
+  
+    try {
+      const response = await updateLectureAssignment(
+        assignment?.lecture.id,
+        formData
+      );
+  
+      if (response?.data?.success) {
+        setAssignments((prevAssignments) =>
+          prevAssignments?.map((a) =>
+            a?.id === assignment_id ? { ...a, is_assigned: true } : a
+          )
+        );
+        fetchAssignments();
+      } else {
+        setError("Failed to assign the assignment.");
+      }
+    } catch (err) {
+      console.error(err);
+      setError("An error occurred while assigning the assignment.");
+    }
+  };
+  
 
   const handleCreateAssignment = async () => {
     const formData = {
@@ -320,7 +353,7 @@ const LectureAssignment = ({ id, isDarkMode, class_ID, isEdit }) => {
                     >
                       <IconButton
                         onClick={() => {
-                          handleUpdateAssignment(assignment);
+                          handleEditAssignment(assignment);
                         }}
                         style={{ cursor: "pointer" }}
                       >
@@ -452,7 +485,7 @@ const LectureAssignment = ({ id, isDarkMode, class_ID, isEdit }) => {
                             )}
                             <Button
                               variant="contained"
-                              onClick={() => handleUpdateAssignment(assignment)}
+                              onClick={() => handleAssignAssignment(assignment)}
                               sx={{
                                 // backgroundColor: assignment.is_assigned
                                 //   ? "green"
