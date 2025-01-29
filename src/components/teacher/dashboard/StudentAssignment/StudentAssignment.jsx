@@ -75,7 +75,7 @@ const StudentAssignment = () => {
         const response = await getteacherClass();
         console.log("Option Response", response)
         setClassOptions(response?.data?.data?.class_subject_list);
-        const findMCA=response?.data?.data?.class_subject_list?.find((val)=>val?.class_id===2)
+        const findMCA=response?.data?.data?.class_subject_list?.find((val)=>val?.class_id===2 || val?.class_id===20)
         setSelectedOptions(findMCA);
       } catch (error) {
         console.error(error);
@@ -107,7 +107,6 @@ const StudentAssignment = () => {
         selectedOptions?.class_id,
         true
       );
-      console.log("Response", response);
       setRangeData(response?.data?.data);
     } catch (error) {
       console.error(error);
