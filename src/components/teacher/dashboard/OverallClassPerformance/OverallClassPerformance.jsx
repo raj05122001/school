@@ -29,42 +29,42 @@ function OverallClassPerformance() {
         {
           rating: "5",
           count: response?.data?.data?.count_of_5 || 0,
-          percentage: (
+          percentage: total > 0 ? (
             ((response?.data?.data?.count_of_5 || 0) / total) *
             100
-          ).toFixed(2),
+          )?.toFixed(2) : "0.00",
         },
         {
           rating: "4",
           count: response?.data?.data?.count_of_4 || 0,
-          percentage: (
+          percentage: total > 0 ? (
             ((response?.data?.data?.count_of_4 || 0) / total) *
             100
-          ).toFixed(2),
+          ).toFixed(2): "0.00",
         },
         {
           rating: "3",
           count: response?.data?.data?.count_of_3 || 0,
-          percentage: (
+          percentage: total > 0 ? (
             ((response?.data?.data?.count_of_3 || 0) / total) *
             100
-          ).toFixed(2),
+          ).toFixed(2): "0.00",
         },
         {
           rating: "2",
           count: response?.data?.data?.count_of_2 || 0,
-          percentage: (
+          percentage: total > 0 ? (
             ((response?.data?.data?.count_of_2 || 0) / total) *
             100
-          ).toFixed(2),
+          ).toFixed(2): "0.00",
         },
         {
           rating: "1",
           count: response?.data?.data?.count_of_1 || 0,
-          percentage: (
+          percentage: total>0 ? (
             ((response?.data?.data?.count_of_1 || 0) / total) *
             100
-          ).toFixed(2),
+          ).toFixed(2): "0.00",
         },
       ];
 
@@ -123,7 +123,7 @@ function OverallClassPerformance() {
               fontSize: "14px",
             }}
           >
-            {item.rating}{" "}
+            {item?.rating}{" "}
             <span style={{ padding: "2px", marginTop: "2px" }}>
               {
                 <svg
@@ -145,7 +145,7 @@ function OverallClassPerformance() {
           {/* Progress Bar */}
           <LinearProgress
             variant="determinate"
-            value={item.percentage}
+            value={item?.percentage || 0}
             sx={{
               flexGrow: 1,
               height: 10,
@@ -167,7 +167,7 @@ function OverallClassPerformance() {
               fontSize: "14px",
             }}
           >
-            {item.percentage}%
+            {item?.percentage || 0}%
           </Typography>
         </Box>
       ))}
