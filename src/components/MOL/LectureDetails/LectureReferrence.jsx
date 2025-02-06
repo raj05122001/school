@@ -210,7 +210,7 @@ const LectureReferrence = ({ id, isDarkMode }) => {
                       >
                         <Box
                           component="img"
-                          src="/springer_logo.png"
+                          src="/springer_thumbnail.png"
                           alt="Springer logo"
                           sx={{
                             width: 100,
