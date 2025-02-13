@@ -413,7 +413,12 @@ export default class apiServices {
       .catch((error) => console.error(error));
   };
 
-  public getStudentAssignment = async (class_ids,page = 1, pageSize = 5, isTeacher = false) => {
+  public getStudentAssignment = async (
+    class_ids,
+    page = 1,
+    pageSize = 5,
+    isTeacher = false
+  ) => {
     return await this.axiosInstance
       .get(
         `/api/v1/dashboard/assignment-student-details/${class_ids}/?page=${page}&size=${pageSize}${
@@ -533,22 +538,24 @@ export default class apiServices {
   };
 
   public getLectureTracking = async (
-    status="",
-    search="",
-    type="",
-    page=1,
-    size=10,
+    status = "",
+    search = "",
+    type = "",
+    page = 1,
+    size = 10,
     getDate,
     subjectList = "",
     classList = ""
   ) => {
     return await this.axiosInstance
       .get(
-        `/api/v1/dashboard/all_lectures/?${search? `&search=${search}`:""}&type=${type}${status? `&status=${status}`:""}${page? `&page=${page}`:""}${size?`&size=${size}`:""}${
-          getDate ? `&date=${getDate}` : ""
-        }${subjectList ? `&subject=${subjectList}` : ""}${
-          classList ? `&class=${classList}` : ""
-        }`
+        `/api/v1/dashboard/all_lectures/?${
+          search ? `&search=${search}` : ""
+        }&type=${type}${status ? `&status=${status}` : ""}${
+          page ? `&page=${page}` : ""
+        }${size ? `&size=${size}` : ""}${getDate ? `&date=${getDate}` : ""}${
+          subjectList ? `&subject=${subjectList}` : ""
+        }${classList ? `&class=${classList}` : ""}`
       )
       .then((Response) => Response)
       .catch((error) => console.error(error));
@@ -732,11 +739,12 @@ export default class apiServices {
     subject = "",
     search = "",
     student_name = "",
-    assignment_id = ""
+    assignment_id = "",
+    page = 1
   ) => {
     return await this.axiosInstance
       .get(
-        `/api/v1/get_assignment_answer/?class=${classname}&subject=${subject}&search=${search}&lecture_id=${lecture_id}&student_id=${student_id}&student_name=${student_name}&assignment_id=${assignment_id}`
+        `/api/v1/get_assignment_answer/?class=${classname}&subject=${subject}&search=${search}&lecture_id=${lecture_id}&student_id=${student_id}&student_name=${student_name}&assignment_id=${assignment_id}&page=${page}`
       )
       .then((Response) => Response.data);
   };
@@ -1047,7 +1055,7 @@ export default class apiServices {
       .then((Response) => Response)
       .catch((error) => console.error(error));
   };
-  
+
   public releasedLecture = async (lectureId, formData) => {
     return await this.axiosInstance
       .patch(`api/v1/lecture/${lectureId}/`, formData)

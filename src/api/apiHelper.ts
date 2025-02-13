@@ -427,9 +427,9 @@ export const getTopTeachers = async () => {
   return await apiInstance.getTopTeachers();
 };
 
-export const getTeacherAssignment = async (lecture_id="",student_id="",classname="",subject="",search="",student_name="",assignment_id="") => {
+export const getTeacherAssignment = async (lecture_id="",student_id="",classname="",subject="",search="",student_name="",assignment_id="", page=1) => {
   const apiInstance = new apiServices(axiosAPIInstance);
-  return await apiInstance.getTeacherAssignment(lecture_id,student_id,classname,subject,search,student_name,assignment_id);
+  return await apiInstance.getTeacherAssignment(lecture_id,student_id,classname,subject,search,student_name,assignment_id,page);
 };
 
 export const updateAssignment = async (que_id, formData) => {
