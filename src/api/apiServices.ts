@@ -732,11 +732,12 @@ export default class apiServices {
     subject = "",
     search = "",
     student_name = "",
-    assignment_id = ""
+    assignment_id = "",
+    page=1
   ) => {
     return await this.axiosInstance
       .get(
-        `/api/v1/get_assignment_answer/?class=${classname}&subject=${subject}&search=${search}&lecture_id=${lecture_id}&student_id=${student_id}&student_name=${student_name}&assignment_id=${assignment_id}`
+        `/api/v1/get_assignment_answer/?class=${classname}&subject=${subject}&search=${search}&lecture_id=${lecture_id}&student_id=${student_id}&student_name=${student_name}&assignment_id=${assignment_id}&page=${page}`
       )
       .then((Response) => Response.data);
   };
