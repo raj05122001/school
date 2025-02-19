@@ -190,6 +190,7 @@ export const BreakpointPlayer = ({
   const playerRef = useRef(null);
   const updateDataTriggered = useRef(false);
 
+
   const updateData = async () => {
     try {
       const formData = {

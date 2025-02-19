@@ -44,9 +44,12 @@ const TextWithMath = ({ text, color, isShow = false}) => {
           />
         );
       }
+<<<<<<< HEAD
       if(isShow){
         console.log(color)
       }
+=======
+>>>>>>> main
       
 
       // Determine which LaTeX delimiter was used
@@ -166,4 +169,3 @@ export default TextWithMath;
 // };
 
 // export default TextWithMath;
-

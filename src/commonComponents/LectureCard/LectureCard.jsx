@@ -51,19 +51,14 @@ const LectureCard = ({ lecture, getAllLecture = () => {} }) => {
     handleCreateLecture,
     handleLectureRecord,
   } = useContext(AppContextProvider);
-
   const [anchorElUser, setAnchorElUser] = useState(null);
-
   const handleOpenUserMenu = (event) => {
     setAnchorElUser(event?.currentTarget);
   };
-
   const handleCloseUserMenu = () => {
     setAnchorElUser(null);
   };
-
   const router = useRouter();
-
   const lectureCardStyle = {
     position: "relative",
     display: "flex",
@@ -93,7 +88,6 @@ const LectureCard = ({ lecture, getAllLecture = () => {} }) => {
     padding: "16px",
     textAlign: "center",
   };
-
   const lectureInfoStyle = {
     flexGrow: 1,
     paddingLeft: "16px",
@@ -107,13 +101,10 @@ const LectureCard = ({ lecture, getAllLecture = () => {} }) => {
   const textStyle = {
     color: isDarkMode ? "#ffffff" : "#000000",
   };
-
   const userDetails = decodeToken(Cookies.get("ACCESS_TOKEN"));
-
   const handleRoute = (id) => {
     router.push(`/student/lecture-listings/${id}`);
   };
-
   return (
     <>
       <Paper
@@ -290,7 +281,6 @@ const LectureCard = ({ lecture, getAllLecture = () => {} }) => {
                 </MenuItem>
               </Menu>
             </Box>
-
             <Tooltip title="Edit Lecture">
               <IconButton
                 onClick={(e) => {
@@ -320,9 +310,7 @@ const LectureCard = ({ lecture, getAllLecture = () => {} }) => {
     </>
   );
 };
-
 export default LectureCard;
-
 export function BasicModal({ open, setOpen, id, getAllLecture = () => {} }) {
   const { isTrialAccount } = useContext(AppContextProvider);
   const inputVideoRef = useRef(null);
@@ -330,7 +318,6 @@ export function BasicModal({ open, setOpen, id, getAllLecture = () => {} }) {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
   const [isLoading, setIsLoading] = useState(false);
-
   const handleClose = (event) => {
     event.stopPropagation();
     if (!loading) {
@@ -338,18 +325,15 @@ export function BasicModal({ open, setOpen, id, getAllLecture = () => {} }) {
       resetStates();
     }
   };
-
   const handleRemoveFile = (index) => {
     setFiles((prevFiles) => prevFiles?.filter((_, idx) => idx !== index));
   };
-
   const resetStates = () => {
     setFiles([]);
     setError("");
     setLoading(false);
     if (inputVideoRef.current) inputVideoRef.current.value = null;
   };
-
   const handleFileChange = (e) => {
     if (isTrialAccount) {
       alert("You don't have access. This is a trial account.");
@@ -359,7 +343,6 @@ export function BasicModal({ open, setOpen, id, getAllLecture = () => {} }) {
       setFiles((prev) => [...prev, ...selectedFiles]);
     }
   };
-
   const handleSubmit = async () => {
     if (!files.length) {
       setError("No file selected. Please choose a Files to upload.");
@@ -387,7 +370,6 @@ export function BasicModal({ open, setOpen, id, getAllLecture = () => {} }) {
       setIsLoading(false);
     }
   };
-
   return isLoading ? (
     <Box className="overlay">
       <Box className="loader"></Box>

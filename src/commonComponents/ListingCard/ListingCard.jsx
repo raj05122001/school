@@ -24,12 +24,10 @@ const ListingCard = ({ data, onClick }) => {
     setIsHovered(true);
     videoRef.current.play();
   };
-
   const handleMouseLeave = () => {
     setIsHovered(false);
     videoRef?.current?.pause();
   };
-
   return (
     <Box
       p={2}
@@ -75,7 +73,6 @@ const ListingCard = ({ data, onClick }) => {
         ) : (
           <Image src={"/Your Lecture is.png"} width={200} height={230} style={{width:"100%",height: "auto", maxHeight: 230,}}/>
         )}
-
         <CardContent
           sx={{
             display: "flex",
@@ -147,5 +144,4 @@ const ListingCard = ({ data, onClick }) => {
     </Box>
   );
 };
-
 export default ListingCard;

@@ -223,7 +223,11 @@ const LectureRecorder = ({ open, closeDrawer, recordingData }) => {
 
   const mergeChunks = async () => {
     await axios.post(
+<<<<<<< HEAD
       `https://9eg2j1kaxd.execute-api.ap-south-1.amazonaws.com/mergeVideo/${recordingData.id}?folderType=edu`
+=======
+      `https://9eg2j1kaxd.execute-api.ap-south-1.amazonaws.com/mergeVideo/${recordingData.id}?folderType=${s3FileName==="edu/"?"edu":"vidya"}`
+>>>>>>> main
     );
   };
 

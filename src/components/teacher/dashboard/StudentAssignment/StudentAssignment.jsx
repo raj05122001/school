@@ -275,6 +275,7 @@ const StudentAssignment = () => {
           />
         </Box>
       </Box>
+<<<<<<< HEAD
       <Box sx={{ display: "flex" }}>
         <TableContainer
           component={Paper}
@@ -381,6 +382,118 @@ const StudentAssignment = () => {
                           variant="rectangular"
                           width={120}
                           height={30}
+=======
+      <TableContainer
+        component={Paper}
+        sx={{
+          maxHeight: 500,
+          minHeight: 380,
+          height: "100%",
+          borderRadius: "8px",
+          overflow: "hidden",
+          backdropFilter: "blur(10px)",
+          backgroundColor: "rgba(255, 255, 255, 0.2)",
+        }}
+        className="blur_effect_card"
+      >
+        <Table>
+          <TableHead stickyHeader>
+            <TableRow>
+              <TableCell
+                sx={{
+                  fontWeight: "bold",
+                  color: isDarkMode ? "#F9F6EE" : "#353935",
+                }}
+              >
+                Full Name
+              </TableCell>
+              <TableCell
+                align="center"
+                sx={{
+                  fontWeight: "bold",
+                  color: isDarkMode ? "#F9F6EE" : "#353935",
+                }}
+              >
+                Work Completed
+              </TableCell>
+              <TableCell
+                align="center"
+                sx={{
+                  fontWeight: "bold",
+                  color: isDarkMode ? "#F9F6EE" : "#353935",
+                }}
+              >
+                Average Score
+              </TableCell>
+              <TableCell
+                align="center"
+                sx={{
+                  fontWeight: "bold",
+                  color: isDarkMode ? "#F9F6EE" : "#353935",
+                }}
+              >
+                Needing Attention
+              </TableCell>
+              <TableCell
+                align="center"
+                sx={{
+                  fontWeight: "bold",
+                  color: isDarkMode ? "#F9F6EE" : "#353935",
+                }}
+              >
+               Can be Improved 
+              </TableCell>
+              <TableCell
+                align="center"
+                sx={{
+                  fontWeight: "bold",
+                  color: isDarkMode ? "#F9F6EE" : "#353935",
+                }}
+              >
+                Mastered
+              </TableCell>
+            </TableRow>
+          </TableHead>
+          <TableBody>
+            {loading
+              ? Array.from(new Array(5))?.map((_, index) => (
+                  <TableRow key={index}>
+                    <TableCell>
+                      <Skeleton variant="rectangular" width={120} height={30} />
+                    </TableCell>
+                    <TableCell align="center">
+                      <Skeleton variant="rectangular" width={60} height={30} />
+                    </TableCell>
+                    <TableCell align="center">
+                      <Skeleton variant="rectangular" width="80%" height={30} />
+                    </TableCell>
+                    <TableCell align="center">
+                      <Skeleton variant="circular" width={30} height={30} />
+                    </TableCell>
+                    <TableCell align="center">
+                      <Skeleton variant="circular" width={30} height={30} />
+                    </TableCell>
+                    <TableCell align="center">
+                      <Skeleton variant="circular" width={30} height={30} />
+                    </TableCell>
+                  </TableRow>
+                ))
+              : data?.map((student, index) => (
+                  <TableRow
+                    key={index}
+                    sx={{
+                      backgroundColor: getRowColor(
+                        student.average_scored_percentage
+                      ),
+                    }}
+                  >
+                    <TableCell>
+                      <Box display="flex" alignItems="center">
+                        <UserImage
+                          name={student?.student_name}
+                          width={36}
+                          height={36}
+>>>>>>> main
                         />
                       </TableCell>
                       <TableCell align="center">

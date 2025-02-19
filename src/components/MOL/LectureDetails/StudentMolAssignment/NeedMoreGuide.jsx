@@ -39,7 +39,6 @@ export default function NeedMoreGuide({ assignmentId, open, setOpen }) {
       }
     }
   }, [assignmentId]);
-
   const fetchData = async () => {
     setLoading(true);
     try {
@@ -62,7 +61,6 @@ export default function NeedMoreGuide({ assignmentId, open, setOpen }) {
   const handleClose = () => {
     setOpen(false);
   };
-
   const scrollContainer = (direction) => {
     if (containerRef.current) {
       containerRef.current.scrollBy({
@@ -173,7 +171,6 @@ export default function NeedMoreGuide({ assignmentId, open, setOpen }) {
             </Paper>
           ))}
         </Box>
-
         <IconButton
           onClick={() => scrollContainer(`right`)}
           // disabled={currentStepIndex === roadMapSteps.length - 1}
@@ -194,7 +191,6 @@ export default function NeedMoreGuide({ assignmentId, open, setOpen }) {
       </Box>
     );
   };
-
   // Typing effect for the text
   const TypingEffect = ({ text }) => {
     const [displayedText, setDisplayedText] = useState("");
@@ -210,7 +206,6 @@ export default function NeedMoreGuide({ assignmentId, open, setOpen }) {
       }, 10); // Adjust speed (50ms per character)
       return () => clearInterval(interval);
     }, [text]);
-
     return (
       <Typography variant="subtitle1" fontSize={"14px"}>
         {renderCodeWithLineBreaks(displayedText)}
@@ -234,7 +229,11 @@ export default function NeedMoreGuide({ assignmentId, open, setOpen }) {
             {renderCarousel(value)}
             {showStepDetails === true && (
               <Box>
+<<<<<<< HEAD
                 
+=======
+
+>>>>>>> main
                   <Paper
                     key={stepIndex}
                     elevation={3}
@@ -265,7 +264,11 @@ export default function NeedMoreGuide({ assignmentId, open, setOpen }) {
                     /> */}
                     <TextWithMath text={value[stepIndex]?.description.trim()} />  
                   </Paper>
+<<<<<<< HEAD
                 
+=======
+
+>>>>>>> main
               </Box>
             )}
           </Box>
@@ -345,7 +348,6 @@ export default function NeedMoreGuide({ assignmentId, open, setOpen }) {
       );
     });
   };
-
   const replaceString = (data) => {
     return data
       ?.replace(/\[(.*?)\]/g, <span style="font-weight: 600">[$1]</span>)
@@ -378,14 +380,12 @@ export default function NeedMoreGuide({ assignmentId, open, setOpen }) {
       </React.Fragment>
     ));
   };
-
   // Function to format keys (optional)
   const formatKey = (key) => {
     return key
       ?.replace(/_/g, " ")
       ?.replace(/\b\w/g, (char) => char.toUpperCase());
   };
-
   return (
     <Dialog
       open={open}

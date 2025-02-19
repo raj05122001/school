@@ -48,10 +48,16 @@ total_duration:0
     try {
       const response = await getteacherClass();
       setClassOptions(response?.data?.data?.class_subject_list);
+<<<<<<< HEAD
       setSelectedOptions(response?.data?.data?.class_subject_list?.[0])
       console.log("response?.data?.data : ",response?.data?.data)
       setAverageDuration({avg_duration:response?.data?.data?.avg_duration,total_duration:response?.data?.data?.total_duration});
       console.log("Response", response?.data?.data)
+=======
+      const findMCA=response?.data?.data?.class_subject_list?.find((val)=>val?.class_id===2)
+      setSelectedOptions(findMCA)
+      setAverageDuration(response?.data?.data?.avg_duration);
+>>>>>>> main
     } catch (error) {
       console.error(error);
     }

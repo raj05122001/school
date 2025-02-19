@@ -24,7 +24,6 @@ import Cookies from "js-cookie";
 import { decodeToken } from "react-jwt";
 import { deleteCompletedLecture } from "@/api/apiHelper";
 import { useRouter } from "next/navigation";
-
 const HeaderMOL = ({
   lectureData,
   isEdit = false,
@@ -36,16 +35,13 @@ const HeaderMOL = ({
   const theme = useTheme();
   const [dialogOpen, setDialogOpen] = useState(false)
   const [userDetails, setUserDetails] = useState(null);
-
   const router = useRouter()
-
   useEffect(() => {
     if (typeof window !== "undefined") {
       const token = Cookies.get("ACCESS_TOKEN");
       setUserDetails(token ? decodeToken(token) : {});
     }
   }, []);
-
   const formatDuration = (ms) => {
     const hours = Math.floor(ms / (1000 * 60 * 60));
     const minutes = Math.floor((ms % (1000 * 60 * 60)) / (1000 * 60));
@@ -67,7 +63,6 @@ const HeaderMOL = ({
       console.error(error)
     }
   }
-
   return (
     <Box
       sx={{
@@ -126,7 +121,6 @@ const HeaderMOL = ({
                 : "Publish Lecture"}
             </Button>
           )}
-
           {/* <Button
             variant="outlined"
             startIcon={<FaDownload size={22} />}
@@ -137,15 +131,12 @@ const HeaderMOL = ({
           >
             {loading ? <Skeleton width={80} height={30} /> : "Download"}
           </Button> */}
-
           <DarkMode />
-
           <IconButton color="inherit">
             <Badge badgeContent={4} color="error">
               <FaBell size={24} />
             </Badge>
           </IconButton>
-
           {loading ? (
             <Skeleton variant="circular" width={40} height={40} />
           ) : (
@@ -153,7 +144,6 @@ const HeaderMOL = ({
           )}
         </Box>
       </Box>
-
       {/* Lecture Topic and Details Layout */}
       <Box sx={{ display: "flex", flexDirection: "row", gap: 3 }}>
         <Box
@@ -180,7 +170,6 @@ const HeaderMOL = ({
             </Typography>
           )}
         </Box>
-
         <Box sx={{ flex: 2 }}>
           <Box sx={{ mb: 1 }}>
             {loading ? (
@@ -225,7 +214,6 @@ const HeaderMOL = ({
               </>
             )}
           </Box>
-
           <Box sx={{ display: "flex", justifyContent: "space-between", mb: 1 }}>
             {loading ? (
               <>
@@ -252,7 +240,6 @@ const HeaderMOL = ({
               </>
             )}
           </Box>
-
           {isShowPic && (
             <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
               {loading ? (
@@ -304,5 +291,4 @@ const HeaderMOL = ({
     </Box>
   );
 };
-
 export default HeaderMOL;
