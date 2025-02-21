@@ -2,6 +2,7 @@ import React, { useEffect, useState, useRef } from "react";
 import { Box, Typography, Link, Button, Skeleton } from "@mui/material";
 import { getLectureResources } from "@/api/apiHelper";
 import { GrResources } from "react-icons/gr";
+import Image from "next/image";
 
 const LectureReferrence = ({ id, isDarkMode }) => {
   const [resources, setResources] = useState([]);
@@ -38,6 +39,7 @@ const LectureReferrence = ({ id, isDarkMode }) => {
       resource?.research_papers?.link ||
       resource?.scopus_data?.scopus_link ||
       resource?.scopus_data?.doi_link ||
+      resource?.springer_data?.url ||
       resource?.youtube_videos?.link ||
       resource?.Google_Book_Links?.thumbnail;
     return (
@@ -46,8 +48,9 @@ const LectureReferrence = ({ id, isDarkMode }) => {
           r.research_papers?.link ||
           r.scopus_data?.scopus_link ||
           r.scopus_data?.doi_link ||
-          r.youtube_videos?.link ||
-          r.Google_Book_Links?.thumbnail;
+          r?.springer_data?.url ||
+          r?.youtube_videos?.link ||
+          r?.Google_Book_Links?.thumbnail;
         return rLink === link;
       }) === index
     );
@@ -121,10 +124,11 @@ const LectureReferrence = ({ id, isDarkMode }) => {
           {displayedResources?.map((resource, index) => {
             // Display research papers, YouTube videos, and Google Books separately
             return (
-              (resource.research_papers ||
-                resource.scopus_data ||
-                resource.youtube_videos ||
-                resource.Google_Book_Links) && (
+              (resource?.research_papers ||
+                resource?.scopus_data ||
+                resource?.springer_data ||
+                resource?.youtube_videos ||
+                resource?.Google_Book_Links) && (
                 <Box
                   key={index}
                   className="blur_effect_card"
@@ -135,23 +139,23 @@ const LectureReferrence = ({ id, isDarkMode }) => {
                     borderRadius: 4,
                   }}
                 >
-                  {resource.research_papers &&
-                    resource.research_papers.title && (
+                  {resource?.research_papers &&
+                    resource?.research_papers.title && (
                       <Box sx={{ mb: 1 }}>
                         <Typography variant="subtitle1" fontWeight={"bold"}>
                           Research Paper:
                         </Typography>
                         <Link
-                          href={resource.research_papers.link}
+                          href={resource?.research_papers?.link}
                           target="_blank"
                           rel="noopener"
                           sx={{ color: isDarkMode && "#ADD8E6" }}
                         >
-                          {resource.research_papers.title}
+                          {resource?.research_papers?.title}
                         </Link>
                       </Box>
                     )}
-                  {resource.scopus_data && (
+                  {resource?.scopus_data && (
                     <Box sx={{ mb: 1 }}>
                       <Typography variant="subtitle1" fontWeight={"bold"}>
                         Scopus Link:
@@ -174,29 +178,61 @@ const LectureReferrence = ({ id, isDarkMode }) => {
                           <Typography>
                             Link:{" "}
                             <Link
-                              href={resource.scopus_data.scopus_link}
+                              href={resource?.scopus_data?.scopus_link}
                               target="_blank"
                               rel="noopener"
                               sx={{ color: isDarkMode && "#ADD8E6" }}
                             >
-                              {resource.scopus_data.Title}
+                              {resource?.scopus_data?.Title}
                             </Link>
                           </Typography>
-                          {resource.scopus_data.doi_link && <Typography>
+                          {resource?.scopus_data?.doi_link && <Typography>
                            DOI Link: <Link
-                              href={resource.scopus_data.doi_link}
+                              href={resource?.scopus_data?.doi_link}
                               target="_blank"
                               rel="noopener"
                               sx={{ color: isDarkMode && "#ADD8E6" }}
                             >
-                              {resource.scopus_data.doi_link}
+                              {resource?.scopus_data?.doi_link}
                             </Link>
                           </Typography>}
                         </Box>
                       </Box>
                     </Box>
                   )}
-                  {resource.youtube_videos && (
+                  {resource?.springer_data && (
+                    <Box sx={{ mb: 1 }}>
+                      <Typography variant="subtitle1" fontWeight={"bold"}>
+                        Springer Link:
+                      </Typography>
+                      <Box
+                        sx={{ display: "flex", alignItems: "center", gap: 4 }}
+                      >
+                        <Box
+                          component="img"
+                          src="/springer_logo.png"
+                          alt="Springer logo"
+                          sx={{
+                            width: 100,
+                            height: "auto",
+                            mt: 1,
+                            mixBlendMode: "multiply",
+                          }}
+                        />
+                        <Box display={"flex"} flexDirection={"column"} gap={2}>
+                            <Link
+                              href={resource?.springer_data?.url}
+                              target="_blank"
+                              rel="noopener"
+                              sx={{ color: isDarkMode && "#ADD8E6" }}
+                            >
+                              {resource?.springer_data?.title}
+                            </Link>
+                        </Box>
+                      </Box>
+                    </Box>
+                  )}
+                  {resource?.youtube_videos && (
                     <Box sx={{ mb: 1 }}>
                       <Typography variant="subtitle1" fontWeight={"bold"}>
                         YouTube Video:
@@ -204,10 +240,10 @@ const LectureReferrence = ({ id, isDarkMode }) => {
                       <Box
                         sx={{ display: "flex", alignItems: "center", gap: 4 }}
                       >
-                        {resource.youtube_videos.thumbnail && (
+                        {resource?.youtube_videos?.thumbnail && (
                           <Box
                             component="img"
-                            src={resource.youtube_videos.thumbnail}
+                            src={resource?.youtube_videos?.thumbnail}
                             alt="YouTube Video Thumbnail"
                             sx={{
                               width: 100,
@@ -218,17 +254,17 @@ const LectureReferrence = ({ id, isDarkMode }) => {
                           />
                         )}
                         <Link
-                          href={resource.youtube_videos.link}
+                          href={resource?.youtube_videos?.link}
                           target="_blank"
                           rel="noopener"
                           sx={{ color: isDarkMode && "#ADD8E6" }}
                         >
-                          {resource.youtube_videos.title}
+                          {resource?.youtube_videos?.title}
                         </Link>
                       </Box>
                     </Box>
                   )}
-                  {resource.Google_Book_Links && (
+                  {resource?.Google_Book_Links && (
                     <Box sx={{ mb: 1 }}>
                       <Typography variant="subtitle1" fontWeight={"bold"}>
                         Google Book Link:
@@ -236,10 +272,10 @@ const LectureReferrence = ({ id, isDarkMode }) => {
                       <Box
                         sx={{ display: "flex", alignItems: "center", gap: 4 }}
                       >
-                        {resource.Google_Book_Links.thumbnail && (
+                        {resource?.Google_Book_Links?.thumbnail && (
                           <Box
                             component="img"
-                            src={resource.Google_Book_Links.thumbnail}
+                            src={resource?.Google_Book_Links?.thumbnail}
                             alt="Google Book Thumbnail"
                             sx={{
                               width: 100,
@@ -250,12 +286,12 @@ const LectureReferrence = ({ id, isDarkMode }) => {
                           />
                         )}
                         <Link
-                          href={resource.Google_Book_Links.link}
+                          href={resource?.Google_Book_Links?.link}
                           target="_blank"
                           rel="noopener"
                           sx={{ color: isDarkMode && "#ADD8E6" }}
                         >
-                          {resource.Google_Book_Links.title}
+                          {resource?.Google_Book_Links?.title}
                         </Link>
                       </Box>
                     </Box>
@@ -264,7 +300,7 @@ const LectureReferrence = ({ id, isDarkMode }) => {
               )
             );
           })}
-          {visibleCount < resources.length && (
+          {visibleCount < resources?.length && (
             <Button
               variant="contained"
               onClick={() => setVisibleCount((prevCount) => prevCount + 5)}
