@@ -21,7 +21,7 @@ export const AppContextProvider = createContext({});
 const Main = ({ children }) => {
   const userDetails = decodeToken(Cookies.get("ACCESS_TOKEN"));
   const isTrialAccount =
-  userDetails?.user_id === 46 || userDetails?.user_id === 7
+  userDetails?.user_id === 46 || userDetails?.user_id === 7 || userDetails?.user_id === 49
       ? false
       : process.env.NEXT_PUBLIC_iSTRIALACCOUNT === "true"
       ? true
