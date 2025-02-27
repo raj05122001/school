@@ -12,6 +12,8 @@ const AssignmentTextFormat = ({ text }) => {
   const replaceString = (data) => {
     return data
       ?.replace(/\*\*(.*?)\*\*/g, "<strong>$1</strong>")
+      ?.replace(/\\n/g, "<br>") // Replace \\n with <br> for line breaks
+      ?.replace(/\n/g, "<br>") // Replace \n with <br> for line breaks
       ?.replace(/\\(.?)\\*/g, "<strong>$1</strong>")
       ?.replace(/#/g, "")
       ?.replace(/`/g, "")
