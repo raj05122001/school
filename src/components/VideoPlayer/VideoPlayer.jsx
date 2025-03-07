@@ -225,7 +225,7 @@ export const BreakpointPlayer = ({
         el.style.left = left;
         el.dataset.time = marker.start / 1000;
         // Use inline styling for the marker label; adjust as needed.
-        el.innerHTML = `<span style="background-color: red;">${marker.gist}</span>`;
+        el.innerHTML = `<span style="background-color: white;">${marker.gist}</span>`;
 
         el.onclick = function () {
           playerRef.current.currentTime(marker.start / 1000);

@@ -151,7 +151,7 @@ const LectureAnalytics = ({ lectureId }) => {
     </Box>
   );
 
-  const sentimentAnalytics = analytics?.sentiment_analytics || {};
+  // const sentimentAnalytics = analytics?.sentiment_analytics || {};
 
   return (
     <Box
@@ -238,7 +238,7 @@ const LectureAnalytics = ({ lectureId }) => {
         )}
       {analytics?.reaction_analytics &&
         renderPercentage("Reaction Analytics", analytics?.reaction_analytics)}
-      {sentimentAnalytics && (
+      {/* {sentimentAnalytics && (
         <Box sx={{ mt: 3 }}>
           <Box sx={{ display: "flex", alignItems: "center" }}>
             <Typography
@@ -298,7 +298,7 @@ const LectureAnalytics = ({ lectureId }) => {
             Last updated on {formattedDate}
           </Typography>
         </Box>
-      )}
+      )} */}
       {analytics?.language_monitoring &&
         renderPercentage("Language Monitoring", analytics?.language_monitoring)}
       {analytics?.main_topics?.length > 0 && (
