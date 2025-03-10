@@ -66,11 +66,11 @@ function GreetingCard() {
         </Box>
         <Box sx={{ display: "flex", gap: 3, alignItems: "flex-start" }}>
           <DarkMode />
-          <IconButton color="inherit">
+          {/* <IconButton color="inherit">
             <Badge badgeContent={4} color="error">
               <FaBell size={24} color="#ffffff" />
             </Badge>
-          </IconButton>
+          </IconButton> */}
           <UserImage width={40} height={40} />
         </Box>
       </Box>
