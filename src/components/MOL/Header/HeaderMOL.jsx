@@ -132,11 +132,11 @@ const HeaderMOL = ({
             {loading ? <Skeleton width={80} height={30} /> : "Download"}
           </Button> */}
           <DarkMode />
-          <IconButton color="inherit">
+          {/* <IconButton color="inherit">
             <Badge badgeContent={4} color="error">
               <FaBell size={24} />
             </Badge>
-          </IconButton>
+          </IconButton> */}
           {loading ? (
             <Skeleton variant="circular" width={40} height={40} />
           ) : (

@@ -130,11 +130,11 @@ const StudentFilters = ({
           <Box sx={{ display: "flex", alignItems: "center", gap: 3 }}>
             {lectureTypeDropDown}
             <DarkMode />
-            <IconButton color="inherit">
+            {/* <IconButton color="inherit">
               <Badge badgeContent={4} color="error">
                 <FaBell size={20} />
               </Badge>
-            </IconButton>
+            </IconButton> */}
             <UserImage width={40} height={40}/>
           </Box>
         </Grid>
