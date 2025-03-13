@@ -7,8 +7,18 @@ import {
   FaTwitter,
 } from "react-icons/fa";
 import { MdArrowForward } from "react-icons/md";
+import { useRouter } from "next/navigation";
 
 const Footer = () => {
+  const router = useRouter()
+  const handlePrivacy = ()=>{
+    router.push(`/privacy-policy`)
+  }
+
+  const handletnc = ()=>{
+    router.push(`/terms-and-conditions`)
+  }
+
   return (
     <Box
       sx={{
@@ -17,7 +27,12 @@ const Footer = () => {
         padding: "40px 20px",
       }}
     >
-      <Grid container spacing={3} display={"flex"} justifyContent={"space-between"}>
+      <Grid
+        container
+        spacing={3}
+        display={"flex"}
+        justifyContent={"space-between"}
+      >
         {/* Headquarters Section */}
         {/* <Grid item xs={12} sm={4}>
           <Typography
@@ -99,11 +114,16 @@ const Footer = () => {
         <Typography variant="body2" sx={{ color: "#7a7a7a" }}>
           © 2023 IndiqAI. All rights reserved.
         </Typography>
-        <Box
-          underline="none"
-          sx={{ color: "#7a7a7a", marginTop: "10px", display: "inline-block" }}
-        >
-          Privacy Policy
+        <Box sx={{display:"flex", justifyContent:"center", alignItems:"center", gap:"4px"}}>
+          <Typography variant="body2" sx={{ color: "#7a7a7a", cursor:"pointer" }} onClick={()=>handletnc()}>
+            Terms and Conditions 
+          </Typography>
+          <Typography variant="body2" sx={{ color: "#7a7a7a" }}>
+            |
+          </Typography>
+          <Typography variant="body2" sx={{ color: "#7a7a7a", cursor:"pointer" }} onClick={()=>handlePrivacy()}>
+            Privacy Policy
+          </Typography>
         </Box>
       </Box>
     </Box>
