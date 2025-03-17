@@ -20,6 +20,8 @@ export async function middleware(req) {
         pathname.includes("/registration") ||
         pathname.includes("/forget-password") ||
         pathname.includes("/login") ||
+        pathname.includes("/terms-and-conditions") ||
+        pathname.includes("/privacy-policy") ||
         pathname.includes("/signup") 
       ) {
         return NextResponse.next();
