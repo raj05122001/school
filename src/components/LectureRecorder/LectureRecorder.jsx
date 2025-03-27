@@ -171,7 +171,7 @@ const LectureRecorder = ({ open, closeDrawer, recordingData }) => {
     return new Promise(async (resolve, reject) => {
       try {
         const params = {
-          Bucket: "vidya-ai-video",
+          Bucket: "vidya-ai",
           Key: `videos/${s3FileName}${recordingData.id}.mp4`,
           Body: chunk,
           ContentType: "video/mp4",
@@ -338,7 +338,7 @@ const LectureRecorder = ({ open, closeDrawer, recordingData }) => {
   const uploadChunkToS3 = async (chunk, index) => {
     try {
       const params = {
-        Bucket: "vidya-ai-video",
+        Bucket: "vidya-ai",
         Key: `videoChunks/lecture_${recordingData.id}/chunk-${index}.mp4`,
         Body: chunk,
         ContentType: "video/mp4",
@@ -369,7 +369,7 @@ const LectureRecorder = ({ open, closeDrawer, recordingData }) => {
     try {
       // List all the objects within the folder
       const listParams = {
-        Bucket: "vidya-ai-video",
+        Bucket: "vidya-ai",
         Prefix: `videoChunks/lecture_${recordingData.id}`,
       };
 
@@ -381,7 +381,7 @@ const LectureRecorder = ({ open, closeDrawer, recordingData }) => {
 
       // Create a list of objects to delete
       const deleteParams = {
-        Bucket: "vidya-ai-video",
+        Bucket: "vidya-ai",
         Delete: { Objects: [] },
       };
 

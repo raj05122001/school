@@ -11,22 +11,22 @@ export const uploadToS3 = async (
     try {
       const fileConfigs = {
         IMAGE: {
-          Bucket: "vidya-ai-video",
+          Bucket: "vidya-ai",
           Key: `assignment/lecture_${assignmentId}/images/${file.name}`,
           ContentType: file.type,
         },
         VIDEO: {
-          Bucket: "vidya-ai-video",
+          Bucket: "vidya-ai",
           Key: `assignment/lecture_${assignmentId}/videos/${file.name}`,
           ContentType: file.type,
         },
         AUDIO: {
-          Bucket: "vidya-ai-video",
+          Bucket: "vidya-ai",
           Key: `assignment/lecture_${assignmentId}/audios/${file.name}`,
           ContentType: file.type,
         },
         FILE: {
-          Bucket: "vidya-ai-video",
+          Bucket: "vidya-ai",
           Key: `assignment/lecture_${assignmentId}/documents/${file.name}`,
           ContentType: file.type,
         },
