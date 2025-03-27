@@ -31,6 +31,7 @@ import { handleErrorResponse } from "@/helper/Helper";
 import { AppContextProvider } from "@/app/main";
 
 const LectureRecorder = ({ open, closeDrawer, recordingData }) => {
+  const Bucket = process.env.NEXT_PUBLIC_AWS_BUCKET;
   const {isTrialAccount,s3FileName}=useContext(AppContextProvider)
   const videoRef = useRef(null);
   const currentTimeLocal = new Date().toLocaleTimeString("en-GB", {
@@ -171,7 +172,7 @@ const LectureRecorder = ({ open, closeDrawer, recordingData }) => {
     return new Promise(async (resolve, reject) => {
       try {
         const params = {
-          Bucket: "vidya-ai",
+          Bucket: Bucket,
           Key: `videos/${s3FileName}${recordingData.id}.mp4`,
           Body: chunk,
           ContentType: "video/mp4",
@@ -338,7 +339,7 @@ const LectureRecorder = ({ open, closeDrawer, recordingData }) => {
   const uploadChunkToS3 = async (chunk, index) => {
     try {
       const params = {
-        Bucket: "vidya-ai",
+        Bucket: Bucket,
         Key: `videoChunks/lecture_${recordingData.id}/chunk-${index}.mp4`,
         Body: chunk,
         ContentType: "video/mp4",
@@ -369,7 +370,7 @@ const LectureRecorder = ({ open, closeDrawer, recordingData }) => {
     try {
       // List all the objects within the folder
       const listParams = {
-        Bucket: "vidya-ai",
+        Bucket: Bucket,
         Prefix: `videoChunks/lecture_${recordingData.id}`,
       };
 
@@ -381,7 +382,7 @@ const LectureRecorder = ({ open, closeDrawer, recordingData }) => {
 
       // Create a list of objects to delete
       const deleteParams = {
-        Bucket: "vidya-ai",
+        Bucket: Bucket,
         Delete: { Objects: [] },
       };
 
