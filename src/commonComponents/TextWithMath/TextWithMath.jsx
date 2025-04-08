@@ -13,7 +13,7 @@ const TextWithMath = ({ text, color}) => {
       ?.replace(/\*\*(.*?)\*\*/g, "<strong>$1</strong>")
       ?.replace(/#/g, "")
       ?.replace(/`/g, "")
-      ?.replace(/(?<!\d)\. /g, ".<br>")
+      ?.replace(/(^|[^0-9])\. /g, "$1.<br>")
       ?.replace(/\\\\n\\\\n/g, "<br><br>")
       ?.replace(/\\\n\\\n/g, "<br><br>")
       ?.replace(/\\n\\n/g,"<br><br>")

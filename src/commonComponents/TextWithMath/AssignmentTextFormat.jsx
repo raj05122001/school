@@ -15,7 +15,7 @@ const AssignmentTextFormat = ({ text }) => {
       ?.replace(/\\(.?)\\*/g, "<strong>$1</strong>")
       ?.replace(/#/g, "")
       ?.replace(/`/g, "")
-      ?.replace(/(?<!\d)\. /g, ".<br><br>")
+      ?.replace(/(\D)\. /g, "$1.<br><br>")
       ?.replace(/:/g, " :<br><br>")
       ?.replace(/\n/g, " ")
       ?.replace(/\\/g, "")

@@ -345,7 +345,7 @@ export default function NeedMoreGuide({ assignmentId, open, setOpen }) {
       ?.replace(/\[(.*?)\]/g, <span style="font-weight: 600">[$1]</span>)
       ?.replace(/#/g, "")
       ?.replace(/`/g, "")
-      ?.replace(/(?<!\d)\. /g, `. <br>`)
+      ?.replace(/(^|[^0-9])\. /g, "$1.<br>")
       ?.replace(/\n/g, `.<br>`)
       ?.replace(/\\n/g, `<br>`); // Handle escaped \n
     // .replace(/\\(.?)\\*/g, "<strong>$1</strong>");

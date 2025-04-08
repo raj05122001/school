@@ -352,7 +352,7 @@ const FormattedText = ({ text, color }) => {
       ?.replace(/#/g, "")
       ?.replace(/`/g, "")
       ?.replace(/\\/g, "")
-      ?.replace(/(?<!\d)\. /g, ".<br>")
+      ?.replace(/(^|[^0-9])\. /g, "$1.<br>")
       ?.replace(/\n/g, "<br>");
   };
 
