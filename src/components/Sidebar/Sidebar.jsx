@@ -40,6 +40,7 @@ import {
   IoIosArrowForward,
   IoIosArrowUp,
 } from "react-icons/io";
+import { FaRobot } from "react-icons/fa6";
 
 // You may adjust widths as per your design
 const drawerWidth = 240;
@@ -134,6 +135,12 @@ export const sidebarLinks = {
       href: "/student/lecture-listings",
       icon: <HiOutlineDocumentDuplicate size={22} />,
       show: "STUDENT",
+    },
+    {
+      text: "Chatbot",
+      href: "/chat-bot",
+      icon: <FaRobot size={22} />,
+      show: ["TEACHER","STUDENT", "ADMIN"]
     },
   ],
 };
