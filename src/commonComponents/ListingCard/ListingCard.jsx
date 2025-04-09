@@ -1,4 +1,4 @@
-import React, { useContext, useRef, useState } from "react";
+import React, { useContext, useEffect, useRef, useState } from "react";
 import {
   Box,
   Card,
@@ -12,11 +12,40 @@ import { MdOutlineDateRange } from "react-icons/md";
 import LectureType from "../LectureType/LectureType";
 import Image from "next/image";
 import { AppContextProvider } from "@/app/main";
+import { GetObjectCommand } from "@aws-sdk/client-s3";
+import { getSignedUrl } from "@aws-sdk/s3-request-presigner";
+import { AwsSdk } from "@/hooks/AwsSdk";
 
 const ListingCard = ({ data, onClick }) => {
   const { isDarkMode, primaryColor, secondaryColor } = useThemeContext();
   const videoRef = useRef(null);
   const {s3FileName}=useContext(AppContextProvider)
+  const [videoUrl,setVideoUrl]=useState("")
+
+  useEffect(()=>{
+    getSignedUrlForObject()
+  },[data?.id])
+
+  const getSignedUrlForObject = async () => {
+    const { s3 } = AwsSdk();
+    const Bucket = process.env.NEXT_PUBLIC_AWS_BUCKET;
+  
+    const params = {
+      Bucket,
+      Key: `videos/${data?.id}.mp4`,
+    };
+    
+    console.log("params : ", params);
+  
+    try {
+      const command = new GetObjectCommand(params);
+      const signedUrl = await getSignedUrl(s3, command, { expiresIn: 60 * 60 * 3 });
+      setVideoUrl(signedUrl)
+    } catch (error) {
+      console.error(error);
+      return null;
+    }
+  };
 
   const [isHovered, setIsHovered] = useState(false);
 
@@ -61,7 +90,7 @@ const ListingCard = ({ data, onClick }) => {
             component="video"
             preload="auto"
             ref={videoRef}
-            src={`https://d3515ggloh2j4b.cloudfront.net/videos/${s3FileName}${data?.id}.mp4`}
+            src={videoUrl}
             controls={isHovered}
             sx={{
               width: "100%",

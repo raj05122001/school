@@ -36,6 +36,9 @@ import { FaBell, FaTimes } from "react-icons/fa";
 import UserImage from "@/commonComponents/UserImage/UserImage";
 import { usePathname, useSearchParams, useRouter } from "next/navigation";
 import { AppContextProvider } from "@/app/main";
+import { GetObjectCommand } from "@aws-sdk/client-s3";
+import { getSignedUrl } from "@aws-sdk/s3-request-presigner";
+import { AwsSdk } from "@/hooks/AwsSdk";
 
 const varelaRound = Varela_Round({ weight: "400", subsets: ["latin"] });
 
@@ -68,6 +71,32 @@ const CoursePlaylist = ({ params }) => {
   const [listLoading, setListLoading] = useState(true);
   const { isDarkMode, primaryColor, secondaryColor } = useThemeContext();
   const [selectedTab, setSelectedTab] = useState(0); // State to manage selected tab
+  const [videoUrl,setVideoUrl]=useState("")
+
+  useEffect(()=>{
+    getSignedUrlForObject()
+  },[id])
+
+  const getSignedUrlForObject = async () => {
+    const { s3 } = AwsSdk();
+    const Bucket = process.env.NEXT_PUBLIC_AWS_BUCKET;
+  
+    const params = {
+      Bucket,
+      Key: `videos/${id}.mp4`,
+    };
+    
+    console.log("params : ", params);
+  
+    try {
+      const command = new GetObjectCommand(params);
+      const signedUrl = await getSignedUrl(s3, command, { expiresIn: 60 * 60 * 3 });
+      setVideoUrl(signedUrl)
+    } catch (error) {
+      console.error(error);
+      return null;
+    }
+  };
 
   const handleTabChange = (event, newValue) => {
     setSelectedTab(newValue);
@@ -149,7 +178,7 @@ const CoursePlaylist = ({ params }) => {
             component="video"
             preload="auto"
             //   ref={videoRef}
-            src={`https://d3515ggloh2j4b.cloudfront.net/videos/${s3FileName}${id}.mp4`}
+            src={videoUrl}
             //   controls={isHovered}
             sx={{
               width: "20%",

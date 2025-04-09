@@ -17,6 +17,9 @@ import { decodeToken } from "react-jwt";
 import Cookies from "js-cookie";
 import axios from "axios";
 import { BASE_URL_MEET } from "@/constants/apiconfig";
+import { GetObjectCommand } from "@aws-sdk/client-s3";
+import { getSignedUrl } from "@aws-sdk/s3-request-presigner";
+import { AwsSdk } from "@/hooks/AwsSdk";
 
 const VideoPlayer = ({ id, duration=1e101 }) => {
   const { s3FileName } = useContext(AppContextProvider);
@@ -25,6 +28,32 @@ const VideoPlayer = ({ id, duration=1e101 }) => {
   const [suggestionData, setSuggestionData] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const playerRef = useRef(null);
+  const [videoUrl,setVideoUrl]=useState("")
+
+  useEffect(()=>{
+    getSignedUrlForObject()
+  },[id])
+
+  const getSignedUrlForObject = async () => {
+    const { s3 } = AwsSdk();
+    const Bucket = process.env.NEXT_PUBLIC_AWS_BUCKET;
+  
+    const params = {
+      Bucket,
+      Key: `videos/${id}.mp4`,
+    };
+    
+    console.log("params : ", params);
+  
+    try {
+      const command = new GetObjectCommand(params);
+      const signedUrl = await getSignedUrl(s3, command, { expiresIn: 60 * 60 * 3 });
+      setVideoUrl(signedUrl)
+    } catch (error) {
+      console.error(error);
+      return null;
+    }
+  };
 
   useEffect(() => {
     if (id) {
@@ -134,9 +163,10 @@ const VideoPlayer = ({ id, duration=1e101 }) => {
         }}
         s3FileName={s3FileName}
         duration={duration}
+        videoUrl={videoUrl}
       />
     ),
-    [markers, id, s3FileName, duration]
+    [markers, id, s3FileName, duration, videoUrl]
   );
 
   return (
@@ -163,7 +193,7 @@ const VideoPlayer = ({ id, duration=1e101 }) => {
         </Box>
       ) : (
         <Box sx={{ width: "100%", height: "90%" }}>
-          {breakpointPlayer}
+          {videoUrl? breakpointPlayer : ""}
         </Box>
       )}
 
@@ -184,6 +214,7 @@ export const BreakpointPlayer = ({
   onPlayerReady,
   s3FileName,
   duration,
+  videoUrl
 }) => {
   const userDetails = decodeToken(Cookies.get("ACCESS_TOKEN"));
   const videoRef = useRef(null);
@@ -267,8 +298,12 @@ export const BreakpointPlayer = ({
         "playbackRates" : [0.25, 0.5, 0.75, 1, 1.25, 1.5, 1.75]
       }'
     >
-      <source
+      {/* <source
         src={`https://d3515ggloh2j4b.cloudfront.net/videos/${s3FileName}${id}.mp4?v=2`}
+        type="video/mp4"
+      /> */}
+      <source
+        src={videoUrl}
         type="video/mp4"
       />
     </video>

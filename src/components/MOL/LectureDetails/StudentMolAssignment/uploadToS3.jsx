@@ -7,26 +7,27 @@ export const uploadToS3 = async (
   s3,
   setUploadProgress
 ) => {
+  const Bucket = process.env.NEXT_PUBLIC_AWS_BUCKET;
   return new Promise(async (resolve, reject) => {
     try {
       const fileConfigs = {
         IMAGE: {
-          Bucket: "vidya-ai-video",
+          Bucket: Bucket,
           Key: `assignment/lecture_${assignmentId}/images/${file.name}`,
           ContentType: file.type,
         },
         VIDEO: {
-          Bucket: "vidya-ai-video",
+          Bucket: Bucket,
           Key: `assignment/lecture_${assignmentId}/videos/${file.name}`,
           ContentType: file.type,
         },
         AUDIO: {
-          Bucket: "vidya-ai-video",
+          Bucket: Bucket,
           Key: `assignment/lecture_${assignmentId}/audios/${file.name}`,
           ContentType: file.type,
         },
         FILE: {
-          Bucket: "vidya-ai-video",
+          Bucket: Bucket,
           Key: `assignment/lecture_${assignmentId}/documents/${file.name}`,
           ContentType: file.type,
         },
