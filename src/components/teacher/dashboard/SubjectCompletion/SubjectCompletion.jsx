@@ -34,10 +34,10 @@ function SubjectCompletion() {
 
   const data = [
     { name: "Completed", value: completionData?.Completion_percentage },
-    { name: "Pending", value: completionData?.toal_lectures_count },
+    { name: "Pending", value: completionData?.total_lectures_count },
   ];
 
-  const perc=(completionData?.toal_lectures_count * completionData?.Completion_percentage)/100
+  const perc=(completionData?.total_lectures_count * completionData?.Completion_percentage)/100
 
   return (
     <Box sx={{ position: 'relative' }}>
@@ -145,7 +145,7 @@ function SubjectCompletion() {
             lineHeight: "24px",
           }}
         >
-          {`${completionData?.completion_count || 0} / ${completionData?.toal_lectures_count || 0}`}
+          {`${completionData?.completion_count || 0} / ${completionData?.total_lectures_count || 0}`}
         </Typography>
       </Box>
     </Card>

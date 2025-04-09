@@ -106,7 +106,7 @@ export default function Page({ suggestionInput, setIsOpenChatBot }) {
       const formData = new FormData();
       formData.append("session_title", sessionTitle);
       formData.append("user", userID);
-      formData.append("lecture", lectureID);
+      // formData.append("lecture", lectureID);
 
       const response = await createSession(formData);
       const { session_id } = response?.data?.data;
@@ -116,19 +116,19 @@ export default function Page({ suggestionInput, setIsOpenChatBot }) {
     }
   };
 
-  useEffect(() => {
-    if (sessionID && suggestionInput) {
-      handleUserInput(suggestionInput);
-    }
-  }, [sessionID, suggestionInput]);
+  // useEffect(() => {
+  //   if (sessionID && suggestionInput) {
+  //     handleUserInput(suggestionInput);
+  //   }
+  // }, [sessionID, suggestionInput]);
 
-  useEffect(() => {
-    if (suggestionInput) {
-      setShowChat(true);
-      setShowList(false);
-      handleCreateSession();
-    }
-  }, [suggestionInput]);
+  // useEffect(() => {
+  //   if (suggestionInput) {
+  //     setShowChat(true);
+  //     setShowList(false);
+  //     handleCreateSession();
+  //   }
+  // }, [suggestionInput]);
 
   const handleKeyPress = (e) => {
     if (e.key === "Enter" && !e.shiftKey) {
@@ -267,12 +267,11 @@ export default function Page({ suggestionInput, setIsOpenChatBot }) {
                 p: 2,
                 borderColor: "grey.300",
                 display: "flex",
-                flexDirection: showOldChat ? "column" : "row",
+                flexDirection: "column",
                 justifyContent: "center",
                 alignItems: "center",
                 width: "100%",
                 height: "100%",
-                gap: "100px",
               }}
             >
               <Button
@@ -336,7 +335,7 @@ export default function Page({ suggestionInput, setIsOpenChatBot }) {
                   <Box
                     sx={{
                       width: "100%",
-                      height:"100%",
+                      height:"400px",
                       overflowY: "auto", // Enable scrolling
                       bgcolor: "grey.100",
                       borderRadius: 2,
@@ -387,7 +386,7 @@ export default function Page({ suggestionInput, setIsOpenChatBot }) {
                           >
                             <Box
                               sx={{
-                                minWidth: 300,
+                                minWidth: "100%",
                                 width: 1.5 * (dimensions.width / 2),
                                 fontSize: "0.85rem",
                               }}
