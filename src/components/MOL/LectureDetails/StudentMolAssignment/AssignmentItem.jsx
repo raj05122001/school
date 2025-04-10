@@ -82,6 +82,7 @@ const AssignmentItem = ({
   const excludedTypes = ["VIDEO", "AUDIO", "IMAGE", "LINK"];
   const [assignmentStatus, setAssignmentStatus] = useState("");
   const [loading, setLoading] = useState(false);
+  const [s3Location,setS3Location]=useState("")
   const shouldRenderAccordion =
     assignmentStatus === "data-found" &&
     !excludedTypes.includes(assignmentType);
@@ -113,7 +114,8 @@ const AssignmentItem = ({
     setFileType(type);
 
     try {
-      await uploadToS3(file, type, assignment.id, s3, setUploadProgress);
+      await uploadToS3(file, type, assignment.id, s3, setUploadProgress, setS3Location);
+      
       dispatch({
         type: "SET_FILE_LINK",
         payload: { assignmentId: assignment.id, file, type },
@@ -166,7 +168,7 @@ const AssignmentItem = ({
       const formData = {
         assignment_que: assignment.id,
         answer_by: answered_by,
-        answer_link: selectedFile ? selectedFile.s3Location : null,
+        answer_link: selectedFile ? s3Location : null,
         answer_description: answerDescription || null,
         answer_type: fileType,
       };
@@ -222,7 +224,7 @@ const AssignmentItem = ({
     try {
       const formData = {
         is_submitted: true,
-        answer_link: selectedFile ? selectedFile.s3Location : null,
+        answer_link: selectedFile ? s3Location : null,
       };
       const submitResponse = await reSubmitAssignment(assignment?.id, formData);
       if (submitResponse.data.success) {
