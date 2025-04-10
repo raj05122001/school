@@ -184,6 +184,24 @@ export default function Page({ suggestionInput, setIsOpenChatBot }) {
       ]);
     } catch (error) {
       console.error(error);
+      const errorCode = error?.response?.data?.error_code;
+      const errorMessage =
+        error?.response?.data?.message ||
+        "Sorry, something went wrong. Please try again.";
+
+      let assistantMessage;
+
+      if (errorCode === "UEDU_CUST_ERR_4033") {
+        assistantMessage =
+          "⚠️ You’ve reached the daily limit of 10 requests. Please try again after 24 hours.";
+      } else {
+        assistantMessage = `⚠️ ${errorMessage}`;
+      }
+
+      setChatHistory((prevChat) => [
+        ...prevChat,
+        { role: "assistant", content: assistantMessage },
+      ]);
     }
     setIsLoading(false);
   };
@@ -335,7 +353,7 @@ export default function Page({ suggestionInput, setIsOpenChatBot }) {
                   <Box
                     sx={{
                       width: "100%",
-                      height:"400px",
+                      height: "400px",
                       overflowY: "auto", // Enable scrolling
                       bgcolor: "grey.100",
                       borderRadius: 2,

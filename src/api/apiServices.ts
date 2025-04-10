@@ -448,13 +448,26 @@ export default class apiServices {
         return response;
       })
       .catch((error) => {
-        toast.error(
-          error?.response?.data?.message || "Failed to update notes",
-          {
+        const errorCode = error?.response?.data?.error_code;
+        const errorMessage =
+          error?.response?.data?.message || "Failed to update notes";
+
+        if (errorCode === "UEDU_CUST_ERR_4033") {
+          // Custom message or UI behavior for reaching daily limit
+          toast.error(
+            "You’ve reached the daily limit of 10 requests. Please try again after 24 hours.",
+            {
+              id: toastInstance,
+              duration: Constants.toastTimer,
+            }
+          );
+        } else {
+          // Generic error toast for other errors
+          toast.error(errorMessage, {
             id: toastInstance,
             duration: Constants.toastTimer,
-          }
-        );
+          });
+        }
         console.error("this is error", error);
       });
   };
@@ -1002,7 +1015,7 @@ export default class apiServices {
     return await this.axiosInstance
       .post(`/api/v1/chatbot/user_message/${sessionID}/`, data)
       .then((Response) => Response.data)
-      .catch((error) => console.error(error));
+      // .catch((error) => console.error(error));
   };
 
   public deleteUpcomingLecture = (lectureId) => {
