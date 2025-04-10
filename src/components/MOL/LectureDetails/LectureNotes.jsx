@@ -88,7 +88,7 @@ const LectureNotes = ({
         console.log("Error generating notes")
       }
     } catch (error) {
-      toast.error("Failed to update notes");
+      // toast.error("Failed to update notes");
       console.error("API Error:", error);
     } finally {
       setShowTextFields((prev) => ({ ...prev, [noteId]: false }));

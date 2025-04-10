@@ -39,6 +39,7 @@ import { usePathname } from "next/navigation";
 import { RiArrowDropDownLine } from "react-icons/ri";
 import TextWithMath from "@/commonComponents/TextWithMath/TextWithMath";
 import AssignmentTextFormat from "@/commonComponents/TextWithMath/AssignmentTextFormat";
+import toast from "react-hot-toast";
 
 export default function NewChatbot({ suggestionInput, setIsOpenChatBot }) {
   const chatbotRef = useRef();
@@ -183,6 +184,24 @@ export default function NewChatbot({ suggestionInput, setIsOpenChatBot }) {
       ]);
     } catch (error) {
       console.error(error);
+      const errorCode = error?.response?.data?.error_code;
+      const errorMessage =
+        error?.response?.data?.message ||
+        "Sorry, something went wrong. Please try again.";
+
+      let assistantMessage;
+
+      if (errorCode === "UEDU_CUST_ERR_4033") {
+        assistantMessage =
+          "⚠️ You’ve reached the daily limit of 10 requests. Please try again after 24 hours.";
+      } else {
+        assistantMessage = `⚠️ ${errorMessage}`;
+      }
+
+      setChatHistory((prevChat) => [
+        ...prevChat,
+        { role: "assistant", content: assistantMessage },
+      ]);
     }
     setIsLoading(false);
   };
@@ -386,8 +405,8 @@ export default function NewChatbot({ suggestionInput, setIsOpenChatBot }) {
                             <Box
                               sx={{
                                 minWidth: 300,
-                                width: 1.5*(dimensions.width/2),
-                                fontSize: "0.85rem"                              
+                                width: 1.5 * (dimensions.width / 2),
+                                fontSize: "0.85rem",
                               }}
                             >
                               <TextWithMath text={data?.bot_response} />
