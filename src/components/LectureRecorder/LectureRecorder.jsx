@@ -290,7 +290,7 @@ const LectureRecorder = ({ open, closeDrawer, recordingData }) => {
           const formData = new FormData();
           formData.append(
             "video_url",
-            `https://vidya-ai-video.s3.amazonaws.com/videos/${s3FileName}${recordingData.id}.mp4`
+            `https://${Bucket}.s3.amazonaws.com/videos/${s3FileName}${recordingData.id}.mp4`
           );
           formData.append("video_src", "OTHERS");
           await uploadVideoToS3(videoAttachment[0]);
