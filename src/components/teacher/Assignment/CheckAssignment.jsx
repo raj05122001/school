@@ -37,6 +37,9 @@ import "@react-pdf-viewer/core/lib/styles/index.css";
 import "@react-pdf-viewer/default-layout/lib/styles/index.css";
 import AudioPlayer from "@/components/AudioPlayer/AudioPlayer";
 import AssignmentTextFormat from "@/commonComponents/TextWithMath/AssignmentTextFormat";
+import { GetObjectCommand } from "@aws-sdk/client-s3";
+import { getSignedUrl } from "@aws-sdk/s3-request-presigner";
+import { AwsSdk } from "@/hooks/AwsSdk";
 
 const CheckAssignment = ({ assignment, index, fetchAssignmentAnswer }) => {
   const { isDarkMode, primaryColor, secondaryColor } = useThemeContext();
@@ -122,6 +125,27 @@ const CheckAssignment = ({ assignment, index, fetchAssignmentAnswer }) => {
     }
   };
 
+  const handleSelectFile = async (fileLink)=>{
+    console.log("fileLink : ",fileLink)
+    const keyPath = new URL(fileLink).pathname.slice(1);
+    
+    const { s3 } = AwsSdk();
+    const Bucket = process.env.NEXT_PUBLIC_AWS_BUCKET;
+  
+    const params = {
+      Bucket,
+      Key: keyPath,
+    };
+
+    try{
+      const command = new GetObjectCommand(params);
+      const signedUrl = await getSignedUrl(s3, command, { expiresIn: 60 * 60 * 3 });
+      setSelectedFile(signedUrl)
+    }catch(error){
+      console.error(error)
+    }
+  }
+
   const renderAnswerContent = useCallback(
     (assignment) => {
       const { answer_type, answer_link } = assignment;
@@ -135,7 +159,7 @@ const CheckAssignment = ({ assignment, index, fetchAssignmentAnswer }) => {
             image={answer_link}
             alt="Answer Image"
             sx={{ height: 300, objectFit: "contain", mt: 2, borderRadius: 2 }}
-            onClick={() => setSelectedFile(answer_link)}
+            onClick={() => handleSelectFile(answer_link)}
           />
         );
       } else if (answer_type === "VIDEO") {
