@@ -123,11 +123,11 @@ const LectureAttachments = ({ lectureId, isDarkMode }) => {
         >
         <GrAttachment />  Lecture Attachments
         </Typography>
-        <label htmlFor="attachments">
+        {userDetails?.role!=="STUDENT" &&  <label htmlFor="attachments">
           <IconButton component="span">
             <AiOutlinePlus color="gray" />
           </IconButton>
-        </label>
+        </label>}
         <input
           type="file"
           id="attachments"
