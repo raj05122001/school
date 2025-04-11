@@ -200,7 +200,7 @@ const CheckAssignment = ({ assignment, index, fetchAssignmentAnswer }) => {
                 cursor: "pointer",
               },
             }}
-            onClick={() => setSelectedFile(answer_link)}
+            onClick={() => handleSelectFile(answer_link)}
           >
             <Box
               sx={{
@@ -298,7 +298,7 @@ const CheckAssignment = ({ assignment, index, fetchAssignmentAnswer }) => {
         }}
       >
         <IconButton
-          onClick={() => setSelectedFile(null)}
+          onClick={() => handleSelectFile(null)}
           sx={{
             position: "absolute",
             top: 20,
