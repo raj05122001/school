@@ -5,9 +5,12 @@ export const uploadToS3 = async (
   fileType,
   assignmentId,
   s3,
-  setUploadProgress
+  setUploadProgress,
+  setS3Location
 ) => {
   const Bucket = process.env.NEXT_PUBLIC_AWS_BUCKET;
+  const Region = process.env.NEXT_PUBLIC_AWS_REGION;
+
   return new Promise(async (resolve, reject) => {
     try {
       const fileConfigs = {
@@ -58,7 +61,8 @@ export const uploadToS3 = async (
       });
 
       const result = await upload.done();
-      file.s3Location = result.Location;
+      const url = `https://${Bucket}.s3.${Region}.amazonaws.com/${result.Key}`
+      setS3Location(url)
       resolve(result);
     } catch (err) {
       console.error("Error uploading file:", err);
