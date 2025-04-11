@@ -172,6 +172,12 @@ const CommentCard = ({
               }}
               value={text}
               onChange={(event) => setText(event.target.value)}
+              onKeyDown={(event) => {
+                if (event.key === "Enter" && !event.shiftKey) {
+                  event.preventDefault(); // Prevent newline if using multiline input
+                  handleComment();
+                }
+              }}
             />
             <IconButton
               color="primary"
@@ -382,6 +388,12 @@ const CommentsSection = ({ id }) => {
             }}
             value={text}
             onChange={(event) => setText(event.target.value)}
+            onKeyDown={(event) => {
+              if (event.key === "Enter" && !event.shiftKey) {
+                event.preventDefault(); // Prevent newline if using multiline input
+                handleSubmitComment();
+              }
+            }}
           />
           <IconButton
             color="primary"
