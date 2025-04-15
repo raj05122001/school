@@ -21,6 +21,7 @@ export async function middleware(req) {
         pathname.includes("/forget-password") ||
         pathname.includes("/login") ||
         pathname.includes("/terms-and-conditions") ||
+        pathname.includes("/delete-account") ||
         pathname.includes("/privacy-policy") ||
         pathname.includes("/signup") 
       ) {

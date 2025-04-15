@@ -90,6 +90,7 @@ const Main = ({ children }) => {
       pathname === "/signup" ||
       pathname === "/vipsbot" ||
       pathname === "/terms-and-conditions" ||
+      pathname === "/delete-account" ||
       pathname === "/privacy-policy" ||
       pathname === "/invite-accept" ? (
         <>{children}</>
