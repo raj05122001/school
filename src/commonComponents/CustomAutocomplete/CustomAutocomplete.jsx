@@ -1,7 +1,14 @@
 import { Autocomplete, TextField } from "@mui/material";
 import { useThemeContext } from "@/hooks/ThemeContext";
 
-const CustomAutocomplete = ({ options, onSelect, onChange, label, value, disabled }) => {
+const CustomAutocomplete = ({
+  options,
+  onSelect,
+  onChange,
+  label,
+  value,
+  disabled,
+}) => {
   const { isDarkMode } = useThemeContext();
 
   const lowerCase = (value) => {
@@ -43,11 +50,12 @@ const CustomAutocomplete = ({ options, onSelect, onChange, label, value, disable
           variant="outlined"
           onChange={(event) => handleChange(event.target.value)}
           InputLabelProps={{
-            style: { color: isDarkMode ? "#d7e4fc" : "" },
+            style: {},
             sx: {
               "&.Mui-focused": {
-                fontSize: isDarkMode && "1.5rem", // Adjust font size when focused
-                color: isDarkMode ? "#d7e4fc" : "#000", // Adjust color if needed
+                fontSize: "16px",
+                fontFamily: "Inter",
+                color:"#16AA54"
               },
             },
           }}
@@ -55,10 +63,16 @@ const CustomAutocomplete = ({ options, onSelect, onChange, label, value, disable
             ...params.InputProps,
             type: "search",
             sx: {
-              color: isDarkMode ? "#d7e4fc" : "#000",
-              backdropFilter: "blur(10px)",
-              backgroundColor: isDarkMode ? "":"rgba(255, 255, 255, 0.5)",
-              "& .MuiOutlinedInput-notchedOutline": {},
+              borderRadius: "12px",
+              fontSize: "16px",
+              fontFamily: "Inter",
+              backgroundColor: isDarkMode ? "" : "rgba(255, 255, 255, 0.5)",
+              "& .MuiOutlinedInput-notchedOutline": {
+                color:"#16AA54"
+              },
+              "&.Mui-focused .MuiOutlinedInput-notchedOutline": {
+                borderColor: "#16AA54", // this is the key line
+              },
             },
           }}
         />

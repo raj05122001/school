@@ -46,6 +46,8 @@ const LoginPage = () => {
     email: "",
     password: "",
   });
+  const [selectedRole, setSelectedRole] = useState(null);
+  const roles = ["Student", "Teacher", "Admin"];
 
   const [error, setError] = useState(null);
 
@@ -112,7 +114,7 @@ const LoginPage = () => {
         item
         xs={12}
         sm={8}
-        md={7}
+        md={6}
         component={Box}
         sx={{
           display: "flex",
@@ -124,7 +126,7 @@ const LoginPage = () => {
           background: `${isMobile ? "url('/mobileLoginBG2.jpg')" : "#fff"}`,
           backgroundSize: "cover", // Ensure the image covers the entire page
           backgroundPosition: "center", // Center the image
-          padding: 4,
+          padding: 2,
           animation: "slideFade 1s ease-in-out",
           ...textAnimation,
         }}
@@ -184,9 +186,9 @@ const LoginPage = () => {
         <Box
           sx={{
             width: "100%",
-            maxWidth: "400px",
+            maxWidth: "407px",
             // border: "1px solid black",
-            p: 5,
+            p: 3,
           }}
         >
           <Typography
@@ -216,14 +218,81 @@ const LoginPage = () => {
             VidyaAI
           </Typography>
           <Box
+            sx={{
+              color: "var(--Secondary_Black, #141514)",
+              width: "100%",
+              height: "19px",
+              textAlign: "center",
+              fontFamily: "Inter",
+              fontSize: "16px",
+              fontStyle: "normal",
+              fontWeight: 400,
+              lineHeight: "normal",
+              // display:"flex",
+              marginTop: "44px",
+              display: "flex",
+              gap: "6px",
+            }}
+          >
+            <Box
+              sx={{
+                flex: 1,
+                height: "1px",
+                backgroundColor: "#C1C1C1",
+                marginTop: "10px",
+                marginBottom: "9px",
+              }}
+            />
+            <Box>Sign in as</Box>
+            <Box
+              sx={{
+                flex: 1,
+                height: "1px",
+                backgroundColor: "#C1C1C1",
+                marginTop: "10px",
+                marginBottom: "9px",
+              }}
+            />
+          </Box>
+          <Box
+            sx={{
+              marginTop: "28px",
+              display: "flex",
+              alignItems: "center",
+              gap: "12px",
+              alignSelf: "stretch",
+              justifyContent: "center",
+            }}
+          >
+            {roles.map((role) => (
+              <Button
+                key={role}
+                variant="contained"
+                onClick={() => setSelectedRole(role)}
+                sx={{
+                  backgroundColor: selectedRole === role ? "#f3f5f7" : "#fff",
+                  color: "var(--Text-Color-1, #3B3D3B)",
+                  textTransform: "none",
+                  borderRadius: "8px",
+                  padding: "4px 12px",
+                  ":hover": {
+                    backgroundColor: selectedRole === role ? "#f3f5f7" : "#fff",
+                  },
+                }}
+              >
+                {role}
+              </Button>
+            ))}
+          </Box>
+          <Box
             component="form"
             noValidate
             sx={{
               display: "flex",
               flexDirection: "column",
               alignItems: "flex-start",
-              gap: "14px",
-              padding: "28px 0px",
+              gap: "10px",
+              padding: "16px 0px",
             }}
             onSubmit={handleSubmit}
           >
@@ -236,7 +305,7 @@ const LoginPage = () => {
                   fontWeight: 600,
                   lineHeight: "118.18%",
                   letterSpacing: "0.8px",
-                  fontFamily: "Inter, sans-serif"
+                  fontFamily: "Inter, sans-serif",
                 }}
               >
                 E-mail
@@ -275,7 +344,7 @@ const LoginPage = () => {
                   fontWeight: 600,
                   lineHeight: "118.18%",
                   letterSpacing: "0.8px",
-                  fontFamily: "Inter, sans-serif"
+                  fontFamily: "Inter, sans-serif",
                 }}
               >
                 Password
@@ -309,7 +378,7 @@ const LoginPage = () => {
                   ),
                   style: { color: "#000", borderRadius: "12px", margin: 0 },
                 }}
-                sx={{ backgroundColor: "#fff", borderRadius: "5px",margin: 0 }}
+                sx={{ backgroundColor: "#fff", borderRadius: "5px", margin: 0 }}
                 variant="outlined"
               />
             </Box>
@@ -357,7 +426,7 @@ const LoginPage = () => {
                     lineHeight: "118.185%", // or simply "14.182px"
                     letterSpacing: "0.84px",
                     textDecoration: "none",
-                    fontFamily: "Inter, sans-serif"
+                    fontFamily: "Inter, sans-serif",
                   }}
                 >
                   Forgot password
@@ -395,7 +464,7 @@ const LoginPage = () => {
                   fontStyle: "normal",
                   fontWeight: 600,
                   lineHeight: "normal",
-                  fontFamily: "Inter, sans-serif"
+                  fontFamily: "Inter, sans-serif",
                 }}
               >
                 Log in
@@ -428,7 +497,7 @@ const LoginPage = () => {
                   fontStyle: "normal",
                   fontWeight: 600,
                   lineHeight: "normal",
-                  fontFamily: "Inter, sans-serif"
+                  fontFamily: "Inter, sans-serif",
                 }}
               >
                 Sign up
@@ -442,20 +511,24 @@ const LoginPage = () => {
                 fontWeight: 400,
                 fontSize: "12px",
                 lineHeight: "normal",
-                fontFamily: "Inter, sans-serif"
+                fontFamily: "Inter, sans-serif",
               }}
             >
               By signing in to VidyaAI you agree to our{" "}
               <Link
                 onClick={() => router.push("/login")}
-                sx={{ color: "#1976d2", cursor: "pointer",  fontFamily: "Inter, sans-serif" }}
+                sx={{
+                  color: "#1976d2",
+                  cursor: "pointer",
+                  fontFamily: "Inter, sans-serif",
+                }}
               >
                 Terms and Privacy Policy
               </Link>
             </Typography>
           </Box>
         </Box>
-        <Box
+        {/* <Box
           sx={{
             width: "832px",
             height: "8%",
@@ -467,7 +540,7 @@ const LoginPage = () => {
             position: "absolute",
             bottom: 0,
           }}
-        ></Box>
+        ></Box> */}
       </Grid>
 
       {/* Left Side with Gradient Background */}
@@ -476,43 +549,74 @@ const LoginPage = () => {
           item
           xs={false}
           sm={4}
-          md={5}
+          md={6}
           sx={{
-            flexShrink: 0,
-            // background: "linear-gradient(to bottom right, #1976d2, #00c853)",
-            backgroundImage: "url('/placeholder_login1.png')", // Add background image
-            backgroundSize: "cover", // Ensure the image covers the entire page
-            backgroundPosition: "center", // Center the image
-            position: "relative", // Ensures the overlay text is positioned correctly
+            display: "inline-flex",
+            // padding: "247px 32px 231px 31px",
+            flexDirection: "column",
+            // justifyContent: "flex-end",
+            alignItems: "center",
           }}
         >
-          {/* Overlay Text */}
-          {/* <Box
+          <Box
             sx={{
-              position: "absolute",
-              top: "25%",
-              left: "25%",
-              // transform: "translate(-50%, -50%)",
-              color: "#fff",
-              textAlign: "left",
-              animation: "slideFade 1s ease-in-out",
-              ...textAnimation,
+              display: "flex",
+              alignItems: "center",
+              gap: "25px",
+              backgroundColor: "#fff",
+              // marginTop: "247px",
+              // marginBotton: "231px",
+              // marginLeft: "31px",
+              // maginRight: "32px",
+              margin: "auto",
             }}
           >
-            <Typography
-              variant="h3"
-              sx={{ fontWeight: "bold", color: "#EDEADE" }}
+            {/* Image 1: Takes 50% of the width */}
+            <Box
+              sx={{
+                width: "388px",
+                height: "546px",
+                aspectRatio: "194 / 273",
+                background:
+                  'url("/Illustration_indian 1.png") lightgray 50% / cover no-repeat',
+                flexShrink: 0,
+                backgroundColor: "#fff",
+              }}
+            />
+            {/* Images 2 and 3: Stack vertically and take remaining 50% */}
+            <Box
+              sx={{
+                flex: 1,
+                display: "flex",
+                flexDirection: "column",
+                gap: "10px",
+              }}
             >
-              Welcome to
-              <br />
-              <Box sx={{ p: 1 }}>
-                <Logo />
-              </Box>
-            </Typography>
-            <Typography variant="h5" sx={{ mt: 1, color: "#191970" }}>
-              Your AI-powered Learning Companion
-            </Typography>
-          </Box> */}
+              <Box
+                sx={{
+                  width: "253px",
+                  height: "259px",
+                  aspectRatio: "253 / 259",
+                  background:
+                    'url("/Illustration_euro 1.png") lightgray 50% / cover no-repeat',
+                  flexShrink: 0,
+                  backgroundColor: "#fff",
+                }}
+              />
+
+              <Box
+                sx={{
+                  width: "253px",
+                  height: "259px",
+                  aspectRatio: "253 / 259",
+                  background:
+                    'url("/Illustration_arabic 1.png") lightgray 50% / cover no-repeat',
+                  flexShrink: 0,
+                  backgroundColor: "#fff",
+                }}
+              />
+            </Box>
+          </Box>
         </Grid>
       )}
     </Grid>

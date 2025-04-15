@@ -31,7 +31,7 @@ import {
   getTopicsByChapter,
   createLecture,
   updateLecture,
-  deleteUpcomingLecture
+  deleteUpcomingLecture,
 } from "@/api/apiHelper";
 import { decodeToken } from "react-jwt";
 import Cookies from "js-cookie";
@@ -47,7 +47,7 @@ const CreatingLecture = ({
   isEditMode = false,
 }) => {
   const { isDarkMode } = useThemeContext();
-  const [isLoading, setIsLoading] = useState(false)
+  const [isLoading, setIsLoading] = useState(false);
   const [lectureSubject, setLectureSubject] = useState(null);
   const [subjectName, setSubjectName] = useState(null);
   const [lectureChapter, setLectureChapter] = useState(null);
@@ -68,7 +68,6 @@ const CreatingLecture = ({
   const [subjectOptions, setSubjectOptions] = useState([]);
   const [chapterOptions, setChapterOptions] = useState([]);
   const [topicOptions, setTopicOptions] = useState([]);
-
 
   const encodeURI = (value) => encodeURIComponent(value);
 
@@ -239,11 +238,15 @@ const CreatingLecture = ({
     };
 
     const data = {
-      subject: checkCondition(lectureSubject, subjectName) || lecture?.subject?.id,
-      chapter: checkCondition(lectureChapter, chapterName) || lecture?.chapter?.id,
-      lecture_class: checkCondition(selectedClass, selectedClassName) || lecture?.lecture_class?.id,
+      subject:
+        checkCondition(lectureSubject, subjectName) || lecture?.subject?.id,
+      chapter:
+        checkCondition(lectureChapter, chapterName) || lecture?.chapter?.id,
+      lecture_class:
+        checkCondition(selectedClass, selectedClassName) ||
+        lecture?.lecture_class?.id,
       topics: topicsName || lecture?.topics,
-      title: topicsName  || lecture?.title,
+      title: topicsName || lecture?.title,
       organizer: Number(userDetails.teacher_id),
       schedule_date: lectureDate.format("YYYY-MM-DD"),
       schedule_time: lectureStartTime.format("HH:mm"),
@@ -254,7 +257,7 @@ const CreatingLecture = ({
     if (file) {
       data.file = file;
     }
-    setIsLoading(true)
+    setIsLoading(true);
     try {
       if (isEditMode && lecture?.id) {
         // Call the updateLecture API when isEditMode is true
@@ -278,7 +281,7 @@ const CreatingLecture = ({
     } catch (error) {
       console.error("Error creating lecture:", error);
     } finally {
-      setIsLoading(false)
+      setIsLoading(false);
     }
   };
 
@@ -291,12 +294,11 @@ const CreatingLecture = ({
     }
   };
 
-  return (
-    isLoading ? (           
-      <Box className="overlay">
-        <Box className="loader"></Box>
-    </Box>        
-     ) :
+  return isLoading ? (
+    <Box className="overlay">
+      <Box className="loader"></Box>
+    </Box>
+  ) : (
     <Dialog
       open={open}
       onClose={handleClose}
@@ -305,58 +307,46 @@ const CreatingLecture = ({
       sx={{
         "& .MuiDialogContent-root": {
           color: isDarkMode ? "white" : "black",
-          background: isDarkMode
-            ? "radial-gradient(circle at 1.8% 4.8%,rgba(17, 23, 58, 0.8) 0%, rgba(58, 85, 148, 0.8) 90%)"
-            : "linear-gradient(109.6deg, rgb(223, 234, 247) 11.2%, rgb(244, 248, 252) 91.1%)",
+          backgroundColor: "#fff",
           backdropFilter: "blur(10px)",
           // backgroundImage: "url('/create_lectureBG.jpg')", // Add background image
           // backgroundSize: "cover", // Ensure the image covers the entire page
           // backgroundPosition: "center", // Center the image
         },
         "& .MuiDialogTitle-root": {
-          bgcolor: isDarkMode ? "#424242" : "white",
-          color: isDarkMode ? "white" : "black",
-          background: isDarkMode
-            ? "linear-gradient(to top, #09203f 0%, #537895 100%);"
-            : "linear-gradient(to top, #dfe9f3 0%, white 100%)",
           display: "flex",
-          justifyContent: "center",
-          alignItems: "center",
+          justifyContent: "space-between",
+          alignItems: "flex-start",
+          alignSelf: "stretch",
         },
         "& .MuiPaper-root": {
-          border: "2px solid #0096FF",
-          borderRadius: "12px",
+          borderRadius: "24px",
+          display: "flex",
+          width: "1055px",
+          padding: "24px",
+          flexDirection: "column",
+          alignItems: "flex-end",
         },
       }}
     >
-     <DialogTitle
+      <DialogTitle
         sx={{
-          bgcolor: isDarkMode ? "#424242" : "white",
-          color: isDarkMode ? "white" : "black",
           display: "flex",
-          alignItems: "center",
-          position: "relative", // For absolute positioning of the delete button
-          flex:1
+          justifyContent: "space-between",
+          alignItems: "flex-start",
+          alignSelf: "stretch",
         }}
       >
         <Box
           sx={{
-            flex: 1,
-            display: "flex",
-            justifyContent: "center",
-            alignItems: "center",
-            position: "absolute",
-            left: "50%",
-            transform: "translateX(-50%)", // Center the text
+            color: "var(--Text-Color-1, #3B3D3B)",
+            fontFamily: "Inter",
+            fontSize: "24px",
+            fontStyle: "normal",
+            fontWeight: "600",
+            lineHeight: "normal",
           }}
         >
-        {" "}
-          <MdOutlineClass
-            style={{
-              color: isDarkMode ? "white" : "black",
-              marginRight: "2px",
-            }}
-          />{" "}
           Create Lecture
         </Box>
         {isEditMode && lecture?.id && (
@@ -368,7 +358,7 @@ const CreatingLecture = ({
               alignItems: "center",
               justifyContent: "flex-end",
               cursor: "pointer",
-              flex:1
+              flex: 1,
             }}
           >
             <MdDelete size={20} onClick={() => onDeleteLecture()} />
@@ -377,14 +367,14 @@ const CreatingLecture = ({
       </DialogTitle>
       <DialogContent>
         <form onSubmit={handleSubmit}>
-          <Grid container spacing={3} marginTop={2}>
+          <Grid container spacing={3} marginTop={1}>
             {/* Lecture Class */}
             <Grid item xs={6}>
               <CustomAutocomplete
                 options={classOptions}
                 onSelect={setSelectedClass}
                 onChange={setSelectedClassName}
-                label={"Lecture Class"}
+                label={"Class"}
                 value={selectedClass}
                 // disabled={isEditMode} // Disable in edit mode
               />
@@ -396,7 +386,7 @@ const CreatingLecture = ({
                 options={subjectOptions}
                 onSelect={setLectureSubject}
                 onChange={setSubjectName}
-                label={"Lecture Subject"}
+                label={"Subject"}
                 value={lectureSubject}
                 // disabled={isEditMode} // Disable in edit mode
               />
@@ -408,7 +398,7 @@ const CreatingLecture = ({
                 options={chapterOptions}
                 onSelect={setLectureChapter}
                 onChange={setChapterName}
-                label={"Lecture Chapter"}
+                label={"Chapter"}
                 value={lectureChapter}
                 // disabled={isEditMode} // Disable in edit mode
               />
@@ -420,7 +410,7 @@ const CreatingLecture = ({
                 options={topicOptions}
                 onSelect={setLectureTopics}
                 onChange={setTopicsName}
-                label={"Lecture Name (Topics)"}
+                label={"Name (Topics)"}
                 value={lectureTopics}
               />
             </Grid>
@@ -433,21 +423,27 @@ const CreatingLecture = ({
                 onChange={(e) => setLectureDescription(e.target.value)}
                 InputLabelProps={{
                   sx: {
-                    color: isDarkMode ? "#d7e4fc" : "" ,
-              "&.Mui-focused": {
-                fontSize: isDarkMode && "1.5rem", // Adjust font size when focused
-                color: isDarkMode ? "#d7e4fc" : "#000", // Adjust color if needed
-              },
-            },
+                    fontSize: "16px",
+                    fontFamily: "Inter",
+                    "&.Mui-focused": {
+                      color: "#16AA54", // Adjust color if needed
+                    },
+                  },
                 }}
                 multiline
                 rows={3}
                 fullWidth
                 InputProps={{
                   sx: {
-                    backdropFilter: "blur(10px)",
-                    color: isDarkMode ? "#d7e4fc" : "" ,
-                    "& .MuiOutlinedInput-notchedOutline": {},
+                    "&.MuiOutlinedInput-root": {
+                      borderRadius: "12px",
+                    },
+                    "& .MuiOutlinedInput-notchedOutline": {
+                      borderRadius: "12px", // ✅ Always round
+                    },
+                    "&.Mui-focused .MuiOutlinedInput-notchedOutline": {
+                      borderColor: "#16AA54",
+                    },
                   },
                 }}
               />
@@ -458,7 +454,10 @@ const CreatingLecture = ({
               <FormControl fullWidth required>
                 <InputLabel
                   id="lecture-type-label"
-                  sx={{ color: isDarkMode ? "#d7e4fc" : "", fontSize: isDarkMode && "20px"}}
+                  sx={{
+                    color: isDarkMode ? "#d7e4fc" : "",
+                    fontSize: isDarkMode && "20px",
+                  }}
                 >
                   Lecture Type
                 </InputLabel>
@@ -469,12 +468,12 @@ const CreatingLecture = ({
                   label="Lecture Type"
                   sx={{
                     backdropFilter: "blur(10px)",
-                    fontSize:"16px",
-                    backgroundColor: "",
+                    fontSize: "16px",
+                    backgroundColor: "#fff",
                     color: isDarkMode ? "#d7e4fc" : "", // Option text color
                     "&.Mui-focused": {
-                color: isDarkMode ? "#d7e4fc" : "#000", // Adjust color if needed
-              },
+                      color: isDarkMode ? "#d7e4fc" : "#000", // Adjust color if needed
+                    },
                     "&.Mui-focused .MuiOutlinedInput-notchedOutline": {
                       borderColor: isDarkMode ? "#d7e4fc" : "", // Border color when focused
                     },
@@ -547,7 +546,7 @@ const CreatingLecture = ({
                     },
                     "& .MuiInputLabel-root": {
                       color: isDarkMode ? "#d7e4fc" : "", // Label color
-                      fontSize: isDarkMode && "20px"
+                      fontSize: isDarkMode && "20px",
                     },
                     "& .MuiInputBase-input": {
                       color: isDarkMode ? "#d7e4fc" : "", // Input text (date value) color
@@ -600,12 +599,10 @@ const CreatingLecture = ({
           </Grid>
         </form>
       </DialogContent>
-      
+
       <DialogActions
         sx={{
-          background: isDarkMode
-            ? "linear-gradient(to top, #09203f 0%, #537895 100%);"
-            : "linear-gradient(to top, #dfe9f3 0%, white 100%)",
+          backgroundColor: "#fff",
         }}
       >
         <Button onClick={handleClose} color="primary">
