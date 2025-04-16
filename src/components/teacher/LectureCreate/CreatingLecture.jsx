@@ -14,6 +14,7 @@ import {
   DialogContent,
   DialogActions,
   TextField,
+  GlobalStyles,
 } from "@mui/material";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
@@ -335,6 +336,7 @@ const CreatingLecture = ({
           justifyContent: "space-between",
           alignItems: "flex-start",
           alignSelf: "stretch",
+          // backgroundColor:"red"
         }}
       >
         <Box
@@ -364,6 +366,9 @@ const CreatingLecture = ({
             <MdDelete size={20} onClick={() => onDeleteLecture()} />
           </Box>
         )}
+        <Button onClick={handleClose} color="primary" sx={{}}>
+          Cancel
+        </Button>
       </DialogTitle>
       <DialogContent>
         <form onSubmit={handleSubmit}>
@@ -418,7 +423,7 @@ const CreatingLecture = ({
             {/* Lecture Description (Optional) */}
             <Grid item xs={12}>
               <TextField
-                label="Lecture Description (Optional)"
+                label="Description (Optional)"
                 value={lectureDescription}
                 onChange={(e) => setLectureDescription(e.target.value)}
                 InputLabelProps={{
@@ -457,6 +462,9 @@ const CreatingLecture = ({
                   sx={{
                     color: isDarkMode ? "#d7e4fc" : "",
                     fontSize: isDarkMode && "20px",
+                    "&.Mui-focused": {
+                      color: "#16AA54",
+                    },
                   }}
                 >
                   Lecture Type
@@ -470,16 +478,17 @@ const CreatingLecture = ({
                     backdropFilter: "blur(10px)",
                     fontSize: "16px",
                     backgroundColor: "#fff",
+                    borderRadius: "12px",
                     color: isDarkMode ? "#d7e4fc" : "", // Option text color
-                    "&.Mui-focused": {
-                      color: isDarkMode ? "#d7e4fc" : "#000", // Adjust color if needed
+                    "& .MuiOutlinedInput-notchedOutline": {
+                      color: "#16AA54",
                     },
                     "&.Mui-focused .MuiOutlinedInput-notchedOutline": {
-                      borderColor: isDarkMode ? "#d7e4fc" : "", // Border color when focused
+                      borderColor: "#16AA54", // <-- This changes the border color to green when focused
                     },
-                    "& .MuiSvgIcon-root": {
-                      color: isDarkMode ? "#d7e4fc" : "", // Dropdown arrow color
-                    },
+                    // "& .MuiSvgIcon-root": {
+                    //   color: isDarkMode ? "#d7e4fc" : "", // Dropdown arrow color
+                    // },
                   }}
                 >
                   {lecture_type?.map((value) => (
@@ -487,7 +496,12 @@ const CreatingLecture = ({
                       <Box
                         sx={{ display: "flex", alignItems: "center", gap: 1 }}
                       >
-                        <Image src={value.image} width={22} height={22} />
+                        <Image
+                          src={value.image}
+                          alt="icon"
+                          width={22}
+                          height={22}
+                        />
                         <Typography>{value?.name}</Typography>
                       </Box>
                     </MenuItem>
@@ -499,26 +513,81 @@ const CreatingLecture = ({
             {/* Lecture Date */}
             <Grid item xs={4}>
               <LocalizationProvider dateAdapter={AdapterDayjs}>
+                <GlobalStyles
+                  styles={{
+                    ".MuiPickersDay-root.Mui-selected": {
+                      backgroundColor: "#16AA54 !important",
+                      color: "#fff !important",
+                    },
+                    ".MuiPickersDay-root.Mui-selected:hover": {
+                      backgroundColor: "#2e7d32 !important",
+                    },
+
+                    // Year picker (main fix here)
+                    "button.MuiPickersYear-yearButton.Mui-selected": {
+                      backgroundColor: "#16AA54 !important",
+                      color: "#fff !important",
+                    },
+                    "button.MuiPickersYear-yearButton.Mui-selected:hover": {
+                      backgroundColor: "#2e7d32 !important",
+                    },
+                  }}
+                />
                 <DatePicker
                   label="Lecture Date"
                   value={lectureDate}
                   onChange={(newDate) => setLectureDate(newDate)}
-                  sx={{
-                    backdropFilter: "blur(10px)",
-                    backgroundColor: "",
-                    color: isDarkMode ? "#d7e4fc" : "", // Option text color
-                    "&.Mui-focused .MuiOutlinedInput-notchedOutline": {
-                      borderColor: isDarkMode ? "#d7e4fc" : "", // Border color when focused
+                  slotProps={{
+                    textField: {
+                      fullWidth: true,
+                      required: true,
+                      sx: {
+                        "& .MuiInputLabel-root": {
+                          fontSize: isDarkMode && "14px",
+
+                          "&.Mui-focused": {
+                            color: "#16AA54", // label color on focus
+                          },
+                        },
+                        "& .MuiOutlinedInput-root": {
+                          borderRadius: "12px",
+                          "&.Mui-focused .MuiOutlinedInput-notchedOutline": {
+                            borderColor: "#16AA54", // border on focus
+                          },
+                        },
+                        "& .MuiOutlinedInput-notchedOutline": {
+                          borderColor: isDarkMode ? "#d7e4fc" : "",
+                        },
+                        "& .MuiSvgIcon-root": {
+                          color: "#16AA54",
+                        },
+                        "& .MuiInputBase-input": {
+                          color: isDarkMode ? "#d7e4fc" : "",
+                        },
+                      },
                     },
-                    "& .MuiSvgIcon-root": {
-                      color: isDarkMode ? "#d7e4fc" : "", // Dropdown arrow color
-                    },
-                    "& .MuiInputLabel-root": {
-                      fontSize: isDarkMode && "20px",
-                      color: isDarkMode ? "#d7e4fc" : "", // Label color
-                    },
-                    "& .MuiInputBase-input": {
-                      color: isDarkMode ? "#d7e4fc" : "", // Input text (date value) color
+                    popper: {
+                      // placement: "bottom-start", // 👈 forces it to open below
+                      modifiers: [
+                        // {
+                        //   name: "flip",
+                        //   enabled: false, // 👈 disables auto-flipping above
+                        // },
+                        {
+                          name: "offset",
+                          options: {
+                            offset: [0, 4],
+                          },
+                        },
+                      ],
+                      sx: {
+                        "& .MuiPaper-root": {
+                          border: "2px solid #16AA54",
+                          boxShadow: "none",
+                          borderRadius: "12px",
+                          fontSize: "14px",
+                        },
+                      },
                     },
                   }}
                   renderInput={(params) => (
@@ -538,15 +607,24 @@ const CreatingLecture = ({
                     backdropFilter: "blur(10px)",
                     backgroundColor: "",
                     color: isDarkMode ? "#d7e4fc" : "", // Option text color
+                    "& .MuiOutlinedInput-root": {
+                      borderRadius: "12px",
+                      "&.Mui-focused .MuiOutlinedInput-notchedOutline": {
+                        borderColor: "#16AA54", // border on focus
+                      },
+                    },
                     "&.Mui-focused .MuiOutlinedInput-notchedOutline": {
                       borderColor: isDarkMode ? "#d7e4fc" : "", // Border color when focused
                     },
                     "& .MuiSvgIcon-root": {
-                      color: isDarkMode ? "#d7e4fc" : "", // Dropdown arrow color
+                      color: "#16AA54", // Dropdown arrow color
                     },
                     "& .MuiInputLabel-root": {
                       color: isDarkMode ? "#d7e4fc" : "", // Label color
-                      fontSize: isDarkMode && "20px",
+                      fontSize: "16px",
+                      "&.Mui-focused": {
+                        color: "#16AA54", // label color on focus
+                      },
                     },
                     "& .MuiInputBase-input": {
                       color: isDarkMode ? "#d7e4fc" : "", // Input text (date value) color
@@ -605,14 +683,23 @@ const CreatingLecture = ({
           backgroundColor: "#fff",
         }}
       >
-        <Button onClick={handleClose} color="primary">
-          Cancel
-        </Button>
         <Button
           type="submit"
           variant="contained"
           color="primary"
           onClick={handleSubmit}
+          sx={{
+            display: "flex",
+            padding: "12px 32px",
+            justifyContent: "center",
+            alignItems: "center",
+            gap: "8px",
+            borderRadius: "8px",
+            background: "#141514",
+            "&:hover": {
+              background: "#1c1d1c", // optional: slightly lighter on hover
+            },
+          }}
         >
           {isEditMode ? "Update Lecture" : "Create Lecture"}
         </Button>
