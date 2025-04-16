@@ -12,18 +12,19 @@ function HeroCard({ averageDuration }) {
         width: "715px",
         height: "316px",
         display: "flex",
-        gap: "34.5px",
         flexShrink: 0,
         borderRadius: "20px",
-        background: "linear-gradient(244deg, #12DD00 -6.52%, #16AA54 110.91%)",
+        padding: "15px 0px 0px 16px",
+        background: "var(--Green-dark-2, #174321);",
       }}
     >
       <Box
         sx={{
           display: "flex",
           flexDirection: "column",
-          width: "100%",
+          width: "440px",
           height: "100%",
+          flexShrink: 0,
         }}
       >
         <Box sx={{ marginTop: "15px", marginLeft: "16px" }}>
@@ -48,17 +49,36 @@ function HeroCard({ averageDuration }) {
       <Box
         sx={{
           display: "flex",
-          justifyContent: "flex-end",
+          justifyContent: "flex-start",
           alignItems: "center",
+          width: "275px",
+          height: "100%",
+          flexShrink: 1,
+          overflow: "hidden",
+          maxWidth: "100%",
+          borderRadius: "20px",
         }}
       >
-        <Image
-          src={"/heroImage.png"}
-          alt="Sitting Image"
-          width={260.45}
-          height={208}
-          style={{ flexShrink: 0, marginTop: "48px", marginRight: "0.46px" }}
+        <Box
+          sx={{
+            width: "297px",
+            height: "253px",
+            aspectRatio: "33 / 28",
+            background:
+              'url("/banner 1_illustration 1.png") lightgray 50% / cover no-repeat',
+            backgroundColor: "var(--Green-dark-2, #174321);",
+            marginTop: "48px",
+            marginRight: "2px",
+            // borderRadius: "8px",
+          }}
         />
+        {/* <Image
+          src={"/banner 1_illustration 1.png"}
+          alt="Sitting Image"
+          width={257}
+          height={250}
+          style={{ flexShrink: 0, marginTop: "48px", marginRight: "0.46px" }}
+        /> */}
       </Box>
     </Box>
   );
