@@ -556,6 +556,7 @@ const LoginPage = () => {
             flexDirection: "column",
             // justifyContent: "flex-end",
             alignItems: "center",
+            backgroundColor: "#fff",
           }}
         >
           <Box
