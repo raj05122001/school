@@ -63,7 +63,7 @@ function SubjectCompletion() {
         fill: "var(--Secondary_Black, #141514)",
         boxShadow: "0 4px 30px rgba(0, 0, 0, 0.1)",
         borderRadius: "100%",
-        backgroundColor: "rgba(20, 21, 20, 0.15)"
+        backgroundColor: "#16AA54"
       }}
     >
       <Box
@@ -163,9 +163,9 @@ function FacebookCircularProgress({value=0}) {
       <CircularProgress
         variant="determinate"
         sx={(theme) => ({
-          color: '#FFFFFF26',
+          color: '#12DD00',
           ...theme.applyStyles('dark', {
-            color: '#FFFFFF26',
+            color: '#12DD00',
           }),
         })}
         size={170}
@@ -176,7 +176,7 @@ function FacebookCircularProgress({value=0}) {
         variant="determinate"
         disableShrink
         sx={(theme) => ({
-          color: '#FFFFFF',
+          color: '#fff',
           animationDuration: '550ms',
           position: 'absolute',
           left: 0,
