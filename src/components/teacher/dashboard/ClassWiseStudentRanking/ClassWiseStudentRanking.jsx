@@ -281,7 +281,8 @@ const ClassWiseStudentRanking = ({ selectedOptions }) => {
       <Box sx={{ display: "flex", flexDirection: "column", gap: 2 }}>
         {getChartData()?.map((entry, index) => (
           <Box
-            key={index}
+            key={entry?.name}
+            onClick={() => handleOpenModal(entry.name)}
             sx={{
               border: "1px solid #C1C1C1",
               borderRadius: "8px",
@@ -290,6 +291,7 @@ const ClassWiseStudentRanking = ({ selectedOptions }) => {
               width: "100%",
               // alignItems: "center",
               gap: 8,
+              cursor: "pointer",
             }}
           >
             <Box
@@ -405,7 +407,9 @@ export const StudentModal = ({
 
   return (
     <Dialog open={open} onClose={handleClose} fullWidth maxWidth="md">
-      <DialogTitle sx={{ backgroundColor: "#3f51b5", color: "#fff" }}>
+      <DialogTitle
+        sx={{ backgroundColor: "#fff", color: "#000", fontFamily: "Inter" }}
+      >
         Student Details
         <IconButton
           aria-label="close"
@@ -422,16 +426,76 @@ export const StudentModal = ({
       </DialogTitle>
       <DialogContent>
         {
-          <TableContainer component={Paper}>
-            <Table aria-label="student details">
-              <TableHead>
+          <TableContainer
+            component={Paper}
+            elevation={0}
+            sx={{ borderRadius: "10px", border: "none" }}
+          >
+            <Table aria-label="student details" sx={{ border: "none" }}>
+              <TableHead
+                sx={{
+                  backgroundColor: "#F3F5F7",
+                  borderRadius: "10px",
+                  border: "none",
+                }}
+              >
                 <TableRow>
-                  <TableCell sx={{ fontWeight: "bold" }}>Name</TableCell>
-                  <TableCell sx={{ fontWeight: "bold" }}>Email Id</TableCell>
-                  <TableCell sx={{ fontWeight: "bold" }}>
+                  <TableCell
+                    sx={{
+                      borderTopLeftRadius: "10px",
+                      borderBottomLeftRadius: "10px",
+                      border: "none",
+                      color: "#3B3D3B",
+                      fontFamily: "Inter",
+                      fontWeight: "600",
+                      fontStyle: "normal",
+                      lineHeight: "normal",
+                      fontSize: "14px",
+                    }}
+                  >
+                    Name
+                  </TableCell>
+                  <TableCell
+                    sx={{
+                      border: "none",
+                      color: "#3B3D3B",
+                      fontFamily: "Inter",
+                      fontWeight: "600",
+                      fontStyle: "normal",
+                      lineHeight: "normal",
+                      fontSize: "14px",
+                    }}
+                  >
+                    Email Id
+                  </TableCell>
+                  <TableCell
+                    sx={{
+                      border: "none",
+                      color: "#3B3D3B",
+                      fontFamily: "Inter",
+                      fontWeight: "600",
+                      fontStyle: "normal",
+                      lineHeight: "normal",
+                      fontSize: "14px",
+                    }}
+                  >
                     Avg Overall Percentage
                   </TableCell>
-                  <TableCell sx={{ fontWeight: "bold" }}>Grade</TableCell>
+                  <TableCell
+                    sx={{
+                      borderTopRightRadius: "10px",
+                      borderBottomRightRadius: "10px",
+                      border: "none",
+                      color: "#3B3D3B",
+                      fontFamily: "Inter",
+                      fontWeight: "600",
+                      fontStyle: "normal",
+                      lineHeight: "normal",
+                      fontSize: "14px",
+                    }}
+                  >
+                    Grade
+                  </TableCell>
                 </TableRow>
               </TableHead>
               <TableBody>
@@ -476,12 +540,58 @@ export const StudentModal = ({
                         key={index}
                         sx={{ "&:hover": { backgroundColor: "#f5f5f5" } }}
                       >
-                        <TableCell sx={{ color: isDarkMode ? "#fff" : "#000" }}>
+                        <TableCell
+                          sx={{
+                            fontWeight: 700,
+                            color: "#3B3D3B",
+                            fontFamily: "Inter, sans-serif",
+                            fontSize: "14px",
+                            fontStyle: "normal",
+                            lineHeight: "normal",
+                            width: "105px",
+                          }}
+                        >
                           {row.student__user__full_name}
                         </TableCell>
-                        <TableCell>{row.student__user__email}</TableCell>
-                        <TableCell>{row.avg_overall_percentage}</TableCell>
-                        <TableCell>{selectedGrad}</TableCell>
+                        <TableCell
+                          sx={{
+                            fontWeight: 700,
+                            color: "#3B3D3B",
+                            fontFamily: "Inter, sans-serif",
+                            fontSize: "14px",
+                            fontStyle: "normal",
+                            lineHeight: "normal",
+                            width: "105px",
+                          }}
+                        >
+                          {row.student__user__email}
+                        </TableCell>
+                        <TableCell
+                          sx={{
+                            fontWeight: 700,
+                            color: "#3B3D3B",
+                            fontFamily: "Inter, sans-serif",
+                            fontSize: "14px",
+                            fontStyle: "normal",
+                            lineHeight: "normal",
+                            width: "105px",
+                          }}
+                        >
+                          {row.avg_overall_percentage}
+                        </TableCell>
+                        <TableCell
+                          sx={{
+                            fontWeight: 700,
+                            color: "#3B3D3B",
+                            fontFamily: "Inter, sans-serif",
+                            fontSize: "14px",
+                            fontStyle: "normal",
+                            lineHeight: "normal",
+                            width: "105px",
+                          }}
+                        >
+                          {selectedGrad}
+                        </TableCell>
                       </TableRow>
                     ))}
               </TableBody>

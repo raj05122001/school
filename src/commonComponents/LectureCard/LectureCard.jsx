@@ -18,6 +18,8 @@ import {
   DialogActions,
   CircularProgress,
   Alert,
+  TableRow,
+  TableCell,
 } from "@mui/material";
 import {
   FaCalendarAlt,
@@ -37,6 +39,7 @@ import { MdFileUpload, MdRemoveCircleOutline } from "react-icons/md";
 import { uploadS3Video } from "@/api/apiHelper";
 import { IoIosCloseCircle } from "react-icons/io";
 import toast from "react-hot-toast";
+import CalendarIconCustom from "../CalendarIconCustom/CalendarIconCustom";
 
 const day = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
 
@@ -116,27 +119,22 @@ const LectureCard = ({ lecture, getAllLecture = () => {} }) => {
 
   return (
     <>
-      <Paper
-        sx={lectureCardStyle}
+      <TableRow
+        hover
+        sx={{
+          cursor: "pointer",
+          backgroundColor: isDarkMode ? "#1e1e1e" : "#fff",
+        }}
         onClick={
           userDetails?.role !== "STUDENT"
             ? (event) => handleOpenUserMenu(event)
             : () => handleRoute(lecture?.id)
         }
-        // onClick={(event)=>handleOpenUserMenu(event)}
       >
-        <Box sx={dateSectionStyle}>
-          <Typography
-            variant="h4"
-            sx={{ fontWeight: "700", fontFamily: "Inter, sans-serif" }}
-          >
-            {new Date(lecture?.schedule_date).getDate()}
-          </Typography>
-          <Typography variant="body2" sx={{ fontFamily: "Inter, sans-serif" }}>
-            {day[new Date(lecture?.schedule_date).getDay()]}
-          </Typography>
-        </Box>
-        <Box sx={lectureInfoStyle}>
+        <TableCell>
+          <CalendarIconCustom date={lecture?.schedule_date} />
+        </TableCell>
+        <TableCell>
           <Tooltip
             title={`Title: ${lecture?.title || ""}`}
             arrow
@@ -146,11 +144,12 @@ const LectureCard = ({ lecture, getAllLecture = () => {} }) => {
               variant="h6"
               sx={{
                 fontWeight: 700,
-                mb: 1,
+                color: "#3B3D3B",
                 fontFamily: "Inter, sans-serif",
-                fontSize: "16px",
+                fontSize: "14px",
                 fontStyle: "normal",
                 lineHeight: "normal",
+                width: "105px",
               }}
               noWrap
             >
@@ -159,158 +158,187 @@ const LectureCard = ({ lecture, getAllLecture = () => {} }) => {
                 : lecture?.title}
             </Typography>
           </Tooltip>
-
-          <Box display="flex" alignItems="center" mb={1}>
-            <FaCalendarAlt style={iconStyle} />
-            <Typography
-              variant="body2"
-              sx={{ fontFamily: "Inter, sans-serif" }}
+        </TableCell>
+        <TableCell>
+          <Tooltip
+            title={`Class: ${lecture?.lecture_class?.name || ""}`}
+            arrow
+            placement="top-start"
+          >
+            <span
+              style={{
+                fontWeight: 700,
+                color: "#3B3D3B",
+                fontFamily: "Inter, sans-serif",
+                fontSize: "14px",
+                fontStyle: "normal",
+                lineHeight: "normal",
+                width: "131px",
+                height: "18px",
+                flexShrink: 0,
+              }}
             >
-              {lecture?.schedule_date}
-            </Typography>
-            <FaClock style={{ ...iconStyle, marginLeft: "16px" }} />
-            <Typography
-              variant="body2"
-              sx={{ fontFamily: "Inter, sans-serif" }}
+              {lecture?.lecture_class?.name}
+            </span>
+          </Tooltip>
+        </TableCell>
+        <TableCell>
+          <Typography
+            variant="body2"
+            sx={{
+              fontWeight: 700,
+              color: "#3B3D3B",
+              fontFamily: "Inter, sans-serif",
+              fontSize: "14px",
+              fontStyle: "normal",
+              lineHeight: "normal",
+              width: "41px",
+              height: "18px",
+              flexShrink: 0,
+            }}
+          >
+            {lecture?.schedule_time}
+          </Typography>
+        </TableCell>
+        <TableCell>
+          <Tooltip
+            title={`Subject: ${lecture?.chapter?.subject?.name || ""}`}
+            arrow
+            placement="top-start"
+          >
+            <span
+              style={{
+                fontWeight: 700,
+                color: "#3B3D3B",
+                fontFamily: "Inter, sans-serif",
+                fontSize: "14px",
+                fontStyle: "normal",
+                lineHeight: "normal",
+                width: "105px",
+              }}
             >
-              {lecture?.schedule_time}
-            </Typography>
-          </Box>
-
-          <Box display="flex" alignItems="center" mb={1}>
-            <FaGraduationCap style={iconStyle} />
-            <Typography
-              variant="body2"
-              sx={{ fontFamily: "Inter, sans-serif" }}
-            >
-              <Tooltip
-                title={`Class: ${lecture?.lecture_class?.name || ""}`}
-                arrow
-                placement="top-start"
-              >
-                <span>{lecture?.lecture_class?.name}</span>
-              </Tooltip>
-            </Typography>
-          </Box>
-          <Box display="flex" alignItems="center" mb={1}>
-            <FaBook style={iconStyle} />
-            <Typography
-              variant="body2"
-              sx={{ fontFamily: "Inter, sans-serif" }}
-            >
-            <Tooltip
-                title={`Subject: ${lecture?.chapter?.subject?.name || ""}`}
-                arrow
-                placement="top-start"
-              >
-                <span>{lecture?.chapter?.subject?.name}</span>
-              </Tooltip>
-            </Typography>
-          </Box>
+              {lecture?.chapter?.subject?.name?.length > 20
+                ? `${lecture?.chapter?.subject?.name.slice(0, 20)}...`
+                : lecture?.chapter?.subject?.name}
+            </span>
+          </Tooltip>
+        </TableCell>
+        <TableCell>
           <Tooltip
             title={`Chapter: ${lecture?.chapter?.chapter || ""}`}
             arrow
             placement="top-start"
           >
-            <Box display="flex" alignItems="center" mb={1}>
-              <FaBookOpen style={iconStyle} />
-              <Typography
-                variant="body2"
-                sx={{ fontFamily: "Inter, sans-serif" }}
-              >
-                {lecture?.chapter?.chapter}
-              </Typography>
-            </Box>
+            <Typography
+              variant="body2"
+              sx={{
+                fontWeight: 700,
+                color: "#3B3D3B",
+                fontFamily: "Inter, sans-serif",
+                fontSize: "14px",
+                fontStyle: "normal",
+                lineHeight: "normal",
+                width: "105px",
+              }}
+            >
+              {lecture?.chapter?.chapter?.length > 20
+                ? `${lecture?.chapter?.chapter.slice(0, 20)}...`
+                : lecture?.chapter?.chapter}
+            </Typography>
           </Tooltip>
-        </Box>
-        {/* Edit button on the top-right corner */}
-        {userDetails?.role !== "STUDENT" && (
-          <Box
-            sx={{
-              position: "absolute",
-              top: "8px",
-              right: "8px",
-              display: "flex",
-              gap: 2,
-              alignItems: "center",
-            }}
-          >
-            <Box sx={{ flexGrow: 0 }}>
-              <Tooltip title="Record Or Upload">
-                <IconButton onClick={() => handleOpenUserMenu()} sx={{ p: 0 }}>
-                  <FaCloudUploadAlt
+        </TableCell>
+        <TableCell sx={{ position: "relative" }}>
+          {userDetails?.role !== "STUDENT" && (
+            <Box
+              sx={{
+                position: "absolute",
+                top: "20px",
+                right: "8px",
+                display: "flex",
+                gap: 2,
+                alignItems: "center",
+              }}
+            >
+              <Box sx={{ flexGrow: 0 }}>
+                <Tooltip title="Record Or Upload">
+                  <IconButton
+                    onClick={() => handleOpenUserMenu()}
+                    sx={{}}
+                  >
+                    <FaCloudUploadAlt
+                      style={{
+                        color: "#4bb344",
+                        cursor: "pointer",
+                      }}
+                      size={24}
+                    />
+                  </IconButton>
+                </Tooltip>
+                <Menu
+                  sx={{ mt: "45px" }}
+                  id="menu-appbar"
+                  anchorEl={anchorElUser}
+                  anchorOrigin={{
+                    vertical: "top",
+                    horizontal: "right",
+                  }}
+                  keepMounted
+                  transformOrigin={{
+                    vertical: "top",
+                    horizontal: "right",
+                  }}
+                  open={Boolean(anchorElUser)}
+                  onClose={(e) => {
+                    e.stopPropagation();
+                    handleCloseUserMenu(e);
+                  }}
+                >
+                  <MenuItem
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      setAnchorElUser(null);
+                      setOpen(true);
+                    }}
+                  >
+                    <Typography sx={{ textAlign: "center" }}>
+                      Upload File
+                    </Typography>
+                  </MenuItem>
+                  <MenuItem
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      handleLectureRecord(lecture);
+                      setAnchorElUser(null);
+                    }}
+                  >
+                    <Typography sx={{ textAlign: "center" }}>
+                      Record or Upload Video
+                    </Typography>
+                  </MenuItem>
+                </Menu>
+              </Box>
+
+              <Tooltip title="Edit Lecture">
+                <IconButton
+                  onClick={(e) => {
+                    e.stopPropagation(); // Stop the click from bubbling up to the parent
+                    handleCreateLecture(lecture, true);
+                  }}
+                  sx={{ p: 0 }}
+                >
+                  <FaEdit
                     style={{
-                      color: isDarkMode ? primaryColor : "#4bb344",
+                      color: "#4bb344",
                       cursor: "pointer",
                     }}
-                    size={23}
+                    size={20}
                   />
                 </IconButton>
               </Tooltip>
-              <Menu
-                sx={{ mt: "45px" }}
-                id="menu-appbar"
-                anchorEl={anchorElUser}
-                anchorOrigin={{
-                  vertical: "top",
-                  horizontal: "right",
-                }}
-                keepMounted
-                transformOrigin={{
-                  vertical: "top",
-                  horizontal: "right",
-                }}
-                open={Boolean(anchorElUser)}
-                onClose={(e) => {
-                  e.stopPropagation();
-                  handleCloseUserMenu(e);
-                }}
-              >
-                <MenuItem
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    setAnchorElUser(null);
-                    setOpen(true);
-                  }}
-                >
-                  <Typography sx={{ textAlign: "center" }}>
-                    Upload File
-                  </Typography>
-                </MenuItem>
-                <MenuItem
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    handleLectureRecord(lecture);
-                    setAnchorElUser(null);
-                  }}
-                >
-                  <Typography sx={{ textAlign: "center" }}>
-                    Record or Upload Video
-                  </Typography>
-                </MenuItem>
-              </Menu>
             </Box>
-
-            <Tooltip title="Edit Lecture">
-              <IconButton
-                onClick={(e) => {
-                  e.stopPropagation(); // Stop the click from bubbling up to the parent
-                  handleCreateLecture(lecture, true);
-                }}
-                sx={{ p: 0 }}
-              >
-                <FaEdit
-                  style={{
-                    color: isDarkMode ? primaryColor : "#4bb344",
-                    cursor: "pointer",
-                  }}
-                  size={20}
-                />
-              </IconButton>
-            </Tooltip>
-          </Box>
-        )}
-      </Paper>
+          )}
+        </TableCell>
+      </TableRow>
       <BasicModal
         open={open}
         setOpen={setOpen}
