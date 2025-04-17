@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import {
   Autocomplete,
   Button,
@@ -14,7 +14,10 @@ import {
   DialogContent,
   DialogActions,
   TextField,
+  Paper,
   GlobalStyles,
+  IconButton,
+  InputAdornment,
 } from "@mui/material";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
@@ -38,6 +41,11 @@ import { decodeToken } from "react-jwt";
 import Cookies from "js-cookie";
 import { useThemeContext } from "@/hooks/ThemeContext";
 import CustomAutocomplete from "@/commonComponents/CustomAutocomplete/CustomAutocomplete";
+import { IoCloseOutline } from "react-icons/io5";
+import getFileIcon from "@/commonComponents/FileIcon/FileIcon";
+import { DemoContainer } from "@mui/x-date-pickers/internals/demo";
+import { MobileTimePicker } from "@mui/x-date-pickers/MobileTimePicker";
+import { AiOutlineClockCircle } from "react-icons/ai";
 
 // const userDetails = decodeToken(Cookies.get("ACCESS_TOKEN"));
 
@@ -63,6 +71,7 @@ const CreatingLecture = ({
   const [lectureDate, setLectureDate] = useState(dayjs());
   const [lectureStartTime, setLectureStartTime] = useState(dayjs());
   const [file, setFile] = useState(null);
+  const inputRef = useRef(null);
 
   // Dropdown options state
   const [classOptions, setClassOptions] = useState([]);
@@ -295,6 +304,10 @@ const CreatingLecture = ({
     }
   };
 
+  const handleRemoveFile = () => {
+    setFile(null);
+  };
+
   return isLoading ? (
     <Box className="overlay">
       <Box className="loader"></Box>
@@ -455,7 +468,7 @@ const CreatingLecture = ({
             </Grid>
 
             {/* Lecture Type */}
-            <Grid item xs={4}>
+            <Grid item xs={4} display={"flex"} alignItems={"center"}>
               <FormControl fullWidth required>
                 <InputLabel
                   id="lecture-type-label"
@@ -511,7 +524,7 @@ const CreatingLecture = ({
             </Grid>
 
             {/* Lecture Date */}
-            <Grid item xs={4}>
+            <Grid item xs={4} display={"flex"} alignItems={"center"}>
               <LocalizationProvider dateAdapter={AdapterDayjs}>
                 <GlobalStyles
                   styles={{
@@ -598,8 +611,14 @@ const CreatingLecture = ({
             </Grid>
 
             {/* Lecture Start Time */}
-            <Grid item xs={4}>
-              <LocalizationProvider dateAdapter={AdapterDayjs}>
+            <Grid
+              item
+              xs={4}
+              display={"flex"}
+              alignItems={"center"}
+              paddingTop={"0px"}
+            >
+              {/* <LocalizationProvider dateAdapter={AdapterDayjs}>
                 <TimePicker
                   label="Lecture Start Time"
                   value={lectureStartTime}
@@ -635,45 +654,152 @@ const CreatingLecture = ({
                     <TextField {...params} fullWidth required />
                   )}
                 />
-              </LocalizationProvider>
+              </LocalizationProvider> */}
+              <Box sx={{ position: "relative" }}>
+                <LocalizationProvider dateAdapter={AdapterDayjs}>
+                  <MobileTimePicker
+                    label={"Lecture Start Time *"}
+                    openTo="hours"
+                    inputRef={inputRef}
+                    value={lectureStartTime}
+                    onChange={(newTime) => setLectureStartTime(newTime)}
+                    sx={{
+                      backdropFilter: "blur(10px)",
+                      backgroundColor: "",
+
+                      color: isDarkMode ? "#d7e4fc" : "", // Option text color
+                      "& .MuiOutlinedInput-root": {
+                        borderRadius: "12px",
+                        "&.Mui-focused .MuiOutlinedInput-notchedOutline": {
+                          borderColor: "#16AA54", // border on focus
+                        },
+                      },
+                      "&.Mui-focused .MuiOutlinedInput-notchedOutline": {
+                        borderColor: isDarkMode ? "#d7e4fc" : "", // Border color when focused
+                      },
+                      "& .MuiSvgIcon-root": {
+                        color: "#16AA54", // Dropdown arrow color
+                      },
+                      "& .MuiInputLabel-root": {
+                        color: isDarkMode ? "#d7e4fc" : "", // Label color
+                        fontSize: "16px",
+                        "&.Mui-focused": {
+                          color: "#16AA54", // label color on focus
+                        },
+                      },
+                      "& .MuiInputBase-input": {
+                        color: isDarkMode ? "#d7e4fc" : "", // Input text (date value) color
+                      },
+                    }}
+                  />
+                  <Box
+                   onClick={() => inputRef.current?.click()}
+                    sx={{
+                      position: "absolute",
+                      right: 10,
+                      top: "50%", // halfway down container
+                      transform: "translateY(-50%)",
+                    }}
+                  >
+                    <AiOutlineClockCircle size={20} color="green" />
+                  </Box>
+                </LocalizationProvider>
+              </Box>
             </Grid>
 
-            {/* Attach Lecture Material */}
-
-            <Grid
-              item
-              xs={12}
-              justifyContent={"center"}
-              sx={{
-                display: "flex",
-                justifyItems: "center",
-                alignItems: "center",
-              }}
-            >
-              <Grid item xs={4}>
-                <Button
-                  variant="color"
-                  component="label"
-                  fullWidth
+            {/* Display file name with remove icon if a file is selected */}
+            {file ? (
+              <Grid item xs={12} sm={8} md={4}>
+                <Box
                   sx={{
-                    color: isDarkMode ? "#d7e4fc" : "", // Text color inside the button
+                    mt: 1,
+                    p: 1,
                     border: "1px solid",
-                    borderColor: isDarkMode ? "#d7e4fc" : "",
+                    borderColor: isDarkMode ? "#d7e4fc" : "#ccc",
+                    borderRadius: "8px",
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "space-between",
                   }}
                 >
-                  <IoDocumentAttachOutline
-                    style={{ marginRight: 3, fontSize: "22px" }}
-                  />{" "}
-                  Attach Material
+                  <Box sx={{ display: "flex", alignItems: "center" }}>
+                    {getFileIcon(file.name, {
+                      style: {
+                        fontSize: "24px",
+                        marginRight: "8px",
+                        color: "#16AA54",
+                      },
+                    })}
+                    <Typography
+                      variant="body2"
+                      sx={{
+                        wordBreak: "break-all",
+                        color: isDarkMode ? "#d7e4fc" : "#333",
+                      }}
+                    >
+                      {file.name.length > 24
+                        ? `${file.name?.slice(0, 14)}...${file.name.slice(
+                            file.name.length - 7,
+                            file.name.length
+                          )}`
+                        : file.name}
+                    </Typography>
+                  </Box>
+                  <IconButton
+                    onClick={handleRemoveFile}
+                    size="small"
+                    sx={{ color: isDarkMode ? "#d7e4fc" : "#333" }}
+                  >
+                    {/* <IoCloseOutline style={{ fontSize: '20px' }} /> */}
+                    <Image src="/icons/trash.png" width={20} height={20} />
+                  </IconButton>
+                </Box>
+              </Grid>
+            ) : (
+              <Grid item xs={12}>
+                <Button
+                  component="label"
+                  fullWidth
+                  variant="outlined"
+                  sx={{
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "center",
+                    padding: "12px 16px",
+                    borderRadius: "8px",
+                    textTransform: "none",
+                    fontSize: "16px",
+                    fontWeight: 500,
+                    color: isDarkMode ? "#d7e4fc" : "#333",
+                    border: "1px solid",
+                    borderColor: isDarkMode ? "#d7e4fc" : "#ccc",
+                    backgroundColor: isDarkMode ? "transparent" : "#fff",
+                    "&:hover": {
+                      backgroundColor: isDarkMode
+                        ? "rgba(215, 228, 252, 0.1)"
+                        : "rgba(0, 0, 0, 0.04)",
+                    },
+                    width: "100%",
+                  }}
+                >
+                  <Image
+                    src="/icons/send-square.png"
+                    width={20}
+                    height={20}
+                    style={{ marginRight: 8, fontSize: "22px" }}
+                  />
+                  {/* <IoDocumentAttachOutline 
+                style={{ marginRight: 8, fontSize: '22px' }} 
+              /> */}
+                  Upload Material
                   <input
                     type="file"
                     hidden
                     onChange={(e) => setFile(e.target.files[0])}
                   />
                 </Button>
-                {file && <Typography variant="body2">{file.name}</Typography>}
               </Grid>
-            </Grid>
+            )}
           </Grid>
         </form>
       </DialogContent>
