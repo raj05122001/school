@@ -15,6 +15,12 @@ import { AppContextProvider } from "@/app/main";
 import { GetObjectCommand } from "@aws-sdk/client-s3";
 import { getSignedUrl } from "@aws-sdk/s3-request-presigner";
 import { AwsSdk } from "@/hooks/AwsSdk";
+import UserImage from "../UserImage/UserImage";
+import dayjs from "dayjs";
+import relativeTime from 'dayjs/plugin/relativeTime';
+
+// enable relativeTime throughout your app
+dayjs.extend(relativeTime);
 
 const ListingCard = ({ data, onClick }) => {
   const { isDarkMode, primaryColor, secondaryColor } = useThemeContext();
@@ -119,51 +125,56 @@ const ListingCard = ({ data, onClick }) => {
             backgroundColor: "rgba(255, 255, 255, 0.2)",
           }}
         >
+          <Box sx={{display:"flex" , alignItems:'center', gap:1}}>
+            <UserImage name={data?.organizer?.full_name} profilePic={data?.organizer?.profilePic}/>
           <Typography
-            variant="h6"
+            // variant="h6"
             gutterBottom
-            sx={{ fontWeight: "bold", color: primaryColor, fontFamily: "Inter, sans-serif" }}
+            sx={{ fontWeight: "bold", fontSize:"14px", lineHeight:"100%", color: "#3B3D3B", fontFamily: "Inter, sans-serif" }}
           >
             {data?.title}
           </Typography>
+          </Box>
           <Typography
             variant="body1"
             gutterBottom
-            sx={{ color: isDarkMode ? primaryColor : "#555", fontFamily: "Inter, sans-serif" }}
+            sx={{ color: isDarkMode ? primaryColor : "#555", fontFamily: "Inter, sans-serif", fontSize:"12px", fontWeight:500,mt:1 }}
           >
             <strong>Class:</strong> {data?.lecture_class?.name}
           </Typography>
           <Typography
             variant="body1"
             gutterBottom
-            sx={{ color: isDarkMode ? primaryColor : "#555", fontFamily: "Inter, sans-serif" }}
+            sx={{ color: isDarkMode ? primaryColor : "#555", fontFamily: "Inter, sans-serif", fontSize:"12px", fontWeight:500 }}
           >
             <strong>Subject:</strong> {data?.chapter?.subject?.name}
           </Typography>
           <Typography
             variant="body1"
             gutterBottom
-            sx={{ color: isDarkMode ? primaryColor : "#555", fontFamily: "Inter, sans-serif" }}
+            sx={{ color: isDarkMode ? primaryColor : "#555", fontFamily: "Inter, sans-serif", fontSize:"12px", fontWeight:500 }}
           >
             <strong>Chapter:</strong> {data?.chapter?.chapter}
           </Typography>
           <Typography
             variant="body1"
             gutterBottom
-            sx={{ color: isDarkMode ? primaryColor : "#555", fontFamily: "Inter, sans-serif" }}
+            sx={{ color: isDarkMode ? primaryColor : "#555", fontFamily: "Inter, sans-serif", fontSize:"12px", fontWeight:500 }}
           >
             <strong>Description:</strong> {data?.description || "N/A"}
           </Typography>
           <Grid container mt={"auto"} pt={2}>
             <Grid item xs={12} sm={8}>
-              <Box sx={{ display: "flex", gap: 1 }}>
+              <Box sx={{ display: "flex", gap: 1, alignItems:'center' }}>
+                <Box>
                 <MdOutlineDateRange size={22} />
+                </Box>
                 <Typography
                   variant="body1"
                   gutterBottom
-                  sx={{ color: isDarkMode ? primaryColor : "#555", fontFamily: "Inter, sans-serif" }}
+                  sx={{ color: isDarkMode ? primaryColor : "#555", fontFamily: "Inter, sans-serif",fontSize:"13px", fontWeight:500,m:0 }}
                 >
-                  {data?.schedule_date}
+                  {dayjs(data?.schedule_date).fromNow()}
                 </Typography>
               </Box>
             </Grid>
