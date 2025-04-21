@@ -62,11 +62,11 @@ function GreetingCardNew() {
           gap: "12px",
         }}
       >
-        <IconButton>
+        {/* <IconButton>
           <Badge variant="dot" invisible={false} color="error">
             <GoBell size={24} />
           </Badge>
-        </IconButton>
+        </IconButton> */}
         {userDetails?.role === "ADMIN" && (
           <Button
             variant="contained"
