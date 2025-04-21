@@ -93,7 +93,7 @@ const LecturePage = ({ params }) => {
     ),
     [id, classID, marksData]
   );
-  const articles = useMemo(() => <Articles lectureId={id} />, [id]);
+  // const articles = useMemo(() => <Articles lectureId={id} />, [id]);
   const lectureAnalytics = useMemo(
     () => <LectureAnalytics lectureId={id} />,
     [id]
@@ -156,7 +156,7 @@ const LecturePage = ({ params }) => {
             {lectureOverview}
             {lectureDetails}
             {personalisedRecommendations}
-            {articles}
+            {/* {articles} */}
           </Box>
         </Grid>
 
