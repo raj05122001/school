@@ -89,16 +89,30 @@ const LecturePopover = ({ data, isOrganizer }) => {
         }}
         style={{
           width: "100%",
-          backgroundColor: "[color]", // Replace [color] with your desired color
-          padding: "0.25rem 0.5rem", // Equivalent to px-2 py-1
-          borderRadius: "0.125rem", // Equivalent to rounded-sm
-          transition: "background-color 0.2s ease-in-out",
-          cursor: "pointer", // Optional, to indicate it's interactive
+          padding: "0.25rem 0.5rem",
+          borderRadius: "0.125rem",
+          borderColor: "#16AA54",
+          cursor: "pointer",
         }}
       >
+        <p
+          style={{
+            color: "white", // Replace with your primary color
+            fontSize: "0.75rem", // Equivalent to text-xs
+            fontWeight: 400, // Equivalent to font-normal
+            backgroundColor:"#16AA54",
+            padding:"5px",
+            width:"60px",
+            borderRadius:"7px",
+            fontWeight:900,
+            fontFamily:"Roboto"
+          }}
+        >
+          {formattedStartTime}
+        </p>
         <h2
           style={{
-            color: "var(--primary-color)", // Replace with your primary color
+            color: "black", // Replace with your primary color
             margin: 0, // Equivalent to my-0
             fontWeight: 600, // Equivalent to font-semibold
             fontSize: "0.75rem", // Equivalent to text-xs
@@ -109,28 +123,11 @@ const LecturePopover = ({ data, isOrganizer }) => {
         >
           {data.event.title}
         </h2>
-        <p
-          style={{
-            color: "var(--primary-color)", // Replace with your primary color
-            fontSize: "0.75rem", // Equivalent to text-xs
-            fontWeight: 400, // Equivalent to font-normal
-          }}
-        >
-          {formattedStartTime}
-        </p>
       </Box>
 
       <Popover
         open={open}
         anchorEl={anchorEl}
-        // anchorOrigin={{
-        //   vertical: "bottom",
-        //   horizontal: "left",
-        // }}
-        // transformOrigin={{
-        //   vertical: "top",
-        //   horizontal: "left",
-        // }}
         disableRestoreFocus
         PaperProps={{
           onMouseEnter: handlePopoverMouseEnter,
@@ -240,7 +237,6 @@ const LecturePopover = ({ data, isOrganizer }) => {
                     <IconButton
                       size="small"
                       color="primary"
-                      // Uncomment and pass relevant function
                       onClick={(event) =>
                         handleCreateLecture(data.event.extendedProps, true)
                       }
@@ -249,27 +245,6 @@ const LecturePopover = ({ data, isOrganizer }) => {
                     </IconButton>
                   </Grid>
                 )}
-                {/* <Grid item xs={4}>
-                  {organizer && (
-                    <Grid container direction="column" alignItems="center">
-                      <Typography variant="caption" color="text.secondary">
-                        Professor
-                      </Typography>
-                      <Avatar
-                        alt={organizer.user.full_name}
-                        src={organizer.user.profile_pic}
-                        sx={{ width: 48, height: 48, marginTop: 1 }}
-                      />
-                      <Typography
-                        variant="caption"
-                        color="text.secondary"
-                        noWrap
-                      >
-                        {organizer.user.full_name}
-                      </Typography>
-                    </Grid>
-                  )}
-                </Grid> */}
               </Grid>
             </CardContent>
           </Card>

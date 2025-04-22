@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import FullCalendar from "@fullcalendar/react";
 import dayGridPlugin from "@fullcalendar/daygrid";
 import timeGridPlugin from "@fullcalendar/timegrid";
@@ -11,7 +11,7 @@ import {
   getAllUpcommingByDate
 } from "@/api/apiHelper";
 import LecturePopover from "./LecturePopover";
-import { formatTime, LectureTyps } from "@/helper/Helper";
+import { formatTime } from "@/helper/Helper";
 import { Skeleton } from "@mui/material";
 import { decodeToken } from "react-jwt";
 import Cookies from "js-cookie";
@@ -28,12 +28,16 @@ const CalendarComponent = ({ maxHeight = "585px" }) => {
   const userDetails = decodeToken(Cookies.get("ACCESS_TOKEN"));
   const { isDarkMode, primaryColor } = useThemeContext();
 
-  // Default the current month to the current month and year
   const [currentMonth, setCurrentMonth] = useState(getCurrentMonthYear());
   const [calendarData, setCalendarData] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
+  const calendarRef = useRef(null);
 
-  // Fetch calendar data when currentMonth changes
+  // Today's date string for header
+  const todayDate = new Date().toLocaleDateString('en-GB', {
+    day: 'numeric', month: 'long', year: 'numeric'
+  });
+
   useEffect(() => {
     fetchData();
   }, [currentMonth]);
@@ -53,9 +57,7 @@ const CalendarComponent = ({ maxHeight = "585px" }) => {
           currentMonth[1],
           currentMonth[0]
         );
-        console.log("Response",response)
         apiResponse = response?.data?.data;
-        console.log("API Response",apiResponse)
       } else {
         const response = await getAllUpcommingByDate(
           currentMonth[1],
@@ -63,6 +65,7 @@ const CalendarComponent = ({ maxHeight = "585px" }) => {
         );
         apiResponse = response?.data?.data;
       }
+
       const dataCalendar = apiResponse || [];
 
       const formattedData = dataCalendar?.map((obj) => ({
@@ -75,7 +78,6 @@ const CalendarComponent = ({ maxHeight = "585px" }) => {
         start_time: obj.start_time,
         organizer: obj.organizer?.name,
       }));
-
       setCalendarData(formattedData);
     } catch (error) {
       console.error("Error fetching calendar data:", error);
@@ -86,18 +88,8 @@ const CalendarComponent = ({ maxHeight = "585px" }) => {
 
   const monthStringToNumber = (monthString) => {
     const months = [
-      "January",
-      "February",
-      "March",
-      "April",
-      "May",
-      "June",
-      "July",
-      "August",
-      "September",
-      "October",
-      "November",
-      "December",
+      "January","February","March","April","May","June",
+      "July","August","September","October","November","December",
     ];
     return months.indexOf(monthString) + 1;
   };
@@ -107,7 +99,7 @@ const CalendarComponent = ({ maxHeight = "585px" }) => {
     const formattedStartTime = formatTime(schedule_time);
     return <LecturePopover data={info} isOrganizer={true} />;
   };
-
+  
   return (
     <div
       className="blur_effect_card"
@@ -122,26 +114,29 @@ const CalendarComponent = ({ maxHeight = "585px" }) => {
       <FullCalendar
         plugins={[dayGridPlugin, timeGridPlugin, interactionPlugin]}
         initialView="dayGridMonth"
+        ref={calendarRef}
         headerToolbar={{
-          left: "prev",
+          left:   "todayDate",
           center: "title",
-          right: "next"
-          // right: "dayGridMonth,timeGridWeek,timeGridDay",
+          right:  "dayGridMonth,timeGridWeek,timeGridDay,prev,todayGridDay,next",
+        }}
+        customButtons={{
+          todayGridDay: {
+                       text: "Today",
+                        click: () => {
+                          const api = calendarRef.current.getApi();
+                          api.changeView("timeGridDay", new Date());
+                        }
+                      },
+          todayDate: { text: todayDate, click: () => {} },
         }}
         events={calendarData}
         eventContent={eventContent}
         datesSet={(dateInfo) => {
           const viewTitle = dateInfo.view.getCurrentData().viewTitle;
-          const [month, year] = viewTitle?.split(" ");
+          const [month, year] = viewTitle.split(" ");
           const monthNumber = monthStringToNumber(month);
           setCurrentMonth([monthNumber.toString(), year]);
-
-          // const startDate = new Date(dateInfo.start); // Start date of the current view
-          // const month = (startDate.getMonth() + 1).toString(); // Convert to 1-indexed month
-          // const year = startDate.getFullYear().toString();
-
-          // // Update the state with the start date's month and year
-          // setCurrentMonth([month, year]);
         }}
       />
     </div>
@@ -154,11 +149,9 @@ export const CalendarSkeleton = () => (
   <div>
     <Skeleton width={100} height={30} className="mb-4" />
     <div className="grid grid-cols-7 gap-2">
-      {Array(5)
-        ?.fill()
-        ?.map((_, i) => (
-          <Skeleton key={i} height={100} className="rounded" />
-        ))}
+      {Array(5).fill().map((_, i) => (
+        <Skeleton key={i} height={100} className="rounded" />
+      ))}
     </div>
   </div>
 );
