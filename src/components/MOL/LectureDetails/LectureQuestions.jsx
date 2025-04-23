@@ -50,17 +50,19 @@ const LectureQuestions = ({ id, isDarkMode }) => {
       sx={{
         p: 3,
         width: "100%",
-        color: isDarkMode ? "#F0EAD6" : "#36454F",
-        borderBottomLeftRadius: "8px",
-        borderBottomRightRadius: "8px",
-        background: isDarkMode
-          ? "radial-gradient(circle at 10% 20%, rgb(90, 92, 106) 0%, rgb(32, 45, 58) 81.3%)"
-          : "radial-gradient(circle at 18.7% 37.8%, rgb(250, 250, 250) 0%, rgb(225, 234, 238) 90%)",
+        borderBottomLeftRadius: "16px",
+        borderBottomRightRadius: "16px",
+        color: "#3B3D3B",
+        backgroundColor: "#fff",
         overflowY: "auto",
         height: "100%",
         minHeight: 400,
         maxHeight: 500,
-        width: "100%",
+        scrollbarWidth: "none", // Firefox
+        msOverflowStyle: "none", // IE/Edge
+        "&::-webkit-scrollbar": {
+          display: "none", // Chrome, Safari, Edge
+        },
       }}
     >
       {loading ? (
@@ -77,18 +79,40 @@ const LectureQuestions = ({ id, isDarkMode }) => {
       ) : (
         <MathJax.Context input="tex">
           <>
-            <Typography variant="h6" fontWeight="bold" gutterBottom>
+            <Typography
+              sx={{
+                color: "#3B3D3B",
+                fontFamily: "Inter",
+                fontSize: "16px",
+                fontStyle: "normal",
+                fontWeight: "600",
+                lineHeight: "20px",
+                letterSpacing: "-0.48px",
+              }}
+              gutterBottom
+            >
               Lecture Questions
             </Typography>
             {displayedQuestion?.map((item, index) => (
               <Box key={index} sx={{ mb: 2 }}>
-                <Typography variant="subtitle1" fontWeight="bold">
-                  <TextWithMath text={item.title} />
+                <Typography>
+                  <TextWithMath
+                    text={item.title}
+                    textStyle={{
+                      color: "#3B3D3B",
+                      fontFamily: "Inter",
+                      fontSize: "16px",
+                      fontStyle: "normal",
+                      fontWeight: "600",
+                      lineHeight: "20px",
+                      letterSpacing: "-0.48px",
+                    }}
+                  />
                 </Typography>
                 <ul>
                   {item?.questions?.map((question, qIndex) => (
                     <li key={qIndex}>
-                      <Typography variant="body2">
+                      <Typography>
                         <TextWithMath text={question} />
                       </Typography>
                     </li>
@@ -100,7 +124,13 @@ const LectureQuestions = ({ id, isDarkMode }) => {
               <Button
                 variant="contained"
                 onClick={() => setVisibleCount((prevCount) => prevCount + 5)}
-                sx={{ mt: 2 }}
+                sx={{
+                  mt: 2,
+                  fontFamily: "Inter",
+                  fontSize: "14px",
+                  backgroundColor: "#16AA54",
+                  textDecoration: "none",
+                }}
               >
                 Need More
               </Button>

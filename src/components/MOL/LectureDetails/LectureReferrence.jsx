@@ -54,6 +54,23 @@ const LectureReferrence = ({ id, isDarkMode }) => {
   });
 
   const displayedResources = uniqueResources.slice(0, visibleCount);
+  const refTitleCSS = {
+    color: "#3B3D3B",
+    fontFamily: "Inter",
+    fontSize: "16px",
+    fontStyle: "normal",
+    fontWeight: "600",
+    lineHeight: "20px",
+    letterSpacing: "-0.48px",
+  };
+
+  const refLinkCSS = {
+    color: "#1dab0e",
+    fontSize: "14px",
+    fontStyle: "normal",
+    fontWeight: 500,
+    fontFamily: "Inter",
+  };
 
   // if (loading) {
   //   return (
@@ -72,17 +89,19 @@ const LectureReferrence = ({ id, isDarkMode }) => {
           sx={{
             p: 3,
             width: "100%",
-            borderBottomLeftRadius: "8px",
-            borderBottomRightRadius: "8px",
-            color: isDarkMode ? "#F0EAD6" : "#36454F",
-            background: isDarkMode
-              ? "radial-gradient(circle at 10% 20%, rgb(90, 92, 106) 0%, rgb(32, 45, 58) 81.3%)"
-              : "radial-gradient(circle at 18.7% 37.8%, rgb(250, 250, 250) 0%, rgb(225, 234, 238) 90%)",
+            borderBottomLeftRadius: "16px",
+            borderBottomRightRadius: "16px",
+            color: "#3B3D3B",
+            backgroundColor: "#fff",
             overflowY: "auto",
             height: "100%",
             minHeight: 400,
             maxHeight: 500,
-            width: "100%",
+            scrollbarWidth: "none", // Firefox
+            msOverflowStyle: "none", // IE/Edge
+            "&::-webkit-scrollbar": {
+              display: "none", // Chrome, Safari, Edge
+            },
           }}
         >
           <Box>
@@ -101,20 +120,33 @@ const LectureReferrence = ({ id, isDarkMode }) => {
           sx={{
             p: 3,
             width: "100%",
-            color: isDarkMode ? "#F0EAD6" : "#36454F",
-            borderBottomLeftRadius: "8px",
-            borderBottomRightRadius: "8px",
-            background: isDarkMode
-              ? "radial-gradient(circle at 10% 20%, rgb(90, 92, 106) 0%, rgb(32, 45, 58) 81.3%)"
-              : "radial-gradient(circle at 18.7% 37.8%, rgb(250, 250, 250) 0%, rgb(225, 234, 238) 90%)",
+            borderBottomLeftRadius: "16px",
+            borderBottomRightRadius: "16px",
+            color: "#3B3D3B",
+            backgroundColor: "#fff",
             overflowY: "auto",
             height: "100%",
             minHeight: 400,
             maxHeight: 500,
-            width: "100%",
+            scrollbarWidth: "none", // Firefox
+            msOverflowStyle: "none", // IE/Edge
+            "&::-webkit-scrollbar": {
+              display: "none", // Chrome, Safari, Edge
+            },
           }}
         >
-          <Typography variant="h6" sx={{ mb: 2, fontWeight: "bold" }}>
+          <Typography
+            sx={{
+              mb: 2,
+              color: "#3B3D3B",
+              fontFamily: "Inter",
+              fontSize: "16px",
+              fontStyle: "normal",
+              fontWeight: "600",
+              lineHeight: "20px",
+              letterSpacing: "-0.48px",
+            }}
+          >
             <GrResources /> Lecture Resources
           </Typography>
 
@@ -138,14 +170,14 @@ const LectureReferrence = ({ id, isDarkMode }) => {
                   {resource.research_papers &&
                     resource.research_papers.title && (
                       <Box sx={{ mb: 1 }}>
-                        <Typography variant="subtitle1" fontWeight={"bold"}>
+                        <Typography sx={refTitleCSS}>
                           Research Paper:
                         </Typography>
                         <Link
                           href={resource.research_papers.link}
                           target="_blank"
                           rel="noopener"
-                          sx={{ color: isDarkMode && "#ADD8E6" }}
+                          sx={refLinkCSS}
                         >
                           {resource.research_papers.title}
                         </Link>
@@ -153,9 +185,7 @@ const LectureReferrence = ({ id, isDarkMode }) => {
                     )}
                   {resource.scopus_data && (
                     <Box sx={{ mb: 1 }}>
-                      <Typography variant="subtitle1" fontWeight={"bold"}>
-                        Scopus Link:
-                      </Typography>
+                      <Typography sx={refTitleCSS}>Scopus Link:</Typography>
                       <Box
                         sx={{ display: "flex", alignItems: "center", gap: 4 }}
                       >
@@ -171,36 +201,57 @@ const LectureReferrence = ({ id, isDarkMode }) => {
                           }}
                         />
                         <Box display={"flex"} flexDirection={"column"} gap={2}>
-                          <Typography>
+                          <Typography
+                            sx={{
+                              color: "#3B3D3B",
+                              fontFamily: "Inter",
+                              fontSize: "14px",
+                              fontStyle: "normal",
+                              fontWeight: "500",
+                              lineHeight: "20px",
+                              letterSpacing: "-0.48px",
+                            }}
+                          >
                             Link:{" "}
                             <Link
                               href={resource.scopus_data.scopus_link}
                               target="_blank"
                               rel="noopener"
-                              sx={{ color: isDarkMode && "#ADD8E6" }}
+                              sx={refLinkCSS}
                             >
                               {resource.scopus_data.Title}
                             </Link>
                           </Typography>
-                          {resource.scopus_data.doi_link && <Typography>
-                           DOI Link: <Link
-                              href={resource.scopus_data.doi_link}
-                              target="_blank"
-                              rel="noopener"
-                              sx={{ color: isDarkMode && "#ADD8E6" }}
+                          {resource.scopus_data.doi_link && (
+                            <Typography
+                              sx={{
+                                color: "#3B3D3B",
+                                fontFamily: "Inter",
+                                fontSize: "14px",
+                                fontStyle: "normal",
+                                fontWeight: "500",
+                                lineHeight: "20px",
+                                letterSpacing: "-0.48px",
+                              }}
                             >
-                              {resource.scopus_data.doi_link}
-                            </Link>
-                          </Typography>}
+                              DOI Link:{" "}
+                              <Link
+                                href={resource.scopus_data.doi_link}
+                                target="_blank"
+                                rel="noopener"
+                                sx={refLinkCSS}
+                              >
+                                {resource.scopus_data.doi_link}
+                              </Link>
+                            </Typography>
+                          )}
                         </Box>
                       </Box>
                     </Box>
                   )}
                   {resource.youtube_videos && (
                     <Box sx={{ mb: 1 }}>
-                      <Typography variant="subtitle1" fontWeight={"bold"}>
-                        YouTube Video:
-                      </Typography>
+                      <Typography sx={refTitleCSS}>YouTube Video:</Typography>
                       <Box
                         sx={{ display: "flex", alignItems: "center", gap: 4 }}
                       >
@@ -221,7 +272,7 @@ const LectureReferrence = ({ id, isDarkMode }) => {
                           href={resource.youtube_videos.link}
                           target="_blank"
                           rel="noopener"
-                          sx={{ color: isDarkMode && "#ADD8E6" }}
+                          sx={refLinkCSS}
                         >
                           {resource.youtube_videos.title}
                         </Link>
@@ -230,7 +281,7 @@ const LectureReferrence = ({ id, isDarkMode }) => {
                   )}
                   {resource.Google_Book_Links && (
                     <Box sx={{ mb: 1 }}>
-                      <Typography variant="subtitle1" fontWeight={"bold"}>
+                      <Typography sx={refTitleCSS}>
                         Google Book Link:
                       </Typography>
                       <Box
@@ -253,7 +304,7 @@ const LectureReferrence = ({ id, isDarkMode }) => {
                           href={resource.Google_Book_Links.link}
                           target="_blank"
                           rel="noopener"
-                          sx={{ color: isDarkMode && "#ADD8E6" }}
+                          sx={refLinkCSS}
                         >
                           {resource.Google_Book_Links.title}
                         </Link>
@@ -268,7 +319,11 @@ const LectureReferrence = ({ id, isDarkMode }) => {
             <Button
               variant="contained"
               onClick={() => setVisibleCount((prevCount) => prevCount + 5)}
-              sx={{ mt: 2 }}
+              sx={{ mt: 2,
+                  fontFamily: "Inter",
+                  fontSize: "14px",
+                  backgroundColor: "#16AA54",
+                  textDecoration: "none", }}
             >
               Need More
             </Button>

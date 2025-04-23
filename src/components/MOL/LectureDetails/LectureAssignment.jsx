@@ -103,13 +103,13 @@ const LectureAssignment = ({ id, isDarkMode, class_ID, isEdit }) => {
       assignment_id,
       assignment_text: editedText === "" ? assignment_text : editedText,
     };
-  
+
     try {
       const response = await updateLectureAssignment(
         assignment?.lecture.id,
         formData
       );
-  
+
       if (response?.data?.success) {
         setAssignments((prevAssignments) =>
           prevAssignments?.map((a) =>
@@ -128,7 +128,7 @@ const LectureAssignment = ({ id, isDarkMode, class_ID, isEdit }) => {
       setError("An error occurred while updating the assignment.");
     }
   };
-  
+
   const handleAssignAssignment = async (assignment) => {
     setError(null); // Clear any previous error messages
     const { id: assignment_id, assignment_mark, assignment_text } = assignment;
@@ -138,13 +138,13 @@ const LectureAssignment = ({ id, isDarkMode, class_ID, isEdit }) => {
       assignment_id,
       assignment_text,
     };
-  
+
     try {
       const response = await updateLectureAssignment(
         assignment?.lecture.id,
         formData
       );
-  
+
       if (response?.data?.success) {
         setAssignments((prevAssignments) =>
           prevAssignments?.map((a) =>
@@ -160,7 +160,6 @@ const LectureAssignment = ({ id, isDarkMode, class_ID, isEdit }) => {
       setError("An error occurred while assigning the assignment.");
     }
   };
-  
 
   const handleCreateAssignment = async () => {
     const formData = {
@@ -247,17 +246,19 @@ const LectureAssignment = ({ id, isDarkMode, class_ID, isEdit }) => {
           sx={{
             p: 3,
             width: "100%",
-            borderBottomLeftRadius: "8px",
-            borderBottomRightRadius: "8px",
-            color: isDarkMode ? "#F0EAD6" : "#36454F",
-            background: isDarkMode
-              ? "radial-gradient(circle at 10% 20%, rgb(90, 92, 106) 0%, rgb(32, 45, 58) 81.3%)"
-              : "radial-gradient(circle at 18.7% 37.8%, rgb(250, 250, 250) 0%, rgb(225, 234, 238) 90%)",
+            borderBottomLeftRadius: "16px",
+            borderBottomRightRadius: "16px",
+            color: "#3B3D3B",
+            backgroundColor: "#fff",
             overflowY: "auto",
             height: "100%",
             minHeight: 400,
             maxHeight: 500,
-            width: "100%",
+            scrollbarWidth: "none", // Firefox
+            msOverflowStyle: "none", // IE/Edge
+            "&::-webkit-scrollbar": {
+              display: "none", // Chrome, Safari, Edge
+            },
           }}
         >
           <Box>
@@ -276,17 +277,19 @@ const LectureAssignment = ({ id, isDarkMode, class_ID, isEdit }) => {
           sx={{
             p: 3,
             width: "100%",
-            borderBottomLeftRadius: "8px",
-            borderBottomRightRadius: "8px",
-            color: isDarkMode ? "#F0EAD6" : "#36454F",
-            background: isDarkMode
-              ? "radial-gradient(circle at 10% 20%, rgb(90, 92, 106) 0%, rgb(32, 45, 58) 81.3%)"
-              : "radial-gradient(circle at 18.7% 37.8%, rgb(250, 250, 250) 0%, rgb(225, 234, 238) 90%)",
+            borderBottomLeftRadius: "16px",
+            borderBottomRightRadius: "16px",
+            color: "#3B3D3B",
+            backgroundColor: "#fff",
             overflowY: "auto",
             height: "100%",
             minHeight: 400,
             maxHeight: 500,
-            width: "100%",
+            scrollbarWidth: "none", // Firefox
+            msOverflowStyle: "none", // IE/Edge
+            "&::-webkit-scrollbar": {
+              display: "none", // Chrome, Safari, Edge
+            },
           }}
         >
           <Typography
@@ -304,7 +307,13 @@ const LectureAssignment = ({ id, isDarkMode, class_ID, isEdit }) => {
                     marginRight: "8px",
                   }}
                 />
-                <Typography variant="body2" color="textPrimary">
+                <Typography
+                  sx={{
+                    fontFamily: "Inter",
+                    fontSize: "14px",
+                    fontWeight: 500,
+                  }}
+                >
                   {item.label}
                 </Typography>
               </Box>
@@ -317,20 +326,28 @@ const LectureAssignment = ({ id, isDarkMode, class_ID, isEdit }) => {
                 justifyContent="space-between"
                 alignItems="center"
               >
-                <Typography variant="h6" sx={{ mb: 2, fontWeight: "bold" }}>
+                <Typography
+                  sx={{
+                    color: "#3B3D3B",
+                    fontFamily: "Inter",
+                    fontSize: "16px",
+                    fontStyle: "normal",
+                    fontWeight: "600",
+                    lineHeight: "20px",
+                    letterSpacing: "-0.48px",
+                  }}
+                >
                   {lectureTitle}
                 </Typography>
                 <Button
-                  variant="outlined"
+                  variant="contained"
                   sx={{
-                    backgroundColor: "#4491fc", // blue
-                    transition: "all 150ms ease-in-out",
-                    color: "#f0f4fa", // white for text
-
-                    ":hover": {
-                      backgroundColor: "#2474e3", // Slightly darker blue on hover
-                      boxShadow:
-                        "0 0 10px 0 #2474e3 inset, 0 0 10px 4px #2474e3", // Matching hover color with blue shade
+                    fontFamily: "Inter",
+                    fontSize: "14px",
+                    backgroundColor: "#16AA54",
+                    textTransform: "none",
+                    "&:hover": {
+                      backgroundColor: "#7ecf73", // customize these shades as needed
                     },
                   }}
                   onClick={() => setOpenDialog(true)}
@@ -372,7 +389,7 @@ const LectureAssignment = ({ id, isDarkMode, class_ID, isEdit }) => {
                       mb: 2,
                       mt: 2,
                       p: 2,
-                      position:"relative",
+                      position: "relative",
                       borderRadius: 4,
                       display: "flex",
                       flexDirection: "column",
@@ -381,16 +398,15 @@ const LectureAssignment = ({ id, isDarkMode, class_ID, isEdit }) => {
                         : "0px 2px 8px #a39f30",
                     }}
                   >
-                  <label
+                    <label
                       style={{
                         position: "absolute",
                         color: "white",
                         top: "-10px",
                         right: "10px",
-                        backgroundColor:
-                        assignment?.is_assigned
-                        ? "#30a347"
-                        : "#a39f30",
+                        backgroundColor: assignment?.is_assigned
+                          ? "#30a347"
+                          : "#a39f30",
                         color: "white",
                         width: "150px",
                         textAlign: "center",
@@ -400,9 +416,7 @@ const LectureAssignment = ({ id, isDarkMode, class_ID, isEdit }) => {
                         fontSize: "12px",
                       }}
                     >
-                      {assignment?.is_assigned
-                        ? "Assigned"
-                        : "Not Assigned"}
+                      {assignment?.is_assigned ? "Assigned" : "Not Assigned"}
                     </label>
                     <Box
                       sx={{
@@ -410,10 +424,16 @@ const LectureAssignment = ({ id, isDarkMode, class_ID, isEdit }) => {
                         justifyContent: "space-between",
                         gap: 8,
                         alignItems: "center",
-                        padding: 2
+                        padding: 2,
                       }}
                     >
-                      <Typography variant="h6">
+                      <Typography
+                        sx={{
+                          fontFamily: "Inter",
+                          fontSize: "16x",
+                          fontWeight: 500,
+                        }}
+                      >
                         Question {String.fromCharCode(65 + index)}&nbsp;
                       </Typography>
                       {isEdit && (
@@ -433,7 +453,15 @@ const LectureAssignment = ({ id, isDarkMode, class_ID, isEdit }) => {
                               mt: "auto",
                             }}
                           >
-                            <span style={{ marginRight: 2 }}>Marks:</span>
+                            <span
+                              style={{
+                                marginRight: 2,
+                                fontSize: "14px",
+                                fontFamily: "Inter",
+                              }}
+                            >
+                              Marks:
+                            </span>
                             <TextField
                               type="number"
                               InputLabelProps={{
@@ -492,8 +520,14 @@ const LectureAssignment = ({ id, isDarkMode, class_ID, isEdit }) => {
                                 //   : "#89CFF0",
                                 backgroundColor: assignment?.is_assigned
                                   ? "#92d689"
-                                  : "#89CFF0",
-                                color: "white",
+                                  : "#93f089",
+                                color: "#fff",
+                                textTransform: "none",
+                                "&:hover": {
+                                  backgroundColor: assignment?.is_assigned
+                                    ? "#7ecf73"
+                                    : "#7be676", // customize these shades as needed
+                                },
                               }}
                             >
                               {assignment.is_assigned ? "Assigned" : "Assign"}
@@ -573,10 +607,9 @@ const LectureAssignment = ({ id, isDarkMode, class_ID, isEdit }) => {
                         color: "white",
                         top: "-10px",
                         right: "10px",
-                        backgroundColor:
-                        assignment?.is_assigned
-                        ? "#30a347"
-                        : "#a39f30",
+                        backgroundColor: assignment?.is_assigned
+                          ? "#30a347"
+                          : "#a39f30",
                         color: "white",
                         width: "150px",
                         textAlign: "center",
@@ -586,11 +619,9 @@ const LectureAssignment = ({ id, isDarkMode, class_ID, isEdit }) => {
                         fontSize: "12px",
                       }}
                     >
-                      {assignment?.is_assigned
-                        ? "Assigned"
-                        : "Not Assigned"}
+                      {assignment?.is_assigned ? "Assigned" : "Not Assigned"}
                     </label>
-                    <Box sx={{ display: "flex", padding: 2,}}>
+                    <Box sx={{ display: "flex", padding: 2 }}>
                       <Typography variant="body1">
                         {String.fromCharCode(65 + index)}.&nbsp;
                       </Typography>

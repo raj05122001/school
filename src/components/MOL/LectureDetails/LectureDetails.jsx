@@ -95,26 +95,42 @@ const LectureDetails = ({
   );
 
   return (
-    <Box sx={{ marginTop: "8px" }}>
+    <Box
+      sx={{
+        alignSelf: "stretch",
+        borderRadius: "0px 0px 16px 16px",
+        background: "#fff",
+        borderRadius: "16px",
+      }}
+    >
       <Typography
-        variant="h4"
-        fontFamily={"Nunito"}
         sx={{
-          bgcolor: "",
-          borderRadius: "8px",
-          padding: 2,
-          color: isDarkMode ? "#F0EAD6" : "#36454F",
+          color: "#3B3D3B",
+          fontFamily: "Inter",
+          fontSize: "20px",
+          fontStyle: "normal",
+          fontWeight: "700",
+          lineHeight: "normal",
+          padding: "21px 0px 6px 20px",
         }}
       >
-        <b>Lecture Details</b>
+        Lecture Details
         <br />
         <span
           style={{
-            fontSize: "16px",
-            color: isDarkMode ? "#F0EAD6" : "#36454F",
+            fontSize: "12px",
+            fontFamily: "Inter, sans-serif",
+            fontStyle: "italic",
+            fontWeight: "400",
           }}
         >
-          {userDetails?.role==="STUDENT" ? <i>(This is an AI generated content.)</i> : <i>(This is an AI generated content. The teacher should verify it.)</i> }
+          {userDetails?.role === "STUDENT" ? (
+            <i>(This is an AI generated content.)</i>
+          ) : (
+            <i>
+              (This is an AI generated content. The teacher should verify it.)
+            </i>
+          )}
         </span>
       </Typography>
 
@@ -126,35 +142,33 @@ const LectureDetails = ({
         sx={{
           ".MuiTabs-flexContainer": {
             gap: 2,
-            // background: isDarkMode
-            //   ? "linear-gradient(177.9deg, rgb(58, 62, 88) 3.6%, rgb(119, 127, 148) 105.8%)"
-            //   : "linear-gradient(180.3deg, rgb(221, 221, 221) 5.5%, rgb(110, 136, 161) 90.2%)",
-            background:
-              isDarkMode &&
-              "linear-gradient(89.7deg, rgb(0, 0, 0) -10.7%, rgb(53, 92, 125) 88.8%)",
-            backgroundImage: isDarkMode ? "" : "url('/TabBG2.jpg')", // Add background image
-            backgroundSize: "cover", // Ensure the image covers the entire page
-            backgroundPosition: "center", // Center the image
-            padding: 1,
+
+            padding: "8px 496px 8px 20px",
+            // borderRadius: "12px",
             borderTopLeftRadius: "12px",
             borderTopRightRadius: "12px",
+            display: "flex",
+            alignItems: "center",
+            borderBottom: "0.5px solid var(--Stroke-Color-1, #C1C1C1)",
           },
           ".MuiTab-root": {
-            color: "#333",
+            color: "#3B3D3B",
             padding: "10px 20px",
             minHeight: 0,
             marginTop: "8px",
             textAlign: "center",
-            color: isDarkMode && "#F0EAD6",
+            fontSize: "16px",
+            fontFamily: "Aptos",
+            textTransform: "none",
             "&:hover": {
               backgroundColor: "#e0e0e0",
               boxShadow: "0px 2px 8px rgba(0, 0, 0, 0.1)",
               borderRadius: "10px",
-              color: "black",
+              color: "#3B3D3B",
             },
             "&.Mui-selected": {
               backgroundColor: "#fff",
-              color: "#000",
+              color: "#3B3D3B",
               boxShadow: "0px 6px 15px rgba(0, 0, 0, 0.2)",
               borderRadius: "10px",
             },
