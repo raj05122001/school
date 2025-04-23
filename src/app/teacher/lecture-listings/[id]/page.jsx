@@ -23,6 +23,7 @@ import LectureAnalytics from "@/components/teacher/LectureAnalytics/LectureAnaly
 import LectureAttachments from "@/components/MOL/LectureAttachment/LectureAttachment";
 import AudioPlayer from "@/components/AudioPlayer/AudioPlayer";
 import { toast } from "react-hot-toast";
+import LectureDescription from "@/commonComponents/LectureDescription/LectureDescription";
 
 const LecturePage = ({ params }) => {
   const { id } = params;
@@ -81,6 +82,16 @@ const LecturePage = ({ params }) => {
     ),
     [lectureData]
   );
+
+  const descriptionMOL = useMemo(
+    ()=>(
+      <LectureDescription
+        lectureData={lectureData}
+        isShowPic={false}
+        loading={loading}
+      />), [lectureData]
+    
+  )
   const lectureOverview = useMemo(
     () => <LectureOverview lectureId={id} isEdit={true} />,
     [id]
@@ -114,21 +125,10 @@ const LecturePage = ({ params }) => {
         gap: 2,
       }}
     >
-      <Paper
-        elevation={3}
-        sx={{
-          color: isDarkMode ? "#fff" : "#000",
-          backgroundImage: isDarkMode
-            ? "url('/headerBGDark1.jpg')"
-            : "url('/headerBG1.jpg')",
-          backgroundSize: "cover",
-          backgroundPosition: "center",
-          mt: 1,
-          p: 2,
-        }}
-      >
+      <Box sx={{marginBottom:"4px", paddingBottom:"4px", height:"80%"}}>
         {headerMOL}
-      </Paper>
+      </Box>  
+
 
       <Grid container spacing={2}>
         {/* Main Content */}
@@ -141,6 +141,7 @@ const LecturePage = ({ params }) => {
                 {videoPlayer}
               </Box>
             )}
+            {descriptionMOL}            
             {lectureOverview}
             {lectureDetails}
             {/* {articles} */}

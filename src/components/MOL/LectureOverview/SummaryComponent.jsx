@@ -42,7 +42,10 @@ const SummaryComponent = ({
 
       if (summaryBoxRef.current) {
         const { scrollTop, scrollHeight, clientHeight } = summaryBoxRef.current;
-        if (scrollHeight > clientHeight && scrollTop + clientHeight >= scrollHeight - 5) {
+        if (
+          scrollHeight > clientHeight &&
+          scrollTop + clientHeight >= scrollHeight - 5
+        ) {
           await updateMolMark();
         } else if (scrollHeight === clientHeight) {
           await updateMolMark();
@@ -51,13 +54,28 @@ const SummaryComponent = ({
     };
 
     summaryBoxRef.current?.addEventListener("scroll", handleScrollAndUpdate);
-    summaryBoxRef.current?.addEventListener('mouseenter', handleScrollAndUpdate);
-    summaryBoxRef.current?.addEventListener('mouseleave', handleScrollAndUpdate);
+    summaryBoxRef.current?.addEventListener(
+      "mouseenter",
+      handleScrollAndUpdate
+    );
+    summaryBoxRef.current?.addEventListener(
+      "mouseleave",
+      handleScrollAndUpdate
+    );
 
     return () => {
-      summaryBoxRef.current?.removeEventListener("scroll", handleScrollAndUpdate);
-      summaryBoxRef.current?.removeEventListener('mouseenter', handleScrollAndUpdate);
-      summaryBoxRef.current?.removeEventListener('mouseleave', handleScrollAndUpdate);
+      summaryBoxRef.current?.removeEventListener(
+        "scroll",
+        handleScrollAndUpdate
+      );
+      summaryBoxRef.current?.removeEventListener(
+        "mouseenter",
+        handleScrollAndUpdate
+      );
+      summaryBoxRef.current?.removeEventListener(
+        "mouseleave",
+        handleScrollAndUpdate
+      );
     };
   }, [isStudent, marksData?.viewed_summary]);
 
@@ -130,7 +148,7 @@ const SummaryComponent = ({
     } catch (error) {
       console.error("Error updating summary:", error);
     }
-  }
+  };
 
   // Utility function to split text into paragraphs after every 5 sentences
   const splitTextIntoParagraphs = (text) => {
@@ -149,12 +167,12 @@ const SummaryComponent = ({
       ?.replace(/\*\*(.*?)\*\*/g, "<strong>$1</strong>");
 
     formattedText = formattedText?.replace(
-        /<img\s+([^>]*?)src="([^"]+)"([^>]*?)>/g,
-        (match, beforeSrc, src, afterSrc) => {
-          return `<img ${beforeSrc}src="${src}" ${afterSrc} style="max-width: 800px; max-height: 400px; display: block; margin: auto;" />`;
-        }
-     );
-    
+      /<img\s+([^>]*?)src="([^"]+)"([^>]*?)>/g,
+      (match, beforeSrc, src, afterSrc) => {
+        return `<img ${beforeSrc}src="${src}" ${afterSrc} style="max-width: 800px; max-height: 400px; display: block; margin: auto;" />`;
+      }
+    );
+
     const newLine = formattedText?.replace(/\n/g, "<br>");
     const paragraphs = splitTextIntoParagraphs(formattedText);
     return paragraphs.join("\n");
@@ -166,19 +184,23 @@ const SummaryComponent = ({
 
   return (
     <Box
+      elevation={0}
       sx={{
         p: 3,
         width: "100%",
-        borderBottomLeftRadius: "8px",
-        borderBottomRightRadius: "8px",
-        color: isDarkMode ? "#F0EAD6" : "#36454F",
-        background: isDarkMode
-          ? "radial-gradient(circle at 10% 20%, rgb(90, 92, 106) 0%, rgb(32, 45, 58) 81.3%)"
-          : "radial-gradient(circle at 18.7% 37.8%, rgb(250, 250, 250) 0%, rgb(225, 234, 238) 90%)",
+        borderBottomLeftRadius: "16px",
+        borderBottomRightRadius: "16px",
+        color: "#3B3D3B",
+        backgroundColor: "#fff",
         overflowY: "auto",
         height: "100%",
         minHeight: 400,
         maxHeight: 500,
+        scrollbarWidth: "none", // Firefox
+        msOverflowStyle: "none", // IE/Edge
+        "&::-webkit-scrollbar": {
+          display: "none", // Chrome, Safari, Edge
+        },
       }}
       ref={summaryBoxRef}
     >
@@ -219,7 +241,7 @@ const SummaryComponent = ({
       ) : summary?.length > 0 ? (
         <Box>
           {isEdit && (
-            <Box sx={{ display: "flex", justifyContent: "flex-end" }} >
+            <Box sx={{ display: "flex", justifyContent: "flex-end" }}>
               <FaEdit
                 size={24}
                 onClick={() => {

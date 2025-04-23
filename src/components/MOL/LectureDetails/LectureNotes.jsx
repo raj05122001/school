@@ -85,7 +85,7 @@ const LectureNotes = ({
           )
         );
       } else {
-        console.log("Error generating notes")
+        console.log("Error generating notes");
       }
     } catch (error) {
       // toast.error("Failed to update notes");
@@ -133,7 +133,10 @@ const LectureNotes = ({
     notesBoxRef?.current?.addEventListener("mouseleave", handleScrollAndUpdate);
 
     return () => {
-      notesBoxRef?.current?.removeEventListener("scroll", handleScrollAndUpdate);
+      notesBoxRef?.current?.removeEventListener(
+        "scroll",
+        handleScrollAndUpdate
+      );
       notesBoxRef?.current?.removeEventListener(
         "mouseenter",
         handleScrollAndUpdate
@@ -171,17 +174,19 @@ const LectureNotes = ({
       sx={{
         p: 3,
         width: "100%",
-        borderBottomLeftRadius: "8px",
-        borderBottomRightRadius: "8px",
-        color: isDarkMode ? "#F0EAD6" : "#36454F",
-        background: isDarkMode
-          ? "radial-gradient(circle at 10% 20%, rgb(90, 92, 106) 0%, rgb(32, 45, 58) 81.3%)"
-          : "radial-gradient(circle at 18.7% 37.8%, rgb(250, 250, 250) 0%, rgb(225, 234, 238) 90%)",
+        borderBottomLeftRadius: "16px",
+        borderBottomRightRadius: "16px",
+        color: "#3B3D3B",
+        backgroundColor: "#fff",
         overflowY: "auto",
         height: "100%",
         minHeight: 400,
         maxHeight: 500,
-        width: "100%",
+        scrollbarWidth: "none", // Firefox
+        msOverflowStyle: "none", // IE/Edge
+        "&::-webkit-scrollbar": {
+          display: "none", // Chrome, Safari, Edge
+        },
       }}
       ref={notesBoxRef}
     >
@@ -206,8 +211,19 @@ const LectureNotes = ({
                   alignItems="center"
                   justifyContent="space-between"
                 >
-                  <Typography sx={{ fontWeight: "bold", fontSize: "18px" }}>
-                    <TextWithMath text={note?.title} />
+                  <Typography sx={{}}>
+                    <TextWithMath
+                      text={note?.title}
+                      textStyle={{
+                        color: "#3B3D3B",
+                        fontFamily: "Inter",
+                        fontSize: "16px",
+                        fontStyle: "normal",
+                        fontWeight: "600",
+                        lineHeight: "20px",
+                        letterSpacing: "-0.48px",
+                      }}
+                    />
                   </Typography>
                   {!showTextFields[note?.id] ? (
                     <Button
@@ -218,6 +234,8 @@ const LectureNotes = ({
                         minHeight: "36px", // Set a consistent button height
                         lineHeight: "1.5", // Ensure proper vertical alignment
                         textTransform: "none", // Optional: Keep text casing as it is
+                        color: "#16AA54",
+                        borderColor: "#16AA54",
                       }}
                     >
                       More Insights
@@ -235,13 +253,34 @@ const LectureNotes = ({
                           })
                         }
                         placeholder="Type your query..."
-                        sx={{ mr: 1 }}
+                        sx={{
+                          mr: 1,
+                          "& .MuiInputBase-input": {
+                            fontSize: "14px",
+                            fontFamily: "Inter",
+                          },
+                          "& .MuiInputBase-input::placeholder": {
+                            fontSize: "14px",
+                            fontFamily: "Inter",
+                          },
+                          "& .MuiOutlinedInput-root": {
+                            "& fieldset": {
+                              borderColor: "#ccc", // default border
+                            },
+                            "&:hover fieldset": {
+                              borderColor: "#16AA54", // on hover
+                            },
+                            "&.Mui-focused fieldset": {
+                              borderColor: "#16AA54", // on focus
+                            },
+                          },
+                        }}
                       />
                       <IconButton
                         onClick={() => sendInfo(note?.id)}
-                        color="primary"
+                        color="#16AA54"
                       >
-                        <IoMdSend />
+                        <IoMdSend color="#16AA54" />
                       </IconButton>
                     </Box>
                   )}
@@ -264,7 +303,7 @@ const LectureNotes = ({
         <Button
           variant="contained"
           onClick={() => setVisibleCount((prevCount) => prevCount + 5)}
-          sx={{ mt: 2 }}
+          sx={{ mt: 2, fontFamily:"Inter", fontSize:"14px", backgroundColor:"#16AA54", textTransform:"none" }}
         >
           Need More
         </Button>

@@ -118,8 +118,12 @@ const LectureAttachments = ({ lectureId, isDarkMode }) => {
         }}
       >
         <Typography
-        variant="h6"
-          sx={{ color: isDarkMode ? "#F9F6EE" : "#353935", fontSize: "24px" }}
+          sx={{ color: "#3B3D3B",
+          fontFamily: "Inter",
+          fontSize: "22px",
+          fontStyle: "normal",
+          fontWeight: 600,
+          lineHeight: "normal",}}
         >
         <GrAttachment />  Lecture Attachments
         </Typography>
