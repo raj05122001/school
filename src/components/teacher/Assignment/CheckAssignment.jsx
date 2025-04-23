@@ -54,8 +54,19 @@ const CheckAssignment = ({ assignment, index, fetchAssignmentAnswer }) => {
 
   const defaultLayoutPluginInstance = defaultLayoutPlugin();
 
+  const getExtensionFromUrl = (url) => {
+    try {
+      const cleanUrl = url.split("?")[0]; // Remove query parameters
+      return cleanUrl.split(".").pop()?.toLowerCase();
+    } catch {
+      return "";
+    }
+  };
+  
+
   const getFileIcon = (url) => {
-    const extension = url?.split(".").pop()?.toLowerCase();
+    // const extension = url?.split(".").pop()?.toLowerCase();
+    const extension = getExtensionFromUrl(selectedFile);
     switch (extension) {
       case "pdf":
         return <BsFiletypePdf size={24} />;
@@ -76,7 +87,8 @@ const CheckAssignment = ({ assignment, index, fetchAssignmentAnswer }) => {
   };
 
   const getFileColor = (url) => {
-    const extension = url?.split(".").pop()?.toLowerCase();
+    // const extension = url?.split(".").pop()?.toLowerCase();
+    const extension = getExtensionFromUrl(selectedFile);
     switch (extension) {
       case "pdf":
         return "#d32f2f";
@@ -128,13 +140,14 @@ const CheckAssignment = ({ assignment, index, fetchAssignmentAnswer }) => {
   const handleSelectFile = async (fileLink)=>{
     console.log("fileLink : ",fileLink)
     const keyPath = new URL(fileLink).pathname.slice(1);
+    const decodeKey = decodeURIComponent(keyPath)
     
     const { s3 } = AwsSdk();
     const Bucket = process.env.NEXT_PUBLIC_AWS_BUCKET;
   
     const params = {
       Bucket,
-      Key: keyPath,
+      Key: decodeKey,
     };
 
     try{
@@ -236,7 +249,8 @@ const CheckAssignment = ({ assignment, index, fetchAssignmentAnswer }) => {
   const renderFileOverlay = () => {
     if (!selectedFile) return null;
 
-    const extension = selectedFile?.split(".").pop()?.toLowerCase();
+    // const extension = selectedFile?.split(".").pop()?.toLowerCase();
+    const extension = getExtensionFromUrl(selectedFile);
     let content;
 
     if (extension === "pdf") {
@@ -298,7 +312,7 @@ const CheckAssignment = ({ assignment, index, fetchAssignmentAnswer }) => {
         }}
       >
         <IconButton
-          onClick={() => handleSelectFile(null)}
+          onClick={() => setSelectedFile(null)}
           sx={{
             position: "absolute",
             top: 20,
