@@ -118,8 +118,9 @@ const CalendarComponent = ({ maxHeight = "585px" }) => {
         headerToolbar={{
           left:   "todayDate",
           center: "title",
-          right:  "dayGridMonth,timeGridWeek,timeGridDay,prev,todayGridDay,next",
+          right:  "dayGridMonth,prev,next",
         }}
+        // right:  "dayGridMonth,timeGridWeek,timeGridDay,prev,todayGridDay,next",
         customButtons={{
           todayGridDay: {
                        text: "Today",
