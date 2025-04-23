@@ -37,6 +37,9 @@ import "@react-pdf-viewer/core/lib/styles/index.css";
 import "@react-pdf-viewer/default-layout/lib/styles/index.css";
 import AudioPlayer from "@/components/AudioPlayer/AudioPlayer";
 import AssignmentTextFormat from "@/commonComponents/TextWithMath/AssignmentTextFormat";
+import { GetObjectCommand } from "@aws-sdk/client-s3";
+import { getSignedUrl } from "@aws-sdk/s3-request-presigner";
+import { AwsSdk } from "@/hooks/AwsSdk";
 
 const CheckAssignment = ({ assignment, index, fetchAssignmentAnswer }) => {
   const { isDarkMode, primaryColor, secondaryColor } = useThemeContext();
@@ -51,8 +54,19 @@ const CheckAssignment = ({ assignment, index, fetchAssignmentAnswer }) => {
 
   const defaultLayoutPluginInstance = defaultLayoutPlugin();
 
+  const getExtensionFromUrl = (url) => {
+    try {
+      const cleanUrl = url.split("?")[0]; // Remove query parameters
+      return cleanUrl.split(".").pop()?.toLowerCase();
+    } catch {
+      return "";
+    }
+  };
+  
+
   const getFileIcon = (url) => {
-    const extension = url?.split(".").pop()?.toLowerCase();
+    // const extension = url?.split(".").pop()?.toLowerCase();
+    const extension = getExtensionFromUrl(selectedFile);
     switch (extension) {
       case "pdf":
         return <BsFiletypePdf size={24} />;
@@ -73,7 +87,8 @@ const CheckAssignment = ({ assignment, index, fetchAssignmentAnswer }) => {
   };
 
   const getFileColor = (url) => {
-    const extension = url?.split(".").pop()?.toLowerCase();
+    // const extension = url?.split(".").pop()?.toLowerCase();
+    const extension = getExtensionFromUrl(selectedFile);
     switch (extension) {
       case "pdf":
         return "#d32f2f";
@@ -122,6 +137,28 @@ const CheckAssignment = ({ assignment, index, fetchAssignmentAnswer }) => {
     }
   };
 
+  const handleSelectFile = async (fileLink)=>{
+    console.log("fileLink : ",fileLink)
+    const keyPath = new URL(fileLink).pathname.slice(1);
+    const decodeKey = decodeURIComponent(keyPath)
+    
+    const { s3 } = AwsSdk();
+    const Bucket = process.env.NEXT_PUBLIC_AWS_BUCKET;
+  
+    const params = {
+      Bucket,
+      Key: decodeKey,
+    };
+
+    try{
+      const command = new GetObjectCommand(params);
+      const signedUrl = await getSignedUrl(s3, command, { expiresIn: 60 * 60 * 3 });
+      setSelectedFile(signedUrl)
+    }catch(error){
+      console.error(error)
+    }
+  }
+
   const renderAnswerContent = useCallback(
     (assignment) => {
       const { answer_type, answer_link } = assignment;
@@ -135,7 +172,7 @@ const CheckAssignment = ({ assignment, index, fetchAssignmentAnswer }) => {
             image={answer_link}
             alt="Answer Image"
             sx={{ height: 300, objectFit: "contain", mt: 2, borderRadius: 2 }}
-            onClick={() => setSelectedFile(answer_link)}
+            onClick={() => handleSelectFile(answer_link)}
           />
         );
       } else if (answer_type === "VIDEO") {
@@ -176,7 +213,7 @@ const CheckAssignment = ({ assignment, index, fetchAssignmentAnswer }) => {
                 cursor: "pointer",
               },
             }}
-            onClick={() => setSelectedFile(answer_link)}
+            onClick={() => handleSelectFile(answer_link)}
           >
             <Box
               sx={{
@@ -212,7 +249,8 @@ const CheckAssignment = ({ assignment, index, fetchAssignmentAnswer }) => {
   const renderFileOverlay = () => {
     if (!selectedFile) return null;
 
-    const extension = selectedFile?.split(".").pop()?.toLowerCase();
+    // const extension = selectedFile?.split(".").pop()?.toLowerCase();
+    const extension = getExtensionFromUrl(selectedFile);
     let content;
 
     if (extension === "pdf") {
