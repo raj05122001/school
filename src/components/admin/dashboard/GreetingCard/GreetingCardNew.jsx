@@ -25,29 +25,20 @@ function GreetingCardNew() {
     <Box
       sx={{
         display: "flex",
-        // backgroundColor: "green",
         borderBottom: "1px solid var(--Stroke-Color-1, #C1C1C1)",
         width: "100%",
         height: "75px",
         padding: "13px 6px",
-        justifyContent: "center",
-        alignItems: "flex-start",
-        gap: "406px",
+        justifyContent:'space-between'
       }}
     >
       <Typography
         sx={{
-          display: "flex",
-          margin: "auto",
-          width: "600px",
           height: "48px",
           fontSize: "28px",
           fontFamily: "Inter, sans-serif",
           fontWeight: 700,
-          //   backgroundColor: "red",
           paddingLeft: "12px",
-          justifyContent: "space-between",
-          alignItems: "center",
           flexShrink: 0,
         }}
       >
@@ -62,11 +53,7 @@ function GreetingCardNew() {
           gap: "12px",
         }}
       >
-        {/* <IconButton>
-          <Badge variant="dot" invisible={false} color="error">
-            <GoBell size={24} />
-          </Badge>
-        </IconButton> */}
+
         {userDetails?.role === "ADMIN" && (
           <Button
             variant="contained"

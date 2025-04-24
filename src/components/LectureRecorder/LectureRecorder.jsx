@@ -11,27 +11,22 @@ import {
 import { FaTimes } from "react-icons/fa";
 import { useOnlineStatus } from "@/hooks/NetworkStatus";
 import {
+  deleteS3Folder,
+  getPresignedUrl,
   updateLectureAttachment,
   uploadAudioFile,
   uploadS3Video,
 } from "@/api/apiHelper";
 import BottomTabs from "./BottomTabs/BottomTabs";
-import { AwsSdk } from "@/hooks/AwsSdk";
 import axios from "axios";
 import RecorderController from "./RecorderController/RecorderController";
-import {
-  PutObjectCommand,
-  ListObjectsV2Command,
-  DeleteObjectsCommand,
-  S3Client,
-} from "@aws-sdk/client-s3";
-import { Upload } from "@aws-sdk/lib-storage";
 import RecorderErrorMessage from "./RecorderErrorMessage/RecorderErrorMessage";
 import { handleErrorResponse } from "@/helper/Helper";
 import { AppContextProvider } from "@/app/main";
+import usePresignedUrl from "@/hooks/usePresignedUrl";
+import usefileUploader from "@/hooks/usefileUploader";
 
 const LectureRecorder = ({ open, closeDrawer, recordingData }) => {
-  const Bucket = process.env.NEXT_PUBLIC_AWS_BUCKET;
   const {isTrialAccount,s3FileName}=useContext(AppContextProvider)
   const videoRef = useRef(null);
   const currentTimeLocal = new Date().toLocaleTimeString("en-GB", {
@@ -58,24 +53,31 @@ const LectureRecorder = ({ open, closeDrawer, recordingData }) => {
   const [uploadedChunk, setUploadedChunk] = useState(0);
   const [audioAttachment, setAudioAttachment] = useState([]);
   const [selectedOption, setSelectedOption] = useState("vidya");
-  const [uploadProgress, setUploadProgress] = useState(0);
-  const [uploadSpeed, setUploadSpeed] = useState(0);
-  const [timeRemaining, setTimeRemaining] = useState(0);
+  // const [uploadProgress, setUploadProgress] = useState(0);
+  // const [uploadSpeed, setUploadSpeed] = useState(0);
+  // const [timeRemaining, setTimeRemaining] = useState(0);
   const [isStopsubmit, setIsStopsubmit] = useState(false);
-
+  const [presignedData,setPresignedData]=useState({})
+  
   const [startAndEndTime, setStartAndEndTime] = useState({
     start_time: currentTimeLocal,
     end_time: currentTimeLocal,
   });
-
-  const { s3 } = AwsSdk();
+  
+  const { fetchPresignedUrl } = usePresignedUrl()
+  const {  
+    uploadVideoToS3,
+    uploadProgress,
+    timeRemaining,
+    uploadSpeed,
+  } = usefileUploader()
 
   const [lectureStoped, setLectureStoped] = useState({
     isProccess: false,
     isError: false,
     submit: false,
     stopRecording: false,
-  });
+  }); 
 
   const getVideoSources = async () => {
     if (window.navigator && window.navigator.mediaDevices) {
@@ -168,60 +170,6 @@ const LectureRecorder = ({ open, closeDrawer, recordingData }) => {
     audioRecorderRef.current.start();
   };
 
-  const uploadVideoToS3 = async (chunk, index) => {
-    return new Promise(async (resolve, reject) => {
-      try {
-        const params = {
-          Bucket: Bucket,
-          Key: `videos/${recordingData.id}.mp4`,
-          Body: chunk,
-          ContentType: "video/mp4",
-        };
-
-        const options = {
-          partSize: 10 * 1024 * 1024, 
-          queueSize: 4, 
-        };
-
-        let startTime = Date.now();
-        let uploadedBytes = 0;
-
-        const upload = new Upload({
-          client: s3,
-          params,
-          ...options,
-          leavePartsOnError: false, 
-        });
-
-        upload.on("httpUploadProgress", (progress) => {
-          const totalBytes = progress.total || 1;
-
-          const currentTime = Date.now();
-          const elapsedTime = (currentTime - startTime) / 1000; 
-          uploadedBytes = progress.loaded;
-
-          const uploadSpeed = uploadedBytes / elapsedTime; 
-          const remainingBytes = totalBytes - uploadedBytes;
-          const timeRemaining = remainingBytes / uploadSpeed; 
-  
-          const progressPercentage = Math.round(
-            (uploadedBytes / totalBytes) * 100
-          );
-          setUploadProgress(progressPercentage);
-          setTimeRemaining(Math.round(timeRemaining));
-          setUploadSpeed((uploadSpeed / 1024 / 1024).toFixed(2));
-
-        });
-
-        const result = await upload.done();
-        resolve(result);
-      } catch (err) {
-        console.error("Error uploading file:", err);
-        reject(err);
-      }
-    });
-  };
-
   const mergeChunks = async () => {
     await axios.post(
       `https://9eg2j1kaxd.execute-api.ap-south-1.amazonaws.com/mergeVideo/${recordingData.id}?folderType=edu`
@@ -286,14 +234,25 @@ const LectureRecorder = ({ open, closeDrawer, recordingData }) => {
       await mergeChunks();
     } else {
       try {
+        const data = {
+          file_name: `${recordingData.id}.mp4`,
+          file_type: "video/mp4",
+          operation: "upload",
+          folder: "videos/",
+        };
+
+        const signedUrl = await fetchPresignedUrl(data)
+
         if (selectedOption === "other") {
+          const xhr = await uploadVideoToS3(videoAttachment[0], signedUrl);
+          const responseURL = xhr?.responseURL?.split('?')[0]
+        
           const formData = new FormData();
           formData.append(
             "video_url",
-            `https://${Bucket}.s3.amazonaws.com/videos/${recordingData.id}.mp4`
+            responseURL
           );
           formData.append("video_src", "OTHERS");
-          await uploadVideoToS3(videoAttachment[0]);
           await uploadS3Video(recordingData.id, formData);
           // await extractingAudio(recordingData.id);
         } else if (selectedOption === "vidya") {
@@ -304,8 +263,9 @@ const LectureRecorder = ({ open, closeDrawer, recordingData }) => {
             audioAttachment[0],
             `${recordingData.id}.wav`
           );
+          const xhr = await uploadVideoToS3(videoAttachment[0], signedUrl);
+          console.log(xhr.status, xhr.getAllResponseHeaders());
           await uploadS3Video(recordingData.id, formData);
-          await uploadVideoToS3(videoAttachment[0]);
         }
 
         setLectureStoped({
@@ -338,16 +298,16 @@ const LectureRecorder = ({ open, closeDrawer, recordingData }) => {
 
   const uploadChunkToS3 = async (chunk, index) => {
     try {
-      const params = {
-        Bucket: Bucket,
-        Key: `videoChunks/lecture_${recordingData.id}/chunk-${index}.mp4`,
-        Body: chunk,
-        ContentType: "video/mp4",
+      const data = {
+        file_name: `chunk-${index}.mp4`,
+        file_type: "video/mp4",
+        operation: "upload",
+        folder: `videoChunks/lecture_${recordingData.id}/`,
       };
 
-      // Create the upload command and send it
-      const command = new PutObjectCommand(params);
-      await s3.send(command);
+      const signedUrl = await fetchPresignedUrl(data)
+
+      await uploadVideoToS3(chunk, signedUrl);
 
       setUploadedChunk((prev) => prev + 1); // Update the state after successful upload
     } catch (err) {
@@ -366,41 +326,7 @@ const LectureRecorder = ({ open, closeDrawer, recordingData }) => {
     }
   };
 
-  const deleteS3Folder = async () => {
-    try {
-      // List all the objects within the folder
-      const listParams = {
-        Bucket: Bucket,
-        Prefix: `videoChunks/lecture_${recordingData.id}`,
-      };
 
-      // Use ListObjectsV2Command to list objects
-      const listedObjects = await s3.send(new ListObjectsV2Command(listParams));
-
-      if (!listedObjects.Contents || listedObjects.Contents.length === 0)
-        return; // Folder is empty
-
-      // Create a list of objects to delete
-      const deleteParams = {
-        Bucket: Bucket,
-        Delete: { Objects: [] },
-      };
-
-      listedObjects.Contents.forEach(({ Key }) => {
-        deleteParams.Delete.Objects.push({ Key });
-      });
-
-      // Use DeleteObjectsCommand to delete the objects
-      await s3.send(new DeleteObjectsCommand(deleteParams));
-
-      // If there are more objects to delete, recursively delete
-      if (listedObjects.IsTruncated) {
-        await deleteS3Folder();
-      }
-    } catch (err) {
-      console.error("Error deleting folder:", err);
-    }
-  };
 
   const stopStream = (stream) => {
     if (!stream) return;
@@ -580,7 +506,7 @@ const LectureRecorder = ({ open, closeDrawer, recordingData }) => {
       submit: false,
       stopRecording: false,
     });
-    await deleteS3Folder();
+    await deleteS3Folder(`videoChunks/lecture_${recordingData.id}`)
   };
 
   const confirmClose = (message) => {

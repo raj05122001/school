@@ -12,20 +12,18 @@ import { MdOutlineDateRange } from "react-icons/md";
 import LectureType from "../LectureType/LectureType";
 import Image from "next/image";
 import { AppContextProvider } from "@/app/main";
-import { GetObjectCommand } from "@aws-sdk/client-s3";
-import { getSignedUrl } from "@aws-sdk/s3-request-presigner";
-import { AwsSdk } from "@/hooks/AwsSdk";
 import UserImage from "../UserImage/UserImage";
 import dayjs from "dayjs";
 import relativeTime from 'dayjs/plugin/relativeTime';
+import usePresignedUrl from "@/hooks/usePresignedUrl";
 
 // enable relativeTime throughout your app
 dayjs.extend(relativeTime);
 
 const ListingCard = ({ data, onClick }) => {
   const { isDarkMode, primaryColor, secondaryColor } = useThemeContext();
+  const { fetchPresignedUrl } = usePresignedUrl()
   const videoRef = useRef(null);
-  const {s3FileName}=useContext(AppContextProvider)
   const [videoUrl,setVideoUrl]=useState("")
 
   useEffect(()=>{
@@ -33,20 +31,19 @@ const ListingCard = ({ data, onClick }) => {
   },[data?.id])
 
   const getSignedUrlForObject = async () => {
-    const { s3 } = AwsSdk();
-    const Bucket = process.env.NEXT_PUBLIC_AWS_BUCKET;
-  
-    const params = {
-      Bucket,
-      Key: `videos/${data?.id}.mp4`,
+    const urlData = {
+      file_name: `${data?.id}.mp4`,
+      file_type: "video/mp4",
+      operation: "download",
+      folder: "videos/",
     };
-    
-    console.log("params : ", params);
+
+    console.log("urlData : ",urlData)
   
     try {
-      const command = new GetObjectCommand(params);
-      const signedUrl = await getSignedUrl(s3, command, { expiresIn: 60 * 60 * 3 });
-      setVideoUrl(signedUrl)
+      const signedUrl = await fetchPresignedUrl(urlData)
+      console.log("signedUrl?.presigned_url : ",signedUrl?.presigned_url)
+      setVideoUrl(signedUrl?.presigned_url)
     } catch (error) {
       console.error(error);
       return null;
