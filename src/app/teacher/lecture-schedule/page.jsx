@@ -61,7 +61,7 @@ const LectureManager = () => {
         // background: isDarkMode
         //   ? "linear-gradient(177.9deg, rgb(58, 62, 88) 3.6%, rgb(119, 127, 148) 105.8%)"
         //   : "linear-gradient(180.3deg, rgb(221, 221, 221) 5.5%, rgb(110, 136, 161) 90.2%);",
-        background:"#F3F5F7",
+        background: "#F3F5F7",
         // overflow: "hidden", // Add this line
       }}
     >
@@ -75,7 +75,7 @@ const LectureManager = () => {
                 style={{
                   marginRight: 8,
                   marginBottom: 8,
-                  color: "#448234"
+                  color: "#448234",
                 }}
               />
               <Typography
@@ -96,60 +96,95 @@ const LectureManager = () => {
                 color="primary"
                 onClick={handleOpenDialog}
                 sx={{
-                  textTransform:"none",
-                  backgroundColor: "#95e681",
-                  fontFamily: "Inter, sans-serif",
-                  fontSize:"18px",
-                  transition: "all 150ms ease-in-out",
-                  color: "#003366", // Dark blue for text
-
-                  ":hover": {
-                    backgroundColor: "#69cc66", // Slightly darker
-                    boxShadow: "0 0 10px 0 #6fcc66 inset, 0 0 10px 4px #68cc66", // Matching hover color
+                  mt: 2,
+                  display: "inline-flex",
+                  padding: "12px 32px",
+                  justifyContent: "center",
+                  alignItems: "center",
+                  gap: "8px",
+                  textTransform: "none",
+                  borderRadius: "8px",
+                  background: "#141514",
+                  color: "#FFF",
+                  textAlign: "center",
+                  fontFeatureSettings: "'liga' off, 'clig' off",
+                  fontFamily: "Aptos",
+                  fontSize: "16px",
+                  fontStyle: "normal",
+                  fontWeight: "700",
+                  lineHeight: "24px",
+                  "&:hover": {
+                    border: "1px solid #141514",
+                    background: "#E5E5E5",
+                    color: "#141514",
                   },
                 }}
               >
-                <MdAdd fontSize={16} size={22} style={{marginRight:2}} /> New Lecture
+                <MdAdd fontSize={16} size={22} style={{  }} /> New
+                Lecture
               </Button>
               <Button
                 variant="contained"
                 color="secondary"
                 onClick={() => downloadExcel()}
                 sx={{
-                  textTransform:"none",
-                  fontFamily: "Inter, sans-serif",
-                  fontSize:"18px",
-                  backgroundColor: "#95e681",
-                  transition: "all 150ms ease-in-out",
-                  color: "#003366", // Dark blue for text
-
-                  ":hover": {
-                    backgroundColor: "#69cc66", // Slightly darker
-                    boxShadow: "0 0 10px 0 #6fcc66 inset, 0 0 10px 4px #68cc66", // Matching hover color
+                  mt: 2,
+                  display: "inline-flex",
+                  padding: "12px 32px",
+                  justifyContent: "center",
+                  alignItems: "center",
+                  gap: "8px",
+                  textTransform: "none",
+                  borderRadius: "8px",
+                  background: "#141514",
+                  color: "#FFF",
+                  textAlign: "center",
+                  fontFeatureSettings: "'liga' off, 'clig' off",
+                  fontFamily: "Aptos",
+                  fontSize: "16px",
+                  fontStyle: "normal",
+                  fontWeight: "700",
+                  lineHeight: "24px",
+                  "&:hover": {
+                    border: "1px solid #141514",
+                    background: "#E5E5E5",
+                    color: "#141514",
                   },
                 }}
               >
-                <MdDownloadForOffline size={22} style={{marginRight:2}}/> Download Format
+                <MdDownloadForOffline size={22} style={{ marginRight: 2 }} />{" "}
+                Download Format
               </Button>
               <Button
                 variant="contained"
                 color="secondary"
                 onClick={() => setOpen(true)}
                 sx={{
-                  textTransform:"none",
-                  fontFamily: "Inter, sans-serif",
-                  fontSize:"18px",
-                  backgroundColor: "#95e681",
-                  transition: "all 150ms ease-in-out",
-                  color: "#003366", // Dark blue for text
-
-                  ":hover": {
-                    backgroundColor: "#69cc66", // Slightly darker
-                    boxShadow: "0 0 10px 0 #6fcc66 inset, 0 0 10px 4px #68cc66", // Matching hover color
+                  mt: 2,
+                  display: "inline-flex",
+                  padding: "12px 32px",
+                  justifyContent: "center",
+                  alignItems: "center",
+                  gap: "8px",
+                  textTransform: "none",
+                  borderRadius: "8px",
+                  background: "#141514",
+                  color: "#FFF",
+                  textAlign: "center",
+                  fontFeatureSettings: "'liga' off, 'clig' off",
+                  fontFamily: "Aptos",
+                  fontSize: "16px",
+                  fontStyle: "normal",
+                  fontWeight: "700",
+                  lineHeight: "24px",
+                  "&:hover": {
+                    border: "1px solid #141514",
+                    background: "#E5E5E5",
+                    color: "#141514",
                   },
                 }}
               >
-                <MdUpload size={22} style={{marginRight:2}}/>
+                <MdUpload size={22} style={{ marginRight: 2 }} />
                 Upload
               </Button>
               {open && <CreateLectureSchedule open={open} setOpen={setOpen} />}
@@ -168,31 +203,35 @@ const LectureManager = () => {
             value={tabValue}
             onChange={handleTabChange}
             sx={{
-              fontFamily: "Inter, sans-serif",
               ".MuiTabs-flexContainer": {
                 gap: 2,
-                background: "linear-gradient(120deg, #d4fc79 0%, #96e6a1 100%)",
-                padding: 1,
-                borderRadius: "12px",
-                justifyContent: "center",
+
+                padding: "8px 496px 8px 20px",
+                // borderRadius: "12px",
+                borderTopLeftRadius: "12px",
+                borderTopRightRadius: "12px",
+                display: "flex",
+                alignItems: "center",
+                borderBottom: "0.5px solid var(--Stroke-Color-1, #C1C1C1)",
               },
               ".MuiTab-root": {
-                // backgroundColor: "#f0f0f0",
-                color: "#333",
+                color: "#3B3D3B",
                 padding: "10px 20px",
-                // height:10,
                 minHeight: 0,
-                "&.MuiTabs-indicator": {
-                  display: "none",
-                },
+                marginTop: "8px",
+                textAlign: "center",
+                fontSize: "16px",
+                fontFamily: "Aptos",
+                textTransform: "none",
                 "&:hover": {
                   backgroundColor: "#e0e0e0",
                   boxShadow: "0px 2px 8px rgba(0, 0, 0, 0.1)",
                   borderRadius: "10px",
+                  color: "#3B3D3B",
                 },
                 "&.Mui-selected": {
                   backgroundColor: "#fff",
-                  color: "#000",
+                  color: "#3B3D3B",
                   boxShadow: "0px 6px 15px rgba(0, 0, 0, 0.2)",
                   borderRadius: "10px",
                 },
