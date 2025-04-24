@@ -10,10 +10,10 @@ import {
   Box,
   Typography,
   Skeleton,
-  Pagination
+  Pagination,
 } from "@mui/material";
 import { useThemeContext } from "@/hooks/ThemeContext";
-import { getMyLectures ,getLectureTracking} from "@/api/apiHelper";
+import { getMyLectures, getLectureTracking } from "@/api/apiHelper";
 import { AiOutlineExclamationCircle } from "react-icons/ai";
 import { useSearchParams, useRouter } from "next/navigation";
 import { decodeToken } from "react-jwt";
@@ -42,11 +42,11 @@ const LectureScheduleTable = () => {
   const fetchLectureData = async (page = 1) => {
     try {
       setLoading(true); // Start loading
-      if(userDetails?.role==="TEACHER"){
+      if (userDetails?.role === "TEACHER") {
         const response = await getMyLectures("UPCOMMING", "", "", page);
-        console.log("Response for table", response)
+        console.log("Response for table", response);
         setLectureData(response?.data?.data?.lecture_data);
-      }else{
+      } else {
         const response = await getLectureTracking("UPCOMMING", "", "", page);
         setLectureData(response?.data);
       }
@@ -56,7 +56,7 @@ const LectureScheduleTable = () => {
       setLoading(false); // End loading
     }
   };
-  
+
   useEffect(() => {
     fetchLectureData(activePage);
   }, [activePage]);
@@ -69,7 +69,7 @@ const LectureScheduleTable = () => {
   };
 
   const handleChange = (event, value) => {
-    console.log("Value", value)
+    console.log("Value", value);
     router.push(`/teacher/lecture-schedule?activePage=${value}`);
   };
 
@@ -90,17 +90,30 @@ const LectureScheduleTable = () => {
   };
 
   return (
-    <Box sx={{ p: 2, height:"100%", width:"100%" }} >
+    <Box sx={{ p: 2, height: "100%", width: "100%" }}>
       {/* Show skeleton loader when loading */}
       {loading ? (
-        <TableContainer component={Paper} className="blur_effect_card">
-          <Table>
-            <TableHead>
-              <TableRow
-                sx={{
-                  background: "linear-gradient(120deg, #d4fc79 0%, #96e6a1 100%)",
-                }}
-              >
+        <TableContainer
+          component={Paper}
+          elevation={0}
+          sx={{
+            borderRadius: "10px",
+            border: "none",
+            overflow: "hidden",
+            backdropFilter: "blur(10px)",
+            backgroundColor: "rgba(255, 255, 255, 0.2)",
+            marginX: "32px",
+          }}
+        >
+          <Table sx={{ border: "none" }}>
+            <TableHead
+              sx={{
+                backgroundColor: "#d9d9d9",
+                borderRadius: "10px",
+                border: "none",
+              }}
+            >
+              <TableRow>
                 {TABLE_HEAD?.map((head, index) => (
                   <TableCell
                     key={index}
@@ -133,14 +146,20 @@ const LectureScheduleTable = () => {
           </Table>
         </TableContainer>
       ) : lectureData?.data?.length > 0 ? (
-        <TableContainer component={Paper} className="blur_effect_card">
-          <Table>
-            <TableHead>
-              <TableRow
-                sx={{
-                  background: "linear-gradient(120deg, #d4fc79 0%, #96e6a1 100%)"
-                }}
-              >
+        <TableContainer elevation={0} component={Paper} sx={{
+            borderRadius: "10px",
+            border:"none",
+            overflow: "hidden",
+            backdropFilter: "blur(10px)",
+            backgroundColor: "rgba(255, 255, 255, 0.2)",
+        }}>
+          <Table sx={{ border: "none" }}>
+            <TableHead sx={{backgroundColor: "#F3F5F7",
+                borderRadius: "10px",
+                border: "none",}}> 
+              <TableRow sx={{backgroundColor: "#d9d9d9",
+                borderRadius: "10px",
+                border: "none",}}>
                 {TABLE_HEAD?.map((head) => (
                   <TableCell
                     key={head}

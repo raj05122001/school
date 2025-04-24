@@ -100,6 +100,11 @@ function GreetingCardNew() {
               borderRadius: "8px",
               backgroundColor: "#141514",
               textTransform: "none",
+              "&:hover": {
+                    border: "1px solid #141514",
+                    background: "#E5E5E5",
+                    color: "#141514",
+                  },
             }}
           >
             <span
@@ -120,21 +125,21 @@ function GreetingCardNew() {
               >
                 <path
                   d="M12.0625 22C17.5625 22 22.0625 17.5 22.0625 12C22.0625 6.5 17.5625 2 12.0625 2C6.5625 2 2.0625 6.5 2.0625 12C2.0625 17.5 6.5625 22 12.0625 22Z"
-                  stroke="white"
+                  stroke="currentColor"
                   stroke-width="1.5"
                   stroke-linecap="round"
                   stroke-linejoin="round"
                 />
                 <path
                   d="M8.0625 12H16.0625"
-                  stroke="white"
+                  stroke="currentColor"
                   stroke-width="1.5"
                   stroke-linecap="round"
                   stroke-linejoin="round"
                 />
                 <path
                   d="M12.0625 16V8"
-                  stroke="white"
+                  stroke="currentColor"
                   stroke-width="1.5"
                   stroke-linecap="round"
                   stroke-linejoin="round"
@@ -151,6 +156,9 @@ function GreetingCardNew() {
                 fontFamily: "Inter Tight, sans-serif",
                 fontWeight: 700,
                 lineHeight: "24px",
+                "&:hover": {
+                    color: "#141514",
+                  },
               }}
             >
               Create
