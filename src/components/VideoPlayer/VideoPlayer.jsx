@@ -17,12 +17,11 @@ import { decodeToken } from "react-jwt";
 import Cookies from "js-cookie";
 import axios from "axios";
 import { BASE_URL_MEET } from "@/constants/apiconfig";
-import { GetObjectCommand } from "@aws-sdk/client-s3";
-import { getSignedUrl } from "@aws-sdk/s3-request-presigner";
-import { AwsSdk } from "@/hooks/AwsSdk";
+import usePresignedUrl from "@/hooks/usePresignedUrl";
 
 const VideoPlayer = ({ id, duration = 1e101 }) => {
   const { s3FileName } = useContext(AppContextProvider);
+  const { fetchPresignedUrl } = usePresignedUrl()
   const userDetails = decodeToken(Cookies.get("ACCESS_TOKEN"));
   const [markers, setMarkers] = useState([]);
   const [suggestionData, setSuggestionData] = useState([]);
@@ -35,22 +34,16 @@ const VideoPlayer = ({ id, duration = 1e101 }) => {
   }, [id]);
 
   const getSignedUrlForObject = async () => {
-    const { s3 } = AwsSdk();
-    const Bucket = process.env.NEXT_PUBLIC_AWS_BUCKET;
-
-    const params = {
-      Bucket,
-      Key: `videos/${id}.mp4`,
+    const data = {
+      file_name: `${id}.mp4`,
+      file_type: "video/mp4",
+      operation: "download",
+      folder: "videos/",
     };
-
-    console.log("params : ", params);
-
+  
     try {
-      const command = new GetObjectCommand(params);
-      const signedUrl = await getSignedUrl(s3, command, {
-        expiresIn: 60 * 60 * 3,
-      });
-      setVideoUrl(signedUrl);
+      const signedUrl = await fetchPresignedUrl(data)
+      setVideoUrl(signedUrl?.presigned_url)
     } catch (error) {
       console.error(error);
       return null;
