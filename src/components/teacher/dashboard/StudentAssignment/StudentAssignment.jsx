@@ -275,14 +275,16 @@ const StudentAssignment = () => {
           />
         </Box>
       </Box>
-      <Box sx={{ display: "flex" }}>
+      <Box sx={{ display: "flex", }}>
         <TableContainer
           component={Paper}
+          elevation={0}
           sx={{
             maxHeight: 500,
             minHeight: 380,
             height: "100%",
-            borderRadius: "8px",
+            borderRadius: "10px",
+            border:"none",
             overflow: "hidden",
             backdropFilter: "blur(10px)",
             backgroundColor: "rgba(255, 255, 255, 0.2)",
@@ -290,17 +292,22 @@ const StudentAssignment = () => {
           }}
           // className="blur_effect_card"
         >
-          <Table sx={{ borderRadius: "10px", width: "100%" }}>
-            <TableHead stickyHeader>
-              <TableRow sx={{ backgroundColor: "#F3F5F7" }}>
+          <Table sx={{ border: "none" }}>
+            <TableHead stickyHeader sx={{backgroundColor: "#F3F5F7",
+                borderRadius: "10px",
+                border: "none",}}>
+              <TableRow >
                 <TableCell
                   sx={{
-                    color: "var(--Text-Color-1, #3B3D3B)",
-                    fontFamily: "Inter, sans-serif",
-                    fontSize: "14px",
+                    borderTopLeftRadius: "10px",
+                    borderBottomLeftRadius: "10px",
+                    border: "none",
+                    color: "#3B3D3B",
+                    fontFamily: "Inter",
+                    fontWeight: "600",
                     fontStyle: "normal",
-                    fontWeight: 600,
                     lineHeight: "normal",
+                    fontSize: "14px",
                   }}
                 >
                   Full Name
@@ -308,12 +315,13 @@ const StudentAssignment = () => {
                 <TableCell
                   align="center"
                   sx={{
-                    color: "var(--Text-Color-1, #3B3D3B)",
-                    fontFamily: "Inter, sans-serif",
-                    fontSize: "14px",
+                    border: "none",
+                    color: "#3B3D3B",
+                    fontFamily: "Inter",
+                    fontWeight: "600",
                     fontStyle: "normal",
-                    fontWeight: 600,
                     lineHeight: "normal",
+                    fontSize: "14px",
                   }}
                 >
                   Work Completed
@@ -321,12 +329,13 @@ const StudentAssignment = () => {
                 <TableCell
                   align="center"
                   sx={{
-                    color: "var(--Text-Color-1, #3B3D3B)",
-                    fontFamily: "Inter, sans-serif",
-                    fontSize: "14px",
+                    border: "none",
+                    color: "#3B3D3B",
+                    fontFamily: "Inter",
+                    fontWeight: "600",
                     fontStyle: "normal",
-                    fontWeight: 600,
                     lineHeight: "normal",
+                    fontSize: "14px",
                   }}
                 >
                   Average Score
@@ -334,12 +343,13 @@ const StudentAssignment = () => {
                 <TableCell
                   align="center"
                   sx={{
-                    color: "var(--Text-Color-1, #3B3D3B)",
-                    fontFamily: "Inter, sans-serif",
-                    fontSize: "14px",
+                    border: "none",
+                    color: "#3B3D3B",
+                    fontFamily: "Inter",
+                    fontWeight: "600",
                     fontStyle: "normal",
-                    fontWeight: 600,
                     lineHeight: "normal",
+                    fontSize: "14px",
                   }}
                 >
                   Needing Attention
@@ -347,12 +357,13 @@ const StudentAssignment = () => {
                 <TableCell
                   align="center"
                   sx={{
-                    color: "var(--Text-Color-1, #3B3D3B)",
-                    fontFamily: "Inter, sans-serif",
-                    fontSize: "14px",
+                    border: "none",
+                    color: "#3B3D3B",
+                    fontFamily: "Inter",
+                    fontWeight: "600",
                     fontStyle: "normal",
-                    fontWeight: 600,
                     lineHeight: "normal",
+                    fontSize: "14px",
                   }}
                 >
                   Can be Improved
@@ -360,19 +371,22 @@ const StudentAssignment = () => {
                 <TableCell
                   align="center"
                   sx={{
-                    color: "var(--Text-Color-1, #3B3D3B)",
-                    fontFamily: "Inter, sans-serif",
-                    fontSize: "14px",
+                    borderTopRightRadius: "10px",
+                    borderBottomRightRadius: "10px",
+                    border: "none",
+                    color: "#3B3D3B",
+                    fontFamily: "Inter",
+                    fontWeight: "600",
                     fontStyle: "normal",
-                    fontWeight: 600,
                     lineHeight: "normal",
+                    fontSize: "14px",
                   }}
                 >
                   Mastered
                 </TableCell>
               </TableRow>
             </TableHead>
-            <TableBody>
+            <TableBody sx={{borderBottom: "none"}}>
               {loading
                 ? Array.from(new Array(5))?.map((_, index) => (
                     <TableRow key={index}>
@@ -410,11 +424,10 @@ const StudentAssignment = () => {
                   ))
                 : data?.map((student, index) => (
                     <TableRow
+                      hover
                       key={index}
                       sx={{
-                        backgroundColor: getRowColor(
-                          student.average_scored_percentage
-                        ),
+                        backgroundColor: "#fff",
                       }}
                     >
                       <TableCell>
@@ -453,7 +466,7 @@ const StudentAssignment = () => {
                         {student?.completed_assignment}/
                         {student?.total_assignment}
                       </TableCell>
-                      <TableCell align="center">
+                      {/* <TableCell align="center">
                         <Box
                           sx={{
                             width: "100%",
@@ -470,7 +483,7 @@ const StudentAssignment = () => {
                               position: "relative",
                             }}
                           >
-                            {/* Background bar */}
+                            //Background bar
                             <Box
                               sx={{
                                 backgroundColor: "white",
@@ -485,7 +498,7 @@ const StudentAssignment = () => {
                                 height: "100%",
                               }}
                             />
-                            {/* Progress bar */}
+                            //Progress bar
                             <Box
                               sx={{
                                 backgroundColor: getScoreColor(
@@ -501,7 +514,7 @@ const StudentAssignment = () => {
                                 height: "100%",
                               }}
                             />
-                            {/* Score text */}
+                            //Score text
                             <Box
                               sx={{
                                 color: "var(--Text-Color-1, #3B3D3B)",
@@ -520,6 +533,21 @@ const StudentAssignment = () => {
                             </Box>
                           </Box>
                         </Box>
+                      </TableCell> */}
+                      <TableCell align="center">
+                      <Typography
+                            sx={{
+                              color: "var(--Text-Color-1, #3B3D3B)",
+                              fontFamily: "Inter, sans-serif",
+                              fontSize: "14px",
+                              fontStyle: "normal",
+                              fontWeight: 700,
+                              lineHeight: "normal",
+                              marginLeft: "12px",
+                            }}
+                          >
+                            {student?.average_scored_percentage}%
+                          </Typography>
                       </TableCell>
                       <TableCell align="center">
                         <Box

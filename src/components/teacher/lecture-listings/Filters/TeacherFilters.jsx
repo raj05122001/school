@@ -305,7 +305,7 @@ const TeacherFilters = ({classValue = "All"}) => {
           px: 2,
           gap: 1,
           width: "100%",
-          maxWidth: "85vw",
+          maxWidth: "80vw",
           flexWrap: "nowrap",
           "&::-webkit-scrollbar": { display: "none" },
           scrollbarWidth: "none",

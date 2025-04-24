@@ -140,7 +140,7 @@ export const sidebarLinks = {
       text: "Chatbot",
       href: "/chat-bot",
       icon: <FaRobot size={22} />,
-      show: ["TEACHER","STUDENT", "ADMIN"]
+      show: ["TEACHER", "STUDENT", "ADMIN"],
     },
   ],
 };
@@ -381,59 +381,59 @@ const Sidebar = ({ open, setOpen }) => {
         <Box>
           <Box sx={{ borderTop: "1px solid #C1C1C1", marginX: "16px" }} />
           <div>
-              <Box
+            <Box
               onClick={handleMenu}
-                sx={{
-                  display: "flex",
-                  alignItems: "center",
-                  flexDirection: "row",
-                  // borderTop: "1px solid #C1C1C1",
-                  p: 2,
-                  mt: 2,
-                  mb: 1,
-                  // marginX: "16px",
-                  justifyContent: "space-between",
-                  cursor: "pointer",
-                }}
-              >
-                <Box sx={{ display: "flex", alignItems: "center" }}>
-                  <Box sx={{ width: 48, height: 48 }}>
-                    <UserImage
-                      profilePic={userDetails?.profile_pic}
-                      name={userDetails?.full_name}
-                      width={42}
-                      height={42}
-                    />
-                  </Box>
-                  <Box>
-                    <Typography
-                      variant="body1"
-                      sx={{
-                        color: "#282D32",
-                        fontWeight: 700,
-                        fontSize: "16px",
-                        lineHeight: "18.91px",
-                        fontFamily: "Inter, sans-serif",
-                      }}
-                    >
-                      {userDetails?.full_name}
-                    </Typography>
-                    <Typography
-                      variant="body1"
-                      sx={{
-                        color: "#404145",
-                        fontFamily: "Inter, sans-serif",
-                        fontSize:"12px"
-                      }}
-                    >
-                      CCST
-                    </Typography>
-                  </Box>
+              sx={{
+                display: "flex",
+                alignItems: "center",
+                flexDirection: "row",
+                // borderTop: "1px solid #C1C1C1",
+                p: 2,
+                mt: 2,
+                mb: 1,
+                // marginX: "16px",
+                justifyContent: "space-between",
+                cursor: "pointer",
+              }}
+            >
+              <Box sx={{ display: "flex", alignItems: "center" }}>
+                <Box sx={{ width: 48, height: 48 }}>
+                  <UserImage
+                    profilePic={userDetails?.profile_pic}
+                    name={userDetails?.full_name}
+                    width={42}
+                    height={42}
+                  />
                 </Box>
                 <Box>
-                  <IoIosArrowForward size={20} />
+                  <Typography
+                    variant="body1"
+                    sx={{
+                      color: "#282D32",
+                      fontWeight: 700,
+                      fontSize: "16px",
+                      lineHeight: "18.91px",
+                      fontFamily: "Inter, sans-serif",
+                    }}
+                  >
+                    {userDetails?.full_name}
+                  </Typography>
+                  <Typography
+                    variant="body1"
+                    sx={{
+                      color: "#404145",
+                      fontFamily: "Inter, sans-serif",
+                      fontSize: "12px",
+                    }}
+                  >
+                    CCST
+                  </Typography>
                 </Box>
               </Box>
+              <Box>
+                <IoIosArrowForward size={20} />
+              </Box>
+            </Box>
             <Menu
               id="menu-appbar"
               anchorEl={anchorEl}
@@ -449,8 +449,71 @@ const Sidebar = ({ open, setOpen }) => {
               open={Boolean(anchorEl)}
               onClose={handleClose}
             >
-              {userDetails?.role==="TEACHER"?<MenuItem onClick={()=>router.push("/teacher/myprofile")}>Profile</MenuItem>:""}
-              <MenuItem onClick={() => handleRoute()}>Logout</MenuItem>
+              {userDetails?.role === "TEACHER" ? (
+                <MenuItem
+                  onClick={() => router.push("/teacher/myprofile")}
+                  sx={{
+                    fontFamily: "Aptos",
+                    fontSize: "16px",
+                    fontStyle: "normal",
+                    fontWeight: "700",
+                    lineHeight: "24px",
+                  }}
+                >
+                  <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
+<path d="M12 21C16.9706 21 21 16.9706 21 12C21 7.02944 16.9706 3 12 3C7.02944 3 3 7.02944 3 12C3 16.9706 7.02944 21 12 21Z" stroke="#3B3D3B" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M12 11V16" stroke="#3B3D3B" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M11.9502 8H12.0502V8.1H11.9502V8Z" stroke="#3B3D3B" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+</svg>{" "}
+                  Profile
+                </MenuItem>
+              ) : (
+                ""
+              )}
+              <MenuItem
+                onClick={() => handleRoute()}
+                sx={{
+                  fontFamily: "Aptos",
+                  fontSize: "16px",
+                  fontStyle: "normal",
+                  fontWeight: "700",
+                  lineHeight: "24px",
+                }}
+              >
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="24"
+                  height="24"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                >
+                  <path
+                    d="M17.4404 14.62L20.0004 12.06L17.4404 9.5"
+                    stroke="#3B3D3B"
+                    stroke-width="1.5"
+                    stroke-miterlimit="10"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                  />
+                  <path
+                    d="M9.75977 12.0596H19.9298"
+                    stroke="#3B3D3B"
+                    stroke-width="1.5"
+                    stroke-miterlimit="10"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                  />
+                  <path
+                    d="M11.7598 20C7.33977 20 3.75977 17 3.75977 12C3.75977 7 7.33977 4 11.7598 4"
+                    stroke="#3B3D3B"
+                    stroke-width="1.5"
+                    stroke-miterlimit="10"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                  />
+                </svg>{" "}
+                Logout
+              </MenuItem>
             </Menu>
           </div>
         </Box>
