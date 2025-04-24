@@ -1,7 +1,14 @@
 import React, { useEffect, useState } from "react";
 import { meetingAnalytics } from "@/api/apiHelper";
 import { BsInfoCircle } from "react-icons/bs";
-import { Box, Typography, IconButton, Paper, useTheme } from "@mui/material";
+import {
+  Box,
+  Typography,
+  IconButton,
+  Paper,
+  useTheme,
+  LinearProgress,
+} from "@mui/material";
 import { PieChart, Pie, Cell, ResponsiveContainer, Tooltip } from "recharts";
 import { useThemeContext } from "@/hooks/ThemeContext";
 
@@ -69,7 +76,7 @@ const LectureAnalytics = ({ lectureId }) => {
         x={x}
         y={y}
         className="text-sm"
-        fill= {isDarkMode ? "#FFFFF0" : "#36454F"}
+        fill={isDarkMode ? "#FFFFF0" : "#36454F"}
         textAnchor="middle"
         dominantBaseline="middle"
         fontSize={12}
@@ -84,13 +91,18 @@ const LectureAnalytics = ({ lectureId }) => {
       return (
         <div
           style={{
-            background: "rgba(255, 255, 255, 0.75)",
-            backdropFilter: "blur(10px)",
+            display: "flex",
             padding: "10px",
-            borderRadius: "10px",
-            boxShadow: "0 4px 8px rgba(0, 0, 0, 0.1)",
-            color: "black",
-            fontWeight: "bold",
+            alignItems: "center",
+            gap: "10px",
+            flexShrink: 0,
+            borderRadius: "18px",
+            background: "#141514",
+            color: "#F3F5F7",
+            fontFamily: "Inter",
+            fontWeight: 500,
+            fontSize: "14px",
+            lineHeight: "12px",
           }}
         >
           <p style={{ margin: 0 }}>{`${payload[0].name}`}</p>
@@ -164,7 +176,16 @@ const LectureAnalytics = ({ lectureId }) => {
       }}
       className="blur_effect_card"
     >
-      <Typography variant="h5" sx={{ fontWeight: "bold", color:primaryColor }}>
+      <Typography
+        sx={{
+          color: "#3B3D3B",
+          fontFamily: "Inter",
+          fontSize: "22px",
+          fontStyle: "normal",
+          fontWeight: 600,
+          lineHeight: "normal",
+        }}
+      >
         Lecture Analytics
       </Typography>
       {analytics?.overall_health_score &&
@@ -176,8 +197,16 @@ const LectureAnalytics = ({ lectureId }) => {
         <Box sx={{ mt: 3 }}>
           <Box sx={{ display: "flex", alignItems: "center" }}>
             <Typography
-              variant="h6"
-              sx={{ fontWeight: "bold", color: primaryColor }}
+              sx={{
+                color: "#3B3D3B",
+                leadingTrim: "both",
+                textEdge: "cap",
+                fontFamily: "Aptos",
+                fontSize: "20px",
+                fontStyle: "normal",
+                fontWeight: 600,
+                lineHeight: "24px",
+              }}
             >
               Topics Distribution
             </Typography>
@@ -243,7 +272,16 @@ const LectureAnalytics = ({ lectureId }) => {
           <Box sx={{ display: "flex", alignItems: "center" }}>
             <Typography
               variant="h6"
-              sx={{ fontWeight: "bold", color: primaryColor}}
+              sx={{
+                color: "#3B3D3B",
+                leadingTrim: "both",
+                textEdge: "cap",
+                fontFamily: "Aptos",
+                fontSize: "20px",
+                fontStyle: "normal",
+                fontWeight: 600,
+                lineHeight: "24px",
+              }}
             >
               Sentiment Analytics
             </Typography>
@@ -264,7 +302,8 @@ const LectureAnalytics = ({ lectureId }) => {
               </IconButton>
             </Tooltip>
           </Box>
-          <Box sx={{ display: "flex", gap: 3, mt: 2 }}>
+          {/* Progress Bars Old*/}
+          {/* <Box sx={{ display: "flex", gap: 3, mt: 2 }}>
             <Box
               sx={{ textAlign: "center", color: theme.palette.success.main }}
             >
@@ -276,9 +315,12 @@ const LectureAnalytics = ({ lectureId }) => {
               <Typography variant="body2">Positive</Typography>
             </Box>
             <Box
-              sx={{ textAlign: "center", color: isDarkMode ? "#FFFFF0" : "#36454F" }}
+              sx={{
+                textAlign: "center",
+                color: isDarkMode ? "#FFFFF0" : "#36454F",
+              }}
             >
-              <Typography variant="h6" sx={{ fontWeight: "bold"}}>
+              <Typography variant="h6" sx={{ fontWeight: "bold" }}>
                 {sentimentAnalytics?.neutral
                   ? `${sentimentAnalytics.neutral.toFixed(0)}%`
                   : "0%"}
@@ -293,8 +335,108 @@ const LectureAnalytics = ({ lectureId }) => {
               </Typography>
               <Typography variant="body2">Negative</Typography>
             </Box>
-          </Box>
-          <Typography variant="caption" color={secondaryColor} sx={{ pt: 1 }}>
+          </Box> */}
+          {/* Progress Bars */}
+          {["positive", "negative", "neutral"].map((type) => {
+            const value = sentimentAnalytics?.[type] ?? 0;
+            const barColor = {
+              positive: "#14AE5C", // green
+              negative: "#EC221F", // red
+              neutral: "#FF9500", // orange
+            }[type];
+
+            const label = {
+              positive: "Positive",
+              negative: "Negative",
+              neutral: "Neutral",
+            }[type];
+
+            const subLabel = {
+              positive: "High",
+              negative: "Risk",
+              neutral: "Moderate",
+            }[type];
+
+            return (
+              <Box
+                key={type}
+                sx={{
+                  mt: 1,
+                  p: 1.5,
+                  border: " 1px solid #E0E0E0",
+                  borderRadius: 6,
+                }}
+              >
+                <Box sx={{ display: "flex", justifyContent: "space-between" }}>
+                  <Typography
+                    sx={{
+                      color: " #3D3D3D",
+                      fontFeatureSettings: "'liga' off, 'clig' off",
+                      fontFamily: "Aptos",
+                      fontSize: "14px",
+                      fontStyle: "normal",
+                      fontWeight: 600,
+                      lineHeight: "18.712px",
+                    }}
+                  >
+                    {label}
+                  </Typography>
+                  <Typography
+                    sx={{
+                      color: " #3D3D3D",
+                      leadingTrim: "both",
+                      textEdge: "cap",
+                      fontFeatureSettings: "'liga' off, 'clig' off",
+                      fontFamily: "Aptos",
+                      fontSize: "18px",
+                      fontStyle: "normal",
+                      fontWeight: 600,
+                      lineHeight: "18.712px",
+                    }}
+                  >{`${value.toFixed(0)}%`}</Typography>
+                </Box>
+                <LinearProgress
+                  variant="determinate"
+                  value={value}
+                  sx={{
+                    height: 8,
+                    mt: 1,
+                    borderRadius: 5,
+                    backgroundColor: "#E0E0E0",
+                    "& .MuiLinearProgress-bar": {
+                      backgroundColor: barColor,
+                    },
+                  }}
+                />
+                <Typography
+                  sx={{
+                    color: " #858585",
+                    fontFeatureSettings: "'liga' off, 'clig' off",
+                    fontFamily: "Aptos",
+                    fontSize: "12px",
+                    fontStyle: "normal",
+                    fontWeight: 600,
+                    lineHeight: "18.712px",
+                  }}
+                >
+                  {subLabel}
+                </Typography>
+              </Box>
+            );
+          })}
+
+          <Typography
+            sx={{
+              pt: 1,
+              color: " #858585",
+              fontFeatureSettings: "'liga' off, 'clig' off",
+              fontFamily: "Aptos",
+              fontSize: "14px",
+              fontStyle: "normal",
+              fontWeight: 600,
+              lineHeight: "18.712px",
+            }}
+          >
             Last updated on {formattedDate}
           </Typography>
         </Box>
@@ -302,7 +444,20 @@ const LectureAnalytics = ({ lectureId }) => {
       {analytics?.language_monitoring &&
         renderPercentage("Language Monitoring", analytics?.language_monitoring)}
       {analytics?.main_topics?.length > 0 && (
-        <Typography variant="h6" color={primaryColor}>Main Topics</Typography>
+        <Typography
+          sx={{
+            color: "#3B3D3B",
+            leadingTrim: "both",
+            textEdge: "cap",
+            fontFamily: "Aptos",
+            fontSize: "20px",
+            fontStyle: "normal",
+            fontWeight: 600,
+            lineHeight: "24px",
+          }}
+        >
+          Main Topics
+        </Typography>
       )}
       {analytics?.main_topics?.length > 0 && (
         <Box maxHeight={300} sx={{ overflowY: "auto" }}>
@@ -314,13 +469,14 @@ const LectureAnalytics = ({ lectureId }) => {
                 display: "inline-block",
                 padding: "6px 12px",
                 margin: "4px",
-                border: "1px solid #1976d2", // Use primary color or any color you prefer
-                borderRadius: "4px",
-                backgroundColor: "#e3f2fd", // Light background color for button-like effect
-                color: "#1976d2", // Primary color for text
+                // border: "1px solid #1976d2", // Use primary color or any color you prefer
+                borderRadius: "18px",
+                backgroundColor: "#D7FCE0", // Light background color for button-like effect
+                color: "#174321", // Primary color for text
                 cursor: "pointer", // Makes it feel clickable
-                fontSize: "14px", // Adjust font size if needed
-                fontWeight: "500", // Slightly bold text
+                fontSize: "12px", // Adjust font size if needed
+                fontWeight: "600", // Slightly bold text
+                fontFamily:"Inter"
               }}
             >
               {val}

@@ -53,7 +53,12 @@ const RatingSection = ({ id, isShowRating = false }) => {
     >
       <>
         <Box sx={{ display: "flex", mb: 1 }}>
-          <Typography variant="h4" color={isDarkMode ? "white" : "black"}>
+          <Typography sx={{color: "#3B3D3B",
+          fontFamily: "Inter",
+          fontSize: "22px",
+          fontStyle: "normal",
+          fontWeight: 600,
+          lineHeight: "normal",}}>
             Ratings
           </Typography>
           <GiStaryu size={24} color={isDarkMode ? "#FFC107" : "#FFEA00"} />

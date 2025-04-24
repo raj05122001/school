@@ -41,11 +41,13 @@ const LectureMCQ = ({ id, isDarkMode }) => {
     try {
       // First, convert the single quotes around the array to double quotes
       let validJson = options
-        ?.replace(/^\[|\]$/g, '') // Remove the surrounding brackets temporarily
-        ?.split(',') // Split each option by commas
-        ?.map(option => option?.trim()?.replace(/^'/, '"')?.replace(/'$/, '"')) // Replace single quotes around each option with double quotes
-        ?.join(','); // Join the items back into a comma-separated string
-  
+        ?.replace(/^\[|\]$/g, "") // Remove the surrounding brackets temporarily
+        ?.split(",") // Split each option by commas
+        ?.map((option) =>
+          option?.trim()?.replace(/^'/, '"')?.replace(/'$/, '"')
+        ) // Replace single quotes around each option with double quotes
+        ?.join(","); // Join the items back into a comma-separated string
+
       // Wrap the modified string back into an array format
       validJson = `[${validJson}]`;
 
@@ -55,7 +57,6 @@ const LectureMCQ = ({ id, isDarkMode }) => {
       return [];
     }
   };
-  
 
   // Function to generate alphabetical labels
   const getLabel = (index) => {
@@ -81,17 +82,19 @@ const LectureMCQ = ({ id, isDarkMode }) => {
       sx={{
         p: 3,
         width: "100%",
-        color: isDarkMode ? "#F0EAD6" : "#36454F",
-        borderBottomLeftRadius: "8px",
-        borderBottomRightRadius: "8px",
-        background: isDarkMode
-          ? "radial-gradient(circle at 10% 20%, rgb(90, 92, 106) 0%, rgb(32, 45, 58) 81.3%)"
-          : "radial-gradient(circle at 18.7% 37.8%, rgb(250, 250, 250) 0%, rgb(225, 234, 238) 90%)",
+        borderBottomLeftRadius: "16px",
+        borderBottomRightRadius: "16px",
+        color: "#3B3D3B",
+        backgroundColor: "#fff",
         overflowY: "auto",
         height: "100%",
         minHeight: 400,
         maxHeight: 500,
-        width: "100%",
+        scrollbarWidth: "none", // Firefox
+        msOverflowStyle: "none", // IE/Edge
+        "&::-webkit-scrollbar": {
+          display: "none", // Chrome, Safari, Edge
+        },
       }}
     >
       {loading ? (
@@ -123,14 +126,20 @@ const LectureMCQ = ({ id, isDarkMode }) => {
                     alignItems="flex-start"
                     sx={{ fontSize: "16px", fontWeight: "bold" }}
                   >
-                    <Typography  >
-                      {questionIndex + 1}.&nbsp;
-                    </Typography>
-                    <Typography
-                     sx={{marginTop:0.2}}
-                      variant="span"
-                    >
-                    <TextWithMath text={item.question} />{" "}
+                    <Typography>{questionIndex + 1}.&nbsp;</Typography>
+                    <Typography sx={{ marginTop: 0.2 }}>
+                      <TextWithMath
+                        text={item?.question}
+                        textStyle={{
+                        color: "#3B3D3B",
+                        fontFamily: "Inter",
+                        fontSize: "14px",
+                        fontStyle: "normal",
+                        fontWeight: "600",
+                        lineHeight: "20px",
+                        letterSpacing: "-0.48px",
+                      }}
+                      />{" "}
                     </Typography>
                   </Box>
                   <List sx={{ padding: 0 }}>
@@ -146,7 +155,6 @@ const LectureMCQ = ({ id, isDarkMode }) => {
                           sx={{ fontSize: "14px" }}
                         >
                           <Typography
-                            variant="body2"
                             sx={{ textAlign: "left" }}
                           >
                             {getLabel(index)}&nbsp;&nbsp;
@@ -173,13 +181,9 @@ const LectureMCQ = ({ id, isDarkMode }) => {
                       Answer:&nbsp;
                     </Typography>
 
-                    <Typography
-                     sx={{marginTop:0.4}}
-                      variant="span"
-                    >
-                    <TextWithMath text={item?.answer} />
+                    <Typography sx={{ marginTop: 0.4 }} variant="span">
+                      <TextWithMath text={item?.answer} />
                     </Typography>
-
                   </Box>
                 </ListItem>
               ))}
@@ -187,7 +191,13 @@ const LectureMCQ = ({ id, isDarkMode }) => {
                 <Button
                   variant="contained"
                   onClick={() => setVisibleCount((prevCount) => prevCount + 5)}
-                  sx={{ mt: 2 }}
+                  sx={{
+                    mt: 2,
+                    fontFamily: "Inter",
+                    fontSize: "14px",
+                    backgroundColor: "#16AA54",
+                    textDecoration: "none",
+                  }}
                 >
                   Need More
                 </Button>

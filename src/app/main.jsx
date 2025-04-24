@@ -134,7 +134,7 @@ const Main = ({ children }) => {
               )}
               <Box sx={{ display: "flex", flexDirection: "column" }}>
                 <Box>
-                  <GreetingCardNew />
+                {!(pathname.includes("lecture-listings/")) &&<GreetingCardNew />}
                 </Box>
                 {children}
                 <Box sx={{ mt: "auto" }}>

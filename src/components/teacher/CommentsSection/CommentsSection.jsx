@@ -46,22 +46,43 @@ const ReplyCard = ({ reply, isDarkMode, secondaryColor, loading }) => {
         <UserImage
           profilePic={repliedBy.profile_pic}
           name={repliedBy.full_name}
-          width={36}
-          height={36}
+          width={32}
+          height={32}
         />
       </Box>
       <Box>
-        <Typography
-          variant="body2"
-          fontWeight="bold"
-          color={isDarkMode ? "white" : "black"}
+      <Box sx={{display:"flex", gap:"8px"}}>
+      <Typography
+          sx={{
+            color: "#3B3D3B",
+              fontFamily: "Inter",
+              fontSize: "14px",
+              fontStyle: "normal",
+              fontWeight: 400,
+              lineHeight: "12px",
+          }}
         >
           {repliedBy.full_name || "Anonymous"}
         </Typography>
-        <Typography variant="caption" color={secondaryColor}>
-          {formatDistanceToNow(new Date(reply.replied_at), { addSuffix: true })}
+        <Typography sx={{
+          color: "#8C8F90",
+              fontFamily: "Inter",
+              fontSize: "12px",
+              fontStyle: "normal",
+              fontWeight: 400,
+              lineHeight: "12px",
+        }}>
+          ({formatDistanceToNow(new Date(reply.replied_at), { addSuffix: true })})
         </Typography>
-        <Typography variant="body2" mt={0.5} color={secondaryColor}>
+      </Box>
+        
+        <Typography sx={{color: "#3B3D3B",
+            fontFamily: "Inter",
+            fontSize: "14px",
+            fontStyle: "normal",
+            fontWeight: 400,
+            lineHeight: "16.5px",
+            marginTop:"4px"}}>
           {reply.reply_text}
         </Typography>
       </Box>
@@ -113,24 +134,52 @@ const CommentCard = ({
         <UserImage
           profilePic={comment.made_by?.profile_pic}
           name={comment.made_by?.full_name}
-          width={48}
-          height={48}
+          width={32}
+          height={32}
         />
       </Box>
       <Box flex={1}>
+        <Box sx={{ display: "flex", gap: "4px" }}>
+          <Typography
+            sx={{
+              color: "#3B3D3B",
+              fontFamily: "Inter",
+              fontSize: "14px",
+              fontStyle: "normal",
+              fontWeight: 400,
+              lineHeight: "12px",
+            }}
+          >
+            {comment.made_by?.full_name || "Anonymous"}
+          </Typography>
+          <Typography
+            sx={{
+              color: "#8C8F90",
+              fontFamily: "Inter",
+              fontSize: "12px",
+              fontStyle: "normal",
+              fontWeight: 400,
+              lineHeight: "12px",
+            }}
+          >
+            (
+            {formatDistanceToNow(new Date(comment.created_at), {
+              addSuffix: true,
+            })}
+            )
+          </Typography>
+        </Box>
         <Typography
-          variant="body1"
-          fontWeight="bold"
-          color={isDarkMode ? "white" : "black"}
+          sx={{
+            color: "#3B3D3B",
+            fontFamily: "Inter",
+            fontSize: "14px",
+            fontStyle: "normal",
+            fontWeight: 400,
+            lineHeight: "16.5px",
+            marginTop:"4px"
+          }}
         >
-          {comment.made_by?.full_name || "Anonymous"}
-        </Typography>
-        <Typography variant="caption" color={secondaryColor}>
-          {formatDistanceToNow(new Date(comment.created_at), {
-            addSuffix: true,
-          })}
-        </Typography>
-        <Typography variant="body2" mt={1} color={secondaryColor}>
           {comment.comment}
         </Typography>
         <Box display="flex" alignItems="center" mt={1}>
@@ -183,12 +232,12 @@ const CommentCard = ({
               color="primary"
               sx={{
                 ml: 1,
-                backgroundColor: isDarkMode ? "#FFD700" : "#E3F2FD",
+                backgroundColor: "#e3fde3",
               }}
               onClick={handleComment}
               aria-label="Send reply"
             >
-              <FaPaperPlane color={isDarkMode ? "#000" : "#0288D1"} />
+              <FaPaperPlane color={"#21d102"} />
             </IconButton>
           </Box>
         )}
@@ -302,16 +351,23 @@ const CommentsSection = ({ id }) => {
       <Box>
         <Box display="flex" alignItems="center" pb={2}>
           <Typography
-            variant="h6"
-            fontWeight="bold"
-            color={isDarkMode ? "white" : "black"}
+            sx={{
+              color: "#3B3D3B",
+              textAlign: "center",
+              fontFeatureSettings: "'liga' off, 'clig' off",
+              fontFamily: "Aptos",
+              fontSize: "18px",
+              fontStyle: "normal",
+              fontWeight: 600,
+              lineHeight: "24px",
+            }}
           >
             Comments
           </Typography>
           {commentData.length > 0 && (
             <Box
               sx={{
-                backgroundColor: isDarkMode ? primaryColor : "#FFD700",
+                backgroundColor: "#a5e85d",
                 width: 34,
                 height: 34,
                 marginLeft: 1,
@@ -399,12 +455,12 @@ const CommentsSection = ({ id }) => {
             color="primary"
             sx={{
               ml: 1,
-              backgroundColor: isDarkMode ? "#FFD700" : "#E3F2FD",
+              backgroundColor: "#e3fde3",
             }}
             onClick={handleSubmitComment}
             aria-label="Send comment"
           >
-            <FaPaperPlane color={isDarkMode ? "#000" : "#0288D1"} />
+            <FaPaperPlane color={"#21d102"} />
           </IconButton>
         </Box>
       </Box>

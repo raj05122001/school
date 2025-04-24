@@ -19,7 +19,7 @@ import axios from "axios";
 import { BASE_URL_MEET } from "@/constants/apiconfig";
 import usePresignedUrl from "@/hooks/usePresignedUrl";
 
-const VideoPlayer = ({ id, duration=1e101 }) => {
+const VideoPlayer = ({ id, duration = 1e101 }) => {
   const { s3FileName } = useContext(AppContextProvider);
   const { fetchPresignedUrl } = usePresignedUrl()
   const userDetails = decodeToken(Cookies.get("ACCESS_TOKEN"));
@@ -27,11 +27,11 @@ const VideoPlayer = ({ id, duration=1e101 }) => {
   const [suggestionData, setSuggestionData] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const playerRef = useRef(null);
-  const [videoUrl,setVideoUrl]=useState("")
+  const [videoUrl, setVideoUrl] = useState("");
 
-  useEffect(()=>{
-    getSignedUrlForObject()
-  },[id])
+  useEffect(() => {
+    getSignedUrlForObject();
+  }, [id]);
 
   const getSignedUrlForObject = async () => {
     const data = {
@@ -188,7 +188,7 @@ const VideoPlayer = ({ id, duration=1e101 }) => {
         </Box>
       ) : (
         <Box sx={{ width: "100%", height: "90%" }}>
-          {videoUrl? breakpointPlayer : ""}
+          {videoUrl ? breakpointPlayer : ""}
         </Box>
       )}
 
@@ -209,7 +209,7 @@ export const BreakpointPlayer = ({
   onPlayerReady,
   s3FileName,
   duration,
-  videoUrl
+  videoUrl,
 }) => {
   const userDetails = decodeToken(Cookies.get("ACCESS_TOKEN"));
   const videoRef = useRef(null);
@@ -244,7 +244,7 @@ export const BreakpointPlayer = ({
       const progressControl = playerRef.current.controlBar.progressControl;
 
       markers.forEach((marker) => {
-        const left = ((marker.start / 1000) / total) * 100 + "%";
+        const left = (marker.start / 1000 / total) * 100 + "%";
         const el = document.createElement("div");
         el.className = "vjs-marker";
         el.style.left = left;
@@ -297,10 +297,7 @@ export const BreakpointPlayer = ({
         src={`https://d3515ggloh2j4b.cloudfront.net/videos/${s3FileName}${id}.mp4?v=2`}
         type="video/mp4"
       /> */}
-      <source
-        src={videoUrl}
-        type="video/mp4"
-      />
+      <source src={videoUrl} type="video/mp4" />
     </video>
   );
 };
@@ -327,7 +324,7 @@ export const Suggestion = ({ suggestionData }) => {
         mx: "auto",
       }}
     >
-      <Grid item xs={12} sm={0.6} py={2}>
+      {/* <Grid item xs={12} sm={0.6} py={2}>
         {uniqueTitles.length > 0 && (
           <Button
             onClick={() => scrollContainer("left")}
@@ -349,7 +346,7 @@ export const Suggestion = ({ suggestionData }) => {
             ←
           </Button>
         )}
-      </Grid>
+      </Grid> */}
       <Grid
         item
         xs={12}
@@ -375,46 +372,72 @@ export const Suggestion = ({ suggestionData }) => {
               onClick={() => handelChatBotText(originalTitle)}
               sx={{
                 overflow: "hidden",
-                bgcolor: "grey.300",
+                backgroundColor: "#fff",
                 marginRight: "4px",
-                "&:hover": {
-                  bgcolor: "grey.400",
-                  ringColor: "green.400",
-                  boxShadow: "0 0 5px rgba(0, 128, 0, 0.2)",
-                },
-                py: 1,
-                borderRadius: 2,
-                transition: "all 0.3s ease-out",
-                "& .shine": {
-                  position: "absolute",
-                  right: 0,
-                  width: 24,
-                  height: 96,
-                  mt: -1,
-                  opacity: 0.1,
-                  bgcolor: "white",
-                  rotate: "12deg",
-                  transform: "translateX(8px)",
-                  transition: "transform 1s",
-                },
-                "&:hover .shine": {
-                  transform: "translateX(-100%)",
-                },
+                padding: "10px 10px",
+                borderRadius: 6,
               }}
             >
-              <Box className="shine" />
               <Typography
-                variant="body2"
-                sx={{ color: "primary.main", fontWeight: "bold" }}
+                sx={{
+                  color: "#16AA54",
+                  textAlign: "center",
+                  fontFamily: "Inter",
+                  fontSize: "14px",
+                  fontStyle: "normal",
+                  fontWeight: "550",
+                  lineHeight: "16px" /* 15.6px */,
+                  letterSpacing: "-0.36px",
+                }}
               >
-                ✦ {originalTitle}
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="12"
+                  height="12"
+                  viewBox="0 0 12 12"
+                  fill="none"
+                >
+                  <path
+                    d="M4.40965 0.09375C3.8008 3.40099 3.30722 3.89454 0 4.50339C3.30725 5.11225 3.8008 5.6058 4.40965 8.91304C5.01851 5.6058 5.51206 5.11225 8.81931 4.50339C5.51206 3.89454 5.01848 3.40099 4.40965 0.09375Z"
+                    fill="url(#paint0_linear_441_5884)"
+                  />
+                  <path
+                    d="M9.19597 6.29785C8.80879 8.40112 8.49485 8.71504 6.3916 9.10221C8.49485 9.48941 8.80879 9.80333 9.19597 11.9066C9.58314 9.80333 9.89709 9.48938 12.0003 9.10221C9.89703 8.71504 9.58317 8.40112 9.19597 6.29785Z"
+                    fill="url(#paint1_linear_441_5884)"
+                  />
+                  <defs>
+                    <linearGradient
+                      id="paint0_linear_441_5884"
+                      x1="4.40965"
+                      y1="0.09375"
+                      x2="4.40965"
+                      y2="8.91304"
+                      gradientUnits="userSpaceOnUse"
+                    >
+                      <stop stop-color="#1F8505" />
+                      <stop offset="1" stop-color="#12DD00" />
+                    </linearGradient>
+                    <linearGradient
+                      id="paint1_linear_441_5884"
+                      x1="9.19595"
+                      y1="6.29785"
+                      x2="9.19595"
+                      y2="11.9066"
+                      gradientUnits="userSpaceOnUse"
+                    >
+                      <stop stop-color="#1F8505" />
+                      <stop offset="1" stop-color="#12DD00" />
+                    </linearGradient>
+                  </defs>
+                </svg>{" "}
+                {originalTitle}
                 {originalTitle.includes("?") ? "" : "?"}
               </Typography>
             </IconButton>
           );
         })}
       </Grid>
-      <Grid item xs={12} sm={0.6} py={2}>
+      {/* <Grid item xs={12} sm={0.6} py={2}>
         {uniqueTitles.length > 0 && (
           <Button
             onClick={() => scrollContainer("right")}
@@ -436,7 +459,7 @@ export const Suggestion = ({ suggestionData }) => {
             →
           </Button>
         )}
-      </Grid>
+      </Grid> */}
     </Grid>
   );
 };

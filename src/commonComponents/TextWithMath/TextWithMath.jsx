@@ -2,7 +2,7 @@ import { Box, Typography } from "@mui/material";
 import React from "react";
 import MathJax from "react-mathjax2";
 
-const TextWithMath = ({ text, color, isShow = false}) => {
+const TextWithMath = ({ text, color, isShow = false, textStyle = {} }) => {
   const isArray = Array.isArray(text);
   const textArray = isArray ? text : [text];
   // Combined regex to match $$...$$ or \[...\]
@@ -16,7 +16,7 @@ const TextWithMath = ({ text, color, isShow = false}) => {
       ?.replace(/(?<!\d)\. /g, ".<br>")
       ?.replace(/\\\\n\\\\n/g, "<br><br>")
       ?.replace(/\\\n\\\n/g, "<br><br>")
-      ?.replace(/\\n\\n/g,"<br><br>")
+      ?.replace(/\\n\\n/g, "<br><br>")
       ?.replace(/\n\n/g, "<br><br>")
       ?.replace(/\\\\n/g, "<br>")
       ?.replace(/\\\n/g, "<br>")
@@ -39,24 +39,52 @@ const TextWithMath = ({ text, color, isShow = false}) => {
           <Typography
             variant="span"
             key={`${offset}-text`}
-            sx={{color : color==="red"? "red" :color==="green"? "green":""}}
+            sx={{
+              fontSize: "14px",
+              fontFamily: "Inter",
+              fontWeight: "500",
+              lineHeight: "18px",
+              letterSpacing: "-0.42px",
+              color:
+                color === "red"
+                  ? "red"
+                  : color === "green"
+                  ? "green"
+                  : "#3B3D3B",
+
+              ...textStyle,
+            }}
             dangerouslySetInnerHTML={{ __html: replaceString(textBefore) }}
           />
         );
       }
-      if(isShow){
-        console.log(color)
+      if (isShow) {
+        console.log(color);
       }
-      
 
       // Determine which LaTeX delimiter was used
       const latexContent = p2 || p3;
       if (latexContent) {
-        const cleanedLatex = latexContent?.replace(/\n/g, " ")?.replace(/\\\\/g, "\\");
+        const cleanedLatex = latexContent
+          ?.replace(/\n/g, " ")
+          ?.replace(/\\\\/g, "\\");
         elements.push(
           <Typography
             variant="span"
-            sx={{ fontSize: "1rem", lineHeight: "1rem", color : color==="red"? "red" :color==="green"? "green":""}}
+            sx={{
+              fontSize: "14px",
+              fontWeight: 500,
+              lineHeight: "18px",
+              letterSpacing: "-0.42px",
+              fontFamily: "Inter",
+              color:
+                color === "red"
+                  ? "red"
+                  : color === "green"
+                  ? "green"
+                  : "#3B3D3B",
+              ...textStyle,
+            }}
             key={`${offset}-math`}
           >
             <MathJax.Node inline key={`${offset}-math-node`}>
@@ -78,7 +106,16 @@ const TextWithMath = ({ text, color, isShow = false}) => {
           variant="span"
           key={`remaining-text`}
           dangerouslySetInnerHTML={{ __html: replaceString(remainingText) }}
-          sx={{color : color==="red"? "red" :color==="green"? "green":""}}
+          sx={{
+            fontSize: "14px",
+            fontWeight: "500",
+            lineHeight: "18px",
+            letterSpacing: "-0.42px",
+            fontFamily: "Inter",
+            color:
+              color === "red" ? "red" : color === "green" ? "green" : "#3B3D3B",
+            ...textStyle,
+          }}
         />
       );
     }
@@ -88,7 +125,11 @@ const TextWithMath = ({ text, color, isShow = false}) => {
 
   return (
     <MathJax.Context input="tex">
-      <Box sx={{color : color==="red"? "red" :color==="green"? "green":""}}>
+      <Box
+        sx={{
+          color: color === "red" ? "red" : color === "green" ? "green" : "",
+        }}
+      >
         {textArray?.map((part, index) => (
           <Box key={index}>{processText(part)}</Box>
         ))}
@@ -98,9 +139,6 @@ const TextWithMath = ({ text, color, isShow = false}) => {
 };
 
 export default TextWithMath;
-
-
-
 
 // import { Box, Typography } from "@mui/material";
 // import React from "react";
@@ -166,4 +204,3 @@ export default TextWithMath;
 // };
 
 // export default TextWithMath;
-

@@ -27,8 +27,12 @@ const HighlightsComponent = ({
       }
 
       if (highlightsBoxRef.current) {
-        const { scrollTop, scrollHeight, clientHeight } = highlightsBoxRef.current;
-        if (scrollHeight > clientHeight && scrollTop + clientHeight >= scrollHeight - 5) {
+        const { scrollTop, scrollHeight, clientHeight } =
+          highlightsBoxRef.current;
+        if (
+          scrollHeight > clientHeight &&
+          scrollTop + clientHeight >= scrollHeight - 5
+        ) {
           await updateMolMark();
         } else if (scrollHeight === clientHeight) {
           await updateMolMark();
@@ -37,13 +41,28 @@ const HighlightsComponent = ({
     };
 
     highlightsBoxRef.current?.addEventListener("scroll", handleScrollAndUpdate);
-    highlightsBoxRef.current?.addEventListener('mouseenter', handleScrollAndUpdate);
-    highlightsBoxRef.current?.addEventListener('mouseleave', handleScrollAndUpdate);
+    highlightsBoxRef.current?.addEventListener(
+      "mouseenter",
+      handleScrollAndUpdate
+    );
+    highlightsBoxRef.current?.addEventListener(
+      "mouseleave",
+      handleScrollAndUpdate
+    );
 
     return () => {
-      highlightsBoxRef.current?.removeEventListener("scroll", handleScrollAndUpdate);
-      highlightsBoxRef.current?.removeEventListener('mouseenter', handleScrollAndUpdate);
-      highlightsBoxRef.current?.removeEventListener('mouseleave', handleScrollAndUpdate);
+      highlightsBoxRef.current?.removeEventListener(
+        "scroll",
+        handleScrollAndUpdate
+      );
+      highlightsBoxRef.current?.removeEventListener(
+        "mouseenter",
+        handleScrollAndUpdate
+      );
+      highlightsBoxRef.current?.removeEventListener(
+        "mouseleave",
+        handleScrollAndUpdate
+      );
     };
   }, [isStudent, marksData?.viewed_highlights]);
 
@@ -84,7 +103,7 @@ const HighlightsComponent = ({
     }
   };
 
-  console.log("Decisions", decisions)
+  console.log("Decisions", decisions);
 
   useEffect(() => {
     fetchHighlight();
@@ -117,16 +136,19 @@ const HighlightsComponent = ({
       sx={{
         p: 3,
         width: "100%",
-        borderBottomLeftRadius: "8px",
-        borderBottomRightRadius: "8px",
-        color: isDarkMode ? "#F0EAD6" : "#36454F",
-        background: isDarkMode
-          ? "radial-gradient(circle at 10% 20%, rgb(90, 92, 106) 0%, rgb(32, 45, 58) 81.3%)"
-          : "radial-gradient(circle at 18.7% 37.8%, rgb(250, 250, 250) 0%, rgb(225, 234, 238) 90%)",
+        borderBottomLeftRadius: "16px",
+        borderBottomRightRadius: "16px",
+        color: "#3B3D3B",
+        backgroundColor: "#fff",
         overflowY: "auto",
         height: "100%",
         minHeight: 400,
         maxHeight: 500,
+        scrollbarWidth: "none", // Firefox
+        msOverflowStyle: "none", // IE/Edge
+        "&::-webkit-scrollbar": {
+          display: "none", // Chrome, Safari, Edge
+        },
       }}
       ref={highlightsBoxRef}
     >
@@ -147,17 +169,29 @@ const HighlightsComponent = ({
             <Box sx={{ textAlign: "justify", mt: 2 }}>
               {decisions?.map((section) => (
                 <Box key={section.title} sx={{ mb: 2 }}>
-                  <Typography variant="subtitle1" sx={{ fontWeight: "bold" }}>
+                  <Typography
+                    sx={{
+                      color: "#3B3D3B",
+                      fontFamily: "Inter",
+                      fontSize: "16px",
+                      fontStyle: "normal",
+                      fontWeight: "600",
+                      lineHeight: "20px",
+                      letterSpacing: "-0.48px",
+                    }}
+                  >
                     {section.title} -
                   </Typography>
-                  <Box component="ul" sx={{ pl: 2 }}>
+                  <Box component="ul" sx={{ pl: 2, py:2 }}>
                     {section?.keypoints?.map((point, index) => (
                       <Box
                         component="li"
                         key={index}
-                        sx={{ fontSize: "0.875rem" }}
+                        sx={{ fontSize: "14px", fontFamily:"Inter", lineHeight:"18px", p:0.5 }}
                       >
-                      <TextWithMath text={point?.replace(/^- /, "")?.trim()} />
+                        <TextWithMath
+                          text={point?.replace(/^- /, "")?.trim()}
+                        />
                         {/* {renderTextWithMathJax()} */}
                       </Box>
                     ))}
