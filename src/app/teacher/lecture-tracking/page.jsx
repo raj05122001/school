@@ -299,21 +299,18 @@ const LectureTabs = () => {
         sx={{
           borderRadius: "20px",
           backgroundColor: "#fff",
-          padding: "24px 32px 32px 32px",
-          maxWidth: "1300px",
-          margin: "0 auto",
+          padding: "32px",
+          // maxWidth: "1300px",
+          // margin: "0 auto",
           display: "flex",
           alignItems: "center",
           alignSelf: "stretch",
-          gap: "16px",
+          // gap: "16px",
         }}
       >
         <Grid
           container
-          spacing={2}
-          sx={{
-            margin: "auto",
-          }}
+          spacing={8}
         >
           {["COMPLETED", "UPCOMMING", "MISSED", "CANCELLED"]?.map((value) =>
             tabLoader ? (
@@ -332,7 +329,7 @@ const LectureTabs = () => {
                   onClick={() => handleChange(value, "status")}
                   sx={{
                     display: "flex",
-                    width: "238px",
+                    width: "100%",
                     height: "50px",
                     padding: "5.5px 9px",
                     justifyContent: "space-between",

@@ -273,16 +273,25 @@ const Sidebar = ({ open, setOpen }) => {
                         minHeight: 48,
                         margin: "8px 0",
                         pl: open ? 2 : 1,
-                        borderRight:
-                          pathname === item.href ||
-                          (item.text === "Lecture" &&
-                            [
-                              "/teacher/lecture-listings",
-                              "/teacher/lecture-schedule",
-                              "/teacher/lecture-tracking",
-                            ].includes(pathname))
-                            ? "4px solid #12DD00"
-                            : "none", // Use a solid color for the border
+                        backgroundColor: pathname === item.href ||
+                        (item.text === "Lecture" &&
+                          [
+                            "/teacher/lecture-listings",
+                            "/teacher/lecture-schedule",
+                            "/teacher/lecture-tracking",
+                          ].includes(pathname))
+                          ? "#FEECF0":"transparent",
+                          borderRadius:"6px"
+                        // borderRight:
+                        //   pathname === item.href ||
+                        //   (item.text === "Lecture" &&
+                        //     [
+                        //       "/teacher/lecture-listings",
+                        //       "/teacher/lecture-schedule",
+                        //       "/teacher/lecture-tracking",
+                        //     ].includes(pathname))
+                        //     ? "4px solid #E7002A"
+                        //     : "none", // Use a solid color for the border
                       }}
                       onClick={() => handleItemClick(index, item)}
                     >
@@ -296,7 +305,7 @@ const Sidebar = ({ open, setOpen }) => {
                                 "/teacher/lecture-schedule",
                                 "/teacher/lecture-tracking",
                               ].includes(pathname))
-                              ? "#16AA54"
+                              ? "#E7002A"
                               : "#8C8F90",
                           minWidth: open ? "unset" : "20px",
                           mr: open ? 2 : 0,
@@ -321,7 +330,7 @@ const Sidebar = ({ open, setOpen }) => {
                                   "/teacher/lecture-schedule",
                                   "/teacher/lecture-tracking",
                                 ].includes(pathname))
-                                ? "#16AA54"
+                                ? "#E7002A"
                                 : "#8C8F90",
                           }}
                         />
@@ -358,7 +367,7 @@ const Sidebar = ({ open, setOpen }) => {
                                     sx={{
                                       color:
                                         pathname === child.href
-                                          ? "#16AA54"
+                                          ? "#E7002A"
                                           : "#8C8F90",
                                       ml: 2,
                                     }}

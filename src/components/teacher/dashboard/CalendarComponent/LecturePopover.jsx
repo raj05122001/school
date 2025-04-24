@@ -100,7 +100,7 @@ const LecturePopover = ({ data, isOrganizer }) => {
             color: "white", // Replace with your primary color
             fontSize: "0.75rem", // Equivalent to text-xs
             fontWeight: 400, // Equivalent to font-normal
-            backgroundColor:"#16AA54",
+            backgroundColor:"#F6003D",
             padding:"5px",
             width:"60px",
             borderRadius:"7px",

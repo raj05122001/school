@@ -21,7 +21,7 @@
     padding: 5px;
     border-radius: 5px;
     border-width: 2px;
-    border-color: #16AA54;
+    border-color: #E7002A;
     transition: all 0.3s ease;
   }
   
@@ -92,4 +92,12 @@
     font-family: Inter !important;
     font-weight: 600 !important;
     line-height: 20px !important;
+  }
+
+  .fc-event {
+    background-color: #FEECF0 !important;
+  }
+
+  .fc-day-today{
+background-color: transparent !important;
   }

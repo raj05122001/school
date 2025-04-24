@@ -57,8 +57,6 @@ total_duration:0
     }
   };
 
-
-  
   const darkModeStyles = {
     backgroundColor: "#1a1a1a",
     color: "#ffffff",

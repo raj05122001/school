@@ -32,7 +32,7 @@ function LectureDuration({ averageDuration }) {
             fill: "var(--Secondary_Black, #141514)",
             boxShadow: "0 4px 30px rgba(0, 0, 0, 0.1)",
             borderRadius: "100%",
-            backgroundColor: "#16AA54",
+            backgroundColor: "#001B72",
           }}
         >
           {/* Card Content */}
@@ -126,9 +126,9 @@ function FacebookCircularProgress({ value = 0 }) {
       <CircularProgress
         variant="determinate"
         sx={(theme) => ({
-          color: "#12DD00",
+          color: "#001B72",
           ...theme.applyStyles("dark", {
-            color: "#12DD00",
+            color: "#001B72",
           }),
         })}
         size={170}

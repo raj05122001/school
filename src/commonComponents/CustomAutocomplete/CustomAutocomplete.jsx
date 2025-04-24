@@ -55,7 +55,7 @@ const CustomAutocomplete = ({
               "&.Mui-focused": {
                 fontSize: "16px",
                 fontFamily: "Inter",
-                color:"#16AA54"
+                color:"#000"
               },
             },
           }}
@@ -68,10 +68,10 @@ const CustomAutocomplete = ({
               fontFamily: "Inter",
               backgroundColor: isDarkMode ? "" : "rgba(255, 255, 255, 0.5)",
               "& .MuiOutlinedInput-notchedOutline": {
-                color:"#16AA54"
+                color:"#001B72"
               },
               "&.Mui-focused .MuiOutlinedInput-notchedOutline": {
-                borderColor: "#16AA54", // this is the key line
+                borderColor: "#001B72", // this is the key line
               },
             },
           }}

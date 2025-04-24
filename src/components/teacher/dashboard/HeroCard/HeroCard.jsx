@@ -15,7 +15,7 @@ function HeroCard({ averageDuration }) {
         flexShrink: 0,
         borderRadius: "20px",
         padding: "15px 0px 0px 16px",
-        background: "var(--Green-dark-2, #174321);",
+        background: "#E7002A",
       }}
     >
       <Box
@@ -65,8 +65,8 @@ function HeroCard({ averageDuration }) {
             height: "253px",
             aspectRatio: "33 / 28",
             background:
-              'url("/banner 1_illustration 1.png") lightgray 50% / cover no-repeat',
-            backgroundColor: "var(--Green-dark-2, #174321);",
+              'url("/banner 1_illustration 2.png") lightgray 50% / cover no-repeat',
+            backgroundColor: "#E7002A",
             marginTop: "48px",
             marginRight: "2px",
             // borderRadius: "8px",

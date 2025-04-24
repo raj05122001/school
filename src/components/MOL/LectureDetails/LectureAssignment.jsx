@@ -344,10 +344,10 @@ const LectureAssignment = ({ id, isDarkMode, class_ID, isEdit }) => {
                   sx={{
                     fontFamily: "Inter",
                     fontSize: "14px",
-                    backgroundColor: "#16AA54",
+                    backgroundColor: "#E7002A",
                     textTransform: "none",
                     "&:hover": {
-                      backgroundColor: "#7ecf73", // customize these shades as needed
+                      backgroundColor: "#E7002A", // customize these shades as needed
                     },
                   }}
                   onClick={() => setOpenDialog(true)}

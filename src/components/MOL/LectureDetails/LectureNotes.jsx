@@ -234,8 +234,8 @@ const LectureNotes = ({
                         minHeight: "36px", // Set a consistent button height
                         lineHeight: "1.5", // Ensure proper vertical alignment
                         textTransform: "none", // Optional: Keep text casing as it is
-                        color: "#16AA54",
-                        borderColor: "#16AA54",
+                        color: "#E7002A",
+                        borderColor: "#E7002A",
                       }}
                     >
                       More Insights
@@ -303,7 +303,9 @@ const LectureNotes = ({
         <Button
           variant="contained"
           onClick={() => setVisibleCount((prevCount) => prevCount + 5)}
-          sx={{ mt: 2, fontFamily:"Inter", fontSize:"14px", backgroundColor:"#16AA54", textTransform:"none" }}
+          sx={{ mt: 2, fontFamily:"Inter", fontSize:"14px", backgroundColor:"#E7002A", textTransform:"none", "&:hover": {
+            backgroundColor: "#E7002A", // customize these shades as needed
+          }, }}
         >
           Need More
         </Button>

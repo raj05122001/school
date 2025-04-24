@@ -65,7 +65,7 @@ const LectureReferrence = ({ id, isDarkMode }) => {
   };
 
   const refLinkCSS = {
-    color: "#1dab0e",
+    color: "#E7002A",
     fontSize: "14px",
     fontStyle: "normal",
     fontWeight: 500,
@@ -322,8 +322,12 @@ const LectureReferrence = ({ id, isDarkMode }) => {
               sx={{ mt: 2,
                   fontFamily: "Inter",
                   fontSize: "14px",
-                  backgroundColor: "#16AA54",
-                  textDecoration: "none", }}
+                  backgroundColor: "#E7002A",
+                  textDecoration: "none", 
+                  "&:hover": {
+                    backgroundColor: "#E7002A", // customize these shades as needed
+                  },
+                }}
             >
               Need More
             </Button>

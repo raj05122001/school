@@ -267,7 +267,7 @@ const LectureCard = ({ lecture, getAllLecture = () => {} }) => {
                   >
                     <FaCloudUploadAlt
                       style={{
-                        color: "#4bb344",
+                        color: "#FF3B30",
                         cursor: "pointer",
                       }}
                       size={24}
@@ -328,7 +328,7 @@ const LectureCard = ({ lecture, getAllLecture = () => {} }) => {
                 >
                   <FaEdit
                     style={{
-                      color: "#4bb344",
+                      color: "#FF3B30",
                       cursor: "pointer",
                     }}
                     size={20}

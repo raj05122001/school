@@ -455,12 +455,12 @@ const CommentsSection = ({ id }) => {
             color="primary"
             sx={{
               ml: 1,
-              backgroundColor: "#e3fde3",
+              backgroundColor: "#FEECF0",
             }}
             onClick={handleSubmitComment}
             aria-label="Send comment"
           >
-            <FaPaperPlane color={"#21d102"} />
+            <FaPaperPlane color={"#E7002A"} />
           </IconButton>
         </Box>
       </Box>

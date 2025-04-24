@@ -377,24 +377,20 @@ function HeaderMOL({
         width: "100%",
         height: "60px",
         padding: "8px 4px",
-        justifyContent: "center",
-        alignItems: "flex-start",
-        gap: "406px",
+        justifyContent:'space-between',
+        // alignItems: "flex-start",
+        // gap: "406px",
       }}
     >
       <Typography
         sx={{
           display: "flex",
-          margin: "auto",
-          width: "600px",
           height: "48px",
           fontSize: "28px",
           fontFamily: "Inter, sans-serif",
           fontWeight: 700,
           //   backgroundColor: "red",
           paddingLeft: "8px",
-          justifyContent: "space-between",
-          alignItems: "center",
           flexShrink: 0,
         }}
       >
@@ -459,13 +455,6 @@ function HeaderMOL({
           <Button
             variant="contained"
             onClick={() => handleReleased(!lectureData?.is_released)}
-            // startIcon={
-            //     lectureData?.is_released ? (
-            //       <MdUnpublished size={22} />
-            //     ) : (
-            //       <MdPublishedWithChanges size={22} />
-            //     )
-            //   }
             sx={{
               display: "flex",
               padding: "10px 16px",
@@ -473,8 +462,11 @@ function HeaderMOL({
               alignItems: "center",
               gap: "8px",
               borderRadius: "8px",
-              backgroundColor: "#141514",
+              backgroundColor: "#E7002A",
               textTransform: "none",
+              "&:hover": {
+                backgroundColor: "#E7002A", // optional: slightly lighter on hover
+            },
             }}
           >
             <Typography

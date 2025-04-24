@@ -97,15 +97,15 @@ const LectureManager = () => {
                 onClick={handleOpenDialog}
                 sx={{
                   textTransform:"none",
-                  backgroundColor: "#95e681",
+                  backgroundColor: "#E7002A",
                   fontFamily: "Inter, sans-serif",
                   fontSize:"18px",
                   transition: "all 150ms ease-in-out",
                   color: "#003366", // Dark blue for text
 
                   ":hover": {
-                    backgroundColor: "#69cc66", // Slightly darker
-                    boxShadow: "0 0 10px 0 #6fcc66 inset, 0 0 10px 4px #68cc66", // Matching hover color
+                    backgroundColor: "#E7002A", // Slightly darker
+                    boxShadow: "0 0 10px 0 #E7002A inset, 0 0 10px 4px #E7002A", // Matching hover color
                   },
                 }}
               >
@@ -119,13 +119,13 @@ const LectureManager = () => {
                   textTransform:"none",
                   fontFamily: "Inter, sans-serif",
                   fontSize:"18px",
-                  backgroundColor: "#95e681",
+                  backgroundColor: "#E7002A",
                   transition: "all 150ms ease-in-out",
                   color: "#003366", // Dark blue for text
 
                   ":hover": {
-                    backgroundColor: "#69cc66", // Slightly darker
-                    boxShadow: "0 0 10px 0 #6fcc66 inset, 0 0 10px 4px #68cc66", // Matching hover color
+                    backgroundColor: "#E7002A", // Slightly darker
+                    boxShadow: "0 0 10px 0 #E7002A inset, 0 0 10px 4px #E7002A", // Matching hover color
                   },
                 }}
               >
@@ -139,13 +139,13 @@ const LectureManager = () => {
                   textTransform:"none",
                   fontFamily: "Inter, sans-serif",
                   fontSize:"18px",
-                  backgroundColor: "#95e681",
+                  backgroundColor: "#E7002A",
                   transition: "all 150ms ease-in-out",
                   color: "#003366", // Dark blue for text
 
                   ":hover": {
-                    backgroundColor: "#69cc66", // Slightly darker
-                    boxShadow: "0 0 10px 0 #6fcc66 inset, 0 0 10px 4px #68cc66", // Matching hover color
+                    backgroundColor: "#E7002A", // Slightly darker
+                    boxShadow: "0 0 10px 0 #E7002A inset, 0 0 10px 4px #E7002A", // Matching hover color
                   },
                 }}
               >
@@ -171,7 +171,7 @@ const LectureManager = () => {
               fontFamily: "Inter, sans-serif",
               ".MuiTabs-flexContainer": {
                 gap: 2,
-                background: "linear-gradient(120deg, #d4fc79 0%, #96e6a1 100%)",
+                background: "linear-gradient(120deg, #FEECF0 0%, #FEECF0 100%)",
                 padding: 1,
                 borderRadius: "12px",
                 justifyContent: "center",

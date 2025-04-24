@@ -471,7 +471,7 @@ const LectureAnalytics = ({ lectureId }) => {
                 margin: "4px",
                 // border: "1px solid #1976d2", // Use primary color or any color you prefer
                 borderRadius: "18px",
-                backgroundColor: "#D7FCE0", // Light background color for button-like effect
+                backgroundColor: "#FEECF0", // Light background color for button-like effect
                 color: "#174321", // Primary color for text
                 cursor: "pointer", // Makes it feel clickable
                 fontSize: "12px", // Adjust font size if needed

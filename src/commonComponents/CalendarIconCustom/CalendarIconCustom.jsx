@@ -36,7 +36,7 @@ const CalendarIconCustom = ({ date }) => {
         }}
         dangerouslySetInnerHTML={{
           __html: `<svg xmlns="http://www.w3.org/2000/svg" width="37" height="13" viewBox="0 0 37 13" fill="none">
-            <path d="M36.1144 12.5H0.00292969V11C0.00292969 4.92487 4.9278 0 11.0029 0H25.1144C31.1895 0 36.1144 4.92487 36.1144 11V12.5Z" fill="#16AA54"/>
+            <path d="M36.1144 12.5H0.00292969V11C0.00292969 4.92487 4.9278 0 11.0029 0H25.1144C31.1895 0 36.1144 4.92487 36.1144 11V12.5Z" fill="#E7002A"/>
           </svg>`,
         }}
       />
@@ -51,7 +51,7 @@ const CalendarIconCustom = ({ date }) => {
         }}
         dangerouslySetInnerHTML={{
           __html: `<svg xmlns="http://www.w3.org/2000/svg" width="37" height="36" viewBox="0 0 37 36" fill="none">
-            <rect x="0.00292969" width="36.1115" height="36" rx="11" fill="#E2FFEE"/>
+            <rect x="0.00292969" width="36.1115" height="36" rx="11" fill="#FEECF0"/>
           </svg>`,
         }}
       />

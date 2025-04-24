@@ -218,7 +218,7 @@ export default function Page({ suggestionInput, setIsOpenChatBot }) {
         zIndex: 99990,
         // borderRadius: 2,
         width: "100%",
-        height: "100vh",
+        height: "92vh",
         // boxShadow:
         //   "rgba(50, 50, 93, 0.25) 0px 50px 100px -20px, rgba(0, 0, 0, 0.3) 0px 30px 60px -30px, rgba(10, 37, 64, 0.35) 0px -2px 6px 0px inset",
         display: "flex",
@@ -423,7 +423,7 @@ export default function Page({ suggestionInput, setIsOpenChatBot }) {
           </Grid>
         )}
         {showChat && (
-          <Box sx={{ display: "flex", width: "100%", height: "80vh" }}>
+          <Box sx={{ display: "flex", width: "100%", height: "76vh" }}>
             {/* SideBar ChatHistory */}
             <Box sx={{ width: "30%", height: "100%" }}>
               {oldChats.length > 0 ? (
@@ -529,7 +529,7 @@ export default function Page({ suggestionInput, setIsOpenChatBot }) {
                               maxWidth: "85%",
                               bgcolor:
                                 message.role === "user"
-                                  ? "primary.light"
+                                  ? "#FEECF0"
                                   : "grey.300",
                               color: "text.primary",
                               borderRadius: 2,
@@ -640,7 +640,7 @@ export default function Page({ suggestionInput, setIsOpenChatBot }) {
                           endAdornment: (
                             <Box sx={{ display: "flex", alignItems: "center" }}>
                               <IconButton
-                                color="primary"
+                                color="#E7002A"
                                 onClick={() =>
                                   handleUserInput(userTextInput.trim())
                                 }
@@ -649,7 +649,7 @@ export default function Page({ suggestionInput, setIsOpenChatBot }) {
                                 {isLoading ? (
                                   <CircularProgress size={24} />
                                 ) : (
-                                  <FaArrowUp />
+                                  <FaArrowUp color="#E7002A" />
                                 )}
                               </IconButton>
                               {userTextInput && isLoading ? (

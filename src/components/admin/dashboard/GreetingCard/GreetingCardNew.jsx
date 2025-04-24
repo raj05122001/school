@@ -29,7 +29,7 @@ function GreetingCardNew() {
         width: "100%",
         height: "75px",
         padding: "13px 6px",
-        justifyContent:'space-between'
+        justifyContent: "space-between",
       }}
     >
       <Typography
@@ -49,11 +49,10 @@ function GreetingCardNew() {
           display: "flex",
           justifyContent: "space-between",
           alignItems: "center",
-          paddingRight:"12px",
+          paddingRight: "12px",
           gap: "12px",
         }}
       >
-
         {userDetails?.role === "ADMIN" && (
           <Button
             variant="contained"
@@ -65,11 +64,11 @@ function GreetingCardNew() {
               alignItems: "center",
               gap: "8px",
               borderRadius: "8px",
-              backgroundColor: "#141514",
+              backgroundColor: "#E7002A",
               textTransform: "none",
             }}
           >
-            <FiUpload style={{fontSize:"24px"}}/>
+            <FiUpload style={{ fontSize: "24px" }} />
             <Typography
               sx={{
                 color: "#fff",
@@ -85,8 +84,7 @@ function GreetingCardNew() {
               Upload
             </Typography>
           </Button>
-          
-        )}  
+        )}
         {userDetails?.role === "TEACHER" && (
           <Button
             variant="contained"
@@ -98,8 +96,11 @@ function GreetingCardNew() {
               alignItems: "center",
               gap: "8px",
               borderRadius: "8px",
-              backgroundColor: "#141514",
+              backgroundColor: "#E7002A",
               textTransform: "none",
+              "&:hover": {
+                background: "#E7002A", // optional: slightly lighter on hover
+              },
             }}
           >
             <span
@@ -151,16 +152,19 @@ function GreetingCardNew() {
                 fontFamily: "Inter Tight, sans-serif",
                 fontWeight: 700,
                 lineHeight: "24px",
+                "&:hover": {
+                  backgroundColor: "#E7002A", // optional: slightly lighter on hover
+                },
               }}
             >
               Create
             </Typography>
           </Button>
-        )} 
-        {userDetails?.role==="STUDENT" && (
+        )}
+        {userDetails?.role === "STUDENT" && (
           <Button
             variant="contained"
-            onClick={()=>router.push(`/student/lecture-listings/`)}
+            onClick={() => router.push(`/student/lecture-listings/`)}
             sx={{
               display: "flex",
               padding: "12px 16px",
@@ -168,11 +172,14 @@ function GreetingCardNew() {
               alignItems: "center",
               gap: "8px",
               borderRadius: "8px",
-              backgroundColor: "#141514",
+              backgroundColor: "#E7002A",
               textTransform: "none",
+              "&:hover": {
+                backgroundColor: "#E7002A", // optional: slightly lighter on hover
+            },
             }}
           >
-            <IoPlayCircleOutline style={{color:"#fff", fontSize:"24px"}}/>
+            <IoPlayCircleOutline style={{ color: "#fff", fontSize: "24px" }} />
             <Typography
               sx={{
                 color: "#fff",

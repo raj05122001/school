@@ -380,7 +380,7 @@ export const Suggestion = ({ suggestionData }) => {
             >
               <Typography
                 sx={{
-                  color: "#16AA54",
+                  color: "#E7002A",
                   textAlign: "center",
                   fontFamily: "Inter",
                   fontSize: "14px",
@@ -414,8 +414,8 @@ export const Suggestion = ({ suggestionData }) => {
                       y2="8.91304"
                       gradientUnits="userSpaceOnUse"
                     >
-                      <stop stop-color="#1F8505" />
-                      <stop offset="1" stop-color="#12DD00" />
+                      <stop stop-color="#E7002A" />
+                      <stop offset="1" stop-color="#E7002A" />
                     </linearGradient>
                     <linearGradient
                       id="paint1_linear_441_5884"
@@ -425,8 +425,8 @@ export const Suggestion = ({ suggestionData }) => {
                       y2="11.9066"
                       gradientUnits="userSpaceOnUse"
                     >
-                      <stop stop-color="#1F8505" />
-                      <stop offset="1" stop-color="#12DD00" />
+                      <stop stop-color="#E7002A" />
+                      <stop offset="1" stop-color="#E7002A" />
                     </linearGradient>
                   </defs>
                 </svg>{" "}

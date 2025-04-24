@@ -128,8 +128,11 @@ const LectureQuestions = ({ id, isDarkMode }) => {
                   mt: 2,
                   fontFamily: "Inter",
                   fontSize: "14px",
-                  backgroundColor: "#16AA54",
+                  backgroundColor: "#E7002A",
                   textDecoration: "none",
+                  "&:hover": {
+                    backgroundColor: "#E7002A", // customize these shades as needed
+                  },
                 }}
               >
                 Need More

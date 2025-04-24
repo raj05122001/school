@@ -444,7 +444,7 @@ const CreatingLecture = ({
                     fontSize: "16px",
                     fontFamily: "Inter",
                     "&.Mui-focused": {
-                      color: "#16AA54", // Adjust color if needed
+                      color: "#000", // Adjust color if needed
                     },
                   },
                 }}
@@ -460,7 +460,7 @@ const CreatingLecture = ({
                       borderRadius: "12px", // ✅ Always round
                     },
                     "&.Mui-focused .MuiOutlinedInput-notchedOutline": {
-                      borderColor: "#16AA54",
+                      borderColor: "#001B72",
                     },
                   },
                 }}
@@ -476,7 +476,7 @@ const CreatingLecture = ({
                     color: isDarkMode ? "#d7e4fc" : "",
                     fontSize: isDarkMode && "20px",
                     "&.Mui-focused": {
-                      color: "#16AA54",
+                      color: "#000",
                     },
                   }}
                 >
@@ -492,12 +492,12 @@ const CreatingLecture = ({
                     fontSize: "16px",
                     backgroundColor: "#fff",
                     borderRadius: "12px",
-                    color: isDarkMode ? "#d7e4fc" : "", // Option text color
+                    color: isDarkMode ? "#d7e4fc" : "#000", // Option text color
                     "& .MuiOutlinedInput-notchedOutline": {
-                      color: "#16AA54",
+                      color: "#000",
                     },
                     "&.Mui-focused .MuiOutlinedInput-notchedOutline": {
-                      borderColor: "#16AA54", // <-- This changes the border color to green when focused
+                      borderColor: "#001B72", // <-- This changes the border color to green when focused
                     },
                     // "& .MuiSvgIcon-root": {
                     //   color: isDarkMode ? "#d7e4fc" : "", // Dropdown arrow color
@@ -529,16 +529,16 @@ const CreatingLecture = ({
                 <GlobalStyles
                   styles={{
                     ".MuiPickersDay-root.Mui-selected": {
-                      backgroundColor: "#16AA54 !important",
+                      backgroundColor: "#6750A4 !important",
                       color: "#fff !important",
                     },
                     ".MuiPickersDay-root.Mui-selected:hover": {
-                      backgroundColor: "#2e7d32 !important",
+                      backgroundColor: "#6750A4 !important",
                     },
 
                     // Year picker (main fix here)
                     "button.MuiPickersYear-yearButton.Mui-selected": {
-                      backgroundColor: "#16AA54 !important",
+                      backgroundColor: "#000 !important",
                       color: "#fff !important",
                     },
                     "button.MuiPickersYear-yearButton.Mui-selected:hover": {
@@ -559,20 +559,20 @@ const CreatingLecture = ({
                           fontSize: isDarkMode && "14px",
 
                           "&.Mui-focused": {
-                            color: "#16AA54", // label color on focus
+                            color: "#000", // label color on focus
                           },
                         },
                         "& .MuiOutlinedInput-root": {
                           borderRadius: "12px",
                           "&.Mui-focused .MuiOutlinedInput-notchedOutline": {
-                            borderColor: "#16AA54", // border on focus
+                            borderColor: "#001B72", // border on focus
                           },
                         },
                         "& .MuiOutlinedInput-notchedOutline": {
                           borderColor: isDarkMode ? "#d7e4fc" : "",
                         },
                         "& .MuiSvgIcon-root": {
-                          color: "#16AA54",
+                          color: "#FF3B30",
                         },
                         "& .MuiInputBase-input": {
                           color: isDarkMode ? "#d7e4fc" : "",
@@ -595,7 +595,7 @@ const CreatingLecture = ({
                       ],
                       sx: {
                         "& .MuiPaper-root": {
-                          border: "2px solid #16AA54",
+                          border: "2px solid #001B72",
                           boxShadow: "none",
                           borderRadius: "12px",
                           fontSize: "14px",
@@ -629,20 +629,20 @@ const CreatingLecture = ({
                     "& .MuiOutlinedInput-root": {
                       borderRadius: "12px",
                       "&.Mui-focused .MuiOutlinedInput-notchedOutline": {
-                        borderColor: "#16AA54", // border on focus
+                        borderColor: "#000", // border on focus
                       },
                     },
                     "&.Mui-focused .MuiOutlinedInput-notchedOutline": {
                       borderColor: isDarkMode ? "#d7e4fc" : "", // Border color when focused
                     },
                     "& .MuiSvgIcon-root": {
-                      color: "#16AA54", // Dropdown arrow color
+                      color: "#000", // Dropdown arrow color
                     },
                     "& .MuiInputLabel-root": {
                       color: isDarkMode ? "#d7e4fc" : "", // Label color
                       fontSize: "16px",
                       "&.Mui-focused": {
-                        color: "#16AA54", // label color on focus
+                        color: "#000", // label color on focus
                       },
                     },
                     "& .MuiInputBase-input": {
@@ -671,20 +671,20 @@ const CreatingLecture = ({
                       "& .MuiOutlinedInput-root": {
                         borderRadius: "12px",
                         "&.Mui-focused .MuiOutlinedInput-notchedOutline": {
-                          borderColor: "#16AA54", // border on focus
+                          borderColor: "#001B72", // border on focus
                         },
                       },
                       "&.Mui-focused .MuiOutlinedInput-notchedOutline": {
                         borderColor: isDarkMode ? "#d7e4fc" : "", // Border color when focused
                       },
                       "& .MuiSvgIcon-root": {
-                        color: "#16AA54", // Dropdown arrow color
+                        color: "#000", // Dropdown arrow color
                       },
                       "& .MuiInputLabel-root": {
                         color: isDarkMode ? "#d7e4fc" : "", // Label color
                         fontSize: "16px",
                         "&.Mui-focused": {
-                          color: "#16AA54", // label color on focus
+                          color: "#000", // label color on focus
                         },
                       },
                       "& .MuiInputBase-input": {
@@ -701,7 +701,7 @@ const CreatingLecture = ({
                       transform: "translateY(-50%)",
                     }}
                   >
-                    <AiOutlineClockCircle size={20} color="green" />
+                    <AiOutlineClockCircle size={20} color="#FF3B30" />
                   </Box>
                 </LocalizationProvider>
               </Box>
@@ -727,7 +727,7 @@ const CreatingLecture = ({
                       style: {
                         fontSize: "24px",
                         marginRight: "8px",
-                        color: "#16AA54",
+                        color: "#000",
                       },
                     })}
                     <Typography
@@ -821,9 +821,9 @@ const CreatingLecture = ({
             alignItems: "center",
             gap: "8px",
             borderRadius: "8px",
-            background: "#141514",
+            background: "#E7002A",
             "&:hover": {
-              background: "#1c1d1c", // optional: slightly lighter on hover
+              background: "#E7002A", // optional: slightly lighter on hover
             },
           }}
         >

@@ -98,7 +98,7 @@ const LectureScheduleTable = () => {
             <TableHead>
               <TableRow
                 sx={{
-                  background: "linear-gradient(120deg, #d4fc79 0%, #96e6a1 100%)",
+                  background: "linear-gradient(120deg, #FEECF0 0%, #FEECF0 100%)",
                 }}
               >
                 {TABLE_HEAD?.map((head, index) => (
@@ -138,7 +138,7 @@ const LectureScheduleTable = () => {
             <TableHead>
               <TableRow
                 sx={{
-                  background: "linear-gradient(120deg, #d4fc79 0%, #96e6a1 100%)"
+                  background: "linear-gradient(120deg, #FEECF0 0%, #FEECF0 100%)"
                 }}
               >
                 {TABLE_HEAD?.map((head) => (

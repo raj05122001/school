@@ -51,8 +51,8 @@ const ClassProf = () => {
         display: "inline-flex",
         padding: "32px 24px 24px 24px",
         flexDirection: "column",
-        justifyContent: "flex-end",
-        alignItems: "center",
+        // justifyContent: "flex-end",
+        // alignItems: "center",
         gap: "23px",
         borderRadius: "20px",
         background: "#FFF",
@@ -64,9 +64,10 @@ const ClassProf = () => {
         sx={{
           display: "flex",
           alignItems: "center",
-          gap: "53px",
+          // gap: "53px",
           //   backgroundColor: "#F3F5F7",
           color: "#3B3D3B",
+          justifyContent:"space-between"
         }}
       >
         <Box display={"flex"} sx={{ gap: "6px" }}>
@@ -75,7 +76,6 @@ const ClassProf = () => {
               display: "flex",
               width: "24px",
               height: "24px",
-              justifyContent: "center",
               alignItems: "center",
               flexShrink: 0,
             }}
@@ -202,7 +202,7 @@ const ClassProf = () => {
           gap: "10px",
           alignSelf: "stretch",
           borderRadius: "12px",
-          background: "#EDEEFC",
+          background: "#FEECF0",
         }}
       >
         <Box
@@ -234,21 +234,21 @@ const ClassProf = () => {
             >
               <path
                 d="M18.1401 21.62C17.2601 21.88 16.2201 22 15.0001 22H9.00011C7.78011 22 6.74011 21.88 5.86011 21.62C6.08011 19.02 8.75011 16.97 12.0001 16.97C15.2501 16.97 17.9201 19.02 18.1401 21.62Z"
-                stroke="#5856D6"
+                stroke="#FF2D55"
                 stroke-width="1.5"
                 stroke-linecap="round"
                 stroke-linejoin="round"
               />
               <path
                 d="M15 2H9C4 2 2 4 2 9V15C2 18.78 3.14 20.85 5.86 21.62C6.08 19.02 8.75 16.97 12 16.97C15.25 16.97 17.92 19.02 18.14 21.62C20.86 20.85 22 18.78 22 15V9C22 4 20 2 15 2ZM12 14.17C10.02 14.17 8.42 12.56 8.42 10.58C8.42 8.60002 10.02 7 12 7C13.98 7 15.58 8.60002 15.58 10.58C15.58 12.56 13.98 14.17 12 14.17Z"
-                stroke="#5856D6"
+                stroke="#FF2D55"
                 stroke-width="1.5"
                 stroke-linecap="round"
                 stroke-linejoin="round"
               />
               <path
                 d="M15.5799 10.58C15.5799 12.56 13.9799 14.17 11.9999 14.17C10.0199 14.17 8.41992 12.56 8.41992 10.58C8.41992 8.60002 10.0199 7 11.9999 7C13.9799 7 15.5799 8.60002 15.5799 10.58Z"
-                stroke="#5856D6"
+                stroke="#FF2D55"
                 stroke-width="1.5"
                 stroke-linecap="round"
                 stroke-linejoin="round"
@@ -344,6 +344,9 @@ const ClassProf = () => {
           
         </Box>
       </Box>
+
+
+
       <Box
         sx={{
           display: "flex",
@@ -352,7 +355,7 @@ const ClassProf = () => {
           gap: "10px",
           alignSelf: "stretch",
           borderRadius: "12px",
-          background: "#E6F1FD",
+          background: "#FEECF0",
         }}
       >
         <Box
@@ -384,7 +387,7 @@ const ClassProf = () => {
             >
               <path
                 d="M12 18.2C14.2091 18.2 16 16.4091 16 14.2C16 11.9908 14.2091 10.2 12 10.2C9.79086 10.2 8 11.9908 8 14.2C8 16.4091 9.79086 18.2 12 18.2Z"
-                stroke="#007AFF"
+                stroke="#FF2D55"
                 stroke-width="1.5"
                 stroke-miterlimit="10"
                 stroke-linecap="round"
@@ -392,14 +395,14 @@ const ClassProf = () => {
               />
               <path
                 d="M10.4399 14.2999L11.0899 14.9499C11.2799 15.1399 11.5899 15.1399 11.7799 14.9599L13.5599 13.3199"
-                stroke="#007AFF"
+                stroke="#FF2D55"
                 stroke-width="1.5"
                 stroke-linecap="round"
                 stroke-linejoin="round"
               />
               <path
                 d="M8.00007 22H16.0001C20.0201 22 20.7401 20.39 20.9501 18.43L21.7001 10.43C21.9701 7.99 21.2701 6 17.0001 6H7.00007C2.73007 6 2.03007 7.99 2.30007 10.43L3.05007 18.43C3.26007 20.39 3.98007 22 8.00007 22Z"
-                stroke="#007AFF"
+                stroke="#FF2D55"
                 stroke-width="1.5"
                 stroke-miterlimit="10"
                 stroke-linecap="round"
@@ -407,7 +410,7 @@ const ClassProf = () => {
               />
               <path
                 d="M8 6V5.2C8 3.43 8 2 11.2 2H12.8C16 2 16 3.43 16 5.2V6"
-                stroke="#007AFF"
+                stroke="#FF2D55"
                 stroke-width="1.5"
                 stroke-miterlimit="10"
                 stroke-linecap="round"
@@ -415,7 +418,7 @@ const ClassProf = () => {
               />
               <path
                 d="M21.65 11C19.92 12.26 18 13.14 16.01 13.64"
-                stroke="#007AFF"
+                stroke="#FF2D55"
                 stroke-width="1.5"
                 stroke-miterlimit="10"
                 stroke-linecap="round"
@@ -423,7 +426,7 @@ const ClassProf = () => {
               />
               <path
                 d="M2.62012 11.27C4.29012 12.41 6.11012 13.22 8.00012 13.68"
-                stroke="#007AFF"
+                stroke="#FF2D55"
                 stroke-width="1.5"
                 stroke-miterlimit="10"
                 stroke-linecap="round"

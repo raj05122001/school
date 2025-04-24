@@ -36,7 +36,7 @@ function ProfileCard() {
         alignItems: "center",
         p: "4px",
         border:"0.5px solid var(--Gradient-1, #1F8505)",
-        background: "rgba(255, 255, 255, 0.20)",
+        background: "#FFFFFF",
         boxShadow: "0 4px 30px rgba(0, 0, 0, 0.1)",
         borderRadius: "55px",
         flexShrink: 0,
@@ -74,7 +74,7 @@ function ProfileCard() {
         {/* Teacher Name */}
         <Typography
           sx={{
-            color: "#fff",
+            color: "#000000",
             fontFamily: "Inter, sans-serif",
             fontSize: "14px",
             fontStyle: "normal",
@@ -94,7 +94,7 @@ function ProfileCard() {
         {userDetails?.role === "STUDENT" ? (
           <Typography
             sx={{
-              color: "#fff",
+              color: "#000000",
               fontFamily: "Inter, sans-serif",
               fontSize: "10px",
               fontStyle: "normal",
@@ -108,7 +108,7 @@ function ProfileCard() {
         ) : (
           <Typography
             sx={{
-              color: "#fff",
+              color: "#000000",
               fontFamily: "Inter, sans-serif",
               fontSize: "10px",
               fontStyle: "normal",
@@ -137,7 +137,7 @@ function ProfileCard() {
       <Box>
         <Typography
           sx={{
-            color: "#fff",
+            color: "#000000",
             alignSelf: "stretch",
             fontFamily: "Inter, sans-serif",
             fontSize: "10px",
@@ -150,7 +150,7 @@ function ProfileCard() {
         </Typography>
         <Typography 
           sx={{
-            color: "#fff",
+            color: "#000000",
             alignSelf: "stretch",
             fontFamily: "Inter, sans-serif",
             fontSize: "14px",
