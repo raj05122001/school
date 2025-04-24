@@ -209,7 +209,7 @@ export default function Page({ suggestionInput, setIsOpenChatBot }) {
   return (
     <Box
       sx={{
-        bgcolor: "grey.200",
+        bgcolor: "#fff",
         // minWidth: 300,
         // minHeight: 300,
         // position: "fixed", // Set position to fixed
@@ -265,7 +265,8 @@ export default function Page({ suggestionInput, setIsOpenChatBot }) {
               justifyContent: "space-between",
               alignItems: "center",
               borderBottom: 1,
-              borderColor: "grey.300",
+              borderColor: "#000",
+              backgroundColor:"#000",
               p: 2,
               flexShrink: 0, // Prevent shrinking during resize
             }}
@@ -301,19 +302,27 @@ export default function Page({ suggestionInput, setIsOpenChatBot }) {
                   setShowList(false);
                 }}
                 sx={{
-                  mb: 2,
-                  //   width: "50%",
-                  border: "none",
-                  borderRadius: 4,
-                  backgroundColor: "#AFE1AF", // Light Green
-                  transition: "all 150ms ease-in-out",
-                  color: "#003366", // Dark blue for text
-
-                  ":hover": {
-                    border: "none",
-                    backgroundColor: "#00A36C", // Darker Green on hover
-                    boxShadow: "0 0 10px 0 #00A36C inset, 0 0 10px 4px #00A36C",
-                    color: "#fff",
+                  mt: 2,
+                  display: "inline-flex",
+                  padding: "12px 32px",
+                  justifyContent: "center",
+                  alignItems: "center",
+                  gap: "8px",
+                  textTransform: "none",
+                  borderRadius: "8px",
+                  background: "#141514",
+                  color: "#FFF",
+                  textAlign: "center",
+                  fontFeatureSettings: "'liga' off, 'clig' off",
+                  fontFamily: "Aptos",
+                  fontSize: "16px",
+                  fontStyle: "normal",
+                  fontWeight: "700",
+                  lineHeight: "24px",
+                  "&:hover": {
+                    border: "1px solid #141514",
+                    background: "#E5E5E5",
+                    color: "#141514",
                   },
                 }}
               >
@@ -328,20 +337,29 @@ export default function Page({ suggestionInput, setIsOpenChatBot }) {
                     color="primary"
                     onClick={handleOldChatsClick}
                     sx={{
-                      mb: 2,
-                      //   width: "60%",
-                      borderRadius: 4,
-                      backgroundColor: "#EADDCA", // Light Brown
-                      transition: "all 150ms ease-in-out",
-                      color: "#003366", // Dark blue for text
-                      border: "none",
-                      ":hover": {
-                        border: "none",
-                        backgroundColor: "#C19A6B", // Darker Brown on hover
-                        boxShadow:
-                          "0 0 10px 0 #C19A6B inset, 0 0 10px 4px #C19A6B",
-                        color: "#fff",
-                      },
+                      mt: 2,
+                  display: "inline-flex",
+                  padding: "12px 28px",
+                  justifyContent: "center",
+                  alignItems: "center",
+                  gap: "8px",
+                  textTransform: "none",
+                  borderRadius: "8px",
+                  border:"1px solid #141514",
+                  background: "#fff",
+                  color: "#141514",
+                  textAlign: "center",
+                  fontFeatureSettings: "'liga' off, 'clig' off",
+                  fontFamily: "Aptos",
+                  fontSize: "16px",
+                  fontStyle: "normal",
+                  fontWeight: "700",
+                  lineHeight: "24px",
+                  "&:hover": {
+                    border: "1px solid #141514",
+                    background: "#E5E5E5",
+                    color: "#141514",
+                  },
                     }}
                   >
                     Conversation History
@@ -529,10 +547,11 @@ export default function Page({ suggestionInput, setIsOpenChatBot }) {
                               maxWidth: "85%",
                               bgcolor:
                                 message.role === "user"
-                                  ? "primary.light"
-                                  : "grey.300",
-                              color: "text.primary",
+                                  ? "#fff"
+                                  : "#fff",
+                              color: "#141514",
                               borderRadius: 2,
+                              border:"1px solid #141514",
                               p: 1,
                               mx: 1,
                               overflowX: "auto",
@@ -566,10 +585,8 @@ export default function Page({ suggestionInput, setIsOpenChatBot }) {
                           color: "text.secondary",
                         }}
                       >
-                        <FaRobot size={50} style={{ marginBottom: "16px" }} />
-                        <Typography variant="h6">
-                          Ask me any question
-                        </Typography>
+                        <FaRobot size={50} style={{ marginBottom: "16px", fontWeight:400, lineHeight:"normal", fontStyle:"normal", color:"#141514" }} />
+                        <Typography sx={{fontFamily:"Inter", fontSize:"20px", fontWeight:400, lineHeight:"normal", fontStyle:"normal", color:"#141514"}}>Hello! How can I help you?</Typography>
                       </Box>
                     )}
                     {isLoading && (
@@ -624,7 +641,7 @@ export default function Page({ suggestionInput, setIsOpenChatBot }) {
                               borderColor: "#ccc",
                             },
                             "&.Mui-focused .MuiOutlinedInput-notchedOutline": {
-                              borderColor: "#1e88e5",
+                              borderColor: "#141514",
                               borderWidth: "1px",
                             },
                             // Ensure the textarea inside TextField is scrollable
@@ -649,7 +666,7 @@ export default function Page({ suggestionInput, setIsOpenChatBot }) {
                                 {isLoading ? (
                                   <CircularProgress size={24} />
                                 ) : (
-                                  <FaArrowUp />
+                                  <FaArrowUp style={{color:"#141514"}}/>
                                 )}
                               </IconButton>
                               {userTextInput && isLoading ? (
@@ -739,10 +756,10 @@ export const VoiceToText = ({ setUserTextInput }) => {
           onClick={isRecording ? stopRecording : startRecording}
           color={isRecording ? "error" : "primary"}
           sx={{
-            bgcolor: isRecording ? "error.main" : "primary.main",
+            bgcolor: isRecording ? "error.main" : "#141514",
             color: "white",
             "&:hover": {
-              bgcolor: isRecording ? "error.dark" : "primary.dark",
+              bgcolor: isRecording ? "error.dark" : "#141514",
             },
           }}
         >

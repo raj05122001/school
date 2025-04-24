@@ -153,7 +153,7 @@ function OverallClassPerformance() {
               "& .MuiLinearProgress-bar": {
                 backgroundColor: "#49cc4c",
               },
-              backgroundColor: isDarkMode ? "#333" : "#e0e0e0",
+              backgroundColor: "#e0e0e0",
             }}
           />
 

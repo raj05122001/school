@@ -324,13 +324,12 @@ export const Suggestion = ({ suggestionData }) => {
         mx: "auto",
       }}
     >
-      {/* <Grid item xs={12} sm={0.6} py={2}>
+      <Grid item xs={12} sm={0.6} py={2}>
         {uniqueTitles.length > 0 && (
           <Button
+            disableRipple
             onClick={() => scrollContainer("left")}
             sx={{
-              bgcolor: "grey.300",
-              "&:hover": { bgcolor: "grey.400" },
               p: 1,
               width: 40,
               height: 40,
@@ -341,12 +340,16 @@ export const Suggestion = ({ suggestionData }) => {
               alignItems: "center",
               justifyContent: "center",
               position: "inherit",
+              backgroundColor: "#fff",
+              marginRight: "4px",
+              padding: "10px 10px",
+              color:"#16AA54"
             }}
           >
             ←
           </Button>
         )}
-      </Grid> */}
+      </Grid>
       <Grid
         item
         xs={12}
@@ -437,13 +440,12 @@ export const Suggestion = ({ suggestionData }) => {
           );
         })}
       </Grid>
-      {/* <Grid item xs={12} sm={0.6} py={2}>
+      <Grid item xs={12} sm={0.6} py={2}>
         {uniqueTitles.length > 0 && (
           <Button
+          disableRipple
             onClick={() => scrollContainer("right")}
             sx={{
-              bgcolor: "grey.300",
-              "&:hover": { bgcolor: "grey.400" },
               p: 1,
               width: 40,
               height: 40,
@@ -454,12 +456,16 @@ export const Suggestion = ({ suggestionData }) => {
               alignItems: "center",
               justifyContent: "center",
               position: "inherit",
+              backgroundColor: "#fff",
+              marginRight: "4px",
+              padding: "10px 10px",
+              color:"#16AA54"
             }}
           >
             →
           </Button>
         )}
-      </Grid> */}
+      </Grid>
     </Grid>
   );
 };

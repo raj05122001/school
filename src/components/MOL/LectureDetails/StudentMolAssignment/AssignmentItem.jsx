@@ -147,7 +147,7 @@ const AssignmentItem = ({
 
       const signedUrl = await fetchPresignedUrl(data)
 
-      const xhr = await uploadVideoToS3(videoAttachment[0], signedUrl);
+      const xhr = await uploadVideoToS3(file, signedUrl);
       const responseURL = xhr?.responseURL?.split('?')[0]
 
       setS3Location(responseURL)
