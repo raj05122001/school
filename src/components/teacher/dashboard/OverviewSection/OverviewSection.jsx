@@ -12,6 +12,7 @@ import {
   TableHead,
   TableBody,
   Paper,
+  Skeleton,
 } from "@mui/material";
 import { FaChalkboardTeacher } from "react-icons/fa";
 import LectureCard from "@/commonComponents/LectureCard/LectureCard";
@@ -125,7 +126,7 @@ const OverviewSection = () => {
       </Box>
 
       {/* Skeleton Loading Section */}
-      {isLoading && (
+      {/* {isLoading && (
         <Grid container spacing={3}>
           {Array.from({ length: 4 }, (_, ind) => (
             <Grid item xs={12} sm={6} md={6} key={ind}>
@@ -133,8 +134,55 @@ const OverviewSection = () => {
             </Grid>
           ))}
         </Grid>
+      )} */}
+      {isLoading && (
+        <TableContainer
+          component={Paper}
+          elevation={0}
+          sx={{
+            maxHeight: 400,
+            overflowY: "scroll",
+            borderRadius: "10px",
+            border: "none",
+            scrollbarWidth: "none",
+            msOverflowStyle: "none",
+            "&::-webkit-scrollbar": {
+              display: "none",
+            },
+          }}
+        >
+          <Table sx={{ border: "none" }}>
+            <TableHead
+              sx={{
+                backgroundColor: "#F3F5F7",
+                borderRadius: "10px",
+                border: "none",
+              }}
+            >
+              <TableRow>
+                <TableCell />
+                <TableCell>Topic</TableCell>
+                <TableCell>Class</TableCell>
+                <TableCell>Time</TableCell>
+                <TableCell>Subject</TableCell>
+                <TableCell>Chapter</TableCell>
+                <TableCell>Action</TableCell>
+              </TableRow>
+            </TableHead>
+            <TableBody>
+              {Array.from({ length: 4 }).map((_, index) => (
+                <TableRow key={index}>
+                  {Array.from({ length: 7 }).map((__, cellIndex) => (
+                    <TableCell key={cellIndex}>
+                      <Skeleton variant="text" width="100%" height={20} />
+                    </TableCell>
+                  ))}
+                </TableRow>
+              ))}
+            </TableBody>
+          </Table>
+        </TableContainer>
       )}
-
       {/* Lecture Card Section */}
       {/* {allLecture?.lecture_data?.data?.length > 0 && (
         <Grid container spacing={3}>
@@ -304,9 +352,9 @@ const OverviewSection = () => {
       )}
 
       {/* No Data Section */}
-      {allLecture?.lecture_data?.data?.length === 0 && !isLoading && (
+      {/* {allLecture?.lecture_data?.data?.length === 0 && !isLoading && (
         <Grid container spacing={3} direction="row">
-          {/* Skeleton Loading Section */}
+          Skeleton Loading Section
           <Grid item container xs={12} sm={6} spacing={2}>
             <Grid item xs={12}>
               <LectureCardSkeleton />
@@ -315,7 +363,7 @@ const OverviewSection = () => {
               <LectureCardSkeleton />
             </Grid>
           </Grid>
-          {/* Create Lecture Section */}
+          Create Lecture Section
           {userDetails?.role !== "STUDENT" && (
             <Grid
               item
@@ -373,6 +421,149 @@ const OverviewSection = () => {
               </Grid>
             </Grid>
           )}
+        </Grid>
+      )} */}
+
+      {allLecture?.lecture_data?.data?.length === 0 && !isLoading && (
+        <Grid container spacing={3}>
+          <Grid item xs={12}>
+            <TableContainer
+              component={Paper}
+              elevation={0}
+              sx={{
+                maxHeight: 300,
+                overflowY: "auto",
+                borderRadius: "10px",
+                border: "none",
+                scrollbarWidth: "none",
+                msOverflowStyle: "none",
+                "&::-webkit-scrollbar": {
+                  display: "none",
+                },
+              }}
+            >
+              <Table>
+                <TableHead>
+                  <TableRow>
+                    {[
+                      "",
+                      "Topic",
+                      "Class",
+                      "Time",
+                      "Subject",
+                      "Chapter",
+                      "Action",
+                    ].map((heading, i) => (
+                      <TableCell key={i}>
+                        <Skeleton variant="text" width="60%" />
+                      </TableCell>
+                    ))}
+                  </TableRow>
+                </TableHead>
+                <TableBody>
+                  {Array.from({ length: 2 }).map((_, rowIndex) => (
+                    <TableRow key={rowIndex}>
+                      {Array.from({ length: 7 }).map((_, colIndex) => (
+                        <TableCell key={colIndex}>
+                          <Skeleton variant="text" height={20} />
+                        </TableCell>
+                      ))}
+                    </TableRow>
+                  ))}
+                  {userDetails?.role !== "STUDENT" && (
+                    <TableRow>
+                      <TableCell colSpan={7} align="center">
+                        <Box
+                          display="flex"
+                          flexDirection="column"
+                          alignItems="center"
+                          py={3}
+                        >
+                          <Typography
+                            variant="body1"
+                            sx={{
+                              color: "#141514",
+                              display: "flex",
+                              alignItems: "center",
+                              mb: 2,
+                              fontFamily: "Inter",
+                              fontSize: "18px",
+                            }}
+                          >
+                            <FaExclamationCircle
+                              size={20}
+                              style={{ marginRight: 8 }}
+                            />
+                            You don&apos;t have any lectures. Please create a
+                            lecture.
+                          </Typography>
+                          <Button
+                            variant="contained"
+                            sx={{
+                              display: "inline-flex",
+                              padding: "12px 32px",
+                              justifyContent: "center",
+                              alignItems: "center",
+                              gap: "8px",
+                              textTransform: "none",
+                              borderRadius: "8px",
+                              background: "#141514",
+                              color: "#FFF",
+                              textAlign: "center",
+                              fontFeatureSettings: "'liga' off, 'clig' off",
+                              fontFamily: "Aptos",
+                              fontSize: "16px",
+                              fontStyle: "normal",
+                              fontWeight: "700",
+                              lineHeight: "24px",
+                              "&:hover": {
+                                border: "1px solid #141514",
+                                background: "#E5E5E5",
+                                color: "#141514",
+                              },
+                            }}
+                            // startIcon={<FaChalkboardTeacher size={18} />}
+                            onClick={() => handleCreateLecture("", false)}
+                          >
+                            <svg
+                              xmlns="http://www.w3.org/2000/svg"
+                              width="24"
+                              height="24"
+                              viewBox="0 0 25 24"
+                              fill="none"
+                            >
+                              <path
+                                d="M12.0625 22C17.5625 22 22.0625 17.5 22.0625 12C22.0625 6.5 17.5625 2 12.0625 2C6.5625 2 2.0625 6.5 2.0625 12C2.0625 17.5 6.5625 22 12.0625 22Z"
+                                stroke="currentColor"
+                                stroke-width="1.5"
+                                stroke-linecap="round"
+                                stroke-linejoin="round"
+                              />
+                              <path
+                                d="M8.0625 12H16.0625"
+                                stroke="currentColor"
+                                stroke-width="1.5"
+                                stroke-linecap="round"
+                                stroke-linejoin="round"
+                              />
+                              <path
+                                d="M12.0625 16V8"
+                                stroke="currentColor"
+                                stroke-width="1.5"
+                                stroke-linecap="round"
+                                stroke-linejoin="round"
+                              />
+                            </svg>
+                            Create Lecture
+                          </Button>
+                        </Box>
+                      </TableCell>
+                    </TableRow>
+                  )}
+                </TableBody>
+              </Table>
+            </TableContainer>
+          </Grid>
         </Grid>
       )}
     </Box>
