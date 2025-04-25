@@ -261,6 +261,7 @@ const Sidebar = ({ open, setOpen }) => {
                     fontFamily: "Inter, sans-serif",
 
                     paddingLeft: "16px",
+                    paddingRight:"12px"
                   }}
                 >
                   <Tooltip
