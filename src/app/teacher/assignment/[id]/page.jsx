@@ -35,10 +35,7 @@ import DarkMode from "@/components/DarkMode/DarkMode";
 import { FaBell, FaTimes } from "react-icons/fa";
 import UserImage from "@/commonComponents/UserImage/UserImage";
 import { usePathname, useSearchParams, useRouter } from "next/navigation";
-import { AppContextProvider } from "@/app/main";
-import { GetObjectCommand } from "@aws-sdk/client-s3";
-import { getSignedUrl } from "@aws-sdk/s3-request-presigner";
-import { AwsSdk } from "@/hooks/AwsSdk";
+import usePresignedUrl from "@/hooks/usePresignedUrl";
 
 const varelaRound = Varela_Round({ weight: "400", subsets: ["latin"] });
 
@@ -49,6 +46,7 @@ const darkModeStyles = {
   inputColor: "#ffffff",
   boxShadow: "0px 2px 5px rgba(255, 255, 255, 0.1)",
 };
+
 const lightModeStyles = {
   backgroundColor: "#ffffff",
   color: "#000000",
@@ -58,53 +56,51 @@ const lightModeStyles = {
 };
 
 const CoursePlaylist = ({ params }) => {
-  const {s3FileName}=useContext(AppContextProvider)
+  const { fetchPresignedUrl } = usePresignedUrl()
   const { id } = params;
   const searchParams = useSearchParams();
   const router = useRouter();
   const pathname = usePathname();
   const searchQuery = searchParams.get("globalSearch") || "";
   const [globalSearch, setGlobalSearch] = useState(searchQuery);
+
   const [listData, setListData] = useState({});
   const [listLoading, setListLoading] = useState(true);
   const { isDarkMode, primaryColor, secondaryColor } = useThemeContext();
   const [selectedTab, setSelectedTab] = useState(0); // State to manage selected tab
   const [videoUrl,setVideoUrl]=useState("")
-  
-  
-    useEffect(()=>{
-      getSignedUrlForObject()
-    },[s3FileName,id])
-  
-    const getSignedUrlForObject = async () => {
-      const { s3 } = AwsSdk();
-      const Bucket = process.env.NEXT_PUBLIC_AWS_BUCKET;
-    
-      const params = {
-        Bucket,
-        Key: `videos/${s3FileName}${id}.mp4`,
-      };
-      
-      console.log("params : ", params);
-    
-      try {
-        const command = new GetObjectCommand(params);
-        const signedUrl = await getSignedUrl(s3, command, { expiresIn: 60 * 60 * 3 });
-        setVideoUrl(signedUrl)
-      } catch (error) {
-        console.error(error);
-        return null;
-      }
+
+  useEffect(()=>{
+    getSignedUrlForObject()
+  },[id])
+
+  const getSignedUrlForObject = async () => {
+    const data = {
+      file_name: `${id}.mp4`,
+      file_type: "video/mp4",
+      operation: "download",
+      folder: "videos/",
     };
+  
+    try {
+      const signedUrl = await fetchPresignedUrl(data)
+      setVideoUrl(signedUrl?.presigned_url)
+    } catch (error) {
+      console.error(error);
+      return null;
+    }
+  };
 
   const handleTabChange = (event, newValue) => {
     setSelectedTab(newValue);
   };
+
   useEffect(() => {
     if (id) {
       fetchAssignmentAnswer();
     }
   }, [id, searchQuery]);
+
   const fetchAssignmentAnswer = async () => {
     setListLoading(true);
     try {
@@ -116,6 +112,7 @@ const CoursePlaylist = ({ params }) => {
         "",
         searchQuery
       );
+
       if (apiResponse?.success) {
         setListData(apiResponse?.data);
       }
@@ -126,15 +123,20 @@ const CoursePlaylist = ({ params }) => {
       setListLoading(false);
     }
   };
+
   useEffect(() => {
     const delayDebounceFn = setTimeout(() => {
       handleChange(globalSearch);
     }, 500); 
+
     return () => clearTimeout(delayDebounceFn); 
   }, [globalSearch]);
+
+
   const handleChange = (value) => {
     router.push(`${pathname}?globalSearch=${value}`);
   };
+
   const currentStyles = isDarkMode ? darkModeStyles : lightModeStyles;
   return (
     <Box
@@ -191,6 +193,7 @@ const CoursePlaylist = ({ params }) => {
               <MdOutlineTopic /> {listData?.lecture?.title}
               <hr />
             </Typography>
+
            <Box sx={{ display:"flex", justifyContent:"flex-end"}}>  
            <TextField
               id="global-search"
@@ -227,6 +230,7 @@ const CoursePlaylist = ({ params }) => {
             <DarkMode />
             <UserImage width={40} height={40} />
            </Box> 
+
           </Box>
             <Typography variant="subtitle1" marginTop={4}>
               <BsXDiamond /> <strong>Class:</strong>{" "}
@@ -240,6 +244,7 @@ const CoursePlaylist = ({ params }) => {
               <BsXDiamond /> <strong>Chapter:</strong>{" "}
               {listData?.lecture?.chapter?.chapter || "N/A"}
             </Typography>
+
             <Typography variant="subtitle1">
               <BsXDiamond /> <strong>Scheduled Date:</strong>{" "}
               {listData?.lecture?.schedule_date || "N/A"}
@@ -250,6 +255,7 @@ const CoursePlaylist = ({ params }) => {
             </Typography>
           </CardContent>
         </Card>
+
         {/* Video List */}
         <Box sx={{ flex: 1, width:"100%" }}>
           {/* <Box
@@ -305,6 +311,7 @@ const CoursePlaylist = ({ params }) => {
               <Tab label="Not Checked" />
             </Tabs>
           </Box> */}
+
           <StudentAssignments
             listData={listData?.students}
             isDarkMode={isDarkMode}
@@ -314,4 +321,5 @@ const CoursePlaylist = ({ params }) => {
     </Box>
   );
 };
+
 export default CoursePlaylist;

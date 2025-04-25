@@ -1089,4 +1089,27 @@ export default class apiServices {
         console.error("this is error", error);
       });
   };
+
+  public getPresignedUrl = async (data) => {
+    return await this.axiosInstance
+      .post(`api/v1/get_presigned_url/`, data)
+      .then((Response) => Response.data)
+      // .catch((error) => console.error(error));
+  };
+
+  public deleteS3File = (s3_key) => {
+    return this.axiosInstance
+      .delete(`api/v1/delete_s3file/?s3_key=${s3_key}`)
+      .then((response) => {
+        return response.data;
+      })
+  };
+
+  public deleteS3Folder = (folder) => {
+    return this.axiosInstance
+      .delete(`api/v1/delete_s3file/?folder=${folder}`)
+      .then((response) => {
+        return response.data;
+      })
+  };
 }

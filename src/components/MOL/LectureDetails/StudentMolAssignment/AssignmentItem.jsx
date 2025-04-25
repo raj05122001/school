@@ -14,7 +14,6 @@ import {
 } from "@mui/material";
 import { FaPhotoVideo, FaFileAudio, FaRegFileVideo } from "react-icons/fa";
 import { MdClose, MdDescription } from "react-icons/md";
-import { uploadToS3 } from "./uploadToS3";
 import TextWithMath from "@/commonComponents/TextWithMath/TextWithMath";
 import FilePreview from "./FilePreview";
 import {
@@ -38,6 +37,8 @@ import { BASE_URL_MEET } from "@/constants/apiconfig";
 import { BsDownload } from "react-icons/bs";
 import { IoIosArrowDown, IoIosArrowUp } from "react-icons/io";
 import AssignmentTextFormat from "@/commonComponents/TextWithMath/AssignmentTextFormat";
+import usePresignedUrl from "@/hooks/usePresignedUrl";
+import useFileUploader from "@/hooks/usefileUploader";
 
 const ColorLinearProgress = styled(LinearProgress)(({ theme, value }) => {
   let color = "#FF0000"; // Default: Red for low scores
@@ -59,7 +60,6 @@ const ColorLinearProgress = styled(LinearProgress)(({ theme, value }) => {
 const AssignmentItem = ({
   assignment,
   index,
-  s3,
   answered_by,
   dispatch,
   isDarkMode,
@@ -71,11 +71,16 @@ const AssignmentItem = ({
   teacherComments,
   fetchAssignments,
 }) => {
+  const { fetchPresignedUrl } = usePresignedUrl()
+  const {  
+    uploadVideoToS3,
+    uploadProgress
+  } = useFileUploader()
+
   const [openAccordian, setOpenAccordian] = useState(false);
   const [answerDescription, setAnswerDescription] = useState("");
   const [selectedFile, setSelectedFile] = useState(null);
   const [fileType, setFileType] = useState("");
-  const [uploadProgress, setUploadProgress] = useState(0);
   const [submitting, setSubmitting] = useState(false);
   const [open, setOpen] = useState(false);
   const [result, setResult] = useState({});
@@ -114,7 +119,39 @@ const AssignmentItem = ({
     setFileType(type);
 
     try {
-      await uploadToS3(file, type, assignment.id, s3, setUploadProgress, setS3Location);
+      const fileConfigs = {
+        IMAGE: {
+          Key: `assignment/lecture_${assignment.id}/images/`,
+          ContentType: file.type,
+        },
+        VIDEO: {
+          Key: `assignment/lecture_${assignment.id}/videos/`,
+          ContentType: file.type,
+        },
+        AUDIO: {
+          Key: `assignment/lecture_${assignment.id}/audios/`,
+          ContentType: file.type,
+        },
+        FILE: {
+          Key: `assignment/lecture_${assignment.id}/documents/`,
+          ContentType: file.type,
+        },
+      };
+
+      const data = {
+        file_name: file.name,
+        file_type: fileConfigs[type]?.ContentType,
+        operation: "upload",
+        folder: fileConfigs[type]?.Key,
+      };
+
+      const signedUrl = await fetchPresignedUrl(data)
+
+      const xhr = await uploadVideoToS3(videoAttachment[0], signedUrl);
+      const responseURL = xhr?.responseURL?.split('?')[0]
+
+      setS3Location(responseURL)
+      
       dispatch({
         type: "SET_FILE_LINK",
         payload: { assignmentId: assignment.id, file, type },
@@ -147,7 +184,6 @@ const AssignmentItem = ({
   const removeSelectedFile = () => {
     setSelectedFile(null);
     setFileType("");
-    setUploadProgress(0);
     dispatch({ type: "REMOVE_FILE_LINK", payload: assignment.id });
   };
 

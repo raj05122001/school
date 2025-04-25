@@ -622,3 +622,19 @@ export const deleteCompletedLecture = async (lectureId) => {
   const apiInstance = new apiServices(axiosAPIInstance);
   return await apiInstance.deleteCompletedLecture(lectureId);
 };
+
+
+export const getPresignedUrl = async (data) => {
+  const apiInstance = new apiServices(axiosAPIInstance);
+  return await apiInstance.getPresignedUrl(data);
+};
+
+export const deleteS3File = async (key) => {
+  const apiInstance = new apiServices(axiosAPIInstance);
+  return await apiInstance.deleteS3File(key);
+};
+
+export const deleteS3Folder = async (key) => {
+  const apiInstance = new apiServices(axiosAPIInstance);
+  return await apiInstance.deleteS3Folder(key);
+};

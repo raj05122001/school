@@ -12,51 +12,47 @@ import { MdOutlineDateRange } from "react-icons/md";
 import LectureType from "../LectureType/LectureType";
 import Image from "next/image";
 import { AppContextProvider } from "@/app/main";
-import { GetObjectCommand } from "@aws-sdk/client-s3";
-import { getSignedUrl } from "@aws-sdk/s3-request-presigner";
-import { AwsSdk } from "@/hooks/AwsSdk";
+import usePresignedUrl from "@/hooks/usePresignedUrl";
 
 const ListingCard = ({ data, onClick }) => {
   const { isDarkMode, primaryColor, secondaryColor } = useThemeContext();
+  const { fetchPresignedUrl } = usePresignedUrl()
   const videoRef = useRef(null);
-  const {s3FileName}=useContext(AppContextProvider)
-
   const [isHovered, setIsHovered] = useState(false);
-    const [videoUrl,setVideoUrl]=useState("")
-  
-    useEffect(()=>{
-      getSignedUrlForObject()
-    },[s3FileName,data?.id])
-  
-    const getSignedUrlForObject = async () => {
-      const { s3 } = AwsSdk();
-      const Bucket = process.env.NEXT_PUBLIC_AWS_BUCKET;
-    
-      const params = {
-        Bucket,
-        Key: `videos/${s3FileName}${data?.id}.mp4`,
-      };
-      
-      console.log("params : ", params);
-    
-      try {
-        const command = new GetObjectCommand(params);
-        const signedUrl = await getSignedUrl(s3, command, { expiresIn: 60 * 60 * 3 });
-        setVideoUrl(signedUrl)
-      } catch (error) {
-        console.error(error);
-        return null;
-      }
+  const [videoUrl,setVideoUrl]=useState("")
+
+  useEffect(()=>{
+    getSignedUrlForObject()
+  },[data?.id])
+
+  const getSignedUrlForObject = async () => {
+    const urlData = {
+      file_name: `${data?.id}.mp4`,
+      file_type: "video/mp4",
+      operation: "download",
+      folder: "videos/",
     };
+  
+    try {
+      const signedUrl = await fetchPresignedUrl(urlData)
+      setVideoUrl(signedUrl?.presigned_url)
+    } catch (error) {
+      console.error(error);
+      return null;
+    }
+  };
+
 
   const handleMouseEnter = () => {
     setIsHovered(true);
     videoRef.current.play();
   };
+
   const handleMouseLeave = () => {
     setIsHovered(false);
     videoRef?.current?.pause();
   };
+
   return (
     <Box
       p={2}
@@ -102,6 +98,7 @@ const ListingCard = ({ data, onClick }) => {
         ) : (
           <Image src={"/Your Lecture is.png"} width={200} height={230} style={{width:"100%",height: "auto", maxHeight: 230,}}/>
         )}
+
         <CardContent
           sx={{
             display: "flex",
@@ -173,4 +170,5 @@ const ListingCard = ({ data, onClick }) => {
     </Box>
   );
 };
+
 export default ListingCard;

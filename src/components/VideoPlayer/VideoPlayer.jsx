@@ -17,40 +17,33 @@ import { decodeToken } from "react-jwt";
 import Cookies from "js-cookie";
 import axios from "axios";
 import { BASE_URL_MEET } from "@/constants/apiconfig";
-import { GetObjectCommand } from "@aws-sdk/client-s3";
-import { getSignedUrl } from "@aws-sdk/s3-request-presigner";
-import { AwsSdk } from "@/hooks/AwsSdk";
+import usePresignedUrl from "@/hooks/usePresignedUrl";
 
-const VideoPlayer = ({ id, duration=1e101 }) => {
-
+const VideoPlayer = ({ id, duration = 1e101 }) => {
   const { s3FileName } = useContext(AppContextProvider);
-
+  const { fetchPresignedUrl } = usePresignedUrl()
   const userDetails = decodeToken(Cookies.get("ACCESS_TOKEN"));
   const [markers, setMarkers] = useState([]);
   const [suggestionData, setSuggestionData] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const playerRef = useRef(null);
-  const [videoUrl,setVideoUrl]=useState("")
+  const [videoUrl, setVideoUrl] = useState("");
 
-  useEffect(()=>{
-    getSignedUrlForObject()
-  },[s3FileName,id])
+  useEffect(() => {
+    getSignedUrlForObject();
+  }, [id]);
 
   const getSignedUrlForObject = async () => {
-    const { s3 } = AwsSdk();
-    const Bucket = process.env.NEXT_PUBLIC_AWS_BUCKET;
-  
-    const params = {
-      Bucket,
-      Key: `videos/${s3FileName}${id}.mp4`,
+    const data = {
+      file_name: `${id}.mp4`,
+      file_type: "video/mp4",
+      operation: "download",
+      folder: "videos/",
     };
-    
-    console.log("params : ", params);
   
     try {
-      const command = new GetObjectCommand(params);
-      const signedUrl = await getSignedUrl(s3, command, { expiresIn: 60 * 60 * 3 });
-      setVideoUrl(signedUrl)
+      const signedUrl = await fetchPresignedUrl(data)
+      setVideoUrl(signedUrl?.presigned_url)
     } catch (error) {
       console.error(error);
       return null;
@@ -165,10 +158,10 @@ const VideoPlayer = ({ id, duration=1e101 }) => {
         }}
         s3FileName={s3FileName}
         duration={duration}
-        signedUrl={videoUrl}
+        videoUrl={videoUrl}
       />
     ),
-    [markers, id, s3FileName, duration,videoUrl]
+    [markers, id, s3FileName, duration, videoUrl]
   );
 
   return (
@@ -195,7 +188,7 @@ const VideoPlayer = ({ id, duration=1e101 }) => {
         </Box>
       ) : (
         <Box sx={{ width: "100%", height: "90%" }}>
-          {videoUrl? breakpointPlayer :""}
+          {videoUrl ? breakpointPlayer : ""}
         </Box>
       )}
 
@@ -216,13 +209,12 @@ export const BreakpointPlayer = ({
   onPlayerReady,
   s3FileName,
   duration,
-  signedUrl
+  videoUrl,
 }) => {
   const userDetails = decodeToken(Cookies.get("ACCESS_TOKEN"));
   const videoRef = useRef(null);
   const playerRef = useRef(null);
   const updateDataTriggered = useRef(false);
-
 
   const updateData = async () => {
     try {
@@ -302,13 +294,10 @@ export const BreakpointPlayer = ({
       }'
     >
       {/* <source
-        src={`https://d3515ggloh2j4b.cloudfront.net/videos/${s3FileName}${id}.mp4`}
+        src={`https://d3515ggloh2j4b.cloudfront.net/videos/${s3FileName}${id}.mp4?v=2`}
         type="video/mp4"
       /> */}
-       <source
-        src={signedUrl}
-        type="video/mp4"
-      />
+      <source src={videoUrl} type="video/mp4" />
     </video>
   );
 };
@@ -335,7 +324,7 @@ export const Suggestion = ({ suggestionData }) => {
         mx: "auto",
       }}
     >
-      <Grid item xs={12} sm={0.6} py={2}>
+       <Grid item xs={12} sm={0.6} py={2}>
         {uniqueTitles.length > 0 && (
           <Button
             onClick={() => scrollContainer("left")}
@@ -357,7 +346,7 @@ export const Suggestion = ({ suggestionData }) => {
             ←
           </Button>
         )}
-      </Grid>
+      </Grid> 
       <Grid
         item
         xs={12}

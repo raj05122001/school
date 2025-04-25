@@ -7,8 +7,6 @@ import { decodeToken } from "react-jwt";
 import TextWithMath from "@/commonComponents/TextWithMath/TextWithMath";
 import AssignmentItem from "./StudentMolAssignment/AssignmentItem";
 import { initialState, reducer } from "./StudentMolAssignment/stateManagement";
-import { AwsSdk } from "@/hooks/AwsSdk";
-
 
 const StudentMOLAssignment = ({ id, isDarkMode, class_ID }) => {
   const [state, dispatch] = useReducer(reducer, initialState);
@@ -16,7 +14,6 @@ const StudentMOLAssignment = ({ id, isDarkMode, class_ID }) => {
   const [submittedId,SetSubmittedId]=useState([])
   const [assignmentType, setAssignmentType] = useState([])
   const hasFetchedData = useRef(false); // Prevent multiple fetch calls
-  const { s3 } = AwsSdk();
   const [userDetails, setUserDetails] = useState(null);
 
   useEffect(() => {
@@ -145,7 +142,6 @@ const StudentMOLAssignment = ({ id, isDarkMode, class_ID }) => {
               key={assignment.id}
               assignment={assignment}
               index={index}
-              s3={s3}
               answered_by={answered_by}
               dispatch={dispatch}
               isDarkMode={isDarkMode}
