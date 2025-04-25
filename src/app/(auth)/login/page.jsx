@@ -145,42 +145,7 @@ const LoginPage = () => {
             gap: "10.5px",
           }}
         >
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            width="35"
-            height="34"
-            viewBox="0 0 35 34"
-            fill="none"
-          >
-            <path
-              d="M0.0158748 8.81498C0.0101488 6.58575 0.00207896 4.43087 2.56751e-06 2.27598C-0.000926809 1.30917 0.25019 0.987796 1.17992 0.771177C1.56558 0.68132 1.95761 0.632127 2.35822 0.66857C3.88182 0.807144 4.11578 1.05925 4.11511 2.5749C4.11381 5.54717 4.21133 8.5237 4.08196 11.4903C3.98171 13.7894 4.66119 15.6491 6.18545 17.3604C9.06447 20.5925 11.8148 23.9391 14.6531 27.2081C16.2384 29.034 18.0485 29.0306 19.6321 27.1933C22.8627 23.445 26.0604 19.6681 29.2551 15.889C29.9215 15.1007 30.1383 14.1134 30.1415 13.1123C30.1534 9.34816 30.1338 5.58383 30.1065 1.81971C30.103 1.33881 30.3183 1.05519 30.723 0.923103C31.1191 0.793827 31.538 0.692037 31.9521 0.668189C33.7031 0.56733 34.2264 1.08319 34.2235 2.81512C34.2173 6.48091 34.1879 10.1471 34.2319 13.8123C34.2555 15.7759 33.6283 17.3728 32.2672 18.8255C28.3249 23.033 24.4615 27.3148 20.5892 31.5875C18.5375 33.8512 15.8937 33.9601 13.8237 31.7234C9.67074 27.2361 5.5585 22.7109 1.43501 18.1962C0.434631 17.1009 0.0271045 15.7715 0.0160334 14.3137C0.00230568 12.5057 0.0148049 10.6975 0.0158748 8.81498Z"
-              fill="#16AA54"
-            />
-            <path
-              d="M17.066 7.68108C18.7821 7.68108 20.1733 6.28991 20.1733 4.57381C20.1733 2.85772 18.7821 1.46655 17.066 1.46655C15.3499 1.46655 13.9587 2.85772 13.9587 4.57381C13.9587 6.28991 15.3499 7.68108 17.066 7.68108Z"
-              fill="#16AA54"
-            />
-            <path
-              d="M16.9762 22.8585C19.4536 22.8585 26.0051 13.9288 26.0051 10.8991C26.0051 10.0912 25.4696 9.43623 24.8089 9.43623L9.58457 9.43623C8.92394 9.43623 8.38837 10.0912 8.38837 10.8991C8.3884 13.9288 14.4989 22.8585 16.9762 22.8585Z"
-              fill="#16AA54"
-            />
-          </svg>
-          <Typography
-            sx={{
-              width: "147.63px",
-              height: "46px",
-              flexShrink: 0,
-              color: "var(--Primary_Green, #16AA54)",
-              fontSize: "34.23px",
-              fontStyle: "normal",
-              fontWeight: 500,
-              lineHeight: "normal",
-              letterSpacing: "-1.027px",
-              fontFamily: "Space Grotesk, Arial, sans-serif",
-            }}
-          >
-            VidyaAI
-          </Typography>
+    <Logo />
         </Box>
         {/* Login Form */}
         <Box
@@ -204,7 +169,7 @@ const LoginPage = () => {
           >
             Welcome to
           </Typography>
-          <Typography
+          {/* <Typography
             sx={{
               color: "var(--Primary_Green, #16AA54)",
               fontSize: "64px",
@@ -216,7 +181,10 @@ const LoginPage = () => {
             }}
           >
             VidyaAI
-          </Typography>
+          </Typography> */}
+          <Box sx={{display:'flex',justifyContent:'center',mt:2}}>
+          <Image src={"/MediaGuru.png"} width={181} height={30} />
+          </Box>
           <Box
             sx={{
               color: "var(--Secondary_Black, #141514)",
@@ -418,7 +386,7 @@ const LoginPage = () => {
                   href="#"
                   variant="body2"
                   sx={{
-                    color: "var(--Primary_Green, #16AA54)",
+                    color: "#E7002A",
                     textAlign: "right",
                     fontSize: "14px",
                     fontStyle: "normal",
@@ -452,10 +420,10 @@ const LoginPage = () => {
                 flexShrink: 0,
                 alignSelf: "stretch",
                 borderRadius: "12px",
-                background: "var(--Secondary_Black, #141514)",
+                background: "#001B72",
                 textTransform: "none",
                 color: "#fff",
-                ":hover": { backgroundColor: "#fff", color: "black" },
+                ":hover": { backgroundColor: "#001B72"},
               }}
             >
               <Typography
