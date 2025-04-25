@@ -47,7 +47,7 @@ const LoginPage = () => {
     password: "",
   });
   const [selectedRole, setSelectedRole] = useState(null);
-  const roles = ["Student", "Teacher", "Admin"];
+  const roles = ["Trainer", "Trainee"];
 
   const [error, setError] = useState(null);
 
