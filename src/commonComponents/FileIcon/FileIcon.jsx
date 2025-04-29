@@ -25,7 +25,7 @@ import { FaRegFileZipper } from "react-icons/fa6";
 
 const getFileIcon = (fileName, props = {}) => {
   // Extract file extension
-  const ext = fileName.split('.').pop().toLowerCase();
+  const ext = fileName?.split('.')?.pop()?.toLowerCase();
 
   // Map the extension to the respective icon
   switch (ext) {

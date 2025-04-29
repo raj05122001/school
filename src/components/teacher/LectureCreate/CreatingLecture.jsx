@@ -36,6 +36,9 @@ import {
   createLecture,
   updateLecture,
   deleteUpcomingLecture,
+  updateLectureAttachment,
+  getLecAttachment,
+  deleteAttachment,
 } from "@/api/apiHelper";
 import { decodeToken } from "react-jwt";
 import Cookies from "js-cookie";
@@ -70,14 +73,16 @@ const CreatingLecture = ({
   const [lectureType, setLectureType] = useState("subject");
   const [lectureDate, setLectureDate] = useState(dayjs());
   const [lectureStartTime, setLectureStartTime] = useState(dayjs());
-  const [file, setFile] = useState(null);
+  const [fileStatus, setFileStatus] = useState(false);
   const inputRef = useRef(null);
-
+  const fileRef = useRef(null);
+  const [fileName, setFileName] = useState(null)
   // Dropdown options state
   const [classOptions, setClassOptions] = useState([]);
   const [subjectOptions, setSubjectOptions] = useState([]);
   const [chapterOptions, setChapterOptions] = useState([]);
   const [topicOptions, setTopicOptions] = useState([]);
+  const [attachments, setAttachments] = useState([]);
 
   const encodeURI = (value) => encodeURIComponent(value);
 
@@ -96,8 +101,32 @@ const CreatingLecture = ({
     console.error("Invalid or expired token");
   }
 
+  const getAttachments = async () => {
+      try {
+        const apiResponse = await getLecAttachment(lecture?.id);
+        const response  = apiResponse?.data?.data;
+        console.log("Response attachment", response)
+        setFileName(response[0])
+        fileRef.current = response[0]
+      } catch (error) {
+        console.error(error);
+      }
+    };
+
+  const handleRemoveFile = async () => {
+      try {
+        await deleteAttachment(fileName?.id);
+        getAttachments();
+      } catch (error) {
+        console.error(error);
+      }
+    };
+
+  console.log("New File Name", fileName)
+
   useEffect(() => {
     if (isEditMode && lecture) {
+      getAttachments()
       setSelectedClass(
         {
           name: lecture?.lecture_class?.name,
@@ -235,6 +264,15 @@ const CreatingLecture = ({
     }
   }, [lectureChapter]);
 
+  const handleFileSelect = (e) => {
+    console.log("handleFileSelect triggered");
+    const selectedFile = e?.target?.files?.[0];
+    console.log("Selected file is:", selectedFile);
+    fileRef.current = selectedFile;
+    setFileName(selectedFile)
+    console.log("FileRef is", fileRef)
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     // Create a new FormData object to send to the API
@@ -246,6 +284,7 @@ const CreatingLecture = ({
         return secondValue;
       }
     };
+    const file = fileRef.current;
 
     const data = {
       subject:
@@ -267,6 +306,7 @@ const CreatingLecture = ({
     if (file) {
       data.file = file;
     }
+
     setIsLoading(true);
     try {
       if (isEditMode && lecture?.id) {
@@ -274,6 +314,15 @@ const CreatingLecture = ({
         const response = await updateLecture(lecture.id, data);
 
         if (response.data.success) {
+          const lectureId = response?.data?.data?.id;
+          if (file) {
+            console.log("Uploading file with FormData");
+            var fd = new FormData();
+            fd.append("files", file);
+            fd.append("lecture", lectureId);
+            const attachRes = await updateLectureAttachment(lectureId, fd);
+            console.log("Attachment response:", attachRes);
+          }
           handleClose(); // Close the dialog after a successful update
         } else {
           console.error("Failed to update lecture:", response.data.message);
@@ -281,8 +330,18 @@ const CreatingLecture = ({
       } else {
         // Call the createLecture API when not in edit mode
         const response = await createLecture(data);
-
+        console.log("Response is", response);
         if (response.data.success) {
+          const lectureId = response?.data?.data?.id;
+          if (file) {
+            console.log("Uploading file with FormData");
+            var fd = new FormData();
+            fd.append("files", file);
+            fd.append("lecture", lectureId);
+            const attachRes = await updateLectureAttachment(lectureId, fd);
+            console.log("Attachment response:", attachRes);
+          }
+
           handleClose(); // Close the dialog after a successful creation
         } else {
           console.error("Failed to create lecture:", response.data.message);
@@ -304,9 +363,7 @@ const CreatingLecture = ({
     }
   };
 
-  const handleRemoveFile = () => {
-    setFile(null);
-  };
+
 
   return isLoading ? (
     <Box className="overlay">
@@ -380,11 +437,35 @@ const CreatingLecture = ({
           </Box>
         )}
         <Button onClick={handleClose} color="primary" sx={{}}>
-        <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 32 32" fill="none">
-<path d="M16.0001 29.3337C23.3334 29.3337 29.3334 23.3337 29.3334 16.0003C29.3334 8.66699 23.3334 2.66699 16.0001 2.66699C8.66675 2.66699 2.66675 8.66699 2.66675 16.0003C2.66675 23.3337 8.66675 29.3337 16.0001 29.3337Z" stroke="#3B3D3B" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-<path d="M12.2266 19.7732L19.7732 12.2266" stroke="#3B3D3B" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-<path d="M19.7732 19.7732L12.2266 12.2266" stroke="#3B3D3B" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-</svg>
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            width="32"
+            height="32"
+            viewBox="0 0 32 32"
+            fill="none"
+          >
+            <path
+              d="M16.0001 29.3337C23.3334 29.3337 29.3334 23.3337 29.3334 16.0003C29.3334 8.66699 23.3334 2.66699 16.0001 2.66699C8.66675 2.66699 2.66675 8.66699 2.66675 16.0003C2.66675 23.3337 8.66675 29.3337 16.0001 29.3337Z"
+              stroke="#3B3D3B"
+              stroke-width="1.5"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            />
+            <path
+              d="M12.2266 19.7732L19.7732 12.2266"
+              stroke="#3B3D3B"
+              stroke-width="1.5"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            />
+            <path
+              d="M19.7732 19.7732L12.2266 12.2266"
+              stroke="#3B3D3B"
+              stroke-width="1.5"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            />
+          </svg>
         </Button>
       </DialogTitle>
       <DialogContent>
@@ -697,7 +778,7 @@ const CreatingLecture = ({
                     }}
                   />
                   <Box
-                   onClick={() => inputRef.current?.click()}
+                    onClick={() => inputRef.current?.click()}
                     sx={{
                       position: "absolute",
                       right: 10,
@@ -712,7 +793,8 @@ const CreatingLecture = ({
             </Grid>
 
             {/* Display file name with remove icon if a file is selected */}
-            {file ? (
+
+            {fileName?.name ? (
               <Grid item xs={12} sm={8} md={4}>
                 <Box
                   sx={{
@@ -727,7 +809,7 @@ const CreatingLecture = ({
                   }}
                 >
                   <Box sx={{ display: "flex", alignItems: "center" }}>
-                    {getFileIcon(file.name, {
+                    {getFileIcon(fileName?.name, {
                       style: {
                         fontSize: "24px",
                         marginRight: "8px",
@@ -741,12 +823,12 @@ const CreatingLecture = ({
                         color: isDarkMode ? "#d7e4fc" : "#333",
                       }}
                     >
-                      {file.name.length > 24
-                        ? `${file.name?.slice(0, 14)}...${file.name.slice(
-                            file.name.length - 7,
-                            file.name.length
+                      {fileName?.name?.length > 24
+                        ? `${fileName?.name?.slice(0, 14)}...${fileName?.name?.slice(
+                            fileName?.name?.length - 7,
+                            fileName?.name?.length
                           )}`
-                        : file.name}
+                        : fileName?.name}
                     </Typography>
                   </Box>
                   <IconButton
@@ -755,16 +837,21 @@ const CreatingLecture = ({
                     sx={{ color: isDarkMode ? "#d7e4fc" : "#333" }}
                   >
                     {/* <IoCloseOutline style={{ fontSize: '20px' }} /> */}
-                    <Image src="/icons/trash.png" width={20} height={20} />
+                    <Image
+                      src="/icons/trash.png"
+                      alt="delete"
+                      width={20}
+                      height={20}
+                    />
                   </IconButton>
                 </Box>
               </Grid>
             ) : (
               <Grid item xs={12}>
                 <Button
-                  component="label"
                   fullWidth
                   variant="outlined"
+                  component="label"
                   sx={{
                     display: "flex",
                     alignItems: "center",
@@ -788,6 +875,7 @@ const CreatingLecture = ({
                 >
                   <Image
                     src="/icons/send-square.png"
+                    alt="attachment"
                     width={20}
                     height={20}
                     style={{ marginRight: 8, fontSize: "22px" }}
@@ -796,11 +884,7 @@ const CreatingLecture = ({
                 style={{ marginRight: 8, fontSize: '22px' }} 
               /> */}
                   Upload Material
-                  <input
-                    type="file"
-                    hidden
-                    onChange={(e) => setFile(e.target.files[0])}
-                  />
+                  <input type="file" hidden onChange={handleFileSelect} />
                 </Button>
               </Grid>
             )}
