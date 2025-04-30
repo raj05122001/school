@@ -349,7 +349,7 @@ const ClassWiseStudentRanking = ({ selectedOptions }) => {
                   lineHeight: "32.91px",
                 }}
               >
-                {entry.value}%
+                {entry.value}
               </Typography>
             </Box>
           </Box>
