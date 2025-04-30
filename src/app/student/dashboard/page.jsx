@@ -21,18 +21,8 @@ const Page = () => {
     <Box sx={{ flexGrow: 1, m: 2 }}>
       {/* <Box>{greetingCard}</Box> */}
       {/* Overview and Calendar */}
+      {profileCard}
       <Grid container direction="row" spacing={2} mt={1}>
-        <Grid item xs={12} sm={4} mt={2}>
-          
-            <Grid item xs={12} marginBottom={1}>
-              {profileCard}
-              {/* <ClassWiseStudentRanking /> */}
-            </Grid>
-            <Grid item xs={12}>
-              {watchTimeChart}
-            </Grid>
-          
-        </Grid>
         <Grid item xs={12} sm={8}>
           {recentLectures}
           {/* <Box mt={4}>{calendarComponent}</Box> */}
@@ -41,10 +31,10 @@ const Page = () => {
       {/* Lecture and Subject Analytics */}
       <Grid container spacing={2} mt={4}>
         <Grid item xs={12} md={4}>
-          {myRank}
+          {watchTimeChart}
         </Grid>
         <Grid item xs={12} md={8}>
-          {myAssignmentAnalytics}
+          {myRank}
         </Grid>
       </Grid>
     </Box>

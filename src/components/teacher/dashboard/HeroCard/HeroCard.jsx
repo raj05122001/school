@@ -72,13 +72,6 @@ function HeroCard({ averageDuration }) {
             // borderRadius: "8px",
           }}
         />
-        {/* <Image
-          src={"/banner 1_illustration 1.png"}
-          alt="Sitting Image"
-          width={257}
-          height={250}
-          style={{ flexShrink: 0, marginTop: "48px", marginRight: "0.46px" }}
-        /> */}
       </Box>
     </Box>
   );
