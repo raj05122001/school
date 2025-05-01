@@ -83,10 +83,9 @@ function OverallClassPerformance() {
         maxHeight: 465,
         flexGrow: 1,
         p: 2,
-        borderRadius: "8px",
-        backgroundColor: isDarkMode ? "#1E1E2F" : "#F5F5F5",
+        borderRadius: "16px",
+        backgroundColor: "#fff",
       }}
-      className="blur_effect_card"
     >
       <Typography
         variant="h6"
