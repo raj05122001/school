@@ -118,12 +118,12 @@ export const sidebarLinks = {
         },
       ],
     },
-    {
-      text: "Assessment",
-      href: "/teacher/assignment",
-      icon: <LuGraduationCap size={22} />,
-      show: "TEACHER",
-    },
+    // {
+    //   text: "Assessment",
+    //   href: "/teacher/assignment",
+    //   icon: <LuGraduationCap size={22} />,
+    //   show: "TEACHER",
+    // },
     {
       text: "Dashboard",
       href: "/student/dashboard",
