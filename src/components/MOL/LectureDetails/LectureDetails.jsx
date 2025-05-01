@@ -4,13 +4,13 @@ import { getLectureSummary, getLectureHighlights } from "@/api/apiHelper";
 import LectureNotes from "./LectureNotes";
 import LectureMCQ from "./LectureMCQ";
 import LectureQuestions from "./LectureQuestions";
-import LectureAssignment from "./LectureAssignment";
+// import LectureAssignment from "./LectureAssignment";
 import LectureReferrence from "./LectureReferrence";
 import { useThemeContext } from "@/hooks/ThemeContext";
 import { decodeToken } from "react-jwt";
 import Cookies from "js-cookie";
 import StudentMCQ from "./StudentMCQ";
-import StudentMOLAssignment from "./StudentMOLAssignment";
+// import StudentMOLAssignment from "./StudentMOLAssignment";
 
 const window = global?.window || {};
 
@@ -63,32 +63,32 @@ const LectureDetails = ({
     [id, isDarkMode]
   );
 
-  const memoizedStudentMOLAssignment = useMemo(
-    () => (
-      <StudentMOLAssignment
-        id={id}
-        isDarkMode={isDarkMode}
-        class_ID={class_ID}
-      />
-    ),
-    [id, isDarkMode, class_ID]
-  );
+  // const memoizedStudentMOLAssignment = useMemo(
+  //   () => (
+  //     <StudentMOLAssignment
+  //       id={id}
+  //       isDarkMode={isDarkMode}
+  //       class_ID={class_ID}
+  //     />
+  //   ),
+  //   [id, isDarkMode, class_ID]
+  // );
 
   const memoizedLectureQuestions = useMemo(
     () => <LectureQuestions id={id} isDarkMode={isDarkMode} />,
     [id, isDarkMode]
   );
-  const memoizedLectureAssignment = useMemo(
-    () => (
-      <LectureAssignment
-        id={id}
-        isDarkMode={isDarkMode}
-        class_ID={class_ID}
-        isEdit={true}
-      />
-    ),
-    [id, isDarkMode, class_ID]
-  );
+  // const memoizedLectureAssignment = useMemo(
+  //   () => (
+  //     <LectureAssignment
+  //       id={id}
+  //       isDarkMode={isDarkMode}
+  //       class_ID={class_ID}
+  //       isEdit={true}
+  //     />
+  //   ),
+  //   [id, isDarkMode, class_ID]
+  // );
   const memoizedLectureReferrence = useMemo(
     () => <LectureReferrence id={id} isDarkMode={isDarkMode} />,
     [id, isDarkMode]
@@ -178,7 +178,7 @@ const LectureDetails = ({
         <Tab label="Notes" />
         <Tab label="MCQ" />
         <Tab label="Questions" />
-        <Tab label="Assignment" />
+        {/* <Tab label="Assignment" /> */}
         <Tab label="Reference" />
       </Tabs>
 
@@ -189,11 +189,11 @@ const LectureDetails = ({
           ? memoizedStudentMCQ
           : memoizedLectureMCQ)}
       {value === 2 && memoizedLectureQuestions}
-      {value === 3 &&
+      {/* {value === 3 &&
         (userDetails?.role === "STUDENT"
           ? memoizedStudentMOLAssignment
-          : memoizedLectureAssignment)}
-      {value === 4 && memoizedLectureReferrence}
+          : memoizedLectureAssignment)} */}
+      {value === 3 && memoizedLectureReferrence}
     </Box>
   );
 };
