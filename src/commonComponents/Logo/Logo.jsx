@@ -13,7 +13,8 @@ const Logo = ({ color = "initial" }) => {
     >
       <Image
         className="cursor-pointer"
-        src="/mediagurulogo.svg"
+        // src="/mediagurulogo.svg"
+        src="/vidyaAIFulllogo.png"
         alt="chat bot"
         width={150}
         height={30}

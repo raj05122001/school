@@ -7,11 +7,12 @@ import WatchTimeChart from "@/components/student/dashboard/WatchTimeChart/WatchT
 import MyRank from "@/components/student/dashboard/MyRank/MyRank";
 import MyAssignmentAnalytics from "@/components/student/dashboard/MyAssignmentAnalytics/MyAssignmentAnalytics";
 import RecentLectures from "@/components/student/dashboard/RecentLectures/RecentLectures";
+import HeroSectionStudent from "@/components/student/dashboard/HeroSectionStudent/HeroSectionStudent";
 
 
 const Page = () => {
   // const greetingCard = useMemo(() => <GreetingCard />, []);
-  const profileCard = useMemo(() => <ProfileCard />, []);
+  const profileCard = useMemo(() => <HeroSectionStudent />, []);
   const watchTimeChart = useMemo(()=><WatchTimeChart />, []);
   const recentLectures = useMemo(() => <RecentLectures />, []);
   const myRank = useMemo(() => <MyRank />, []);
@@ -21,30 +22,15 @@ const Page = () => {
     <Box sx={{ flexGrow: 1, m: 2 }}>
       {/* <Box>{greetingCard}</Box> */}
       {/* Overview and Calendar */}
-      <Grid container direction="row" spacing={2} mt={1}>
-        <Grid item xs={12} sm={4} mt={2}>
-          
-            <Grid item xs={12} marginBottom={1}>
-              {profileCard}
-              {/* <ClassWiseStudentRanking /> */}
-            </Grid>
-            <Grid item xs={12}>
-              {watchTimeChart}
-            </Grid>
-          
-        </Grid>
-        <Grid item xs={12} sm={8}>
-          {recentLectures}
-          {/* <Box mt={4}>{calendarComponent}</Box> */}
-        </Grid>
-      </Grid>
+      {profileCard}
+      {recentLectures}
       {/* Lecture and Subject Analytics */}
-      <Grid container spacing={2} mt={4}>
+      <Grid container spacing={2} marginTop={"16px"}>
         <Grid item xs={12} md={4}>
-          {myRank}
+          {watchTimeChart}
         </Grid>
         <Grid item xs={12} md={8}>
-          {myAssignmentAnalytics}
+          {myRank}
         </Grid>
       </Grid>
     </Box>

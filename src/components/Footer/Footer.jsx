@@ -10,21 +10,22 @@ import { MdArrowForward } from "react-icons/md";
 import { useRouter } from "next/navigation";
 
 const Footer = () => {
-  const router = useRouter()
-  const handlePrivacy = ()=>{
-    router.push(`/privacy-policy`)
-  }
+  const router = useRouter();
+  const handlePrivacy = () => {
+    router.push(`/privacy-policy`);
+  };
 
-  const handletnc = ()=>{
-    router.push(`/terms-and-conditions`)
-  }
+  const handletnc = () => {
+    router.push(`/terms-and-conditions`);
+  };
 
   return (
     <Box
       sx={{
-        backgroundColor: "#1c1e22",
-        color: "#ffffff",
+        backgroundColor: "#fff",
+        color: "#5a0303",
         padding: "40px 20px",
+        borderTop: "1px solid rgb(90, 3, 3)",
       }}
     >
       <Grid
@@ -63,22 +64,29 @@ const Footer = () => {
         {/* Social Community Section */}
         <Grid item xs={12} sm={4}>
           <Typography
-            variant="h6"
-            sx={{ fontWeight: "bold", marginBottom: "10px" }}
+            sx={{
+              color: "#5a0303",
+              fontFamily: "Inter",
+              fontSize: "18px",
+              fontStyle: "normal",
+              fontWeight: 600,
+              lineHeight: "normal",
+              marginBottom: "10px",
+            }}
           >
             Join Our Social Community
           </Typography>
           <Box sx={{ display: "flex", gap: "15px" }}>
-            <Box underline="none" sx={{ color: "#ffffff" }}>
+            <Box underline="none" sx={{ color: "#5a0303" }}>
               <FaLinkedin />
             </Box>
-            <Box underline="none" sx={{ color: "#ffffff" }}>
+            <Box underline="none" sx={{ color: "#5a0303" }}>
               <FaFacebookF />
             </Box>
-            <Box underline="none" sx={{ color: "#ffffff" }}>
+            <Box underline="none" sx={{ color: "#5a0303" }}>
               <FaInstagram />
             </Box>
-            <Box underline="none" sx={{ color: "#ffffff" }}>
+            <Box underline="none" sx={{ color: "#5a0303" }}>
               <FaTwitter />
             </Box>
           </Box>
@@ -87,12 +95,29 @@ const Footer = () => {
         {/* Contact Section */}
         <Grid item xs={12} sm={4}>
           <Typography
-            variant="h6"
-            sx={{ fontWeight: "bold", marginBottom: "10px" }}
+            sx={{
+              color: "#5a0303",
+              fontFamily: "Inter",
+              fontSize: "18px",
+              fontStyle: "normal",
+              fontWeight: 600,
+              lineHeight: "normal",
+              marginBottom: "10px",
+            }}
           >
             Let&apos;s Discuss What&apos;s Next
           </Typography>
-          <Typography variant="body2" sx={{ marginBottom: "10px" }}>
+          <Typography
+            sx={{
+              color: "#2e0202",
+              fontFamily: "Inter",
+              fontSize: "14px",
+              fontStyle: "normal",
+              fontWeight: 400,
+              lineHeight: "normal",
+              marginBottom: "10px",
+            }}
+          >
             Have a project or a question? We&apos;d love to hear from you.
           </Typography>
           <a
@@ -102,7 +127,16 @@ const Footer = () => {
           >
             <Box
               underline="none"
-              sx={{ color: "#00aaff", display: "flex", alignItems: "center" }}
+              sx={{
+                color: "#aa1616",
+                fontFamily: "Inter",
+                fontSize: "14px",
+                fontStyle: "normal",
+                fontWeight: 400,
+                lineHeight: "normal",
+                display: "flex",
+                alignItems: "center",
+              }}
             >
               CONTACT US <MdArrowForward style={{ marginLeft: "5px" }} />
             </Box>
@@ -111,17 +145,32 @@ const Footer = () => {
       </Grid>
 
       <Box sx={{ marginTop: "40px", textAlign: "center" }}>
-        <Typography variant="body2" sx={{ color: "#7a7a7a" }}>
+        <Typography variant="body2" sx={{ color: "#7a7a7a", fontFamily:"Inter" }}>
           © 2023 IndiqAI. All rights reserved.
         </Typography>
-        <Box sx={{display:"flex", justifyContent:"center", alignItems:"center", gap:"4px"}}>
-          <Typography variant="body2" sx={{ color: "#7a7a7a", cursor:"pointer" }} onClick={()=>handletnc()}>
-            Terms and Conditions 
+        <Box
+          sx={{
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
+            gap: "4px",
+          }}
+        >
+          <Typography
+            variant="body2"
+            sx={{ color: "#7a7a7a", cursor: "pointer", fontFamily:"Inter" }}
+            onClick={() => handletnc()}
+          >
+            Terms and Conditions
           </Typography>
           <Typography variant="body2" sx={{ color: "#7a7a7a" }}>
             |
           </Typography>
-          <Typography variant="body2" sx={{ color: "#7a7a7a", cursor:"pointer" }} onClick={()=>handlePrivacy()}>
+          <Typography
+            variant="body2"
+            sx={{ color: "#7a7a7a", cursor: "pointer" }}
+            onClick={() => handlePrivacy()}
+          >
             Privacy Policy
           </Typography>
         </Box>

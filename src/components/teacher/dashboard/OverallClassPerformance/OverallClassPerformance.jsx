@@ -83,10 +83,11 @@ function OverallClassPerformance() {
         maxHeight: 465,
         flexGrow: 1,
         p: 2,
-        borderRadius: "8px",
-        backgroundColor: isDarkMode ? "#1E1E2F" : "#F5F5F5",
+        borderRadius: "16px",
+        backgroundColor: "#fff",
+        border:"none",
+        boxShadow:"none"
       }}
-      className="blur_effect_card"
     >
       <Typography
         variant="h6"
@@ -151,7 +152,7 @@ function OverallClassPerformance() {
               width:"100%",
               borderRadius: 5,
               "& .MuiLinearProgress-bar": {
-                backgroundColor: "#49cc4c",
+                backgroundColor: "#cc4949",
               },
               backgroundColor: isDarkMode ? "#333" : "#e0e0e0",
             }}
