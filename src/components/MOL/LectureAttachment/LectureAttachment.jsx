@@ -104,11 +104,10 @@ const LectureAttachments = ({ lectureId, isDarkMode }) => {
       sx={{
         color: isDarkMode ? "#F9F6EE" : "#353935",
         borderRadius: 6,
-        boxShadow: 2,
+        backgroundColor:"#fff",
         p: 3,
         mt: 2,
       }}
-      className ="blur_effect_card"
     >
       <Box
         sx={{

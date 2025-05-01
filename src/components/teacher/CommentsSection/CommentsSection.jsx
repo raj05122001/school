@@ -116,7 +116,7 @@ const CommentCard = ({
 
   if (loading) {
     return (
-      <Box display="flex" alignItems="flex-start" mb={3}>
+      <Box display="flex" alignItems="flex-start" mb={3} backgroundColor={"#fff"}>
         <Skeleton variant="circular" width={48} height={48} />
         <Box ml={2} flex={1}>
           <Skeleton width="50%" height={20} />
@@ -129,7 +129,7 @@ const CommentCard = ({
   }
 
   return (
-    <Box display="flex" alignItems="flex-start" mb={3}>
+    <Box display="flex" alignItems="flex-start" mb={3} sx={{backgroundColor:"#fff"}}>
       <Box sx={{ mr: 2 }}>
         <UserImage
           profilePic={comment.made_by?.profile_pic}
@@ -342,10 +342,11 @@ const CommentsSection = ({ id }) => {
         flexDirection: "column",
         justifyContent: "space-between",
         p: 3,
-        backdropFilter: "blur(20px)",
-        backgroundColor: "rgba(255, 255, 255, 0.2)",
-        boxShadow: "0 8px 24px rgba(0, 0, 0, 0.15)",
+        // backdropFilter: "blur(20px)",
+        backgroundColor: "#fff",
         borderRadius: "24px",
+        border:"none",
+        boxShadow:"none"
       }}
     >
       <Box>
@@ -391,7 +392,7 @@ const CommentsSection = ({ id }) => {
 
         <Divider sx={{ borderColor: isDarkMode ? "gray.600" : "gray.300" }} />
 
-        <CardContent sx={{ maxHeight: "400px", overflowY: "auto" }}>
+        <CardContent sx={{ maxHeight: "400px", overflowY: "auto", }}>
           {loading ? (
             Array.from(new Array(3))?.map((_, index) => (
               <CommentCard

@@ -514,12 +514,22 @@ const AssignmentItem = ({
             <Typography
               variant="body2"
               sx={{
-                  color: isDarkMode ? "#fff" : "#000",
-                  backgroundColor: isDarkMode ? "#f0dcf5" : "#f0dcf5",
-                  border: "1px solid #9a44ad",
-                  borderRadius:"4px",
-                  p: 1,
-                  fontSize: "14px",
+                display: "inline-flex",
+                padding: "10px 18px",
+                justifyContent: "center",
+                alignItems: "center",
+                gap: "8px",
+                textTransform: "none",
+                borderRadius: "8px",
+                background: "#155A03",
+                color: "#FFF",
+                textAlign: "center",
+                fontFeatureSettings: "'liga' off, 'clig' off",
+                fontFamily: "Aptos",
+                fontSize: "14px",
+                fontStyle: "normal",
+                fontWeight: "700",
+                lineHeight: "24px",
                 }}
             >
               Total Marks: {assignment.assignment_mark}
@@ -547,13 +557,27 @@ const AssignmentItem = ({
                 variant="contained"
                 onClick={() => !open && setOpen(true)}
                 sx={{
-                  color: isDarkMode ? "#fff" : "#000",
-                  backgroundColor: isDarkMode ? "#507dba" : "#89CFF0",
-                  p: 1,
-                  fontSize: "12px",
-                  ":hover": {
-                    color: "#fff",
-                  },
+                display: "inline-flex",
+                padding: "10px 30px",
+                justifyContent: "center",
+                alignItems: "center",
+                gap: "8px",
+                textTransform: "none",
+                borderRadius: "8px",
+                background: "#141514",
+                color: "#FFF",
+                textAlign: "center",
+                fontFeatureSettings: "'liga' off, 'clig' off",
+                fontFamily: "Aptos",
+                fontSize: "14px",
+                fontStyle: "normal",
+                fontWeight: "700",
+                lineHeight: "24px",
+                "&:hover": {
+                  border: "1px solid #141514",
+                  background: "#E5E5E5",
+                  color: "#141514",
+                },
                 }}
               >
                 Need Guidance
@@ -726,7 +750,7 @@ const AssignmentItem = ({
                   component="label"
                   onChange={(e) => handleFileSelect(e, "IMAGE")}
                 >
-                  <FaPhotoVideo />
+                  <FaPhotoVideo color="#16AA54"/>
                   <input hidden accept="image/*" type="file" />
                 </IconButton>
               </Tooltip>
@@ -736,7 +760,7 @@ const AssignmentItem = ({
                   component="label"
                   onChange={(e) => handleFileSelect(e, "AUDIO")}
                 >
-                  <FaFileAudio />
+                  <FaFileAudio color="#16AA54"/>
                   <input hidden accept="audio/*" type="file" />
                 </IconButton>
               </Tooltip>
@@ -746,7 +770,7 @@ const AssignmentItem = ({
                   component="label"
                   onChange={(e) => handleFileSelect(e, "VIDEO")}
                 >
-                  <FaRegFileVideo />
+                  <FaRegFileVideo color="#16AA54"/>
                   <input hidden accept="video/*" type="file" />
                 </IconButton>
               </Tooltip>
@@ -756,7 +780,7 @@ const AssignmentItem = ({
                   component="label"
                   onChange={(e) => handleFileSelect(e, "FILE")}
                 >
-                  <MdDescription />
+                  <MdDescription color="#16AA54"/>
                   <input
                     hidden
                     accept=".pdf,.doc,.docx,.txt,.xlsx,.xls,.pptx"
@@ -947,7 +971,7 @@ export const BorderLinearProgress = styled(LinearProgress)(({ theme }) => ({
   height: 64,
   borderRadius: 8,
   [`&.${linearProgressClasses.colorPrimary}`]: {
-    backgroundColor:  "#cce7ff", // Light blue for light mode
+    backgroundColor:  "#DAEDD5", // Light blue for light mode
     ...theme.applyStyles("dark", {
       backgroundColor: "#003366", // Navy blue for dark mode
     }),

@@ -62,7 +62,10 @@ const LecturePage = ({ params }) => {
 
   const classID = lectureData?.lecture_class?.id;
 
-  const videoPlayer = useMemo(() => <VideoPlayer id={id} duration={lectureData?.duration} />, [id,lectureData?.duration]);
+  const videoPlayer = useMemo(
+    () => <VideoPlayer id={id} duration={lectureData?.duration} />,
+    [id, lectureData?.duration]
+  );
   const headerMOL = useMemo(
     () => (
       <HeaderMOL lectureData={lectureData} isEdit={false} isShowPic={true} />
@@ -122,21 +125,9 @@ const LecturePage = ({ params }) => {
         gap: 2,
       }}
     >
-      <Paper
-        elevation={3}
-        sx={{
-          color: isDarkMode ? "#fff" : "#000",
-          backgroundImage: isDarkMode
-            ? "url('/headerBGDark1.jpg')"
-            : "url('/headerBG1.jpg')",
-          backgroundSize: "cover",
-          backgroundPosition: "center",
-          mt: 1,
-          p: 2,
-        }}
-      >
+      <Box sx={{ marginBottom: "4px", paddingBottom: "4px", height: "80%" }}>
         {headerMOL}
-      </Paper>
+      </Box>
 
       <Grid container spacing={2}>
         {/* Main Content */}
