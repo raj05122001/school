@@ -18,7 +18,7 @@ import UserImage from "@/commonComponents/UserImage/UserImage";
 import { Paper, Grid } from "@mui/material";
 import { getMyAssignmentAnalytics } from "@/api/apiHelper";
 
-function ProfileCard() {
+function HeroSectionStudent() {
   const router = useRouter();
   const [userDetails, setUserDetails] = useState(null);
   const [myScores, setMyScores] = useState({});
@@ -45,7 +45,29 @@ function ProfileCard() {
     }
   }, []);
   return (
-<Box sx={{ marginTop: "15px", marginLeft: "16px" }}>
+    <Box
+      sx={{
+        width: "100%",
+        height: "304px",
+        display: "flex",
+        flexShrink: 0,
+        borderRadius: "20px",
+        background: "var(--Green-dark-2, #174321);",
+        // gap:"30px"
+        justifyContent: "space-between",
+      }}
+    >
+      <Box
+        sx={{
+          display: "flex",
+          flexDirection: "column",
+          width: "60%",
+          height: "100%",
+          flexShrink: 0,
+          gap: "37px",
+        }}
+      >
+        <Box sx={{ marginTop: "15px", marginLeft: "16px" }}>
           <Box
             sx={{
               maxWidth: "249px",
@@ -191,7 +213,137 @@ function ProfileCard() {
             </Box>
           </Box>
         </Box>
+
+        <Box
+          sx={{
+            display: "flex",
+            flexDirection: "column",
+            gap: "8px",
+            marginLeft: "16px",
+            height: "100%",
+            // maxWidth:"636px"
+          }}
+        >
+          <Box
+            sx={{
+              bgcolor: "white",
+              borderRadius: "12px",
+              padding: "14px 12px",
+              display: "flex",
+              justifyContent: "space-between",
+              alignItems: "center",
+            }}
+          >
+            <Box display="flex" alignItems="center" gap={1}>
+              <img
+                src={"/note-2.png"}
+                style={{ width: "24px", height: "24px" }}
+              />
+              <Typography fontWeight={600} color={"#3B3D3B"}>
+                Average Score %
+              </Typography>
+            </Box>
+            <Typography variant="h5" color={"#3B3D3B"} fontWeight={700}>
+              {myScores?.average_scored_percentage}%
+            </Typography>
+          </Box>
+
+          <Grid container spacing={2}>
+            <Grid item xs={4}>
+              <ScoreCard
+                bgColor="#DBFFDC"
+                dotColor="#34C759"
+                value={myScores?.my_assignment_in_which_i_got_less_than_50}
+                Range={"0-50%"}
+              />
+            </Grid>
+            <Grid item xs={4}>
+              <ScoreCard
+                bgColor="#FFF3E0"
+                dotColor="#FFCC00"
+                value={myScores?.my_assignment_in_which_i_got_between_than_50_to_80}
+                Range={"50%-80%"}
+              />
+            </Grid>
+            <Grid item xs={4}>
+              <ScoreCard
+                bgColor="#FBEDEE"
+                dotColor="#FF3B30"
+                value={myScores?.my_assignment_in_which_i_got_between_than_80_to_100}
+                Range={"80%-100%"}
+              />
+            </Grid>
+          </Grid>
+        </Box>
+      </Box>
+      <Box
+        sx={{
+          display: "flex",
+          justifyContent: "flex-start",
+          alignItems: "center",
+          width: "20%",
+          height: "100%",
+          flexShrink: 1,
+          overflow: "hidden",
+          maxWidth: "100%",
+          borderRadius: "20px",
+          minWidth: "336px",
+        }}
+      >
+        <Box
+          sx={{
+            width: "336px",
+            height: "304px",
+            aspectRatio: "33 / 28",
+            background:
+              'url("/banner 3_illustration 1.png") lightgray 50% / cover no-repeat',
+            backgroundColor: "var(--Green-dark-2, #174321);",
+            marginRight: "2px",
+          }}
+        />
+      </Box>
+    </Box>
   );
 }
 
-export default ProfileCard;
+export default HeroSectionStudent;
+
+const ScoreCard = ({ bgColor, dotColor, value, Range }) => {
+  return (
+    <Paper
+      elevation={0}
+      sx={{
+        bgcolor: bgColor,
+        p: 2,
+        borderRadius: "12px",
+        minWidth: 100,
+        minHeight: 70,
+        display: "flex",
+        flexDirection: "column",
+        justifyContent: "space-between",
+      }}
+    >
+      <Box display="flex" justifyContent="space-between" alignItems="center">
+        <Box>
+          <Typography fontSize="16px" fontWeight={600} color="text.primary">
+            Assignment
+          </Typography>
+          <Typography fontSize="16px" fontWeight={600} color="text.primary">
+            Range {Range}
+          </Typography>
+        </Box>
+        <Box
+          sx={{
+            bgcolor: dotColor,
+            width: "16px",
+            height: "16px",
+            borderRadius: "100%",
+          }}
+        />
+      </Box>
+      <Typography fontSize="24px" fontWeight={600} mt={1}>
+        {value}
+      </Typography>
+    </Paper>
+  );
+};

@@ -94,27 +94,37 @@ function MyRank() {
           </Typography>
         </Box>
       </Box>
-      <ResponsiveContainer width="100%" height="80%">
-        <FunnelChart width={450} height={300}>
-          <Funnel dataKey="value" data={data} isAnimationActive width="100%">
-            <LabelList
-              position="outside"
-              fill={isDarkMode ? "#F0EAD6" : "#F0EAD6"}
-              stroke="none"
-              dataKey="name"
-              offset={20}
-              style={{
-                fontSize: "12px",
-                paddingRight: "4px",
-                paddingBottom: "2px",
-                width: "100%",
-                marginRight: "4px",
-                marginBottom: "2px",
-              }}
-            />
-          </Funnel>
-        </FunnelChart>
-      </ResponsiveContainer>
+      <Box
+        sx={{
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
+          width: "100%",
+          height: "400px", // Adjust as needed
+        }}
+      >
+        <ResponsiveContainer width="60%" height="80%">
+          <FunnelChart width={450} height={300}>
+            <Funnel dataKey="value" data={data} isAnimationActive width="100%">
+              <LabelList
+                position="outside"
+                fill={isDarkMode ? "#F0EAD6" : "#F0EAD6"}
+                stroke="none"
+                dataKey="name"
+                offset={20}
+                style={{
+                  fontSize: "12px",
+                  paddingRight: "4px",
+                  paddingBottom: "2px",
+                  width: "100%",
+                  marginRight: "4px",
+                  marginBottom: "2px",
+                }}
+              />
+            </Funnel>
+          </FunnelChart>
+        </ResponsiveContainer>
+      </Box>
     </Box>
   );
 }

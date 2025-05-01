@@ -70,7 +70,7 @@ const PersonalisedRecommendations = ({ id, marksData }) => {
     }
   };
 
-  const isSummary = section==="SUMMARY" || section==="HIGHLIGHTS"
+  const isSummary = section === "SUMMARY" || section === "HIGHLIGHTS";
 
   return (
     <Container
@@ -82,14 +82,22 @@ const PersonalisedRecommendations = ({ id, marksData }) => {
         flexDirection: "column",
         justifyContent: "space-between",
         p: 3,
-        backdropFilter: "blur(20px)",
-        backgroundColor: "rgba(255, 255, 255, 0.2)",
-        boxShadow: "0 8px 24px rgba(0, 0, 0, 0.15)",
+        backgroundColor: "#fff",
         borderRadius: "24px",
       }}
     >
-      <Typography variant="h4" gutterBottom color={primaryColor}>
-        <MdSelfImprovement style={{ fontSize: "32px" }} /> Personalised
+      <Typography
+        gutterBottom
+        sx={{
+          color: "#3B3D3B",
+          fontFamily: "Inter",
+          fontSize: "24px",
+          fontStyle: "normal",
+          fontWeight: 600,
+          lineHeight: "normal",
+        }}
+      >
+        <MdSelfImprovement style={{ fontSize: "24px" }} /> Personalised
         Recommendations
       </Typography>
 
@@ -109,11 +117,20 @@ const PersonalisedRecommendations = ({ id, marksData }) => {
               backgroundColor: "rgba(255, 255, 255, 0.2)",
               borderRadius: 6,
               pl: 2,
-              boxShadow: "0px 4px 10px #ADD8E6",
+              boxShadow: "0px 4px 10px rgb(207, 223, 206)",
             }}
           >
             <CardContent sx={{}}>
-              <Typography variant="h6" color={"#483248"}>
+              <Typography
+                sx={{
+                  color: "#3B3D3B",
+                  fontFamily: "Inter",
+                  fontSize: "18px",
+                  fontStyle: "normal",
+                  fontWeight: 600,
+                  lineHeight: "normal",
+                }}
+              >
                 <VscPreview style={{ marginRight: 2 }} />
                 Previously Selected
               </Typography>
@@ -125,23 +142,50 @@ const PersonalisedRecommendations = ({ id, marksData }) => {
                 isApiCall={true}
                 isSummary={isSummary}
               />
-              <Typography variant="body1" color={"#630330"}>
+              <Typography
+                sx={{
+                  color: "#155A03",
+                  fontFamily: "Inter",
+                  fontSize: "14px",
+                  fontStyle: "normal",
+                  fontWeight: 600,
+                  lineHeight: "normal",
+                }}
+              >
                 <strong>✦ Approach:</strong>{" "}
-                <span style={{ color: "#51414F" }}>
+                <span style={{ color: "#51414F", fontWeight: "normal" }}>
                   {selectedApproach || "None"}
                 </span>
               </Typography>
-              <Typography variant="body1" color={"#630330"}>
+              <Typography
+                sx={{
+                  color: "#155A03",
+                  fontFamily: "Inter",
+                  fontSize: "14px",
+                  fontStyle: "normal",
+                  fontWeight: 600,
+                  lineHeight: "normal",
+                }}
+              >
                 <strong>✦ Section:</strong>{" "}
-                <span style={{ color: "#51414F" }}>{section || "None"}</span>
+                <span style={{ color: "#51414F", fontWeight: "normal" }}>
+                  {section || "None"}
+                </span>
               </Typography>
             </CardContent>
           </Card>
         )
       )}
       <Box display={"flex"} gap={1}>
-        <MdRecommend style={{ fontSize: "32px" }} />
-        <Typography variant="h6" gutterBottom color={primaryColor}>
+        <MdRecommend style={{ fontSize: "24px" }} />
+        <Typography sx={{
+                  color: "#3B3D3B",
+                  fontFamily: "Inter",
+                  fontSize: "18px",
+                  fontStyle: "normal",
+                  fontWeight: 600,
+                  lineHeight: "normal",
+                }} gutterBottom>
           {" "}
           Personalized Topics Tailored for You
         </Typography>
@@ -175,7 +219,7 @@ const TopicAccordion = ({
   section,
   selectedApproach,
   isApiCall = false,
-  isSummary = false
+  isSummary = false,
 }) => {
   const { isDarkMode, primaryColor, secondaryColor } = useThemeContext();
   const [data, setData] = useState({});
@@ -224,7 +268,7 @@ const TopicAccordion = ({
         backgroundColor: "rgba(255, 255, 255, 0.2)",
         borderRadius: 2,
         p: 2,
-        boxShadow: "0px 2px 6px #FFDEAD",
+        boxShadow: "0px 2px 6px #79B669",
         margin: 2,
       }}
     >
@@ -232,7 +276,11 @@ const TopicAccordion = ({
         expandIcon={<FaChevronDown />} // Using react-icons here
       >
         <Typography variant="body1" color={primaryColor}>
-        {isSummary ? <TextWithMath text={`${topic.slice(0,200)}...`} /> : <TextWithMath text={topic} />}
+          {isSummary ? (
+            <TextWithMath text={`${topic.slice(0, 200)}...`} />
+          ) : (
+            <TextWithMath text={topic} />
+          )}
         </Typography>
       </AccordionSummary>
       <AccordionDetails
