@@ -90,8 +90,11 @@ const SubjectAnalytics = () => {
         p: 4,
         maxHeight: "420px",
         height: "100%",
+        backgroundColor:"#fff",
+        boxShadow:"none",
+        border:"none",
+        borderRadius:"20px"
       }}
-      className="blur_effect_card"
     >
       <Box
         sx={{
