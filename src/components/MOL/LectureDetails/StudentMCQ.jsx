@@ -182,7 +182,18 @@ const StudentMCQ = ({ id, isDarkMode }) => {
                   <Typography sx={{ textAlign: "left", marginRight: 1 }}>
                     {questionIndex + 1}.
                   </Typography>
-                  <TextWithMath text={item?.question} />
+                  <TextWithMath
+                    text={item?.question}
+                    textStyle={{
+                      color: "#3B3D3B",
+                      fontFamily: "Inter",
+                      fontSize: "14px",
+                      fontStyle: "normal",
+                      fontWeight: "600",
+                      lineHeight: "20px",
+                      letterSpacing: "-0.48px",
+                    }}
+                  />
                 </Box>
                 <RadioGroup
                   value={selectedAnswers[item?.id] || ""}
@@ -213,28 +224,30 @@ const StudentMCQ = ({ id, isDarkMode }) => {
                   <Button
                     variant="outlined"
                     onClick={() => handleSubmitAnswer(item?.id)}
-                    sx={{ mt: 2,
-                display: "inline-flex",
-                padding: "10px 30px",
-                justifyContent: "center",
-                alignItems: "center",
-                gap: "8px",
-                textTransform: "none",
-                borderRadius: "8px",
-                background: "#141514",
-                color: "#FFF",
-                textAlign: "center",
-                fontFeatureSettings: "'liga' off, 'clig' off",
-                fontFamily: "Aptos",
-                fontSize: "16px",
-                fontStyle: "normal",
-                fontWeight: "700",
-                lineHeight: "24px",
-                "&:hover": {
-                  border: "1px solid #141514",
-                  background: "#E5E5E5",
-                  color: "#141514",
-                }, }}
+                    sx={{
+                      mt: 2,
+                      display: "inline-flex",
+                      padding: "10px 30px",
+                      justifyContent: "center",
+                      alignItems: "center",
+                      gap: "8px",
+                      textTransform: "none",
+                      borderRadius: "8px",
+                      background: "#141514",
+                      color: "#FFF",
+                      textAlign: "center",
+                      fontFeatureSettings: "'liga' off, 'clig' off",
+                      fontFamily: "Aptos",
+                      fontSize: "16px",
+                      fontStyle: "normal",
+                      fontWeight: "700",
+                      lineHeight: "24px",
+                      "&:hover": {
+                        border: "1px solid #141514",
+                        background: "#E5E5E5",
+                        color: "#141514",
+                      },
+                    }}
                   >
                     Submit
                   </Button>
