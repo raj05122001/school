@@ -14,12 +14,15 @@ import {
   Badge,
   TextField,
   InputAdornment,
+  Paper,
+  InputBase,
 } from "@mui/material";
 import {
   MdPlayArrow,
   MdBookmark,
   MdDownload,
   MdMoreVert,
+  MdOutlineWatchLater,
 } from "react-icons/md";
 import {
   getLectureById,
@@ -36,6 +39,8 @@ import { FaBell, FaTimes } from "react-icons/fa";
 import UserImage from "@/commonComponents/UserImage/UserImage";
 import { usePathname, useSearchParams, useRouter } from "next/navigation";
 import usePresignedUrl from "@/hooks/usePresignedUrl";
+import { FiFilter, FiSearch } from "react-icons/fi";
+import { IoCalendarClearOutline } from "react-icons/io5";
 
 const varelaRound = Varela_Round({ weight: "400", subsets: ["latin"] });
 
@@ -56,7 +61,7 @@ const lightModeStyles = {
 };
 
 const CoursePlaylist = ({ params }) => {
-  const { fetchPresignedUrl } = usePresignedUrl()
+  const { fetchPresignedUrl } = usePresignedUrl();
   const { id } = params;
   const searchParams = useSearchParams();
   const router = useRouter();
@@ -68,11 +73,11 @@ const CoursePlaylist = ({ params }) => {
   const [listLoading, setListLoading] = useState(true);
   const { isDarkMode, primaryColor, secondaryColor } = useThemeContext();
   const [selectedTab, setSelectedTab] = useState(0); // State to manage selected tab
-  const [videoUrl,setVideoUrl]=useState("")
+  const [videoUrl, setVideoUrl] = useState("");
 
-  useEffect(()=>{
-    getSignedUrlForObject()
-  },[id])
+  useEffect(() => {
+    getSignedUrlForObject();
+  }, [id]);
 
   const getSignedUrlForObject = async () => {
     const data = {
@@ -81,10 +86,10 @@ const CoursePlaylist = ({ params }) => {
       operation: "download",
       folder: "videos/",
     };
-  
+
     try {
-      const signedUrl = await fetchPresignedUrl(data)
-      setVideoUrl(signedUrl?.presigned_url)
+      const signedUrl = await fetchPresignedUrl(data);
+      setVideoUrl(signedUrl?.presigned_url);
     } catch (error) {
       console.error(error);
       return null;
@@ -127,11 +132,10 @@ const CoursePlaylist = ({ params }) => {
   useEffect(() => {
     const delayDebounceFn = setTimeout(() => {
       handleChange(globalSearch);
-    }, 500); 
+    }, 500);
 
-    return () => clearTimeout(delayDebounceFn); 
+    return () => clearTimeout(delayDebounceFn);
   }, [globalSearch]);
-
 
   const handleChange = (value) => {
     router.push(`${pathname}?globalSearch=${value}`);
@@ -141,98 +145,119 @@ const CoursePlaylist = ({ params }) => {
   return (
     <Box
       sx={{
-        padding: 1,
+        padding: 4,
         color: "#fff",
         minHeight: "100vh",
-        background:isDarkMode ? "" : "linear-gradient(to top, #dfe9f3 0%, white 100%)"
+        background: isDarkMode
+          ? ""
+          : "linear-gradient(to top, #dfe9f3 0%, white 100%)",
+        display: "flex",
+        flexDirection: "column",
+        gap: 2,
       }}
     >
-    
-      <Box
-        sx={{ display: "flex", flexDirection: "column", gap: 2, height: "100%", justifyContent:"center", alignItems:"center" }}
+      {/* Main Course Card */}
+      <Card
+        sx={{
+          width: "100%",
+          display: "flex",
+          color: isDarkMode ? "#f1f1f1" : "#000", // Text color based on theme
+          borderRadius: "16px",
+          fontFamily: varelaRound,
+          height: "140px",
+        }}
       >
-        {/* Main Course Card */}
-        <Card
+        <CardMedia
+          component="video"
+          preload="auto"
+          //   ref={videoRef}
+          src={videoUrl}
+          //   controls={isHovered}
           sx={{
-            marginTop:4,
-            width: "100%",
-            display:"flex",
-            // backgroundColor: "rgba(255, 255, 255, 0.2)",
-            color: isDarkMode ? "#f1f1f1" : "#000", // Text color based on theme
-            height: "70%",
-            borderRadius: "16px",
-            fontFamily: varelaRound,
-            background: isDarkMode
-              ? "rgba(255, 255, 255, 0.2)"
-              : "linear-gradient(to top, #f3e7e9 0%, #e3eeff 99%, #e3eeff 100%)",
+            width: "20%",
+            height: "100%",
+
+            backdropFilter: "blur(10px)",
+            backgroundColor: "black",
           }}
-        >
-          <CardMedia
-            component="video"
-            preload="auto"
-            //   ref={videoRef}
-            src={videoUrl}
-            //   controls={isHovered}
+        />
+        <CardContent sx={{ width: "100%" }}>
+          <Box
             sx={{
-              width: "20%",
-              height: "100%",
-              
-             
-              backdropFilter: "blur(10px)",
-              backgroundColor: "black",
+              display: "flex",
+              alignItems: "center",
+              gap: 3,
+              justifyContent: "space-between",
+              width: "100%",
             }}
-          />
-          <CardContent sx={{width:"100%"}}>
-          <Box sx={{ display: "flex", alignItems: "center", gap: 3 ,justifyContent:'space-between', width:"100%"}}>
+          >
             <Typography
               variant="h5"
               fontWeight="bold"
               fontSize={"24px"}
               fontFamily={varelaRound}
             >
-              <MdOutlineTopic /> {listData?.lecture?.title}
-              <hr />
+              {listData?.lecture?.title}
             </Typography>
+          </Box>
 
-           <Box sx={{ display:"flex", justifyContent:"flex-end"}}>  
-           <TextField
-              id="global-search"
-              variant="outlined"
-              value={decodeURIComponent(globalSearch)}
-              placeholder="Global Search"
-              onChange={(e) =>
-                setGlobalSearch(encodeURIComponent(e.target.value))
-              }
-              InputProps={{
-                endAdornment: searchQuery && (
-                  <InputAdornment position="end">
-                    <IconButton
-                      onClick={() => {
-                        setGlobalSearch("");
-                      }}
-                    >
-                      <FaTimes size={18} />
-                    </IconButton>
-                  </InputAdornment>
-                ),
-                sx: {
-                  ...currentStyles,
-                  "& .MuiOutlinedInput-notchedOutline": { border: "none" },
-                  height:40
-                },
-              }}
-              sx={{
-                boxShadow: currentStyles.boxShadow,
-                borderRadius: 1,
-                width: "200px",
-              }}
-            />
-            <DarkMode />
-            <UserImage width={40} height={40} />
-           </Box> 
+          <Box sx={{ display: "flex", gap: "56px" }}>
+            <Box>
+              <Typography
+                sx={{ fontWeight: 400, fontSize: "12px", color: "#8C8F90" }}
+              >
+                Class
+              </Typography>
+              <Typography
+                sx={{ fontWeight: 700, fontSize: "14px", color: "#3B3D3B" }}
+              >
+                {listData?.lecture?.lecture_class?.name || "N/A"}
+              </Typography>
+            </Box>
+
+            <Box>
+              <Typography
+                sx={{ fontWeight: 400, fontSize: "12px", color: "#8C8F90" }}
+              >
+                Subject
+              </Typography>
+              <Typography
+                sx={{ fontWeight: 700, fontSize: "14px", color: "#3B3D3B" }}
+              >
+                {listData?.lecture?.chapter?.subject?.name || "N/A"}
+              </Typography>
+            </Box>
+
+            <Box>
+              <Typography
+                sx={{ fontWeight: 400, fontSize: "12px", color: "#8C8F90" }}
+              >
+                Chapter
+              </Typography>
+              <Typography
+                sx={{ fontWeight: 700, fontSize: "14px", color: "#3B3D3B" }}
+              >
+                {listData?.lecture?.chapter?.chapter || "N/A"}
+              </Typography>
+            </Box>
+          </Box>
+          <Box sx={{display:"flex",gap:"10px"}}>
+           <Box sx={{backgroundColor:"#DCF9E8",borderRadius:'4px',padding:"4px",display:'flex',gap:1,alignItems:'center'}}>
+           <MdOutlineWatchLater color="#1F6F2C"/>
+           <Typography sx={{fontWeight:400,fontSize:"12px",color:"#1F6F2C"}} >
+              {listData?.lecture?.schedule_date || "N/A"}
+            </Typography>
+           </Box>
+
+           <Box sx={{backgroundColor:"#DCF9E8",borderRadius:'4px',padding:"4px",display:'flex',gap:1,alignItems:'center'}}>
+           <IoCalendarClearOutline color="#1F6F2C"/>
+           <Typography sx={{fontWeight:400,fontSize:"12px",color:"#1F6F2C"}} >
+           {listData?.lecture?.schedule_time || "N/A"}
+            </Typography>
+           </Box>
 
           </Box>
-            <Typography variant="subtitle1" marginTop={4}>
+          {/* <Typography variant="subtitle1" marginTop={4}>
               <BsXDiamond /> <strong>Class:</strong>{" "}
               {listData?.lecture?.lecture_class?.name || "N/A"}
             </Typography>
@@ -252,71 +277,39 @@ const CoursePlaylist = ({ params }) => {
             <Typography variant="subtitle1">
               <BsXDiamond /> <strong>Scheduled Time:</strong>{" "}
               {listData?.lecture?.schedule_time || "N/A"}
-            </Typography>
-          </CardContent>
-        </Card>
+            </Typography> */}
+        </CardContent>
+      </Card>
 
-        {/* Video List */}
-        <Box sx={{ flex: 1, width:"100%" }}>
-          {/* <Box
-            sx={{
-              display: "flex",
-              justifyContent: "space-between",
-              alignItems: "center",
-              mb: 2,
-            }}
-          >
-            <Tabs
-              value={selectedTab}
-              onChange={handleTabChange}
-              indicatorColor="none"
-              textColor="primary"
-              sx={{
-                alignSelf: "flex-end",
-                ".MuiTabs-flexContainer": {
-                  gap: 2,
-                  background:
-                    isDarkMode &&
-                    "linear-gradient(89.7deg, rgb(0, 0, 0) -10.7%, rgb(53, 92, 125) 88.8%)",
-                  backgroundImage: isDarkMode ? "" : "url('/TabBG2.jpg')", // Add background image
-                  backgroundSize: "cover", // Ensure the image covers the entire page
-                  backgroundPosition: "center", // Center the image
-                  padding: 1,
-                  // borderRadius: "12px",
-                  borderTopLeftRadius: "12px",
-                  borderTopRightRadius: "12px",
-                },
-                ".MuiTab-root": {
-                  color: "#333",
-                  padding: "10px 20px",
-                  minHeight: 0,
-                  marginTop: "8px",
-                  textAlign: "center",
-                  color: isDarkMode && "#F0EAD6",
-                  "&:hover": {
-                    backgroundColor: "#e0e0e0",
-                    boxShadow: "0px 2px 8px rgba(0, 0, 0, 0.1)",
-                    borderRadius: "10px",
-                  },
-                  "&.Mui-selected": {
-                    backgroundColor: "#fff",
-                    color: "#000",
-                    boxShadow: "0px 6px 15px rgba(0, 0, 0, 0.2)",
-                    borderRadius: "10px",
-                  },
-                },
-              }}
-            >
-              <Tab label="Checked" />
-              <Tab label="Not Checked" />
-            </Tabs>
-          </Box> */}
+      {/* Search Bar */}
+      <Paper
+        component="form"
+        sx={{
+          p: "2px 8px",
+          display: "flex",
+          alignItems: "center",
+          borderRadius: "16px",
+          border: "1px solid #ccc",
+          width: "100%",
+        }}
+      >
+        <InputBase
+          sx={{ ml: 1, flex: 1 }}
+          placeholder="Search"
+          onChange={(e) => setGlobalSearch(encodeURIComponent(e.target.value))}
+          value={decodeURIComponent(globalSearch)}
+        />
+        <IconButton type="submit">
+          <FiSearch />
+        </IconButton>
+      </Paper>
 
-          <StudentAssignments
-            listData={listData?.students}
-            isDarkMode={isDarkMode}
-          />
-        </Box>
+      {/* Video List */}
+      <Box sx={{ flex: 1, width: "100%" }}>
+        <StudentAssignments
+          listData={listData?.students}
+          isDarkMode={isDarkMode}
+        />
       </Box>
     </Box>
   );

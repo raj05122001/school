@@ -1,16 +1,30 @@
 "use client";
 import React, { useMemo, useState, useEffect } from "react";
 import TeacherFilters from "@/components/teacher/lecture-listings/Filters/TeacherFilters";
-import { Box, Typography, Grid,Pagination } from "@mui/material";
+import {
+  Box,
+  Typography,
+  Grid,
+  Pagination,
+  Table,
+  TableHead,
+  TableRow,
+  TableCell,
+  TableBody,
+} from "@mui/material";
 import { useSearchParams, useRouter, usePathname } from "next/navigation";
 import { useThemeContext } from "@/hooks/ThemeContext";
 import { MdAssignment } from "react-icons/md";
 import AssignmentCard from "@/components/teacher/Assignment/AssignmentCard";
-import { getTeacherAllLecture,getTeacherAssignment } from "@/api/apiHelper";
+import { getTeacherAllLecture, getTeacherAssignment } from "@/api/apiHelper";
 import LectureListingCardSkeleton from "@/commonComponents/Skeleton/LectureListingCardSkeleton/LectureListingCardSkeleton";
 import { FaChalkboardTeacher } from "react-icons/fa";
 import { decodeToken } from "react-jwt";
 import Cookies from "js-cookie";
+import ChapterStatus from "@/components/teacher/Assignment/ChapterStatus";
+import SearchWithFilter from "@/components/teacher/Assignment/SearchWithFilter";
+import AssignmentTable from "@/components/teacher/Assignment/AssignmentTable";
+import CalendarIconCustom from "@/commonComponents/CalendarIconCustom/CalendarIconCustom";
 
 const Assignment = () => {
   const { isDarkMode, primaryColor, secondaryColor } = useThemeContext();
@@ -45,10 +59,6 @@ const Assignment = () => {
     paginationSelectedColor: "#ffffff",
   };
 
-  const encodeURI = (value) => {
-    return encodeURIComponent(value);
-  };
-
   useEffect(() => {
     fetchData();
   }, [activePage, classValue, subject, searchQuery]);
@@ -56,9 +66,18 @@ const Assignment = () => {
   const fetchData = async () => {
     setIsLoading(true);
     try {
-      const apiResponse = await getTeacherAssignment("","",classValue,subject,searchQuery,"","", activePage);
+      const apiResponse = await getTeacherAssignment(
+        "",
+        "",
+        classValue,
+        subject,
+        searchQuery,
+        "",
+        "",
+        activePage
+      );
       if (apiResponse?.success) {
-        setLectureList(apiResponse?.data?.lectures);
+        setLectureList(apiResponse?.data);
       }
     } catch (error) {
       console.error(error);
@@ -73,97 +92,17 @@ const Assignment = () => {
     router.push(`${pathname}?${newSearchParams.toString()}`);
   };
 
-  const handleChangeRoute = (id) => {
-    router.push(`/teacher/assignment/${id}`);
-  };
-
-  const filters = useMemo(
-    () => (
-      <TeacherFilters
-        classValue={classValue}
-        subject={subject}
-        searchQuery={searchQuery}
-        month={month}
-        lectureType={lectureType}
-        isAssignment={true}
-        label={
-          <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
-            <MdAssignment size={30} color={primaryColor} />
-            <Typography variant="h4" color={primaryColor}>
-              Lecture Assessment
-            </Typography>
-          </Box>
-        }
-      />
-    ),
-    [classValue, subject, searchQuery, month, lectureType,isDarkMode]
-  );
   return (
-    <Box sx={{ width: "100%", height: "100%" }}>
-      {filters}
-      <Grid container spacing={2}>
-        {isLoading ? (
-          Array.from({ length: 9 }, (_, ind) => (
-            <Grid item xs={12} sm={4} key={ind} spacing={2}>
-              <LectureListingCardSkeleton />
-            </Grid>
-          ))
-        ) : lectureList?.data?.length > 0 ? (
-          lectureList?.data?.map((value, index) => (
-            <Grid item xs={12} sm={4} key={index}>
-              <AssignmentCard data={value} onClick={handleChangeRoute} />
-            </Grid>
-          ))
-        ) : (
-          <Grid
-            item
-            xs={12}
-            sx={{
-              display: "flex",
-              flexDirection: "column",
-              alignItems: "center",
-              justifyContent: "center",
-              height: "100%",
-            }}
-          >
-            <FaChalkboardTeacher
-              size={30}
-              sx={{
-                fontSize: 80,
-                color: isDarkMode
-                  ? darkModeStyles.paginationItemColor
-                  : lightModeStyles.paginationItemColor,
-              }}
-            />
-            <Typography
-              variant="h5"
-              align="center"
-              sx={{
-                marginTop: 2,
-                color: isDarkMode
-                  ? darkModeStyles.paginationItemColor
-                  : lightModeStyles.paginationItemColor,
-                fontWeight: "bold",
-              }}
-            >
-              No lectures assignment available at the moment
-            </Typography>
-            <Typography
-              variant="body1"
-              align="center"
-              sx={{
-                marginTop: 1,
-                color: isDarkMode
-                  ? darkModeStyles.paginationItemColor
-                  : lightModeStyles.paginationItemColor,
-              }}
-            >
-              Please check back later or modify your search filters.
-            </Typography>
-          </Grid>
-        )}
-      </Grid>
-      {lectureList?.data?.length > 0 && lectureList?.total > 1 ? (
+    <Box sx={{ width: "100%", height: "100%", p: 4 }}>
+      <ChapterStatus
+        totalChapters={lectureList.total_lectures}
+        checked={lectureList?.total_checked}
+        notChecked={lectureList?.total_not_checked}
+      />
+      <SearchWithFilter />
+      <AssignmentTable data={lectureList?.lectures?.data} />
+
+      {lectureList?.lectures?.data?.length > 0 && lectureList?.lectures?.total > 1 ? (
         <Box
           sx={{
             display: "flex",
@@ -175,7 +114,7 @@ const Assignment = () => {
           <Pagination
             page={activePage}
             onChange={handleChange}
-            count={lectureList?.total}
+            count={lectureList?.lectures?.total}
             variant="outlined"
             color="primary"
             size="large"

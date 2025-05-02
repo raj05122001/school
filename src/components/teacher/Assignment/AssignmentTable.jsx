@@ -1,38 +1,27 @@
-import React from "react";
+import CalendarIconCustom from "@/commonComponents/CalendarIconCustom/CalendarIconCustom";
+import { useThemeContext } from "@/hooks/ThemeContext";
 import {
   Box,
-  Typography,
-  Card,
-  CardContent,
-  Grid,
-  Divider,
-  Button,
-  TableContainer,
   Paper,
   Table,
+  TableBody,
+  TableCell,
+  TableContainer,
   TableHead,
   TableRow,
-  TableCell,
-  TableBody,
   Tooltip,
+  Typography,
 } from "@mui/material";
-import UserImage from "@/commonComponents/UserImage/UserImage";
-import { FaCheckCircle, FaTimesCircle, FaArrowRight } from "react-icons/fa";
-import { MdOutlineCreditScore, MdOutlineMail } from "react-icons/md";
-import { TbSquareRoundedPercentage } from "react-icons/tb";
-import { VscFeedback } from "react-icons/vsc";
-import { useThemeContext } from "@/hooks/ThemeContext";
-import { useRouter, usePathname } from "next/navigation";
-import { FaDiamond } from "react-icons/fa6";
-import CalendarIconCustom from "@/commonComponents/CalendarIconCustom/CalendarIconCustom";
+import { useRouter } from "next/navigation";
 
-const StudentAssignments = ({ listData }) => {
-  const { isDarkMode, primaryColor, secondaryColor } = useThemeContext();
+const AssignmentTable = ({ data }) => {
   const router = useRouter();
-  const pathname = usePathname();
-  const handleRoute = async (id) => {
-    router.push(`${pathname}/${id}`);
+  const { isDarkMode } = useThemeContext();
+
+  const handleChangeRoute = (id) => {
+    router.push(`/teacher/assignment/${id}`);
   };
+
   return (
     <Box
       sx={{
@@ -76,8 +65,19 @@ const StudentAssignments = ({ listData }) => {
                   lineHeight: "normal",
                   fontSize: "14px",
                 }}
+              ></TableCell>
+              <TableCell
+                sx={{
+                  border: "none",
+                  color: "#3B3D3B",
+                  fontFamily: "Inter",
+                  fontWeight: "600",
+                  fontStyle: "normal",
+                  lineHeight: "normal",
+                  fontSize: "14px",
+                }}
               >
-                Submitted by
+                Lecture
               </TableCell>
               <TableCell
                 sx={{
@@ -90,7 +90,7 @@ const StudentAssignments = ({ listData }) => {
                   fontSize: "14px",
                 }}
               >
-                Checked Status
+                Chapter
               </TableCell>
               <TableCell
                 sx={{
@@ -103,7 +103,7 @@ const StudentAssignments = ({ listData }) => {
                   fontSize: "14px",
                 }}
               >
-                Checked Assignment
+                Class
               </TableCell>
               <TableCell
                 sx={{
@@ -116,7 +116,33 @@ const StudentAssignments = ({ listData }) => {
                   fontSize: "14px",
                 }}
               >
-                Total Assignment
+                Subject
+              </TableCell>
+              <TableCell
+                sx={{
+                  border: "none",
+                  color: "#3B3D3B",
+                  fontFamily: "Inter",
+                  fontWeight: "600",
+                  fontStyle: "normal",
+                  lineHeight: "normal",
+                  fontSize: "14px",
+                }}
+              >
+                Checked
+              </TableCell>
+              <TableCell
+                sx={{
+                  border: "none",
+                  color: "#3B3D3B",
+                  fontFamily: "Inter",
+                  fontWeight: "600",
+                  fontStyle: "normal",
+                  lineHeight: "normal",
+                  fontSize: "14px",
+                }}
+              >
+                Total
               </TableCell>
               <TableCell
                 sx={{
@@ -134,7 +160,7 @@ const StudentAssignments = ({ listData }) => {
             </TableRow>
           </TableHead>
           <TableBody sx={{ borderBottom: "none" }}>
-            {listData?.data?.map((lecture) => (
+            {data?.map((lecture) => (
               <TableRow
                 hover
                 sx={{
@@ -143,54 +169,62 @@ const StudentAssignments = ({ listData }) => {
                 }}
               >
                 <TableCell>
-                  <Box
-                    display="flex"
-                    alignItems="center"
-                    sx={{
-                      fontWeight: 700,
-                      color: "#3B3D3B",
-                      fontFamily: "Inter, sans-serif",
-                      fontSize: "14px",
-                      fontStyle: "normal",
-                      lineHeight: "normal",
-                      width: "105px",
-                    }}
-                    gap={2}
+                  <CalendarIconCustom date={lecture?.schedule_date} />
+                </TableCell>
+                <TableCell>
+                  <Tooltip
+                    title={`Title: ${lecture?.title || ""}`}
+                    arrow
+                    placement="top-start"
                   >
-                    <UserImage
-                      profilePic={lecture?.user?.profile_pic}
-                      name={lecture?.user?.full_name}
-                      width={24}
-                      height={24}
-                    />
-                    <Box flex="1">
-                      <Typography variant="h6" fontWeight={700} sx={{fontSize:"14px",color:"#3B3D3B"}}>
-                        {lecture?.user?.full_name}
-                      </Typography>
-                      <Typography variant="body2" color={secondaryColor} sx={{fontWeight:400,fontSize:"10px",color:"#3B3D3B"}}>
-                        {lecture?.user?.email}
-                      </Typography>
-                    </Box>
-                  </Box>
-                </TableCell>
-                <TableCell>
-                  <Box display="flex" alignItems="center" gap={1}>
-                    {lecture?.total_submitted_assignment ===
-                    lecture?.checked_assignments ? (
-                      <Box sx={{height:"16px",width:"16px",borderRadius:"100%",backgroundColor:"#34C759"}}/>
-                    ) : (
-                      <Box sx={{height:"16px",width:"16px",borderRadius:"100%",backgroundColor:"#FF3B30"}}/>
-                    )}
-                    <Typography variant="body2" fontWeight="bold">
-                      {lecture?.total_submitted_assignment ===
-                      lecture?.checked_assignments
-                        ? "Checked"
-                        : "Not Checked"}
+                    <Typography
+                      variant="h6"
+                      sx={{
+                        fontWeight: 700,
+                        color: "#3B3D3B",
+                        fontFamily: "Inter, sans-serif",
+                        fontSize: "14px",
+                        fontStyle: "normal",
+                        lineHeight: "normal",
+                        width: "105px",
+                      }}
+                      noWrap
+                    >
+                      {lecture?.title?.length > 24
+                        ? `${lecture?.title?.slice(0, 24)}...`
+                        : lecture?.title}
                     </Typography>
-                  </Box>
+                  </Tooltip>
                 </TableCell>
-
                 <TableCell>
+                  <Tooltip
+                    title={`Chapter: ${lecture?.chapter?.chapter || ""}`}
+                    arrow
+                    placement="top-start"
+                  >
+                    <span
+                      style={{
+                        fontWeight: 700,
+                        color: "#3B3D3B",
+                        fontFamily: "Inter, sans-serif",
+                        fontSize: "14px",
+                        fontStyle: "normal",
+                        lineHeight: "normal",
+                        width: "131px",
+                        height: "18px",
+                        flexShrink: 0,
+                      }}
+                    >
+                      {lecture?.chapter?.chapter}
+                    </span>
+                  </Tooltip>
+                </TableCell>
+                <TableCell>
+                  <Tooltip
+                    title={`Class: ${lecture?.lecture_class?.name || ""}`}
+                    arrow
+                    placement="top-start"
+                  >
                     <span
                       style={{
                         fontWeight: 700,
@@ -202,10 +236,16 @@ const StudentAssignments = ({ listData }) => {
                         width: "105px",
                       }}
                     >
-                      {lecture?.checked_assignments}
+                      {lecture?.lecture_class?.name || ""}
                     </span>
+                  </Tooltip>
                 </TableCell>
                 <TableCell>
+                  <Tooltip
+                    title={`Subject: ${lecture?.chapter?.subject?.name}`}
+                    arrow
+                    placement="top-start"
+                  >
                     <Typography
                       variant="body2"
                       sx={{
@@ -218,10 +258,13 @@ const StudentAssignments = ({ listData }) => {
                         width: "105px",
                       }}
                     >
-                      {lecture?.total_submitted_assignment}
+                      {lecture?.chapter?.subject?.name}
                     </Typography>
+                  </Tooltip>
                 </TableCell>
-                <TableCell onClick={() => handleRoute(lecture?.id)}>
+                <TableCell>{lecture?.checked_assignments}</TableCell>
+                <TableCell>{lecture?.total_submitted_assignments}</TableCell>
+                <TableCell onClick={() => handleChangeRoute(lecture?.id)}>
                   <img
                     src="/arrow-square-right.png"
                     style={{ width: "24px", height: "24px" }}
@@ -236,4 +279,4 @@ const StudentAssignments = ({ listData }) => {
   );
 };
 
-export default StudentAssignments;
+export default AssignmentTable;
