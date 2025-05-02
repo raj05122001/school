@@ -69,9 +69,8 @@ const EditDetailsPage = () => {
         experience: fetchedData?.experience,
         department: fetchedData?.department?.name,
         email: fetchedData?.email,
-        profile_pic:`${BASE_URL_MEET}${fetchedData?.profile_pic}`,
+        profile_pic: `${BASE_URL_MEET}${fetchedData?.profile_pic}`,
       });
-
     } catch (error) {
       console.error(error);
     }
@@ -120,19 +119,28 @@ const EditDetailsPage = () => {
     }
 
     try {
-     const response= await updateTeacherDetails(
+      const response = await updateTeacherDetails(
         userDetails?.teacher_id,
         updateData
       );
-      toast.success("Details updated successfully.")
+      toast.success("Details updated successfully.");
     } catch (error) {
       console.error("Update error:", error);
-      toast.error("Failed to update details.")
+      toast.error("Failed to update details.");
     }
   };
 
   const handleCloseSnackbar = () => {
     setSnackbar({ ...snackbar, open: false });
+  };
+
+  const labelCSS = {
+    color: "#141514",
+    fontFamily: "Inter",
+    fontSize: "14px",
+    fontStyle: "normal",
+    fontWeight: 400,
+    lineHeight: "normal",
   };
 
   return (
@@ -144,11 +152,16 @@ const EditDetailsPage = () => {
       }}
     >
       <Typography
-        variant="h4"
         gutterBottom
         align="center"
-        sx={{ fontWeight: "bold" }}
-        color= {isDarkMode ? "#E5E4E2" : "black"}
+        sx={{
+          color: "#0B2E02",
+          fontFamily: "Inter",
+          fontSize: "32px",
+          fontStyle: "normal",
+          fontWeight: 600,
+          lineHeight: "normal",
+        }}
       >
         Teacher Details
       </Typography>
@@ -198,13 +211,7 @@ const EditDetailsPage = () => {
       <form onSubmit={handleSubmit(onSubmit)}>
         <Grid container spacing={2}>
           <Grid item xs={12} sm={6}>
-            <Typography
-              variant="subtitle2"
-              color= {isDarkMode ? "#E5E4E2" : "#B2BEB5"}
-              sx={{ fontWeight: "bold" }}
-            >
-              Full Name*
-            </Typography>
+            <Typography sx={labelCSS}>Full Name*</Typography>
             <TextField
               fullWidth
               variant="outlined"
@@ -212,19 +219,22 @@ const EditDetailsPage = () => {
               {...register("full_name", { required: "Full name is required" })}
               error={!!errors.full_name}
               helperText={errors.full_name?.message}
-              sx={{ marginTop: 1 }}
-              className="blur_effect_card"
+              sx={{
+                marginTop: 1,
+                backgroundColor: "#fff",
+                "& .MuiInputBase-input": {
+                  fontSize: "14px",
+                  fontFamily: "Aspekta, sans-serif",
+                },
+                "& .MuiFormHelperText-root": {
+                  fontFamily: "Aspekta, sans-serif",
+                },
+              }}
             />
           </Grid>
 
           <Grid item xs={12} sm={6}>
-            <Typography
-              variant="subtitle2"
-              color= {isDarkMode ? "#E5E4E2" : "#B2BEB5"}
-              sx={{ fontWeight: "bold" }}
-            >
-              Designation*
-            </Typography>
+            <Typography sx={labelCSS}>Designation*</Typography>
             <TextField
               fullWidth
               variant="outlined"
@@ -234,19 +244,22 @@ const EditDetailsPage = () => {
               })}
               error={!!errors.designation}
               helperText={errors.designation?.message}
-              sx={{ marginTop: 1 }}
-              className="blur_effect_card"
+              sx={{
+                marginTop: 1,
+                backgroundColor: "#fff",
+                "& .MuiInputBase-input": {
+                  fontSize: "14px",
+                  fontFamily: "Aspekta, sans-serif",
+                },
+                "& .MuiFormHelperText-root": {
+                  fontFamily: "Aspekta, sans-serif",
+                },
+              }}
             />
           </Grid>
 
           <Grid item xs={12} sm={6}>
-            <Typography
-              variant="subtitle2"
-              color= {isDarkMode ? "#E5E4E2" : "#B2BEB5"}
-              sx={{ fontWeight: "bold" }}
-            >
-              Experience*
-            </Typography>
+            <Typography sx={labelCSS}>Experience*</Typography>
             <TextField
               fullWidth
               variant="outlined"
@@ -256,19 +269,22 @@ const EditDetailsPage = () => {
               })}
               error={!!errors.experience}
               helperText={errors.experience?.message}
-              sx={{ marginTop: 1 }}
-              className="blur_effect_card"
+              sx={{
+                marginTop: 1,
+                backgroundColor: "#fff",
+                "& .MuiInputBase-input": {
+                  fontSize: "14px",
+                  fontFamily: "Aspekta, sans-serif",
+                },
+                "& .MuiFormHelperText-root": {
+                  fontFamily: "Aspekta, sans-serif",
+                },
+              }}
             />
           </Grid>
 
           <Grid item xs={12} sm={6}>
-            <Typography
-              variant="subtitle2"
-              color= {isDarkMode ? "#E5E4E2" : "#B2BEB5"}
-              sx={{ fontWeight: "bold" }}
-            >
-              Department*
-            </Typography>
+            <Typography sx={labelCSS}>Department*</Typography>
             <TextField
               fullWidth
               variant="outlined"
@@ -279,19 +295,22 @@ const EditDetailsPage = () => {
               })}
               error={!!errors.department}
               helperText={errors.department?.message}
-              sx={{ marginTop: 1 }}
-              className="blur_effect_card"
+              sx={{
+                marginTop: 1,
+                backgroundColor: "#fff",
+                "& .MuiInputBase-input": {
+                  fontSize: "14px",
+                  fontFamily: "Aspekta, sans-serif",
+                },
+                "& .MuiFormHelperText-root": {
+                  fontFamily: "Aspekta, sans-serif",
+                },
+              }}
             />
           </Grid>
 
           <Grid item xs={12} sm={12}>
-            <Typography
-              variant="subtitle2"
-              color= {isDarkMode ? "#E5E4E2" : "#B2BEB5"}
-              sx={{ fontWeight: "bold" }}
-            >
-              Email*
-            </Typography>
+            <Typography sx={labelCSS}>Email*</Typography>
             <TextField
               fullWidth
               variant="outlined"
@@ -307,19 +326,22 @@ const EditDetailsPage = () => {
               })}
               error={!!errors.email}
               helperText={errors.email?.message}
-              sx={{ marginTop: 1 }}
-              className="blur_effect_card"
+              sx={{
+                marginTop: 1,
+                backgroundColor: "#fff",
+                "& .MuiInputBase-input": {
+                  fontSize: "14px",
+                  fontFamily: "Aspekta, sans-serif",
+                },
+                "& .MuiFormHelperText-root": {
+                  fontFamily: "Aspekta, sans-serif",
+                },
+              }}
             />
           </Grid>
 
           <Grid item xs={12} sm={12}>
-            <Typography
-              variant="subtitle2"
-              color= {isDarkMode ? "#E5E4E2" : "#B2BEB5"}
-              sx={{ fontWeight: "bold" }}
-            >
-              Subjects*
-            </Typography>
+            <Typography sx={labelCSS}>Subjects*</Typography>
 
             <Box maxHeight={300} sx={{ overflowY: "auto" }}>
               {subject?.length > 0 &&
@@ -331,13 +353,16 @@ const EditDetailsPage = () => {
                       display: "inline-block",
                       padding: "6px 12px",
                       margin: "4px",
-                      border: "1px solid #1976d2",
+                      border: "1px solid #16AA54",
                       borderRadius: "4px",
-                      backgroundColor: "#e3f2fd",
-                      color: "#1976d2",
+                      backgroundColor: "#DAEDD5",
                       cursor: "pointer",
+                      fontWeight: 500,
+                      color: "#104502",
+                      fontFamily: "Aspekta, sans-serif",
                       fontSize: "14px",
-                      fontWeight: "500",
+                      fontStyle: "normal",
+                      lineHeight: "normal",
                     }}
                   >
                     {val?.name}
@@ -351,9 +376,32 @@ const EditDetailsPage = () => {
           <Button
             type="submit"
             variant="contained"
-            color="primary"
             size="large"
             startIcon={<FaSave />}
+            sx={{
+              mt: 2,
+                  display: "inline-flex",
+                  padding: "12px 32px",
+                  justifyContent: "center",
+                  alignItems: "center",
+                  gap: "8px",
+                  textTransform: "none",
+                  borderRadius: "8px",
+                  background: "#141514",
+                  color: "#FFF",
+                  textAlign: "center",
+                  fontFeatureSettings: "'liga' off, 'clig' off",
+                  fontFamily: "Aptos",
+                  fontSize: "16px",
+                  fontStyle: "normal",
+                  fontWeight: "700",
+                  lineHeight: "24px",
+                  "&:hover": {
+                    border: "1px solid #141514",
+                    background: "#E5E5E5",
+                    color: "#141514",
+                  },
+            }}
           >
             Save
           </Button>
