@@ -95,13 +95,27 @@ const Page = () => {
                 color="primary"
                 onClick={handleOpenDialog}
                 sx={{
-                  backgroundColor: "#B9D9EB",
-                  transition: "all 150ms ease-in-out",
-                  color: "#003366", // Dark blue for text
-
-                  ":hover": {
-                    backgroundColor: "#6699CC", // Slightly darker
-                    boxShadow: "0 0 10px 0 #6699CC inset, 0 0 10px 4px #6699CC", // Matching hover color
+                  mt: 2,
+                  display: "inline-flex",
+                  padding: "12px 32px",
+                  justifyContent: "center",
+                  alignItems: "center",
+                  gap: "8px",
+                  textTransform: "none",
+                  borderRadius: "8px",
+                  background: "#141514",
+                  color: "#FFF",
+                  textAlign: "center",
+                  fontFeatureSettings: "'liga' off, 'clig' off",
+                  fontFamily: "Aptos",
+                  fontSize: "16px",
+                  fontStyle: "normal",
+                  fontWeight: "700",
+                  lineHeight: "24px",
+                  "&:hover": {
+                    border: "1px solid #141514",
+                    background: "#E5E5E5",
+                    color: "#141514",
                   },
                 }}
               >
@@ -112,13 +126,27 @@ const Page = () => {
                 color="secondary"
                 onClick={() => downloadExcel()}
                 sx={{
-                  backgroundColor: "#B9D9EB",
-                  transition: "all 150ms ease-in-out",
-                  color: "#003366", // Dark blue for text
-
-                  ":hover": {
-                    backgroundColor: "#6699CC", // Slightly darker
-                    boxShadow: "0 0 10px 0 #6699CC inset, 0 0 10px 4px #6699CC", // Matching hover color
+                  mt: 2,
+                  display: "inline-flex",
+                  padding: "12px 32px",
+                  justifyContent: "center",
+                  alignItems: "center",
+                  gap: "8px",
+                  textTransform: "none",
+                  borderRadius: "8px",
+                  background: "#141514",
+                  color: "#FFF",
+                  textAlign: "center",
+                  fontFeatureSettings: "'liga' off, 'clig' off",
+                  fontFamily: "Aptos",
+                  fontSize: "16px",
+                  fontStyle: "normal",
+                  fontWeight: "700",
+                  lineHeight: "24px",
+                  "&:hover": {
+                    border: "1px solid #141514",
+                    background: "#E5E5E5",
+                    color: "#141514",
                   },
                 }}
               >
@@ -129,13 +157,27 @@ const Page = () => {
                 color="secondary"
                 onClick={() => setOpen(true)}
                 sx={{
-                  backgroundColor: "#B9D9EB",
-                  transition: "all 150ms ease-in-out",
-                  color: "#003366", // Dark blue for text
-
-                  ":hover": {
-                    backgroundColor: "#6699CC", // Slightly darker
-                    boxShadow: "0 0 10px 0 #6699CC inset, 0 0 10px 4px #6699CC", // Matching hover color
+                  mt: 2,
+                  display: "inline-flex",
+                  padding: "12px 32px",
+                  justifyContent: "center",
+                  alignItems: "center",
+                  gap: "8px",
+                  textTransform: "none",
+                  borderRadius: "8px",
+                  background: "#141514",
+                  color: "#FFF",
+                  textAlign: "center",
+                  fontFeatureSettings: "'liga' off, 'clig' off",
+                  fontFamily: "Aptos",
+                  fontSize: "16px",
+                  fontStyle: "normal",
+                  fontWeight: "700",
+                  lineHeight: "24px",
+                  "&:hover": {
+                    border: "1px solid #141514",
+                    background: "#E5E5E5",
+                    color: "#141514",
                   },
                 }}
               >

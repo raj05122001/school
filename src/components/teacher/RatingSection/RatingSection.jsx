@@ -48,8 +48,10 @@ const RatingSection = ({ id, isShowRating = false }) => {
         p: 3,
         color: isDarkMode ? "#fff" : "#000",
         width: "100%",
+        backgroundColor:"#fff",
+        boxShadow:"none",
+        borderRadius:"20px",
       }}
-      className="blur_effect_card"
     >
       <>
         <Box sx={{ display: "flex", mb: 1 }}>

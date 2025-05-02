@@ -141,8 +141,11 @@ const ClassWiseStudentRanking = ({ selectedOptions }) => {
         display: "flex",
         flexDirection: "column",
         height: "100%",
+        boxShadow:"none",
+        border:"none",
+        borderRadius:"20px",
+        backgroundColor:"#fff"
       }}
-      className="blur_effect_card"
     >
       <Box
         sx={{
