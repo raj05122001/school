@@ -170,11 +170,10 @@ const LectureAnalytics = ({ lectureId }) => {
       sx={{
         p: 3,
         backdropFilter: "blur(10px)",
-        backgroundColor: "rgba(255, 255, 255, 0.2)",
-        boxShadow: "0 4px 30px rgba(0, 0, 0, 0.1)",
+        backgroundColor: "#fff",
+        boxShadow: "none",
         borderRadius: "16px",
       }}
-      className="blur_effect_card"
     >
       <Typography
         sx={{

@@ -479,9 +479,11 @@ const Sidebar = ({ open, setOpen }) => {
                     flexDirection: "column",
                     alignItems: "flex-start",
                     gap: "22px",
-                    borderRadius: "12px",
+                    // borderRadius: "12px",
+                    border: "none",
                     backgroundColor: "#fff",
-                    boxShadow: "0px 4px 10px 0px rgba(0, 0, 0, 0.15)",
+                    boxShadow: "none",
+                    // boxShadow: "0px 4px 10px 0px rgba(0, 0, 0, 0.15)",
                     height: "100%",
                   }}
                 >
@@ -529,6 +531,13 @@ const Sidebar = ({ open, setOpen }) => {
                     <Button
                       variant="outlined"
                       color="primary"
+                      onClick={() => {
+                        if (userDetails?.role !== "STUDENT") {
+                          console.log("Role:", userDetails?.role); // debug log
+  handleClose(); // close menu if needed
+                          router.push("/teacher/myprofile");
+                        }
+                      }}
                       sx={{
                         mt: 2,
                         display: "inline-flex",
@@ -556,40 +565,9 @@ const Sidebar = ({ open, setOpen }) => {
                     >
                       Setup Profile
                     </Button>
-                    <Button
-                      variant="outlined"
-                      color="primary"
-                      sx={{
-                        mt: 2,
-                        display: "inline-flex",
-                        padding: "12px 32px",
-                        justifyContent: "center",
-                        alignItems: "center",
-                        gap: "8px",
-                        textTransform: "none",
-                        borderRadius: "8px",
-                        border: "1px solid #141514",
-                        background: "#E5E5E5",
-                        color: "#141514",
-                        textAlign: "center",
-                        fontFeatureSettings: "'liga' off, 'clig' off",
-                        fontFamily: "Aptos",
-                        fontSize: "16px",
-                        fontStyle: "normal",
-                        fontWeight: "700",
-                        lineHeight: "24px",
-                        "&:hover": {
-                          background: "#141514",
-                          color: "#FFF",
-                        },
-                      }}
-                    >
-                      Switch Account
-                    </Button>
                   </Box>
                   <Box>
                     <MenuItem
-                      onClick={() => router.push("/teacher/myprofile")}
                       sx={{
                         fontFamily: "Aptos",
                         fontSize: "16px",
@@ -597,9 +575,10 @@ const Sidebar = ({ open, setOpen }) => {
                         fontWeight: "700",
                         lineHeight: "24px",
                         margin: "0 auto",
+                        border: "none",
                       }}
                     >
-                      <Box sx={{ display: "flex", gap: "8px" }}>
+                      {/* <Box sx={{ display: "flex", gap: "8px" }}>
                         <svg
                           xmlns="http://www.w3.org/2000/svg"
                           width="24"
@@ -625,53 +604,53 @@ const Sidebar = ({ open, setOpen }) => {
                           />
                         </svg>{" "}
                         <Typography>Settings</Typography>
+                      </Box> */}
+                    </MenuItem>
+
+                    <MenuItem
+                      onClick={() => router.push("/teacher/myprofile")}
+                      sx={{
+                        fontFamily: "Aptos",
+                        fontSize: "16px",
+                        fontStyle: "normal",
+                        fontWeight: "700",
+                        lineHeight: "24px",
+                      }}
+                    >
+                      <Box sx={{ display: "flex", gap: "8px" }}>
+                        <svg
+                          xmlns="http://www.w3.org/2000/svg"
+                          width="24"
+                          height="24"
+                          viewBox="0 0 24 24"
+                          fill="none"
+                        >
+                          <path
+                            d="M12 21C16.9706 21 21 16.9706 21 12C21 7.02944 16.9706 3 12 3C7.02944 3 3 7.02944 3 12C3 16.9706 7.02944 21 12 21Z"
+                            stroke="#3B3D3B"
+                            stroke-width="1.5"
+                            stroke-linecap="round"
+                            stroke-linejoin="round"
+                          />
+                          <path
+                            d="M12 11V16"
+                            stroke="#3B3D3B"
+                            stroke-width="1.5"
+                            stroke-linecap="round"
+                            stroke-linejoin="round"
+                          />
+                          <path
+                            d="M11.9502 8H12.0502V8.1H11.9502V8Z"
+                            stroke="#3B3D3B"
+                            stroke-width="1.5"
+                            stroke-linecap="round"
+                            stroke-linejoin="round"
+                          />
+                        </svg>{" "}
+                        <Typography>Information</Typography>
                       </Box>
                     </MenuItem>
-                    {!(userDetails?.role === "STUDENT") && (
-                      <MenuItem
-                        onClick={() => router.push("/teacher/myprofile")}
-                        sx={{
-                          fontFamily: "Aptos",
-                          fontSize: "16px",
-                          fontStyle: "normal",
-                          fontWeight: "700",
-                          lineHeight: "24px",
-                        }}
-                      >
-                        <Box sx={{ display: "flex", gap: "8px" }}>
-                          <svg
-                            xmlns="http://www.w3.org/2000/svg"
-                            width="24"
-                            height="24"
-                            viewBox="0 0 24 24"
-                            fill="none"
-                          >
-                            <path
-                              d="M12 21C16.9706 21 21 16.9706 21 12C21 7.02944 16.9706 3 12 3C7.02944 3 3 7.02944 3 12C3 16.9706 7.02944 21 12 21Z"
-                              stroke="#3B3D3B"
-                              stroke-width="1.5"
-                              stroke-linecap="round"
-                              stroke-linejoin="round"
-                            />
-                            <path
-                              d="M12 11V16"
-                              stroke="#3B3D3B"
-                              stroke-width="1.5"
-                              stroke-linecap="round"
-                              stroke-linejoin="round"
-                            />
-                            <path
-                              d="M11.9502 8H12.0502V8.1H11.9502V8Z"
-                              stroke="#3B3D3B"
-                              stroke-width="1.5"
-                              stroke-linecap="round"
-                              stroke-linejoin="round"
-                            />
-                          </svg>{" "}
-                          <Typography>Information</Typography>
-                        </Box>
-                      </MenuItem>
-                    )}
+
                     <MenuItem
                       onClick={() => handleRoute()}
                       sx={{
