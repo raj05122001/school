@@ -160,8 +160,9 @@ const AssignmentTable = ({ data }) => {
             </TableRow>
           </TableHead>
           <TableBody sx={{ borderBottom: "none" }}>
-            {data?.map((lecture) => (
+            {data?.map((lecture,index) => (
               <TableRow
+                key={index}
                 hover
                 sx={{
                   cursor: "pointer",

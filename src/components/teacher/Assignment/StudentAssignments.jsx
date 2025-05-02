@@ -134,8 +134,9 @@ const StudentAssignments = ({ listData }) => {
             </TableRow>
           </TableHead>
           <TableBody sx={{ borderBottom: "none" }}>
-            {listData?.data?.map((lecture) => (
+            {listData?.data?.map((lecture,index) => (
               <TableRow
+                key={index}
                 hover
                 sx={{
                   cursor: "pointer",
