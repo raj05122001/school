@@ -63,7 +63,7 @@ const StudentMCQ = ({ id, isDarkMode }) => {
       fetchQuizData();
     }
   }, [id]);
-  
+
   const parseOptions = (options) => {
     try {
       // First, convert the single quotes around the array to double quotes
@@ -150,9 +150,7 @@ const StudentMCQ = ({ id, isDarkMode }) => {
         color: isDarkMode ? "#F0EAD6" : "#36454F",
         borderBottomLeftRadius: "8px",
         borderBottomRightRadius: "8px",
-        background: isDarkMode
-          ? "radial-gradient(circle at 10% 20%, rgb(90, 92, 106) 0%, rgb(32, 45, 58) 81.3%)"
-          : "radial-gradient(circle at 18.7% 37.8%, rgb(250, 250, 250) 0%, rgb(225, 234, 238) 90%)",
+        backgroundCOlor: "#fff",
         overflowY: "auto",
         height: "100%",
         minHeight: 400,
@@ -180,7 +178,15 @@ const StudentMCQ = ({ id, isDarkMode }) => {
                   <Typography sx={{ textAlign: "left", marginRight: 1 }}>
                     {questionIndex + 1}.
                   </Typography>
-                  <TextWithMath text={item?.question} />
+                  <TextWithMath text={item?.question} textStyle={{
+                        color: "#3B3D3B",
+                        fontFamily: "Inter",
+                        fontSize: "14px",
+                        fontStyle: "normal",
+                        fontWeight: "600",
+                        lineHeight: "20px",
+                        letterSpacing: "-0.48px",
+                      }}/>
                 </Box>
                 <RadioGroup
                   value={selectedAnswers[item?.id] || ""}
@@ -211,7 +217,28 @@ const StudentMCQ = ({ id, isDarkMode }) => {
                   <Button
                     variant="outlined"
                     onClick={() => handleSubmitAnswer(item?.id)}
-                    sx={{ mt: 1 }}
+                    sx={{ mt: 2,
+                display: "inline-flex",
+                padding: "10px 30px",
+                justifyContent: "center",
+                alignItems: "center",
+                gap: "8px",
+                textTransform: "none",
+                borderRadius: "8px",
+                background: "#141514",
+                color: "#FFF",
+                textAlign: "center",
+                fontFeatureSettings: "'liga' off, 'clig' off",
+                fontFamily: "Aptos",
+                fontSize: "16px",
+                fontStyle: "normal",
+                fontWeight: "700",
+                lineHeight: "24px",
+                "&:hover": {
+                  border: "1px solid #141514",
+                  background: "#E5E5E5",
+                  color: "#141514",
+                }, }}
                   >
                     Submit
                   </Button>
@@ -222,7 +249,7 @@ const StudentMCQ = ({ id, isDarkMode }) => {
                     alignItems="center"
                     marginTop={"4px"}
                     sx={{ fontSize: "16px" }}
-                  >                
+                  >
                     <Typography
                       sx={{
                         fontWeight: "bold",
@@ -240,7 +267,7 @@ const StudentMCQ = ({ id, isDarkMode }) => {
                           ? "green"
                           : "red"
                       }
-                      isShow = {true}
+                      isShow={true}
                     />
                     <Typography
                       sx={{
@@ -264,7 +291,30 @@ const StudentMCQ = ({ id, isDarkMode }) => {
               <Button
                 variant="contained"
                 onClick={() => setVisibleCount((prevCount) => prevCount + 5)}
-                sx={{ mt: 2 }}
+                sx={{
+                  mt: 2,
+                  display: "inline-flex",
+                  padding: "12px 32px",
+                  justifyContent: "center",
+                  alignItems: "center",
+                  gap: "8px",
+                  textTransform: "none",
+                  borderRadius: "8px",
+                  background: "#141514",
+                  color: "#FFF",
+                  textAlign: "center",
+                  fontFeatureSettings: "'liga' off, 'clig' off",
+                  fontFamily: "Aptos",
+                  fontSize: "16px",
+                  fontStyle: "normal",
+                  fontWeight: "700",
+                  lineHeight: "24px",
+                  "&:hover": {
+                    border: "1px solid #141514",
+                    background: "#E5E5E5",
+                    color: "#141514",
+                  },
+                }}
               >
                 Need More
               </Button>
