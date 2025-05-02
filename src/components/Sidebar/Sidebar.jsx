@@ -119,12 +119,12 @@ export const sidebarLinks = {
         },
       ],
     },
-    // {
-    //   text: "Assessment",
-    //   href: "/teacher/assignment",
-    //   icon: <LuGraduationCap size={22} />,
-    //   show: "TEACHER",
-    // },
+    {
+      text: "Assessment",
+      href: "/teacher/assignment",
+      icon: <LuGraduationCap size={22} />,
+      show: "TEACHER",
+    },
     {
       text: "Dashboard",
       href: "/student/dashboard",
@@ -262,7 +262,6 @@ const Sidebar = ({ open, setOpen }) => {
                     fontFamily: "Inter, sans-serif",
 
                     paddingLeft: "16px",
-                    paddingRight: "12px",
                   }}
                 >
                   <Tooltip
@@ -275,7 +274,7 @@ const Sidebar = ({ open, setOpen }) => {
                         minHeight: 48,
                         margin: "8px 0",
                         pl: open ? 2 : 1,
-                        backgroundColor:
+                        borderRight:
                           pathname === item.href ||
                           (item.text === "Lecture" &&
                             [
@@ -283,19 +282,8 @@ const Sidebar = ({ open, setOpen }) => {
                               "/teacher/lecture-schedule",
                               "/teacher/lecture-tracking",
                             ].includes(pathname))
-                            ? "#FEECF0"
-                            : "transparent",
-                        borderRadius: "6px",
-                        // borderRight:
-                        //   pathname === item.href ||
-                        //   (item.text === "Lecture" &&
-                        //     [
-                        //       "/teacher/lecture-listings",
-                        //       "/teacher/lecture-schedule",
-                        //       "/teacher/lecture-tracking",
-                        //     ].includes(pathname))
-                        //     ? "4px solid #E7002A"
-                        //     : "none", // Use a solid color for the border
+                            ? "4px solid #12DD00"
+                            : "none", // Use a solid color for the border
                       }}
                       onClick={() => handleItemClick(index, item)}
                     >
@@ -309,7 +297,7 @@ const Sidebar = ({ open, setOpen }) => {
                                 "/teacher/lecture-schedule",
                                 "/teacher/lecture-tracking",
                               ].includes(pathname))
-                              ? "#E7002A"
+                              ? "#16AA54"
                               : "#8C8F90",
                           minWidth: open ? "unset" : "20px",
                           mr: open ? 2 : 0,
@@ -334,7 +322,7 @@ const Sidebar = ({ open, setOpen }) => {
                                   "/teacher/lecture-schedule",
                                   "/teacher/lecture-tracking",
                                 ].includes(pathname))
-                                ? "#E7002A"
+                                ? "#16AA54"
                                 : "#8C8F90",
                           }}
                         />
@@ -371,7 +359,7 @@ const Sidebar = ({ open, setOpen }) => {
                                     sx={{
                                       color:
                                         pathname === child.href
-                                          ? "#E7002A"
+                                          ? "#16AA54"
                                           : "#8C8F90",
                                       ml: 2,
                                     }}
