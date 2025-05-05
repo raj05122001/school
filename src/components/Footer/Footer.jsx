@@ -23,7 +23,7 @@ const Footer = () => {
     <Box
       sx={{
         backgroundColor: "#fff",
-        color: "#5a0303",
+        color: "#AF0524",
         padding: "40px 20px",
         borderTop: "1px solid rgb(90, 3, 3)",
       }}
@@ -65,8 +65,8 @@ const Footer = () => {
         <Grid item xs={12} sm={4}>
           <Typography
             sx={{
-              color: "#5a0303",
-              fontFamily: "Inter",
+              color: "#AF0524",
+              fontFamily: "Aspekta, sans-serif",
               fontSize: "18px",
               fontStyle: "normal",
               fontWeight: 600,
@@ -77,16 +77,16 @@ const Footer = () => {
             Join Our Social Community
           </Typography>
           <Box sx={{ display: "flex", gap: "15px" }}>
-            <Box underline="none" sx={{ color: "#5a0303" }}>
+            <Box underline="none" sx={{ color: "#AF0524" }}>
               <FaLinkedin />
             </Box>
-            <Box underline="none" sx={{ color: "#5a0303" }}>
+            <Box underline="none" sx={{ color: "#AF0524" }}>
               <FaFacebookF />
             </Box>
-            <Box underline="none" sx={{ color: "#5a0303" }}>
+            <Box underline="none" sx={{ color: "#AF0524" }}>
               <FaInstagram />
             </Box>
-            <Box underline="none" sx={{ color: "#5a0303" }}>
+            <Box underline="none" sx={{ color: "#AF0524" }}>
               <FaTwitter />
             </Box>
           </Box>
@@ -96,8 +96,8 @@ const Footer = () => {
         <Grid item xs={12} sm={4}>
           <Typography
             sx={{
-              color: "#5a0303",
-              fontFamily: "Inter",
+              color: "#AF0524",
+              fontFamily: "Aspekta, sans-serif",
               fontSize: "18px",
               fontStyle: "normal",
               fontWeight: 600,
@@ -110,7 +110,7 @@ const Footer = () => {
           <Typography
             sx={{
               color: "#2e0202",
-              fontFamily: "Inter",
+              fontFamily: "Aspekta, sans-serif",
               fontSize: "14px",
               fontStyle: "normal",
               fontWeight: 400,
@@ -129,7 +129,7 @@ const Footer = () => {
               underline="none"
               sx={{
                 color: "#aa1616",
-                fontFamily: "Inter",
+                fontFamily: "Aspekta, sans-serif",
                 fontSize: "14px",
                 fontStyle: "normal",
                 fontWeight: 400,
@@ -145,7 +145,7 @@ const Footer = () => {
       </Grid>
 
       <Box sx={{ marginTop: "40px", textAlign: "center" }}>
-        <Typography variant="body2" sx={{ color: "#7a7a7a", fontFamily:"Inter" }}>
+        <Typography variant="body2" sx={{ color: "#7a7a7a", fontFamily:"Aspekta, sans-serif" }}>
           © 2023 IndiqAI. All rights reserved.
         </Typography>
         <Box
@@ -158,7 +158,7 @@ const Footer = () => {
         >
           <Typography
             variant="body2"
-            sx={{ color: "#7a7a7a", cursor: "pointer", fontFamily:"Inter" }}
+            sx={{ color: "#7a7a7a", cursor: "pointer", fontFamily:"Aspekta, sans-serif" }}
             onClick={() => handletnc()}
           >
             Terms and Conditions

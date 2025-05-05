@@ -303,9 +303,30 @@ const LectureNotes = ({
         <Button
           variant="contained"
           onClick={() => setVisibleCount((prevCount) => prevCount + 5)}
-          sx={{ mt: 2, fontFamily:"Inter", fontSize:"14px", backgroundColor:"#E7002A", textTransform:"none", "&:hover": {
-            backgroundColor: "#E7002A", // customize these shades as needed
-          }, }}
+          sx={{
+                  mt: 2,
+                  display: "inline-flex",
+                  padding: "12px 32px",
+                  justifyContent: "center",
+                  alignItems: "center",
+                  gap: "8px",
+                  textTransform: "none",
+                  borderRadius: "8px",
+                  background: "#141514",
+                  color: "#FFF",
+                  textAlign: "center",
+                  fontFeatureSettings: "'liga' off, 'clig' off",
+                  fontFamily: "Aptos",
+                  fontSize: "16px",
+                  fontStyle: "normal",
+                  fontWeight: "700",
+                  lineHeight: "24px",
+                  "&:hover": {
+                    border: "1px solid #141514",
+                    background: "#E5E5E5",
+                    color: "#141514",
+                  },
+                }}
         >
           Need More
         </Button>

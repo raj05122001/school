@@ -96,16 +96,27 @@ const LectureManager = () => {
                 color="primary"
                 onClick={handleOpenDialog}
                 sx={{
-                  textTransform:"none",
-                  backgroundColor: "#E7002A",
-                  fontFamily: "Inter, sans-serif",
-                  fontSize:"18px",
-                  transition: "all 150ms ease-in-out",
-                  color: "#003366", // Dark blue for text
-
-                  ":hover": {
-                    backgroundColor: "#E7002A", // Slightly darker
-                    boxShadow: "0 0 10px 0 #E7002A inset, 0 0 10px 4px #E7002A", // Matching hover color
+                  mt: 2,
+                  display: "inline-flex",
+                  padding: "12px 32px",
+                  justifyContent: "center",
+                  alignItems: "center",
+                  gap: "8px",
+                  textTransform: "none",
+                  borderRadius: "8px",
+                  background: "#141514",
+                  color: "#FFF",
+                  textAlign: "center",
+                  fontFeatureSettings: "'liga' off, 'clig' off",
+                  fontFamily: "Aptos",
+                  fontSize: "16px",
+                  fontStyle: "normal",
+                  fontWeight: "700",
+                  lineHeight: "24px",
+                  "&:hover": {
+                    border: "1px solid #141514",
+                    background: "#E5E5E5",
+                    color: "#141514",
                   },
                 }}
               >
@@ -116,16 +127,27 @@ const LectureManager = () => {
                 color="secondary"
                 onClick={() => downloadExcel()}
                 sx={{
-                  textTransform:"none",
-                  fontFamily: "Inter, sans-serif",
-                  fontSize:"18px",
-                  backgroundColor: "#E7002A",
-                  transition: "all 150ms ease-in-out",
-                  color: "#003366", // Dark blue for text
-
-                  ":hover": {
-                    backgroundColor: "#E7002A", // Slightly darker
-                    boxShadow: "0 0 10px 0 #E7002A inset, 0 0 10px 4px #E7002A", // Matching hover color
+                  mt: 2,
+                  display: "inline-flex",
+                  padding: "12px 32px",
+                  justifyContent: "center",
+                  alignItems: "center",
+                  gap: "8px",
+                  textTransform: "none",
+                  borderRadius: "8px",
+                  background: "#141514",
+                  color: "#FFF",
+                  textAlign: "center",
+                  fontFeatureSettings: "'liga' off, 'clig' off",
+                  fontFamily: "Aptos",
+                  fontSize: "16px",
+                  fontStyle: "normal",
+                  fontWeight: "700",
+                  lineHeight: "24px",
+                  "&:hover": {
+                    border: "1px solid #141514",
+                    background: "#E5E5E5",
+                    color: "#141514",
                   },
                 }}
               >
@@ -136,16 +158,27 @@ const LectureManager = () => {
                 color="secondary"
                 onClick={() => setOpen(true)}
                 sx={{
-                  textTransform:"none",
-                  fontFamily: "Inter, sans-serif",
-                  fontSize:"18px",
-                  backgroundColor: "#E7002A",
-                  transition: "all 150ms ease-in-out",
-                  color: "#003366", // Dark blue for text
-
-                  ":hover": {
-                    backgroundColor: "#E7002A", // Slightly darker
-                    boxShadow: "0 0 10px 0 #E7002A inset, 0 0 10px 4px #E7002A", // Matching hover color
+                  mt: 2,
+                  display: "inline-flex",
+                  padding: "12px 32px",
+                  justifyContent: "center",
+                  alignItems: "center",
+                  gap: "8px",
+                  textTransform: "none",
+                  borderRadius: "8px",
+                  background: "#141514",
+                  color: "#FFF",
+                  textAlign: "center",
+                  fontFeatureSettings: "'liga' off, 'clig' off",
+                  fontFamily: "Aptos",
+                  fontSize: "16px",
+                  fontStyle: "normal",
+                  fontWeight: "700",
+                  lineHeight: "24px",
+                  "&:hover": {
+                    border: "1px solid #141514",
+                    background: "#E5E5E5",
+                    color: "#141514",
                   },
                 }}
               >

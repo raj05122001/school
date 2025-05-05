@@ -69,9 +69,8 @@ const EditDetailsPage = () => {
         experience: fetchedData?.experience,
         department: fetchedData?.department?.name,
         email: fetchedData?.email,
-        profile_pic:`${BASE_URL_MEET}${fetchedData?.profile_pic}`,
+        profile_pic: `${BASE_URL_MEET}${fetchedData?.profile_pic}`,
       });
-
     } catch (error) {
       console.error(error);
     }
@@ -120,14 +119,14 @@ const EditDetailsPage = () => {
     }
 
     try {
-     const response= await updateTeacherDetails(
+      const response = await updateTeacherDetails(
         userDetails?.teacher_id,
         updateData
       );
-      toast.success("Details updated successfully.")
+      toast.success("Details updated successfully.");
     } catch (error) {
       console.error("Update error:", error);
-      toast.error("Failed to update details.")
+      toast.error("Failed to update details.");
     }
   };
 
@@ -135,24 +134,29 @@ const EditDetailsPage = () => {
     setSnackbar({ ...snackbar, open: false });
   };
 
+  const labelCSS = {
+    color: "#001b72",
+    fontFamily: "Aspekta, sans-serif",
+    fontSize: "16px",
+    fontStyle: "normal",
+    fontWeight: 600,
+    lineHeight: "19px",
+    letterSpacing: "0.8px",
+  };
+
   return (
     <Box
       sx={{
         padding: { xs: 2, sm: 4 },
-        maxWidth: 800,
-        margin: "0 auto",
+        maxWidth: "1142px",
+        margin: "32px auto",
+        backgroundColor: "#fff",
+        display: "flex",
+        alignItems: "flex-start",
+        gap: "34px",
+        borderRadius: "20px",
       }}
     >
-      <Typography
-        variant="h4"
-        gutterBottom
-        align="center"
-        sx={{ fontWeight: "bold" }}
-        color= {isDarkMode ? "#E5E4E2" : "black"}
-      >
-        Teacher Details
-      </Typography>
-
       <Box
         sx={{
           display: "flex",
@@ -169,8 +173,42 @@ const EditDetailsPage = () => {
           onClick={handleEditPicClick}
           badgeContent={
             <Tooltip title="Edit Profile Picture">
-              <IconButton color="primary" size="small">
-                <FaCamera size={24} />
+              <IconButton
+                color="primary"
+                size="small"
+                sx={{ backgroundColor: "#141514", borderRadius: "8px" }}
+              >
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="24"
+                  height="24"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                >
+                  <path
+                    d="M11 2H9C4 2 2 4 2 9V15C2 20 4 22 9 22H15C20 22 22 20 22 15V13"
+                    stroke="white"
+                    stroke-width="1.5"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                  />
+                  <path
+                    d="M16.0399 3.02025L8.15988 10.9003C7.85988 11.2003 7.55988 11.7903 7.49988 12.2203L7.06988 15.2303C6.90988 16.3203 7.67988 17.0803 8.76988 16.9303L11.7799 16.5003C12.1999 16.4403 12.7899 16.1403 13.0999 15.8403L20.9799 7.96025C22.3399 6.60025 22.9799 5.02025 20.9799 3.02025C18.9799 1.02025 17.3999 1.66025 16.0399 3.02025Z"
+                    stroke="white"
+                    stroke-width="1.5"
+                    stroke-miterlimit="10"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                  />
+                  <path
+                    d="M14.9102 4.15039C15.5802 6.54039 17.4502 8.41039 19.8502 9.09039"
+                    stroke="white"
+                    stroke-width="1.5"
+                    stroke-miterlimit="10"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                  />
+                </svg>
               </IconButton>
             </Tooltip>
           }
@@ -181,8 +219,9 @@ const EditDetailsPage = () => {
             sx={{
               width: { xs: 100, sm: 150 },
               height: { xs: 100, sm: 150 },
-              border: "2px solid #1976d2",
+              // border: "2px solid #1976d2",
               boxShadow: 3,
+              borderRadius: "16px",
             }}
           />
         </Badge>
@@ -198,13 +237,7 @@ const EditDetailsPage = () => {
       <form onSubmit={handleSubmit(onSubmit)}>
         <Grid container spacing={2}>
           <Grid item xs={12} sm={6}>
-            <Typography
-              variant="subtitle2"
-              color= {isDarkMode ? "#E5E4E2" : "#B2BEB5"}
-              sx={{ fontWeight: "bold" }}
-            >
-              Full Name*
-            </Typography>
+            <Typography sx={labelCSS}>Full Name*</Typography>
             <TextField
               fullWidth
               variant="outlined"
@@ -212,19 +245,34 @@ const EditDetailsPage = () => {
               {...register("full_name", { required: "Full name is required" })}
               error={!!errors.full_name}
               helperText={errors.full_name?.message}
-              sx={{ marginTop: 1 }}
-              className="blur_effect_card"
+              sx={{
+                backgroundColor: "#fff",
+                "& .MuiOutlinedInput-root": {
+                  borderRadius: "12px", // This affects the whole input container
+                },
+                "& .MuiOutlinedInput-notchedOutline": {
+                  borderRadius: "12px", // This affects the outline (border)
+                },
+                "& .MuiInputBase-input": {
+                  fontSize: "16px",
+                  fontFamily: "Aspekta, sans-serif",
+                  fontWeight: 400,
+                  lineHeight: "19px",
+                  color: "#282D32",
+                },
+                "& .MuiFormHelperText-root": {
+                  fontFamily: "Aspekta, sans-serif",
+                  fontWeight: 400,
+                  lineHeight: "19px",
+                  fontSize: "16px",
+                  color: "#282D32",
+                },
+              }}
             />
           </Grid>
 
           <Grid item xs={12} sm={6}>
-            <Typography
-              variant="subtitle2"
-              color= {isDarkMode ? "#E5E4E2" : "#B2BEB5"}
-              sx={{ fontWeight: "bold" }}
-            >
-              Designation*
-            </Typography>
+            <Typography sx={labelCSS}>Designation*</Typography>
             <TextField
               fullWidth
               variant="outlined"
@@ -234,19 +282,34 @@ const EditDetailsPage = () => {
               })}
               error={!!errors.designation}
               helperText={errors.designation?.message}
-              sx={{ marginTop: 1 }}
-              className="blur_effect_card"
+              sx={{
+                backgroundColor: "#fff",
+                "& .MuiOutlinedInput-root": {
+                  borderRadius: "12px", // This affects the whole input container
+                },
+                "& .MuiOutlinedInput-notchedOutline": {
+                  borderRadius: "12px", // This affects the outline (border)
+                },
+                "& .MuiInputBase-input": {
+                  fontSize: "16px",
+                  fontFamily: "Aspekta, sans-serif",
+                  fontWeight: 400,
+                  lineHeight: "19px",
+                  color: "#282D32",
+                },
+                "& .MuiFormHelperText-root": {
+                  fontFamily: "Aspekta, sans-serif",
+                  fontWeight: 400,
+                  lineHeight: "19px",
+                  fontSize: "16px",
+                  color: "#282D32",
+                },
+              }}
             />
           </Grid>
 
           <Grid item xs={12} sm={6}>
-            <Typography
-              variant="subtitle2"
-              color= {isDarkMode ? "#E5E4E2" : "#B2BEB5"}
-              sx={{ fontWeight: "bold" }}
-            >
-              Experience*
-            </Typography>
+            <Typography sx={labelCSS}>Experience*</Typography>
             <TextField
               fullWidth
               variant="outlined"
@@ -256,19 +319,34 @@ const EditDetailsPage = () => {
               })}
               error={!!errors.experience}
               helperText={errors.experience?.message}
-              sx={{ marginTop: 1 }}
-              className="blur_effect_card"
+              sx={{
+                backgroundColor: "#fff",
+                "& .MuiOutlinedInput-root": {
+                  borderRadius: "12px", // This affects the whole input container
+                },
+                "& .MuiOutlinedInput-notchedOutline": {
+                  borderRadius: "12px", // This affects the outline (border)
+                },
+                "& .MuiInputBase-input": {
+                  fontSize: "16px",
+                  fontFamily: "Aspekta, sans-serif",
+                  fontWeight: 400,
+                  lineHeight: "19px",
+                  color: "#282D32",
+                },
+                "& .MuiFormHelperText-root": {
+                  fontFamily: "Aspekta, sans-serif",
+                  fontWeight: 400,
+                  lineHeight: "19px",
+                  fontSize: "16px",
+                  color: "#282D32",
+                },
+              }}
             />
           </Grid>
 
           <Grid item xs={12} sm={6}>
-            <Typography
-              variant="subtitle2"
-              color= {isDarkMode ? "#E5E4E2" : "#B2BEB5"}
-              sx={{ fontWeight: "bold" }}
-            >
-              Department*
-            </Typography>
+            <Typography sx={labelCSS}>Department*</Typography>
             <TextField
               fullWidth
               variant="outlined"
@@ -279,19 +357,34 @@ const EditDetailsPage = () => {
               })}
               error={!!errors.department}
               helperText={errors.department?.message}
-              sx={{ marginTop: 1 }}
-              className="blur_effect_card"
+              sx={{
+                backgroundColor: "#fff",
+                "& .MuiOutlinedInput-root": {
+                  borderRadius: "12px", // This affects the whole input container
+                },
+                "& .MuiOutlinedInput-notchedOutline": {
+                  borderRadius: "12px", // This affects the outline (border)
+                },
+                "& .MuiInputBase-input": {
+                  fontSize: "16px",
+                  fontFamily: "Aspekta, sans-serif",
+                  fontWeight: 400,
+                  lineHeight: "19px",
+                  color: "#282D32",
+                },
+                "& .MuiFormHelperText-root": {
+                  fontFamily: "Aspekta, sans-serif",
+                  fontWeight: 400,
+                  lineHeight: "19px",
+                  fontSize: "16px",
+                  color: "#282D32",
+                },
+              }}
             />
           </Grid>
 
           <Grid item xs={12} sm={12}>
-            <Typography
-              variant="subtitle2"
-              color= {isDarkMode ? "#E5E4E2" : "#B2BEB5"}
-              sx={{ fontWeight: "bold" }}
-            >
-              Email*
-            </Typography>
+            <Typography sx={labelCSS}>Email*</Typography>
             <TextField
               fullWidth
               variant="outlined"
@@ -307,19 +400,34 @@ const EditDetailsPage = () => {
               })}
               error={!!errors.email}
               helperText={errors.email?.message}
-              sx={{ marginTop: 1 }}
-              className="blur_effect_card"
+              sx={{
+                backgroundColor: "#fff",
+                "& .MuiOutlinedInput-root": {
+                  borderRadius: "12px", // This affects the whole input container
+                },
+                "& .MuiOutlinedInput-notchedOutline": {
+                  borderRadius: "12px", // This affects the outline (border)
+                },
+                "& .MuiInputBase-input": {
+                  fontSize: "16px",
+                  fontFamily: "Aspekta, sans-serif",
+                  fontWeight: 400,
+                  lineHeight: "19px",
+                  color: "#282D32",
+                },
+                "& .MuiFormHelperText-root": {
+                  fontFamily: "Aspekta, sans-serif",
+                  fontWeight: 400,
+                  lineHeight: "19px",
+                  fontSize: "16px",
+                  color: "#282D32",
+                },
+              }}
             />
           </Grid>
 
           <Grid item xs={12} sm={12}>
-            <Typography
-              variant="subtitle2"
-              color= {isDarkMode ? "#E5E4E2" : "#B2BEB5"}
-              sx={{ fontWeight: "bold" }}
-            >
-              Subjects*
-            </Typography>
+            <Typography sx={labelCSS}>Subjects*</Typography>
 
             <Box maxHeight={300} sx={{ overflowY: "auto" }}>
               {subject?.length > 0 &&
@@ -331,13 +439,16 @@ const EditDetailsPage = () => {
                       display: "inline-block",
                       padding: "6px 12px",
                       margin: "4px",
-                      border: "1px solid #1976d2",
+                      border: "1px solid #E7002A",
                       borderRadius: "4px",
-                      backgroundColor: "#e3f2fd",
-                      color: "#1976d2",
+                      backgroundColor: "#FFF0F3",
                       cursor: "pointer",
+                      fontWeight: 500,
+                      color: "#001b72",
+                      fontFamily: "Aspekta, sans-serif",
                       fontSize: "14px",
-                      fontWeight: "500",
+                      fontStyle: "normal",
+                      lineHeight: "normal",
                     }}
                   >
                     {val?.name}
@@ -353,7 +464,33 @@ const EditDetailsPage = () => {
             variant="contained"
             color="primary"
             size="large"
-            startIcon={<FaSave />}
+            // startIcon={<FaSave />}
+            sx={{
+              mt: 2,
+              display: "inline-flex",
+              padding: "24px",
+              width: "175px",
+              height: "52px",
+              justifyContent: "center",
+              alignItems: "center",
+              gap: "8px",
+              textTransform: "none",
+              borderRadius: "8px",
+              background: "#141514",
+              color: "#FFF",
+              textAlign: "center",
+              fontFeatureSettings: "'liga' off, 'clig' off",
+              fontFamily: "Aptos",
+              fontSize: "16px",
+              fontStyle: "normal",
+              fontWeight: "600",
+              lineHeight: "normal",
+              "&:hover": {
+                border: "1px solid #141514",
+                background: "#E5E5E5",
+                color: "#141514",
+              },
+            }}
           >
             Save
           </Button>

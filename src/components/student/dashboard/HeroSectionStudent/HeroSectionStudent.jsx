@@ -77,9 +77,10 @@ function HeroSectionStudent() {
               display: "flex",
               alignItems: "center",
               p: "4px",
-              border: "0.5px solid var(--Gradient-1, #1F8505)",
-              background: "rgba(255, 255, 255, 0.20)",
+              border: "0.5px solid var(--Gradient-1,rgb(56, 5, 133))",
+              // background: "rgba(255, 255, 255, 0.20)",
               boxShadow: "0 4px 30px rgba(0, 0, 0, 0.1)",
+              backgroundColor:"#fff",
               borderRadius: "55px",
               flexShrink: 0,
               gap: "12px",
@@ -120,7 +121,7 @@ function HeroSectionStudent() {
               {/* Teacher Name */}
               <Typography
                 sx={{
-                  color: "#fff",
+                  color: "#3B3D3B",
                   fontFamily: "Inter, sans-serif",
                   fontSize: "14px",
                   fontStyle: "normal",
@@ -140,7 +141,7 @@ function HeroSectionStudent() {
               {userDetails?.role === "STUDENT" ? (
                 <Typography
                   sx={{
-                    color: "#fff",
+                    color: "#3B3D3B",
                     fontFamily: "Inter, sans-serif",
                     fontSize: "10px",
                     fontStyle: "normal",
@@ -154,7 +155,7 @@ function HeroSectionStudent() {
               ) : (
                 <Typography
                   sx={{
-                    color: "#fff",
+                    color: "#3B3D3B",
                     fontFamily: "Inter, sans-serif",
                     fontSize: "10px",
                     fontStyle: "normal",
@@ -176,14 +177,14 @@ function HeroSectionStudent() {
             >
               <path
                 d="M0.376953 0.755737V28.2442"
-                stroke="white"
+                stroke="black"
                 stroke-width="0.624738"
               />
             </svg>
             <Box>
               <Typography
                 sx={{
-                  color: "#fff",
+                  color: "#3B3D3B",
                   alignSelf: "stretch",
                   fontFamily: "Inter, sans-serif",
                   fontSize: "10px",
@@ -199,7 +200,7 @@ function HeroSectionStudent() {
               </Typography>
               <Typography
                 sx={{
-                  color: "#fff",
+                  color: "#3B3D3B",
                   alignSelf: "stretch",
                   fontFamily: "Inter, sans-serif",
                   fontSize: "14px",
