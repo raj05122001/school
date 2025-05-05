@@ -241,21 +241,42 @@ const CoursePlaylist = ({ params }) => {
               </Typography>
             </Box>
           </Box>
-          <Box sx={{display:"flex",gap:"10px"}}>
-           <Box sx={{backgroundColor:"#DCF9E8",borderRadius:'4px',padding:"4px",display:'flex',gap:1,alignItems:'center'}}>
-           <MdOutlineWatchLater color="#1F6F2C"/>
-           <Typography sx={{fontWeight:400,fontSize:"12px",color:"#1F6F2C"}} >
-              {listData?.lecture?.schedule_date || "N/A"}
-            </Typography>
-           </Box>
+          <Box sx={{ display: "flex", gap: "10px" }}>
+            <Box
+              sx={{
+                backgroundColor: "#DCF9E8",
+                borderRadius: "4px",
+                padding: "4px",
+                display: "flex",
+                gap: 1,
+                alignItems: "center",
+              }}
+            >
+              <MdOutlineWatchLater color="#1F6F2C" />
+              <Typography
+                sx={{ fontWeight: 400, fontSize: "12px", color: "#1F6F2C" }}
+              >
+                {listData?.lecture?.schedule_date || "N/A"}
+              </Typography>
+            </Box>
 
-           <Box sx={{backgroundColor:"#DCF9E8",borderRadius:'4px',padding:"4px",display:'flex',gap:1,alignItems:'center'}}>
-           <IoCalendarClearOutline color="#1F6F2C"/>
-           <Typography sx={{fontWeight:400,fontSize:"12px",color:"#1F6F2C"}} >
-           {listData?.lecture?.schedule_time || "N/A"}
-            </Typography>
-           </Box>
-
+            <Box
+              sx={{
+                backgroundColor: "#DCF9E8",
+                borderRadius: "4px",
+                padding: "4px",
+                display: "flex",
+                gap: 1,
+                alignItems: "center",
+              }}
+            >
+              <IoCalendarClearOutline color="#1F6F2C" />
+              <Typography
+                sx={{ fontWeight: 400, fontSize: "12px", color: "#1F6F2C" }}
+              >
+                {listData?.lecture?.schedule_time || "N/A"}
+              </Typography>
+            </Box>
           </Box>
           {/* <Typography variant="subtitle1" marginTop={4}>
               <BsXDiamond /> <strong>Class:</strong>{" "}

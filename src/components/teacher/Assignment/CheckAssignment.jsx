@@ -14,7 +14,7 @@ import {
   IconButton,
   CardMedia,
   Divider,
-  Paper
+  Paper,
 } from "@mui/material";
 import { AiOutlineDownload } from "react-icons/ai";
 import { BiSolidRightArrowCircle } from "react-icons/bi";
@@ -38,6 +38,9 @@ import "@react-pdf-viewer/default-layout/lib/styles/index.css";
 import AudioPlayer from "@/components/AudioPlayer/AudioPlayer";
 import AssignmentTextFormat from "@/commonComponents/TextWithMath/AssignmentTextFormat";
 import usePresignedUrl from "@/hooks/usePresignedUrl";
+import getFileIcon from "@/commonComponents/FileIcon/FileIcon";
+import { MdOutlineWatchLater } from "react-icons/md";
+import { IoCalendarClearOutline } from "react-icons/io5";
 
 const CheckAssignment = ({ assignment, index, fetchAssignmentAnswer }) => {
   const { isDarkMode, primaryColor, secondaryColor } = useThemeContext();
@@ -47,7 +50,7 @@ const CheckAssignment = ({ assignment, index, fetchAssignmentAnswer }) => {
   const [error, setError] = useState(null);
   const [open, setOpen] = useState(false);
   const [selectedFile, setSelectedFile] = useState(null);
-  const { fetchPresignedUrl } = usePresignedUrl()
+  const { fetchPresignedUrl } = usePresignedUrl();
 
   const isChecked = assignment?.is_checked || false;
 
@@ -61,29 +64,28 @@ const CheckAssignment = ({ assignment, index, fetchAssignmentAnswer }) => {
       return "";
     }
   };
-  
 
-  const getFileIcon = (url) => {
-    // const extension = url?.split(".").pop()?.toLowerCase();
-    const extension = getExtensionFromUrl(selectedFile);
-    switch (extension) {
-      case "pdf":
-        return <BsFiletypePdf size={24} />;
-      case "doc":
-      case "docx":
-        return <BsFiletypeDoc size={24} />;
-      case "txt":
-        return <BsFiletypeTxt size={24} />;
-      case "xls":
-      case "xlsx":
-        return <BsFiletypeXls size={24} />;
-      case "ppt":
-      case "pptx":
-        return <BsFiletypePpt size={24} />;
-      default:
-        return <AiOutlineDownload size={24} />;
-    }
-  };
+  // const getFileIcon = (url) => {
+  //   // const extension = url?.split(".").pop()?.toLowerCase();
+  //   const extension = getExtensionFromUrl(selectedFile);
+  //   switch (extension) {
+  //     case "pdf":
+  //       return <BsFiletypePdf size={24} />;
+  //     case "doc":
+  //     case "docx":
+  //       return <BsFiletypeDoc size={24} />;
+  //     case "txt":
+  //       return <BsFiletypeTxt size={24} />;
+  //     case "xls":
+  //     case "xlsx":
+  //       return <BsFiletypeXls size={24} />;
+  //     case "ppt":
+  //     case "pptx":
+  //       return <BsFiletypePpt size={24} />;
+  //     default:
+  //       return <AiOutlineDownload size={24} />;
+  //   }
+  // };
 
   const getFileColor = (url) => {
     // const extension = url?.split(".").pop()?.toLowerCase();
@@ -136,10 +138,9 @@ const CheckAssignment = ({ assignment, index, fetchAssignmentAnswer }) => {
     }
   };
 
-
-  const handleSelectFile = async (fileLink)=>{
+  const handleSelectFile = async (fileLink) => {
     const keyPath = new URL(fileLink).pathname.slice(1);
-    const decodeKey = decodeURIComponent(keyPath)
+    const decodeKey = decodeURIComponent(keyPath);
     const idx = decodeKey.lastIndexOf("/");
     const file1 = decodeKey.substring(0, idx + 1);
     const file2 = decodeKey.substring(idx + 1);
@@ -150,14 +151,14 @@ const CheckAssignment = ({ assignment, index, fetchAssignmentAnswer }) => {
       operation: "download",
       folder: file1,
     };
-    
-    try{
-      const signedUrl = await fetchPresignedUrl(data)
-      setSelectedFile(signedUrl?.presigned_url)
-    }catch(error){
-      console.error(error)
+
+    try {
+      const signedUrl = await fetchPresignedUrl(data);
+      setSelectedFile(signedUrl?.presigned_url);
+    } catch (error) {
+      console.error(error);
     }
-  }
+  };
 
   const renderAnswerContent = useCallback(
     (assignment) => {
@@ -178,9 +179,9 @@ const CheckAssignment = ({ assignment, index, fetchAssignmentAnswer }) => {
       } else if (answer_type === "VIDEO") {
         return (
           <CardMedia component="video" controls sx={{ height: 300, mt: 2 }}>
-          <source src={answer_link} type="video/mp4" />
-          Your browser does not support the video tag.
-        </CardMedia>
+            <source src={answer_link} type="video/mp4" />
+            Your browser does not support the video tag.
+          </CardMedia>
         );
       } else if (answer_type === "AUDIO") {
         return (
@@ -199,35 +200,24 @@ const CheckAssignment = ({ assignment, index, fetchAssignmentAnswer }) => {
               alignItems: "center",
               border: "1px solid",
               borderColor: isDarkMode ? "grey.700" : "divider",
-              borderRadius: 2,
-              padding: 2,
+              borderRadius: "8px",
+              padding: "8px",
               backgroundColor: isDarkMode
                 ? "rgba(255,255,255,0.1)"
                 : "background.paper",
               boxShadow: 2,
-              "&:hover": {
-                boxShadow: 4,
-                backgroundColor: isDarkMode
-                  ? "rgba(255,255,255,0.2)"
-                  : "action.hover",
-                cursor: "pointer",
-              },
+              width: "287px",
             }}
             onClick={() => handleSelectFile(answer_link)}
           >
-            <Box
-              sx={{
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "center",
-                width: 40,
-                height: 40,
-                backgroundColor: getFileColor(answer_link),
-                borderRadius: "50%",
-                color: "white",
-              }}
-            >
-              {getFileIcon(answer_link)}
+            <Box>
+              {getFileIcon(answer_link, {
+                style: {
+                  fontSize: "24px",
+                  marginRight: "8px",
+                  color: "#16AA54",
+                },
+              })}
             </Box>
             <Typography
               variant="body2"
@@ -255,15 +245,20 @@ const CheckAssignment = ({ assignment, index, fetchAssignmentAnswer }) => {
 
     if (extension === "pdf") {
       content = (
-        <Box sx={{ height: "90%", width: "90%"}}>
+        <Box sx={{ height: "90%", width: "90%" }}>
           <Worker workerUrl="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js">
-            <Viewer fileUrl={selectedFile} plugins={[defaultLayoutPluginInstance]} />
+            <Viewer
+              fileUrl={selectedFile}
+              plugins={[defaultLayoutPluginInstance]}
+            />
           </Worker>
         </Box>
       );
-    } else if (["doc", "docx", "xls", "xlsx", "ppt", "pptx"].includes(extension)) {
+    } else if (
+      ["doc", "docx", "xls", "xlsx", "ppt", "pptx"].includes(extension)
+    ) {
       content = (
-        <Box sx={{ height: "90%", width: "90%"}}>
+        <Box sx={{ height: "90%", width: "90%" }}>
           <iframe
             src={`https://view.officeapps.live.com/op/embed.aspx?src=${encodeURIComponent(
               selectedFile
@@ -327,7 +322,7 @@ const CheckAssignment = ({ assignment, index, fetchAssignmentAnswer }) => {
             height: 40,
           }}
         >
-          <span style={{fontSize:"16px"}}>X</span>
+          <span style={{ fontSize: "16px" }}>X</span>
         </IconButton>
         {content}
       </Box>
@@ -338,8 +333,10 @@ const CheckAssignment = ({ assignment, index, fetchAssignmentAnswer }) => {
     <>
       <Card
         sx={{
-          borderRadius: 2,
-          boxShadow: isChecked ? ("0px 2px 10px #38ba47"):("0px 2px 10px #ff9b85"),
+          borderRadius: "20px",
+          boxShadow: isChecked
+            ? "0px 2px 10px #38ba47"
+            : "0px 2px 10px #ff9b85",
           backgroundColor: isDarkMode ? "rgba(255, 255, 255, 0.1)" : "#fff",
           mb: 3,
         }}
@@ -355,25 +352,74 @@ const CheckAssignment = ({ assignment, index, fetchAssignmentAnswer }) => {
           onClick={() => setOpen((prev) => !prev)}
         >
           <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
-            <BiSolidRightArrowCircle size={24} color={primaryColor} />
             <Typography
               variant="h6"
               fontWeight={"bold"}
               sx={{ color: isDarkMode ? "#F9F6EE" : "#353935" }}
             >
-              Question {index + 1}:
+              Question {index + 1}
             </Typography>
           </Box>
           <Box sx={{ display: "flex", alignItems: "center", gap: 2 }}>
-            <Typography
+            <Box
               sx={{
-                fontSize: ".9rem",
-                fontWeight: 500,
-                color: isDarkMode ? "#e0e0e0" : "text.secondary",
+                backgroundColor: "#DCF9E8",
+                borderRadius: "4px",
+                padding: "4px",
+                display: "flex",
+                gap: 1,
+                alignItems: "center",
               }}
             >
-             <i>Submission Date:</i> {dayjs(assignment?.updated_at).format("DD-MM-YYYY hh:mm A")}
-            </Typography>
+              <MdOutlineWatchLater color="#1F6F2C" />
+              <Typography
+                sx={{ fontWeight: 400, fontSize: "18px", color: "#1F6F2C" }}
+              >
+                {dayjs(assignment?.updated_at).format("DD-MM-YYYY")}
+              </Typography>
+            </Box>
+
+            <Box
+              sx={{
+                backgroundColor: "#DCF9E8",
+                borderRadius: "4px",
+                padding: "4px",
+                display: "flex",
+                gap: 1,
+                alignItems: "center",
+              }}
+            >
+              <IoCalendarClearOutline color="#1F6F2C" />
+              <Typography
+                sx={{ fontWeight: 400, fontSize: "18px", color: "#1F6F2C" }}
+              >
+                {dayjs(assignment?.updated_at).format("hh:mm A")}
+              </Typography>
+            </Box>
+
+            <Box
+              sx={{
+                backgroundColor: "#174321",
+                borderRadius: "6px",
+                display: "flex",
+                alignItems: "center",
+                padding: "6px",
+                gap: "6px",
+              }}
+            >
+              <img
+                src="/task-square.png"
+                style={{ width: "18px", height: "18px" }}
+              />
+              <Typography
+                sx={{ color: "white", fontWeight: 400, fontSize: "18px" }}
+              >
+                <i>Total Marks:</i>{" "}
+                <span style={{ fontWeight: 600, color: "white" }}>
+                  {assignment.assignment_que.assignment_mark}
+                </span>
+              </Typography>
+            </Box>
             {open ? (
               <IconButton>
                 <IoIosArrowUp />
@@ -390,127 +436,159 @@ const CheckAssignment = ({ assignment, index, fetchAssignmentAnswer }) => {
           <CardContent sx={{ pt: 0 }}>
             <Divider sx={{ mb: 2 }} />
             <Box sx={{ display: "flex", justifyContent: "space-between" }}>
-              <Typography variant="body1" gutterBottom color={primaryColor} sx={{ fontWeight: 600 }}>
-                <AssignmentTextFormat text={assignment.assignment_que.assignment_text} />
-              </Typography>
-            </Box>
-            <Typography
-              variant="subtitle1"
-              sx={{ color: isDarkMode ? "#F9F6EE" : "#353935", mt: 1 }}
-            >
-              <i>Total Marks:</i>{" "}
-              <span style={{ fontWeight: 600, color: primaryColor }}>
-                {assignment.assignment_que.assignment_mark}
-              </span>
-            </Typography>
-            <Typography
-              variant="h6"
-              fontWeight={"bold"}
-              mt={3}
-              sx={{ color: isDarkMode ? "#F9F6EE" : "#353935" }}
-            >
-              <FaPenNib style={{ marginRight: "4px" }} />
-              Submission :
-            </Typography>
-            {assignment?.answer_description && (
               <Typography
                 variant="body1"
-                color={secondaryColor}
-                sx={{ mt: 2, lineHeight: 1.6 }}
+                gutterBottom
+                color={primaryColor}
+                sx={{ fontWeight: 600 }}
               >
-                <strong style={{ color: primaryColor }}>Answer: </strong>
-                {assignment?.answer_description}
+                <AssignmentTextFormat
+                  text={assignment.assignment_que.assignment_text}
+                />
               </Typography>
-            )}
-
-            {renderAnswerContent(assignment)}
+            </Box>
+            <Box
+              sx={{
+                backgroundColor: "#DCF9E8",
+                borderRadius: "12px",
+                padding: "12px",
+              }}
+            >
+              <Typography
+                variant="h6"
+                fontWeight={"bold"}
+                sx={{ color: isDarkMode ? "#F9F6EE" : "#353935" }}
+              >
+                Submission
+              </Typography>
+              {assignment?.answer_description && (
+                <Typography
+                  variant="body1"
+                  color={secondaryColor}
+                  sx={{ mt: 2, lineHeight: 1.6 }}
+                >
+                  <strong style={{ color: primaryColor }}>Answer: </strong>
+                  {assignment?.answer_description}
+                </Typography>
+              )}
+              {renderAnswerContent(assignment)}
+            </Box>
 
             <Paper
               elevation={isDarkMode ? 3 : 0}
               sx={{
                 mt: 4,
-                p: 3,
-                borderRadius: 2,
-                backgroundColor: isDarkMode
-                  ? "rgba(255,255,255,0.05)"
-                  : "rgba(0,0,0,0.02)",
+                p: "12px",
+                borderRadius: "12px",
+                backgroundColor: "#F3F5F7",
               }}
             >
-              <Typography variant="h6" sx={{ mb: 2, color: primaryColor }}>
-                Grade & Comment
-              </Typography>
+              {/* <Typography variant="h6" sx={{ mb: 2, color: "#141514", fontWeight:600,fontSize:"16px" }}>
+              Marks Obtained
+              </Typography> */}
               {error && (
                 <Alert severity="error" sx={{ mb: 2 }}>
                   {error}
                 </Alert>
               )}
               <Grid container spacing={2}>
-                <Grid item xs={12} sm={3}>
+                <Grid item xs={12} sm={12}>
+                  <Typography
+                    variant="h6"
+                    sx={{
+                      color: "#141514",
+                      fontWeight: 600,
+                      fontSize: "16px",
+                    }}
+                  >
+                    Marks Obtained
+                  </Typography>
                   <TextField
-                    label="Marks Obtained"
+                    hiddenLabel={true}
                     type="number"
                     variant="outlined"
                     fullWidth
                     value={grades}
                     onChange={(e) => setGrades(e.target.value)}
                     InputLabelProps={{
-                      style: { color: isDarkMode ? "#d7e4fc" : "" },
+                      style: {
+                        color: isDarkMode ? "#d7e4fc" : "",
+                        borderRadius: "12px",
+                      },
                     }}
                     InputProps={{
                       sx: {
                         backdropFilter: "blur(10px)",
-                        backgroundColor: isDarkMode
-                          ? "rgba(255, 255, 255, 0.1)"
-                          : "rgba(0,0,0,0.05)",
+                        backgroundColor: "#FFFFFF",
+                        borderRadius: "12px",
                       },
                     }}
                   />
                 </Grid>
-                <Grid item xs={12} sm={9}>
+                <Grid item xs={12} sm={12}>
+                  <Typography
+                    variant="h6"
+                    sx={{
+                      color: "#141514",
+                      fontWeight: 600,
+                      fontSize: "16px",
+                    }}
+                  >
+                    Comments
+                  </Typography>
                   <TextField
-                    label="Comment"
+                    hiddenLabel={true}
                     variant="outlined"
                     multiline
                     fullWidth
                     value={comment}
                     onChange={(e) => setComment(e.target.value)}
                     InputLabelProps={{
-                      style: { color: isDarkMode ? "#d7e4fc" : "" },
+                      style: {
+                        color: isDarkMode ? "#d7e4fc" : "",
+                        borderRadius: "12px",
+                      },
                     }}
                     InputProps={{
                       sx: {
                         backdropFilter: "blur(10px)",
-                        backgroundColor: isDarkMode
-                          ? "rgba(255, 255, 255, 0.1)"
-                          : "rgba(0,0,0,0.05)",
+                        backgroundColor: "#FFFFFF",
+                        borderRadius: "12px",
                       },
                     }}
                   />
                 </Grid>
               </Grid>
 
-              <Button
-                variant="contained"
-                color="primary"
-                onClick={handleGradeSubmission}
-                sx={{ mt: 3, width: "fit-content" }}
-                aria-label="Submit Grade"
-                disabled={
-                  (isChecked &&
-                    comment === assignment?.comment_by_teacher &&
-                    Number(grades) === Number(assignment?.marks_obtained)) ||
-                  isLoading ||
-                  (!comment && !grades)
-                }
-              >
-                {isLoading ? (
-                  <CircularProgress size={24} sx={{ color: "#fff" }} />
-                ) : isChecked ? (
-                  "Update"
-                ) : (
-                  "Submit"
-                )}
-              </Button>
+              <Box sx={{ display: "flex", justifyContent: "flex-end" }}>
+                <Button
+                  variant="contained"
+                  onClick={handleGradeSubmission}
+                  sx={{
+                    mt: 3,
+                    width: "fit-content",
+                    backgroundColor: "#141514",
+                    borderRadius: "8px",
+                    color: "white",
+                  }}
+                  aria-label="Submit Grade"
+                  disabled={
+                    (isChecked &&
+                      comment === assignment?.comment_by_teacher &&
+                      Number(grades) === Number(assignment?.marks_obtained)) ||
+                    isLoading ||
+                    (!comment && !grades)
+                  }
+                >
+                  {isLoading ? (
+                    <CircularProgress size={24} sx={{ color: "#fff" }} />
+                  ) : isChecked ? (
+                    "Update"
+                  ) : (
+                    "Submit"
+                  )}
+                </Button>
+              </Box>
             </Paper>
           </CardContent>
         ) : (
@@ -525,11 +603,19 @@ const CheckAssignment = ({ assignment, index, fetchAssignmentAnswer }) => {
               }}
               onClick={() => setOpen(true)}
             >
-              <Typography variant="body1" gutterBottom color={primaryColor} sx={{ fontWeight: 600}}>
+              <Typography
+                variant="body1"
+                gutterBottom
+                color={primaryColor}
+                sx={{ fontWeight: 600 }}
+              >
                 <AssignmentTextFormat
                   text={
                     assignment.assignment_que.assignment_text?.length > 200
-                      ? `${assignment.assignment_que.assignment_text?.slice(0, 200)}...`
+                      ? `${assignment.assignment_que.assignment_text?.slice(
+                          0,
+                          200
+                        )}...`
                       : assignment.assignment_que.assignment_text
                   }
                 />

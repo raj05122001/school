@@ -1,5 +1,6 @@
 "use client";
 
+import React, { useState, useEffect, useRef } from "react";
 import {
   Box,
   IconButton,
@@ -8,24 +9,27 @@ import {
   Dialog,
   DialogTitle,
   DialogContent,
+  DialogActions,
   Grid,
   TextField,
   Button,
+  Autocomplete,
+  InputAdornment,
 } from "@mui/material";
 import { FiSearch, FiFilter } from "react-icons/fi";
-import { useState, useEffect, useRef } from "react";
+import { FaTimes } from "react-icons/fa";
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import dayjs from "dayjs";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
+import { getClassByCourse, getSubjectByClass } from "@/api/apiHelper";
 
 export default function SearchWithFilter() {
   const searchParams = useSearchParams();
   const router = useRouter();
   const pathname = usePathname();
 
-  // Controlled inputs, initialized from URL
   const [searchInput, setSearchInput] = useState(
     searchParams.get("globalSearch") || ""
   );
@@ -38,10 +42,42 @@ export default function SearchWithFilter() {
   const [filterDate, setFilterDate] = useState(
     searchParams.get("month") ? dayjs(searchParams.get("month")) : null
   );
-
   const [filterOpen, setFilterOpen] = useState(false);
 
-  // Keep state synced if URL is changed elsewhere
+  const [classList, setClassList] = useState([]);
+  const [subjectList, setSubjectList] = useState([]);
+
+  // Fetch classes on mount
+  useEffect(() => {
+    async function loadClasses() {
+      try {
+        const res = await getClassByCourse("", "");
+        setClassList(res?.data?.data || []);
+      } catch (err) {
+        console.error("Error loading classes", err);
+      }
+    }
+    loadClasses();
+  }, []);
+
+  // Fetch subjects whenever class changes
+  useEffect(() => {
+    async function loadSubjects() {
+      if (!filterClass) {
+        setSubjectList([]);
+        return;
+      }
+      try {
+        const res = await getSubjectByClass(filterClass, "");
+        setSubjectList(res?.data?.data || []);
+      } catch (err) {
+        console.error("Error loading subjects", err);
+      }
+    }
+    loadSubjects();
+  }, [filterClass]);
+
+  // Sync state with URL params
   useEffect(() => {
     setSearchInput(searchParams.get("globalSearch") || "");
     setFilterClass(searchParams.get("class") || "");
@@ -51,27 +87,23 @@ export default function SearchWithFilter() {
     );
   }, [searchParams]);
 
-  // Debounce flag to skip the very first render
   const firstSearchRef = useRef(true);
-
-  // Debounced search: updates ?globalSearch=… as user types
+  // Debounce global search param update
   useEffect(() => {
     if (firstSearchRef.current) {
       firstSearchRef.current = false;
       return;
     }
-    const handler = setTimeout(() => {
+    const timer = setTimeout(() => {
       const params = new URLSearchParams(searchParams.toString());
       if (searchInput) params.set("globalSearch", searchInput);
       else params.delete("globalSearch");
-      // replace so user can use back button normally
       router.replace(`${pathname}?${params.toString()}`);
     }, 500);
+    return () => clearTimeout(timer);
+  }, [searchInput]);
 
-    return () => clearTimeout(handler);
-  }, [searchInput, pathname, router, searchParams]);
-
-  // Manual submit (Enter key) still works
+  // Handle Enter key submit
   const handleSearchSubmit = (e) => {
     e.preventDefault();
     const params = new URLSearchParams(searchParams.toString());
@@ -80,26 +112,23 @@ export default function SearchWithFilter() {
     router.push(`${pathname}?${params.toString()}`);
   };
 
-  // Apply filters when “Apply” is clicked
+  // Apply filters and push URL
   const handleApplyFilters = () => {
     const params = new URLSearchParams(searchParams.toString());
     if (filterClass) params.set("class", filterClass);
     else params.delete("class");
-
     if (filterSubject) params.set("subject", filterSubject);
     else params.delete("subject");
-
     if (filterDate) params.set("month", filterDate.toISOString());
     else params.delete("month");
-
     router.push(`${pathname}?${params.toString()}`);
     setFilterOpen(false);
   };
 
   return (
     <>
-      {/* Search Bar */}
-      <Box sx={{ display: "flex", justifyContent: "space-between", p: 2 }}>
+      {/* Search bar with filter toggle */}
+      <Box sx={{ display: "flex", alignItems: "center", p: 2 }}>
         <Paper
           component="form"
           onSubmit={handleSearchSubmit}
@@ -122,92 +151,91 @@ export default function SearchWithFilter() {
             <FiSearch />
           </IconButton>
         </Paper>
-
         <IconButton
           onClick={() => setFilterOpen(true)}
-          sx={{
-            ml: 2,
-            borderRadius: 2,
-            border: "1px solid #ccc",
-            height: "42px",
-            width: "42px",
-          }}
+          sx={{ ml: 2, border: "1px solid #ccc", borderRadius: 2, width: 42, height: 42 }}
         >
           <FiFilter />
         </IconButton>
       </Box>
 
-      {/* Filter Modal */}
-      <Dialog
-        open={filterOpen}
-        onClose={() => setFilterOpen(false)}
-        fullWidth
-        maxWidth="md"
-      >
-        <DialogTitle sx={{ fontWeight: "bold" }}>
-          Search filter
-        </DialogTitle>
+      {/* Filter dialog */}
+      <Dialog open={filterOpen} onClose={() => setFilterOpen(false)} fullWidth maxWidth="md">
+        <DialogTitle>Search Filters</DialogTitle>
         <DialogContent>
-          <Box sx={{ p: 1 }}>
-            <Grid container spacing={2}>
-              <Grid item xs={12} sm={6} md={3}>
-                <TextField
-                  label="Class"
-                  fullWidth
-                  size="small"
-                  variant="outlined"
+          <LocalizationProvider dateAdapter={AdapterDayjs}>
+            <Grid container spacing={2} sx={{ mt: 1 }}>
+              <Grid item xs={12} sm={4}>
+                <Autocomplete
+                  freeSolo
+                  options={classList.map((c) => c.name)}
                   value={filterClass}
-                  onChange={(e) => setFilterClass(e.target.value)}
+                  onChange={(_e, val) => setFilterClass(val || "")}
+                  renderInput={(params) => (
+                    <TextField
+                      {...params}
+                      label="Class"
+                      InputProps={{
+                        ...params.InputProps,
+                        endAdornment: filterClass ? (
+                          <InputAdornment position="end">
+                            <IconButton onClick={() => setFilterClass("")}
+                              edge="end"
+                            >
+                              <FaTimes />
+                            </IconButton>
+                          </InputAdornment>
+                        ) : null,
+                      }}
+                    />
+                  )}
                 />
               </Grid>
-              <Grid item xs={12} sm={6} md={3}>
-                <TextField
-                  label="Subject"
-                  fullWidth
-                  size="small"
-                  variant="outlined"
+              <Grid item xs={12} sm={4}>
+                <Autocomplete
+                  freeSolo
+                  options={subjectList.map((s) => s.name)}
                   value={filterSubject}
-                  onChange={(e) => setFilterSubject(e.target.value)}
+                  onChange={(_e, val) => setFilterSubject(val || "")}
+                  renderInput={(params) => (
+                    <TextField
+                      {...params}
+                      label="Subject"
+                      InputProps={{
+                        ...params.InputProps,
+                        endAdornment: filterSubject ? (
+                          <InputAdornment position="end">
+                            <IconButton onClick={() => setFilterSubject("")}
+                              edge="end"
+                            >
+                              <FaTimes />
+                            </IconButton>
+                          </InputAdornment>
+                        ) : null,
+                      }}
+                    />
+                  )}
+                  disabled={!filterClass}
                 />
               </Grid>
-              <Grid item xs={12} sm={6} md={3}>
-                <LocalizationProvider dateAdapter={AdapterDayjs}>
-                  <DatePicker
-                    label="Date"
-                    value={filterDate}
-                    onChange={(newDate) => setFilterDate(newDate)}
-                    slotProps={{
-                      textField: { size: "small", fullWidth: true },
-                    }}
-                  />
-                </LocalizationProvider>
+              <Grid item xs={12} sm={4}>
+                <DatePicker
+                  views={["month"]}
+                  label="Month"
+                  value={filterDate}
+                  onChange={(val) => setFilterDate(val)}
+                  renderInput={(params) => <TextField {...params} fullWidth />}
+                />
               </Grid>
             </Grid>
-
-            <Box
-              sx={{
-                mt: 3,
-                display: "flex",
-                justifyContent: "flex-end",
-                gap: 2,
-              }}
-            >
-              <Button
-                onClick={() => setFilterOpen(false)}
-                variant="outlined"
-              >
-                Cancel
-              </Button>
-              <Button
-                onClick={handleApplyFilters}
-                variant="contained"
-                color="primary"
-              >
-                Apply
-              </Button>
-            </Box>
-          </Box>
+          </LocalizationProvider>
         </DialogContent>
+        <DialogActions>
+          <Button onClick={() => setFilterOpen(false)}>Cancel</Button>
+          <Button variant="contained" onClick={handleApplyFilters}>
+            Apply
+          </Button>
+        </DialogActions>
       </Dialog>
     </>
   );

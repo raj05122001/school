@@ -13,7 +13,7 @@ import { getTeacherAssignment } from "@/api/apiHelper";
 import { useThemeContext } from "@/hooks/ThemeContext";
 import CheckAssignment from "@/components/teacher/Assignment/CheckAssignment";
 import UserImage from "@/commonComponents/UserImage/UserImage";
-import DarkMode from "@/components/DarkMode/DarkMode";
+// import DarkMode from "@/components/DarkMode/DarkMode";
 import { TbSquareRoundedPercentage } from "react-icons/tb";
 import { MdOutlineCreditScore } from "react-icons/md";
 import { SiGoogleclassroom } from "react-icons/si";
@@ -115,7 +115,7 @@ const Page = ({ params }) => {
                         </Typography>
                       </Box>
                     </Box>
-                    <DarkMode />
+                    {/* <DarkMode /> */}
                   </Box>
                   <Divider sx={{ my: 2 }} />
                   <Box sx={{ display: "flex", gap: 4 }}>
