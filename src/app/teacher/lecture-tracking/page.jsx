@@ -32,6 +32,7 @@ import TableSkeleton from "@/commonComponents/Skeleton/TableSkeleton/TableSkelet
 
 import { MdOutlineTrackChanges } from "react-icons/md";
 import CalendarIconCustom from "@/commonComponents/CalendarIconCustom/CalendarIconCustom";
+import SearchWithFilter from "@/components/teacher/Assignment/SearchWithFilter";
 
 const LectureTabs = () => {
   const { isDarkMode, primaryColor, secondaryColor } = useThemeContext();
@@ -299,21 +300,18 @@ const LectureTabs = () => {
         sx={{
           borderRadius: "20px",
           backgroundColor: "#fff",
-          padding: "24px 32px 32px 32px",
-          maxWidth: "1300px",
-          margin: "0 auto",
+          padding: "32px",
+          // maxWidth: "1300px",
+          // margin: "0 auto",
           display: "flex",
           alignItems: "center",
           alignSelf: "stretch",
-          gap: "16px",
+          // gap: "16px",
         }}
       >
         <Grid
           container
-          spacing={2}
-          sx={{
-            margin: "auto",
-          }}
+          spacing={8}
         >
           {["COMPLETED", "UPCOMMING", "MISSED", "CANCELLED"]?.map((value) =>
             tabLoader ? (
@@ -332,7 +330,7 @@ const LectureTabs = () => {
                   onClick={() => handleChange(value, "status")}
                   sx={{
                     display: "flex",
-                    width: "238px",
+                    width: "100%",
                     height: "50px",
                     padding: "5.5px 9px",
                     justifyContent: "space-between",
@@ -394,6 +392,8 @@ const LectureTabs = () => {
           )}
         </Grid>
       </Box>
+
+      <SearchWithFilter />
 
       {/* Table */}
       <Box
