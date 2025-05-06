@@ -22,10 +22,10 @@ import Cookies from "js-cookie";
 const TABLE_HEAD = [
   "Title",
   "Date",
-  "Class",
-  "Subject",
-  "Chapter",
-  "Academic Year",
+  "Batch",
+  "Course",
+  "Module",
+  "Batch Year",
   "Starting Time",
   "Allotted hr",
 ];

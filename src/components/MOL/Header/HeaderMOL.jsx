@@ -394,7 +394,7 @@ function HeaderMOL({
           flexShrink: 0,
         }}
       >
-        Minutes of Lecture
+        Minutes of Training
       </Typography>
       <Box
         sx={{

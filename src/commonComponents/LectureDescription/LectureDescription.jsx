@@ -148,7 +148,7 @@ const LectureDescription = ({ lectureData, isShowPic = false, loading }) => {
           ) : (
             <>
               <Typography sx={keyCSS}>
-                Class:{" "}
+                Batch:{" "}
                 <Tooltip
                   title={
                     lectureData?.lecture_class?.name ||
@@ -161,7 +161,7 @@ const LectureDescription = ({ lectureData, isShowPic = false, loading }) => {
                 </Tooltip>
               </Typography>
               <Typography sx={keyCSS}>
-                Subject:{" "}
+                Course:{" "}
                 <Tooltip
                   title={
                     lectureData?.chapter?.subject?.name ||
@@ -174,7 +174,7 @@ const LectureDescription = ({ lectureData, isShowPic = false, loading }) => {
                 </Tooltip>
               </Typography>
               <Typography sx={keyCSS}>
-                Chapter:{" "}
+                Module:{" "}
                 <Tooltip
                   title={
                     lectureData?.chapter?.chapter ||

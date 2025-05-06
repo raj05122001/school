@@ -241,7 +241,7 @@ const ClassWiseStudentRanking = ({ selectedOptions }) => {
               Overall
             </ToggleButton>
             <ToggleButton value="MyClass" aria-label="My Class">
-              Class
+              Batch
             </ToggleButton>
           </ToggleButtonGroup>
         </Box>

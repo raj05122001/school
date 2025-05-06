@@ -84,7 +84,7 @@ const LectureManager = () => {
                 component="h1"
                 gutterBottom
               >
-                Lecture Schedule
+                Training Schedule
               </Typography>
             </Box>
           </Grid>
@@ -120,7 +120,7 @@ const LectureManager = () => {
                   },
                 }}
               >
-                <MdAdd fontSize={16} size={22} style={{marginRight:2}} /> New Lecture
+                <MdAdd fontSize={16} size={22} style={{marginRight:2}} /> New Training
               </Button>
               <Button
                 variant="contained"
@@ -151,7 +151,7 @@ const LectureManager = () => {
                   },
                 }}
               >
-                <MdDownloadForOffline size={22} style={{marginRight:2}}/> Download Format
+                <MdDownloadForOffline size={22} style={{marginRight:2}}/> Download Training
               </Button>
               <Button
                 variant="contained"

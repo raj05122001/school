@@ -142,7 +142,7 @@ const ClassProf = () => {
               lineHeight: "normal",
             }}
           >
-            Class Proficiency
+            Batch Proficiency
           </Typography>
         </Box>
         <Box
@@ -276,7 +276,7 @@ const ClassProf = () => {
               lineHeight: "normal",
             }}
           >
-            Overall Class Participation
+            Overall Batch Participation
           </Typography>
           <Box sx={{display:"flex", justifyContent:"space-between", width:"100%"}}>
             <Typography

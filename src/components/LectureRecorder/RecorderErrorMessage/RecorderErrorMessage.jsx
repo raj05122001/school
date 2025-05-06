@@ -153,7 +153,7 @@ const RecorderErrorMessage = ({
               }}
             >
               Your lecture has been recorded and saved successfully. You will be
-              notified with an email when the Minutes of the Lecture (MoL) is
+              notified with an email when the Minutes of the Training (MoT) is
               ready to view.
             </Typography>
           </Box>

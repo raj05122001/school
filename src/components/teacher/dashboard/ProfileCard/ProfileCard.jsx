@@ -146,7 +146,8 @@ function ProfileCard() {
             lineHeight: "14.99px",
           }}
         >
-          {userDetails?.role && `${userDetails?.role.charAt(0).toUpperCase()}${userDetails?.role.slice(1).toLowerCase()}`}
+          {/* {userDetails?.role && `${userDetails?.role.charAt(0).toUpperCase()}${userDetails?.role.slice(1).toLowerCase()}`} */}
+          {userDetails?.role === "TEACHER" ? `Trainer` : `Trainee`}
         </Typography>
         <Typography 
           sx={{

@@ -20,7 +20,7 @@ const LectureReferrence = ({ id, isDarkMode }) => {
           setResources(resourcesArray);
         }
       } catch (error) {
-        console.error("Error fetching lecture resources:", error);
+        console.error("Error fetching training resources:", error);
       } finally {
         setLoading(false);
       }
@@ -147,7 +147,7 @@ const LectureReferrence = ({ id, isDarkMode }) => {
               letterSpacing: "-0.48px",
             }}
           >
-            <GrResources /> Lecture Resources
+            <GrResources /> Training Resources
           </Typography>
 
           {displayedResources?.map((resource, index) => {

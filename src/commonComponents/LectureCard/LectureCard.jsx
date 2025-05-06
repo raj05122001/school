@@ -407,7 +407,7 @@ export function BasicModal({ open, setOpen, id, getAllLecture = () => {} }) {
       getAllLecture();
       setOpen(false);
     } catch (error) {
-      toast.error("Failed to create lecture");
+      toast.error("Failed to create training");
       console.error(error);
       setError("Failed to upload files");
     } finally {

@@ -120,8 +120,8 @@ const OverviewSection = () => {
           }}
         >
           {userDetails?.role === "STUDENT"
-            ? `Lectures For You`
-            : `Upcoming Lectures`}
+            ? `Trainings For You`
+            : `Upcoming Trainings`}
         </Typography>
       </Box>
 
@@ -162,10 +162,10 @@ const OverviewSection = () => {
               <TableRow>
                 <TableCell />
                 <TableCell>Topic</TableCell>
-                <TableCell>Class</TableCell>
+                <TableCell>Batch</TableCell>
                 <TableCell>Time</TableCell>
-                <TableCell>Subject</TableCell>
-                <TableCell>Chapter</TableCell>
+                <TableCell>Course</TableCell>
+                <TableCell>Module</TableCell>
                 <TableCell>Action</TableCell>
               </TableRow>
             </TableHead>
@@ -280,7 +280,7 @@ const OverviewSection = () => {
                     fontSize: "14px",
                   }}
                 >
-                  Class
+                  Batch
                 </TableCell>
                 <TableCell
                   sx={{
@@ -306,7 +306,7 @@ const OverviewSection = () => {
                     fontSize: "14px",
                   }}
                 >
-                  Subject
+                  Course
                 </TableCell>
                 <TableCell
                   sx={{
@@ -319,7 +319,7 @@ const OverviewSection = () => {
                     fontSize: "14px",
                   }}
                 >
-                  Chapter
+                  Module
                 </TableCell>
                 <TableCell
                   sx={{
@@ -554,7 +554,7 @@ const OverviewSection = () => {
                                 stroke-linejoin="round"
                               />
                             </svg>
-                            Create Lecture
+                            Create Training
                           </Button>
                         </Box>
                       </TableCell>

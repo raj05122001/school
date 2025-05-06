@@ -193,10 +193,11 @@ function HeroSectionStudent() {
                   lineHeight: "14.99px",
                 }}
               >
-                {userDetails?.role &&
+                {/* {userDetails?.role &&
                   `${userDetails?.role
                     .charAt(0)
-                    .toUpperCase()}${userDetails?.role.slice(1).toLowerCase()}`}
+                    .toUpperCase()}${userDetails?.role.slice(1).toLowerCase()}`} */}
+                    {userDetails?.role==="STUDENT" && `Trainee`}
               </Typography>
               <Typography
                 sx={{

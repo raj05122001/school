@@ -91,7 +91,7 @@ const LectureQuestions = ({ id, isDarkMode }) => {
               }}
               gutterBottom
             >
-              Lecture Questions
+              Training Questions
             </Typography>
             {displayedQuestion?.map((item, index) => (
               <Box key={index} sx={{ mb: 2 }}>

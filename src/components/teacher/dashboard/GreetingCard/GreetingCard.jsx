@@ -124,7 +124,7 @@ function GreetingCard() {
               }}
               onClick={() => handleCreateLecture("", false)}
             >
-              Create Lecture
+              Create Training
             </Button>
 
             {/* <Button

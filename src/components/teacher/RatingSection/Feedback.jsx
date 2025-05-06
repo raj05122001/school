@@ -84,10 +84,10 @@ const Feedback = ({ lectureId, data, fetchgetFeedback }) => {
           variant="h6"
           sx={{ fontWeight: "bold", color: primaryColor }}
         >
-          How was the lecture?
+          How was the training?
         </Typography>
         <Typography variant="body2" sx={{ color: secondaryColor, mt: 1 }}>
-          Your feedback matters! Choose an emoji to let us know how the lecture
+          Your feedback matters! Choose an emoji to let us know how the training
           went.
         </Typography>
       </Box>

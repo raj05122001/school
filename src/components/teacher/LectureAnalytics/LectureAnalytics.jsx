@@ -185,7 +185,7 @@ const LectureAnalytics = ({ lectureId }) => {
           lineHeight: "normal",
         }}
       >
-        Lecture Analytics
+        Training Analytics
       </Typography>
       {analytics?.overall_health_score &&
         renderPercentage(
