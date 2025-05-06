@@ -25,7 +25,7 @@ import { decodeToken } from "react-jwt";
 import { deleteCompletedLecture } from "@/api/apiHelper";
 import { useRouter } from "next/navigation";
 
-const LectureDescription = ({ lectureData, isShowPic = false, loading }) => {
+const LectureDescription = ({ lectureData, isShowPic = false, loading,videoTimeStamp=0 }) => {
   const formatDuration = (ms) => {
     const hours = Math.floor(ms / (1000 * 60 * 60));
     const minutes = Math.floor((ms % (1000 * 60 * 60)) / (1000 * 60));
@@ -57,6 +57,14 @@ const LectureDescription = ({ lectureData, isShowPic = false, loading }) => {
     letterSpacing: "-0.42px",
   };
 
+  const handleCopyShareUrl = () => {
+    const shareUrl = `${window.location.href}?timestamp=${videoTimeStamp}`;
+    navigator.clipboard
+      .writeText(shareUrl)
+      .then(() => console.log("URL copied:", shareUrl))
+      .catch((err) => console.error("Could not copy text:", err));
+  };
+
   return (
     <Box
       sx={{
@@ -72,7 +80,7 @@ const LectureDescription = ({ lectureData, isShowPic = false, loading }) => {
         background: "#fff",
       }}
     >
-    <Box sx={{ flex: 1 }}>
+    <Box sx={{width:"100%" ,display:'flex',justifyContent:'space-between'}}>
       {/* Lecture Topic and Details Layout */}
       {loading ? (
         <Skeleton width="100%" height={50} />
@@ -101,6 +109,8 @@ const LectureDescription = ({ lectureData, isShowPic = false, loading }) => {
           </span>
         </Typography>
       )}
+
+      <Button onClick={handleCopyShareUrl} variant="outlined" sx={{mr:2}}>Copy Share URL</Button>
     </Box>
       
 

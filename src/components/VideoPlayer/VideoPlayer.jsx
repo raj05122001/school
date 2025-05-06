@@ -18,10 +18,18 @@ import Cookies from "js-cookie";
 import axios from "axios";
 import { BASE_URL_MEET } from "@/constants/apiconfig";
 import usePresignedUrl from "@/hooks/usePresignedUrl";
+import { useSearchParams } from "next/navigation";
 
-const VideoPlayer = ({ id, duration = 1e101 }) => {
+const VideoPlayer = ({
+  id,
+  duration = 1e101,
+  setVideoTimeStamp = () => {},
+}) => {
+  const searchParams = useSearchParams();
+
+  const timeStamp = searchParams.get("timestamp") || 0;
   const { s3FileName } = useContext(AppContextProvider);
-  const { fetchPresignedUrl } = usePresignedUrl()
+  const { fetchPresignedUrl } = usePresignedUrl();
   const userDetails = decodeToken(Cookies.get("ACCESS_TOKEN"));
   const [markers, setMarkers] = useState([]);
   const [suggestionData, setSuggestionData] = useState([]);
@@ -40,10 +48,10 @@ const VideoPlayer = ({ id, duration = 1e101 }) => {
       operation: "download",
       folder: "videos/",
     };
-  
+
     try {
-      const signedUrl = await fetchPresignedUrl(data)
-      setVideoUrl(signedUrl?.presigned_url)
+      const signedUrl = await fetchPresignedUrl(data);
+      setVideoUrl(signedUrl?.presigned_url);
     } catch (error) {
       console.error(error);
       return null;
@@ -159,9 +167,11 @@ const VideoPlayer = ({ id, duration = 1e101 }) => {
         s3FileName={s3FileName}
         duration={duration}
         videoUrl={videoUrl}
+        setVideoTimeStamp={setVideoTimeStamp}
+        timeStamp={timeStamp}
       />
     ),
-    [markers, id, s3FileName, duration, videoUrl]
+    [markers, id, s3FileName, duration, videoUrl,timeStamp]
   );
 
   return (
@@ -210,6 +220,8 @@ export const BreakpointPlayer = ({
   s3FileName,
   duration,
   videoUrl,
+  setVideoTimeStamp,
+  timeStamp=0
 }) => {
   const userDetails = decodeToken(Cookies.get("ACCESS_TOKEN"));
   const videoRef = useRef(null);
@@ -237,7 +249,7 @@ export const BreakpointPlayer = ({
     // Notify parent that the player is ready
     if (onPlayerReady) {
       onPlayerReady(playerRef.current);
-    }
+    } 
 
     playerRef.current.on("loadedmetadata", function () {
       const total = playerRef.current.duration();
@@ -259,11 +271,19 @@ export const BreakpointPlayer = ({
         // Append the marker element to the progress control bar
         progressControl.children_[0].el_.appendChild(el);
       });
+      
+      if (timeStamp > 0 && timeStamp < total) {
+             playerRef.current.currentTime(timeStamp);
+           }
     });
 
     // Additional event: update personalised data after 10 minutes
     playerRef.current.on("timeupdate", () => {
       const currentTime = playerRef.current.currentTime();
+      +(
+        // live update up the parent
+        (+setVideoTimeStamp(currentTime))
+      );
       if (
         currentTime >= 600 &&
         !updateDataTriggered.current &&
@@ -443,7 +463,7 @@ export const Suggestion = ({ suggestionData }) => {
       <Grid item xs={12} sm={0.6} py={2}>
         {uniqueTitles.length > 0 && (
           <Button
-          disableRipple
+            disableRipple
             onClick={() => scrollContainer("right")}
             sx={{
               p: 1,
