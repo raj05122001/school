@@ -130,7 +130,7 @@ function SubjectCompletion() {
             lineHeight: "24px",
           }}
         >
-          Subjects Completed
+          Course Completed
         </Typography>
 
         {/* Class and Department */}

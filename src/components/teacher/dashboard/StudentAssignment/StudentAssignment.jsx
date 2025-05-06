@@ -222,7 +222,7 @@ const StudentAssignment = () => {
               lineHeight: "normal",
             }}
           >
-            Student Proficiency
+            Trainee Proficiency
           </Typography>
         </Box>
         <Box

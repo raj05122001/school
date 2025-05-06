@@ -93,28 +93,28 @@ export const LectureTyps = {
 
 export const lecture_type = [
   {
-    name: "Subject Lecture",
+    name: "Subject Training",
     type: "subject",
     image: "/subject.svg",
     key: "subject",
     style: { color: "#99650C", op: 40 },
   },
   {
-    name: "Case Study Lecture",
+    name: "Case Study Training",
     type: "case",
     image: "/case.svg",
     key: "case",
     style: { color: "#00562B", op: 50 },
   },
   {
-    name: "Q/A Session",
+    name: "Q/A Training",
     type: "qa",
     image: "/qa.svg",
     key: "qa",
     style: { color: "#0064CF", op: 10 },
   },
   {
-    name: "Workshop Lecture",
+    name: "Workshop Training",
     type: "workshop",
     image: "/workshop.svg",
     key: "workshop",

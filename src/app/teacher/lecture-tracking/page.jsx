@@ -163,7 +163,7 @@ const LectureTabs = () => {
           <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
             <MdOutlineTrackChanges size={30} color={primaryColor} />
             <Typography variant="h4" color={isDarkMode ? "#E5E4E2" : "#36454F"}>
-              Lecture Tracking
+              Training Tracking
             </Typography>
           </Box>
         }
@@ -511,7 +511,7 @@ const LectureTabs = () => {
                       position: "sticky",
                     }}
                   >
-                    Class
+                    Batch
                   </TableCell>
                   <TableCell
                     sx={{
@@ -525,7 +525,7 @@ const LectureTabs = () => {
                       position: "sticky",
                     }}
                   >
-                    Subject Name
+                    Course Name
                   </TableCell>
                   <TableCell
                     sx={{
@@ -541,7 +541,7 @@ const LectureTabs = () => {
                       position: "sticky",
                     }}
                   >
-                    Chapter
+                    Module
                   </TableCell>
                   {status === "UPCOMMING" && (
                     <TableCell

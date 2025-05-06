@@ -62,25 +62,25 @@ export const sidebarLinks = {
       show: "ADMIN",
     },
     {
-      text: "Lecture",
+      text: "Training",
       href: "",
       icon: <HiOutlineDocumentDuplicate size={22} />,
       show: "ADMIN",
       children: [
         {
-          text: "Lecture Listings",
+          text: "Training Listings",
           href: "/admin/lecture-listings",
           icon: <MdVideoLibrary size={22} />,
           show: "ADMIN",
         },
         {
-          text: "Lecture Schedule",
+          text: "Training Schedule",
           href: "/admin/lecture-schedule",
           icon: <MdSchedule size={22} />,
           show: "ADMIN",
         },
         {
-          text: "Lecture Tracking",
+          text: "Training Tracking",
           href: "/admin/lecture-tracking",
           icon: <MdTask size={22} />,
           show: "ADMIN",
@@ -94,25 +94,25 @@ export const sidebarLinks = {
       show: "TEACHER",
     },
     {
-      text: "Lecture",
+      text: "Training",
       href: "",
       icon: <HiOutlineDocumentDuplicate size={22} />,
       show: "TEACHER",
       children: [
         {
-          text: "Lecture Listings",
+          text: "Training Listings",
           href: "/teacher/lecture-listings",
           icon: <MdVideoLibrary size={22} />,
           show: "TEACHER",
         },
         {
-          text: "Lecture Schedule",
+          text: "Training Schedule",
           href: "/teacher/lecture-schedule",
           icon: <MdSchedule size={22} />,
           show: "TEACHER",
         },
         {
-          text: "Lecture Tracking",
+          text: "Training Tracking",
           href: "/teacher/lecture-tracking",
           icon: <MdTask size={22} />,
           show: "TEACHER",
@@ -132,7 +132,7 @@ export const sidebarLinks = {
       show: "STUDENT",
     },
     {
-      text: "Lecture Listings",
+      text: "Training Listings",
       href: "/student/lecture-listings",
       icon: <HiOutlineDocumentDuplicate size={22} />,
       show: "STUDENT",
@@ -277,7 +277,7 @@ const Sidebar = ({ open, setOpen }) => {
                         pl: open ? 2 : 1,
                         backgroundColor:
                           pathname === item.href ||
-                          (item.text === "Lecture" &&
+                          (item.text === "Training" &&
                             [
                               "/teacher/lecture-listings",
                               "/teacher/lecture-schedule",
@@ -303,7 +303,7 @@ const Sidebar = ({ open, setOpen }) => {
                         sx={{
                           color:
                             pathname === item.href ||
-                            (item.text === "Lecture" &&
+                            (item.text === "Training" &&
                               [
                                 "/teacher/lecture-listings",
                                 "/teacher/lecture-schedule",
@@ -328,7 +328,7 @@ const Sidebar = ({ open, setOpen }) => {
                           sx={{
                             color:
                               pathname === item.href ||
-                              (item.text === "Lecture" &&
+                              (item.text === "Training" &&
                                 [
                                   "/teacher/lecture-listings",
                                   "/teacher/lecture-schedule",
@@ -339,7 +339,7 @@ const Sidebar = ({ open, setOpen }) => {
                           }}
                         />
                       )}
-                      {item.text === "Lecture" &&
+                      {item.text === "Training" &&
                         (isOpen ? <IoIosArrowUp /> : <IoIosArrowDown />)}
                     </ListItemButton>
                   </Tooltip>

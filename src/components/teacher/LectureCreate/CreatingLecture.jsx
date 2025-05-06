@@ -285,7 +285,7 @@ const CreatingLecture = ({
         if (response.data.success) {
           handleClose(); // Close the dialog after a successful creation
         } else {
-          console.error("Failed to create lecture:", response.data.message);
+          console.error("Failed to create training:", response.data.message);
         }
       }
     } catch (error) {
@@ -362,7 +362,7 @@ const CreatingLecture = ({
             lineHeight: "normal",
           }}
         >
-          Create Lecture
+          Create Training
         </Box>
         {isEditMode && lecture?.id && (
           <Box
@@ -392,7 +392,7 @@ const CreatingLecture = ({
                 options={classOptions}
                 onSelect={setSelectedClass}
                 onChange={setSelectedClassName}
-                label={"Class"}
+                label={"Batch Name"}
                 value={selectedClass}
                 // disabled={isEditMode} // Disable in edit mode
               />
@@ -404,7 +404,7 @@ const CreatingLecture = ({
                 options={subjectOptions}
                 onSelect={setLectureSubject}
                 onChange={setSubjectName}
-                label={"Subject"}
+                label={"Course Name"}
                 value={lectureSubject}
                 // disabled={isEditMode} // Disable in edit mode
               />
@@ -416,7 +416,7 @@ const CreatingLecture = ({
                 options={chapterOptions}
                 onSelect={setLectureChapter}
                 onChange={setChapterName}
-                label={"Chapter"}
+                label={"Module Name"}
                 value={lectureChapter}
                 // disabled={isEditMode} // Disable in edit mode
               />
@@ -428,7 +428,7 @@ const CreatingLecture = ({
                 options={topicOptions}
                 onSelect={setLectureTopics}
                 onChange={setTopicsName}
-                label={"Name (Topics)"}
+                label={"Session Title (Topics)"}
                 value={lectureTopics}
               />
             </Grid>
@@ -480,7 +480,7 @@ const CreatingLecture = ({
                     },
                   }}
                 >
-                  Lecture Type
+                  Training Type
                 </InputLabel>
                 <Select
                   labelId="lecture-type-label"
@@ -547,7 +547,7 @@ const CreatingLecture = ({
                   }}
                 />
                 <DatePicker
-                  label="Lecture Date"
+                  label="Training Date"
                   value={lectureDate}
                   onChange={(newDate) => setLectureDate(newDate)}
                   slotProps={{
@@ -658,7 +658,7 @@ const CreatingLecture = ({
               <Box sx={{ position: "relative" }}>
                 <LocalizationProvider dateAdapter={AdapterDayjs}>
                   <MobileTimePicker
-                    label={"Lecture Start Time *"}
+                    label={"Training Start Time *"}
                     openTo="hours"
                     inputRef={inputRef}
                     value={lectureStartTime}
@@ -827,7 +827,7 @@ const CreatingLecture = ({
             },
           }}
         >
-          {isEditMode ? "Update Lecture" : "Create Lecture"}
+          {isEditMode ? "Update Training" : "Create Training"}
         </Button>
       </DialogActions>
     </Dialog>

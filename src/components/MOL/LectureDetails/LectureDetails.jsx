@@ -114,7 +114,7 @@ const LectureDetails = ({
           padding: "21px 0px 6px 20px",
         }}
       >
-        Lecture Details
+        Training Details
         <br />
         <span
           style={{
@@ -128,7 +128,7 @@ const LectureDetails = ({
             <i>(This is an AI generated content.)</i>
           ) : (
             <i>
-              (This is an AI generated content. The teacher should verify it.)
+              (This is an AI generated content. The trainer should verify it.)
             </i>
           )}
         </span>

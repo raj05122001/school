@@ -126,7 +126,7 @@ const LectureAttachments = ({ lectureId, isDarkMode }) => {
           fontWeight: 600,
           lineHeight: "normal",}}
         >
-        <GrAttachment />  Lecture Attachments
+        <GrAttachment />  Training Attachments
         </Typography>
         {userDetails?.role!=="STUDENT" &&  <label htmlFor="attachments">
           <IconButton component="span">

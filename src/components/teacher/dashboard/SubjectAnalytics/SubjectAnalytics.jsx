@@ -113,7 +113,7 @@ const SubjectAnalytics = () => {
           className={`${isDarkMode ? "dark-heading" : "light-heading"}`}
         >
           <FiBarChart2 size={22} style={{ marginRight: "8px" }} />
-          Watch Time by Subject
+          Watch Time by Course
         </Typography>
         {isDarkMode ? (
           <MdDarkMode style={{ fontSize: "24px", color: "#f0f0f0" }} />
@@ -169,10 +169,10 @@ const SubjectAnalytics = () => {
           color: isDarkMode ? "#f0f0f0" : "#2b2b2b",
         }}
       >
-        This radar chart displays the watch time for each subject. Each axis
-        represents a subject, and the distance from the center indicates the
+        This radar chart displays the watch time for each course. Each axis
+        represents a course, and the distance from the center indicates the
         total watch time. Higher values mean more time spent watching that
-        subject.
+        course.
       </Typography>
     </Box>
   );

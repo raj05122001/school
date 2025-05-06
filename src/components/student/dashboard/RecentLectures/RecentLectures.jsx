@@ -99,7 +99,7 @@ const RecentLectures = () => {
             lineHeight: "normal",
           }}
         >
-          Recent Lectures
+          Recent Trainings
         </Typography>
       </Box>
 
@@ -131,10 +131,10 @@ const RecentLectures = () => {
               <TableRow>
                 <TableCell />
                 <TableCell>Topic</TableCell>
-                <TableCell>Class</TableCell>
+                <TableCell>Batch</TableCell>
                 <TableCell>Time</TableCell>
-                <TableCell>Subject</TableCell>
-                <TableCell>Chapter</TableCell>
+                <TableCell>Course</TableCell>
+                <TableCell>Module</TableCell>
               </TableRow>
             </TableHead>
             <TableBody>
@@ -250,7 +250,7 @@ const RecentLectures = () => {
                           fontSize: "14px",
                         }}
                       >
-                        Class
+                        Batch
                       </TableCell>
                       <TableCell
                         sx={{
@@ -276,7 +276,7 @@ const RecentLectures = () => {
                           fontSize: "14px",
                         }}
                       >
-                        Subject
+                        Course
                       </TableCell>
                       <TableCell
                         sx={{
@@ -289,7 +289,7 @@ const RecentLectures = () => {
                           fontSize: "14px",
                         }}
                       >
-                        Chapter
+                        Module
                       </TableCell>
                     </TableRow>
                   </TableHead>
@@ -337,7 +337,7 @@ const RecentLectures = () => {
               >
                 <FaExclamationCircle size={30} style={{ marginRight: "8px" }} />
                 <Box display="flex" alignItems="center" justifyContent="center">
-                  You don&apos;t have any lectures.
+                  You don&apos;t have any trainings.
                 </Box>
               </Typography>
             </Grid>
