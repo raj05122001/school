@@ -31,6 +31,7 @@ const LecturePage = ({ params }) => {
   const [lectureData, setLectureData] = useState({});
   const theme = useTheme(); // Access theme to apply dynamic styling
   const [loading, setLoading] = useState(true);
+  const [videoTimeStamp,setVideoTimeStamp]=useState(0)
 
   useEffect(() => {
     if (id) {
@@ -69,7 +70,7 @@ const LecturePage = ({ params }) => {
 
   const classID = lectureData?.lecture_class?.id;
 
-  const videoPlayer = useMemo(() => <VideoPlayer id={id} duration={lectureData?.duration} />, [id,lectureData?.duration]);
+  const videoPlayer = useMemo(() => <VideoPlayer id={id} duration={lectureData?.duration} setVideoTimeStamp={setVideoTimeStamp} />, [id,lectureData?.duration]);
   const headerMOL = useMemo(
     () => (
       <HeaderMOL
@@ -89,7 +90,8 @@ const LecturePage = ({ params }) => {
         lectureData={lectureData}
         isShowPic={false}
         loading={loading}
-      />), [lectureData]
+        videoTimeStamp={videoTimeStamp}
+      />), [lectureData,videoTimeStamp]
     
   )
   const lectureOverview = useMemo(
