@@ -59,7 +59,7 @@ const Page = () => {
         month,
         lectureType,
         activePage,
-        9,
+        16,
         encodeURI(subject)
       );
       if (apiResponse?.data?.success) {
@@ -137,7 +137,7 @@ const Page = () => {
       {filters}
       <Grid container spacing={2}>
         {isLoading ? (
-          Array.from({ length: 9 }, (_, ind) => (
+          Array.from({ length: 16 }, (_, ind) => (
             <Grid item xs={12} sm={4} md={3} key={ind} spacing={2}>
               <LectureListingCardSkeleton />
             </Grid>

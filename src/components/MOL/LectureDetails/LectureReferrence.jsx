@@ -38,6 +38,7 @@ const LectureReferrence = ({ id, isDarkMode }) => {
       resource?.research_papers?.link ||
       resource?.scopus_data?.scopus_link ||
       resource?.scopus_data?.doi_link ||
+      resource?.springer_data?.url ||
       resource?.youtube_videos?.link ||
       resource?.Google_Book_Links?.thumbnail;
     return (
@@ -46,6 +47,7 @@ const LectureReferrence = ({ id, isDarkMode }) => {
           r.research_papers?.link ||
           r.scopus_data?.scopus_link ||
           r.scopus_data?.doi_link ||
+          r?.springer_data?.url ||
           r.youtube_videos?.link ||
           r.Google_Book_Links?.thumbnail;
         return rLink === link;
@@ -155,6 +157,7 @@ const LectureReferrence = ({ id, isDarkMode }) => {
             return (
               (resource.research_papers ||
                 resource.scopus_data ||
+                resource?.springer_data ||
                 resource.youtube_videos ||
                 resource.Google_Book_Links) && (
                 <Box
@@ -245,6 +248,38 @@ const LectureReferrence = ({ id, isDarkMode }) => {
                               </Link>
                             </Typography>
                           )}
+                        </Box>
+                      </Box>
+                    </Box>
+                  )}
+                  {resource?.springer_data && (
+                    <Box sx={{ mb: 1 }}>
+                      <Typography sx={refTitleCSS}>
+                        Springer Link:
+                      </Typography>
+                      <Box
+                        sx={{ display: "flex", alignItems: "center", gap: 4 }}
+                      >
+                        <Box
+                          component="img"
+                          src="/springer_logo.png"
+                          alt="Springer logo"
+                          sx={{
+                            width: 100,
+                            height: "auto",
+                            mt: 1,
+                            mixBlendMode: "multiply",
+                          }}
+                        />
+                        <Box display={"flex"} flexDirection={"column"} gap={2}>
+                            <Link
+                              href={resource?.springer_data?.url}
+                              target="_blank"
+                              rel="noopener"
+                              sx={refLinkCSS}
+                            >
+                              {resource?.springer_data?.title}
+                            </Link>
                         </Box>
                       </Box>
                     </Box>
