@@ -1,5 +1,5 @@
 "use client";
-import React, { useState, useCallback } from "react";
+import React, { useState, useCallback, useEffect } from "react";
 import PropTypes from "prop-types";
 import {
   Box,
@@ -41,6 +41,7 @@ import usePresignedUrl from "@/hooks/usePresignedUrl";
 import getFileIcon from "@/commonComponents/FileIcon/FileIcon";
 import { MdOutlineWatchLater } from "react-icons/md";
 import { IoCalendarClearOutline } from "react-icons/io5";
+import AIFeedback from "@/components/MOL/LectureDetails/StudentMolAssignment/AIFeedback";
 
 const CheckAssignment = ({ assignment, index, fetchAssignmentAnswer }) => {
   const { isDarkMode, primaryColor, secondaryColor } = useThemeContext();
@@ -51,6 +52,9 @@ const CheckAssignment = ({ assignment, index, fetchAssignmentAnswer }) => {
   const [open, setOpen] = useState(false);
   const [selectedFile, setSelectedFile] = useState(null);
   const { fetchPresignedUrl } = usePresignedUrl();
+
+  const answered_by = Number(assignment?.answer_by?.id);
+
 
   const isChecked = assignment?.is_checked || false;
 
@@ -108,6 +112,7 @@ const CheckAssignment = ({ assignment, index, fetchAssignmentAnswer }) => {
         return "#454545";
     }
   };
+
 
   const handleGradeSubmission = useCallback(async () => {
     setIsLoading(true);
@@ -473,7 +478,9 @@ const CheckAssignment = ({ assignment, index, fetchAssignmentAnswer }) => {
               )}
               {renderAnswerContent(assignment)}
             </Box>
-
+            <Box sx={{marginTop:1}}>
+              <AIFeedback assignment={assignment} answered_by={answered_by} totalMarks={assignment.assignment_que.assignment_mark}/>
+            </Box>
             <Paper
               elevation={isDarkMode ? 3 : 0}
               sx={{

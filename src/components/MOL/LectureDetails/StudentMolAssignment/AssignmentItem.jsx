@@ -39,6 +39,7 @@ import { IoIosArrowDown, IoIosArrowUp } from "react-icons/io";
 import AssignmentTextFormat from "@/commonComponents/TextWithMath/AssignmentTextFormat";
 import usePresignedUrl from "@/hooks/usePresignedUrl";
 import useFileUploader from "@/hooks/usefileUploader";
+import AIFeedback from "./AIFeedback";
 
 const ColorLinearProgress = styled(LinearProgress)(({ theme, value }) => {
   let color = "#FF0000"; // Default: Red for low scores
@@ -595,82 +596,7 @@ const AssignmentItem = ({
           </Box>
 
           <Box sx={{ marginTop: 2 }}>
-            {shouldRenderAccordion && (
-              <Accordion
-                sx={{
-                  backgroundColor: "rgba(255, 255, 255, 0.2)",
-                  p: 1,
-                  mt: 1,
-                  borderRadius: "12px !important",
-                  boxShadow: "0px 4px 10px #adc0ff",
-                }}
-              >
-                <AccordionSummary
-                  expandIcon={<FaAngleDown />}
-                  aria-controls="panel2-content"
-                  id="panel2-header"
-                >
-                  <Box sx={{ display: "flex" }}>
-                    <GiBullseye style={{ marginRight: 3, fontSize: "24px" }} />
-                    <Typography
-                      variant="body1"
-                      sx={{
-                        fontSize: "16px",
-                        color: isDarkMode ? "#f0f1f2" : "#282929",
-                      }}
-                    >
-                      AI assessed result
-                      <br />
-                      <i style={{ fontSize: "12px" }}>
-                        (This is an AI based result for your imporvement. The
-                        final score will be provided by the teacher post
-                        resubmission.)
-                      </i>
-                    </Typography>
-                  </Box>
-                </AccordionSummary>
-                <AccordionDetails>
-                  {loading ? (
-                    <Box
-                      sx={{ display: "flex", justifyContent: "center", py: 2 }}
-                    >
-                      <CircularProgress />
-                    </Box>
-                  ) : (
-                    <>
-                      <Typography>
-                        <GrScorecard style={{ marginRight: "4px" }} />
-                        <strong>Marks Scored:</strong> {result?.data?.score}/
-                        {assignment.assignment_mark}
-                      </Typography>
-                      {result?.data?.score !== undefined &&
-                        assignment.assignment_mark && (
-                          <ColorLinearProgress
-                            variant="determinate"
-                            sx={{ height: "6px" }}
-                            value={
-                              (result?.data?.score /
-                                assignment.assignment_mark) *
-                              100
-                            }
-                          />
-                        )}
-                      <Typography
-                        variant="subtitle1"
-                        sx={{ marginTop: 2, fontSize: "18px" }}
-                      >
-                        <strong>
-                          <PiChalkboardTeacher style={{ marginRight: "4px" }} />
-                          Comments
-                        </strong>
-                        <br />
-                      </Typography>
-                      {jsonData(result?.data?.comment)}
-                    </>
-                  )}
-                </AccordionDetails>
-              </Accordion>
-            )}
+            {shouldRenderAccordion && <AIFeedback assignment={assignment} answered_by={answered_by}/>}
           </Box>
           {isSubmit === false &&
             (uploadProgress === 100 || answerDescription ? (
