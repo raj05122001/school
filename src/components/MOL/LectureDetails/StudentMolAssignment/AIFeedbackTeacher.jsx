@@ -35,16 +35,15 @@ const ColorLinearProgress = styled(LinearProgress)(({ theme, value }) => {
   };
 });
 
-const AIFeedback = ({ assignment, answered_by, totalMarks }) => {
+const AIFeedbackTeacher = ({ assignment, answered_by, totalMarks }) => {
   const [result, setResult] = useState({});
   const [loading, setLoading] = useState(false);
 
-
-  const fetchAssessmentResult = async () => {
+  const fetchAssessmentResultTeacher = async () => {
     setLoading(true);
     try {
       const response = await getStudentAssignmentComment(
-        assignment?.id,
+        assignment?.assignment_que?.id,
         answered_by
       );
       const data = response?.data;
@@ -57,7 +56,7 @@ const AIFeedback = ({ assignment, answered_by, totalMarks }) => {
   };
 
   useEffect(() => {
-    fetchAssessmentResult();
+    fetchAssessmentResultTeacher();
   }, []);
 
   const jsonData = (value) => {
@@ -81,12 +80,13 @@ const AIFeedback = ({ assignment, answered_by, totalMarks }) => {
               </Typography>
               <Box
                 sx={{
-                  backgroundColor: "#E0F0FE",
+                  backgroundColor: "#DAEDD5",
                   color: "#1d1924",
                   padding: 4,
                   borderRadius: 4,
-                  backdropFilter: "blur(10px)",
-                  boxShadow: "0px 2px 8px #1389f0",
+                  //   backdropFilter: "blur(10px)",
+                  //   boxShadow: "0px 2px 8px #DAEDD5",
+                  border: "1px solid #16AA54",
                   fontSize: "15px",
                 }}
               >
@@ -111,11 +111,12 @@ const AIFeedback = ({ assignment, answered_by, totalMarks }) => {
               </Typography>
               <Box
                 sx={{
-                  backgroundColor: "#edfced",
+                  backgroundColor: "#DAEDD5",
                   color: "#174d17",
                   padding: 4,
                   borderRadius: 4,
-                  boxShadow: "0px 4px 10px #21ed21",
+                  //   boxShadow: "0px 4px 10px #21ed21",
+                  border: "1px solid #16AA54",
                   fontSize: "15px",
                 }}
               >
@@ -146,11 +147,12 @@ const AIFeedback = ({ assignment, answered_by, totalMarks }) => {
               </Typography>
               <Box
                 sx={{
-                  backgroundColor: "#EADDCA",
+                  backgroundColor: "#DAEDD5",
                   color: "#4A0404",
                   padding: 4,
                   borderRadius: 4,
-                  boxShadow: "0px 4px 10px #a1865d",
+                  //   boxShadow: "0px 4px 10px #a1865d",
+                  border: "1px solid #16AA54",
                   fontSize: "15px",
                 }}
               >
@@ -183,7 +185,7 @@ const AIFeedback = ({ assignment, answered_by, totalMarks }) => {
           p: 1,
           mt: 1,
           borderRadius: "12px !important",
-          boxShadow: "0px 4px 10px #adc0ff",
+          boxShadow: "0px 4px 10px rgb(173, 255, 182)",
         }}
       >
         <AccordionSummary
@@ -219,15 +221,15 @@ const AIFeedback = ({ assignment, answered_by, totalMarks }) => {
               <Typography>
                 <GrScorecard style={{ marginRight: "4px" }} />
                 <strong>Marks Scored:</strong> {result?.data?.score}/
-                {assignment.assignment_mark}
+                {totalMarks}
               </Typography>
               {result?.data?.score !== undefined &&
-                assignment.assignment_mark && (
+                totalMarks && (
                   <ColorLinearProgress
                     variant="determinate"
                     sx={{ height: "6px" }}
                     value={
-                      (result?.data?.score / assignment.assignment_mark) * 100
+                      (result?.data?.score / totalMarks) * 100
                     }
                   />
                 )}
@@ -250,4 +252,4 @@ const AIFeedback = ({ assignment, answered_by, totalMarks }) => {
   );
 };
 
-export default AIFeedback;
+export default AIFeedbackTeacher;

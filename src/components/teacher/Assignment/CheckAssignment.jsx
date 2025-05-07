@@ -42,6 +42,7 @@ import getFileIcon from "@/commonComponents/FileIcon/FileIcon";
 import { MdOutlineWatchLater } from "react-icons/md";
 import { IoCalendarClearOutline } from "react-icons/io5";
 import AIFeedback from "@/components/MOL/LectureDetails/StudentMolAssignment/AIFeedback";
+import AIFeedbackTeacher from "@/components/MOL/LectureDetails/StudentMolAssignment/AIFeedbackTeacher";
 
 const CheckAssignment = ({ assignment, index, fetchAssignmentAnswer }) => {
   const { isDarkMode, primaryColor, secondaryColor } = useThemeContext();
@@ -479,7 +480,7 @@ const CheckAssignment = ({ assignment, index, fetchAssignmentAnswer }) => {
               {renderAnswerContent(assignment)}
             </Box>
             <Box sx={{marginTop:1}}>
-              <AIFeedback assignment={assignment} answered_by={answered_by} totalMarks={assignment.assignment_que.assignment_mark}/>
+              <AIFeedbackTeacher assignment={assignment} answered_by={answered_by} totalMarks={assignment.assignment_que.assignment_mark}/>
             </Box>
             <Paper
               elevation={isDarkMode ? 3 : 0}
