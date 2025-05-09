@@ -123,15 +123,31 @@ const ClassWiseStudentRanking = ({ selectedOptions }) => {
   };
 
   const getChartData = () => {
+    // const gradewiseData =
+    //   statusTabValue === 0
+    //     ? data.active_students_gradewise
+    //     : data.inactive_students_gradewise;
+
     const gradewiseData =
       statusTabValue === 0
-        ? data.active_students_gradewise
-        : data.inactive_students_gradewise;
-    return Object.entries(gradewiseData || {})?.map(([key, value]) => ({
+        ? {
+            A: 2,
+            B: 3,
+            C: 4,
+          }
+        : {
+            D: 2,
+            E: 2,
+          };
+
+    return Object.entries(gradewiseData).map(([key, value]) => ({
       name: key,
       value,
     }));
   };
+
+  console.log("Gradewise Data Active", data.active_students_gradewise);
+  console.log("Gradewise Data InActive", data.inactive_students_gradewise);
 
   return (
     <Card
@@ -141,10 +157,10 @@ const ClassWiseStudentRanking = ({ selectedOptions }) => {
         display: "flex",
         flexDirection: "column",
         height: "100%",
-        boxShadow:"none",
-        border:"none",
-        borderRadius:"20px",
-        backgroundColor:"#fff"
+        boxShadow: "none",
+        border: "none",
+        borderRadius: "20px",
+        backgroundColor: "#fff",
       }}
     >
       <Box
@@ -352,7 +368,7 @@ const ClassWiseStudentRanking = ({ selectedOptions }) => {
                   lineHeight: "32.91px",
                 }}
               >
-                {entry.value}%
+                {entry.value}
               </Typography>
             </Box>
           </Box>
@@ -392,6 +408,116 @@ export const StudentModal = ({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [selectedGrad]);
 
+  const getStudentsByGrade = (selectedGrad) => {
+    if (selectedGrad === "A") {
+      return [
+        {
+          student_id: 5,
+          student__user__id: 16,
+          student__user__full_name: "Saloni Mishra",
+          student__user__email: "cesifo7988@nalwan.com",
+          avg_overall_percentage: 31,
+        },
+        {
+          student_id: 6,
+          student__user__id: 17,
+          student__user__full_name: "Aarav Sharma",
+          student__user__email: "aarav.sharma@example.com",
+          avg_overall_percentage: 78,
+        },
+      ];
+    } else if (selectedGrad === "B") {
+      return [
+        {
+          student_id: 7,
+          student__user__id: 18,
+          student__user__full_name: "Ishita Verma",
+          student__user__email: "ishita.verma@example.com",
+          avg_overall_percentage: 65,
+        },
+        {
+          student_id: 8,
+          student__user__id: 19,
+          student__user__full_name: "Rohan Gupta",
+          student__user__email: "rohan.gupta@example.com",
+          avg_overall_percentage: 89,
+        },
+        {
+          student_id: 9,
+          student__user__id: 20,
+          student__user__full_name: "Anaya Kapoor",
+          student__user__email: "anaya.kapoor@example.com",
+          avg_overall_percentage: 47,
+        },
+      ];
+    } else if (selectedGrad === "C") {
+      return [
+        {
+          student_id: 11,
+          student__user__id: 22,
+          student__user__full_name: "Meera Joshi",
+          student__user__email: "meera.joshi@example.com",
+          avg_overall_percentage: 54,
+        },
+        {
+          student_id: 12,
+          student__user__id: 23,
+          student__user__full_name: "Kabir Singh",
+          student__user__email: "kabir.singh@example.com",
+          avg_overall_percentage: 38,
+        },
+        {
+          student_id: 13,
+          student__user__id: 24,
+          student__user__full_name: "Tanya Reddy",
+          student__user__email: "tanya.reddy@example.com",
+          avg_overall_percentage: 93,
+        },
+        {
+          student_id: 14,
+          student__user__id: 25,
+          student__user__full_name: "Yash Patel",
+          student__user__email: "yash.patel@example.com",
+          avg_overall_percentage: 60,
+        },
+      ];
+    } else if (selectedGrad === "D") {
+      return [
+        {
+          student_id: 15,
+          student__user__id: 26,
+          student__user__full_name: "Ria Nair",
+          student__user__email: "ria.nair@example.com",
+          avg_overall_percentage: 82,
+        },
+        {
+          student_id: 16,
+          student__user__id: 27,
+          student__user__full_name: "Dev Arora",
+          student__user__email: "dev.arora@example.com",
+          avg_overall_percentage: 44,
+        },
+      ];
+    } else {
+      return [
+        {
+          student_id: 17,
+          student__user__id: 28,
+          student__user__full_name: "Sneha Dixit",
+          student__user__email: "sneha.dixit@example.com",
+          avg_overall_percentage: 50,
+        },
+        {
+          student_id: 18,
+          student__user__id: 29,
+          student__user__full_name: "Harshvardhan Rao",
+          student__user__email: "harsh.rao@example.com",
+          avg_overall_percentage: 69,
+        },
+      ];
+    }
+  };
+
   const fetchStudentByGrade = async () => {
     setLoading(true);
     try {
@@ -400,13 +526,17 @@ export const StudentModal = ({
         selectedGrad,
         isMyClass ? userDetails?.teacher_id : 0
       );
-      setStudentData(response?.data?.data);
+      // setStudentData(response?.data?.data);
+      const students = getStudentsByGrade(selectedGrad)
+      setStudentData(students);
     } catch (error) {
       console.error(error);
     } finally {
       setLoading(false);
     }
   };
+
+  console.log("Student data table", studentData);
 
   return (
     <Dialog open={open} onClose={handleClose} fullWidth maxWidth="md">

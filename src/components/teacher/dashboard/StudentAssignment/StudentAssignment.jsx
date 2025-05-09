@@ -634,7 +634,7 @@ const StudentAssignment = () => {
             </Box>
           )}
         </TableContainer>
-        <Box
+        {/* <Box
           sx={{
             display: "flex",
             flexDirection: "column",
@@ -812,7 +812,7 @@ const StudentAssignment = () => {
               {rangeData?.student_counts?.range_80_100 || 0}
             </Typography>
           </Box>
-        </Box>
+        </Box> */}
       </Box>
 
       {/* Pagination Box */}

@@ -293,7 +293,7 @@ const ClassProf = () => {
             >
               {data?.over_all_class_score || 0}
             </Typography>
-            <Box
+            {/* <Box
             sx={{
               display: "inline-flex",
               alignItems: "center",
@@ -330,18 +330,8 @@ const ClassProf = () => {
             >
               {data?.average_grade || 0}%
             </Typography>
+          </Box> */}
           </Box>
-          </Box>
-        </Box>
-        <Box
-          sx={{
-            display: "flex",
-            flexDirection: "column",
-            justifyContent: "flex-end",
-            height: "100%",
-          }}
-        >
-          
         </Box>
       </Box>
 
@@ -455,7 +445,7 @@ const ClassProf = () => {
               lineHeight: "normal",
             }}
           >
-            Work Assigned
+            Average Grade
           </Typography>
           <Box
             sx={{
@@ -476,7 +466,8 @@ const ClassProf = () => {
                 marginTop: "7px",
               }}
             >
-              {data?.total_assignments || 0}
+              {/* {data?.total_assignments || 0} */}
+              {data?.average_grade || 0}%
             </Typography>
             <Box
               sx={{
