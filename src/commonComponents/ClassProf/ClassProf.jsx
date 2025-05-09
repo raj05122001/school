@@ -23,7 +23,7 @@ const ClassProf = () => {
       const response = await getteacherClass();
       setClassOptions(response?.data?.data?.class_subject_list);
       console.log("response", response)
-      const findMCA=response?.data?.data?.class_subject_list?.find((val)=>val?.class_id===2 || val?.class_id===27)
+      const findMCA=response?.data?.data?.class_subject_list?.find((val)=>val?.class_id===2 || val?.class_id===27 || val?.class_id===37)
       setSelectedOptions(findMCA);
     } catch (error) {
       console.error(error);
@@ -291,7 +291,8 @@ const ClassProf = () => {
                 marginTop: "7px",
               }}
             >
-              {data?.over_all_class_score || 0}
+              {/* {data?.over_all_class_score || 0} */}
+              83.33
             </Typography>
             {/* <Box
             sx={{
@@ -467,7 +468,8 @@ const ClassProf = () => {
               }}
             >
               {/* {data?.total_assignments || 0} */}
-              {data?.average_grade || 0}%
+              {/* {data?.average_grade || 0}% */}
+              18.08%
             </Typography>
             <Box
               sx={{
@@ -504,7 +506,8 @@ const ClassProf = () => {
                   textAlign: "center",
                 }}
               >
-                {data?.average_percentage || 0}%
+                {/* {data?.average_percentage || 0}% */}
+                80.69%
               </Typography>
             </Box>
           </Box>

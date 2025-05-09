@@ -98,10 +98,10 @@ total_duration:0
   //   () => <ClassAssignment selectedOptions={selectedOptions} />,
   //   [selectedOptions]
   // );
-  const studentAssignment = useMemo(
-    () => <StudentAssignment />,
-    [selectedOptions]
-  );
+  // const studentAssignment = useMemo(
+  //   () => <StudentAssignment />,
+  //   [selectedOptions]
+  // );
   const classWiseStudentRanking = useMemo(
     () => (
       <ClassWiseStudentRanking
@@ -222,9 +222,9 @@ total_duration:0
           />
         </Box> 
       </Box> */}
-      <Box sx={{marginY:"16px", width:"100%",}}>
+      {/* <Box sx={{marginY:"16px", width:"100%",}}>
         {studentAssignment}
-      </Box>
+      </Box> */}
       
       {/* <Grid container direction="row" spacing={2} mt={1}>
         <Grid

@@ -48,7 +48,7 @@ function HeroSectionStudent() {
     <Box
       sx={{
         width: "100%",
-        height: "304px",
+        height: "200px",
         display: "flex",
         flexShrink: 0,
         borderRadius: "20px",
@@ -246,7 +246,8 @@ function HeroSectionStudent() {
               </Typography>
             </Box>
             <Typography variant="h5" color={"#3B3D3B"} fontWeight={700}>
-              {myScores?.average_scored_percentage}%
+              {/* {myScores?.average_scored_percentage}% */}
+              67%
             </Typography>
           </Box>
 
@@ -281,7 +282,7 @@ function HeroSectionStudent() {
       <Box
         sx={{
           display: "flex",
-          justifyContent: "flex-start",
+          justifyContent: "flex-end",
           alignItems: "center",
           width: "20%",
           height: "100%",
@@ -294,13 +295,14 @@ function HeroSectionStudent() {
       >
         <Box
           sx={{
-            width: "336px",
-            height: "304px",
+            width: "250px",
+            height: "200px",
             aspectRatio: "33 / 28",
             background:
               'url("/banner 3_illustration 1.png") lightgray 50% / cover no-repeat',
             backgroundColor: "var(--Green-dark-2, #E7002A);",
-            marginRight: "2px",
+            // marginRight: "2px",
+            objectFit:"contain"
           }}
         />
       </Box>
