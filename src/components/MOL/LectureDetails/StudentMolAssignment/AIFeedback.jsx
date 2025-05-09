@@ -15,7 +15,7 @@ import { GrScorecard } from "react-icons/gr";
 import { PiChalkboardTeacher } from "react-icons/pi";
 import { styled } from "@mui/material/styles";
 import AssignmentTextFormat from "@/commonComponents/TextWithMath/AssignmentTextFormat";
-import { VscActivateBreakpoints, VscFeedback } from "react-icons/vsc";
+import { VscActivateBreakpoints, VscFeedback, VscWarning } from "react-icons/vsc";
 import { getStudentAssignmentComment } from "@/api/apiHelper";
 
 const ColorLinearProgress = styled(LinearProgress)(({ theme, value }) => {
@@ -39,25 +39,29 @@ const AIFeedback = ({ assignment, answered_by, totalMarks }) => {
   const [result, setResult] = useState({});
   const [loading, setLoading] = useState(false);
 
-
-  const fetchAssessmentResult = async () => {
-    setLoading(true);
-    try {
-      const response = await getStudentAssignmentComment(
-        assignment?.id,
-        answered_by
-      );
-      const data = response?.data;
-      setResult(data); // Store parsed data
-    } catch (error) {
-      console.error("Error fetching result", error);
-    } finally {
-      setLoading(false);
-    }
-  };
-
   useEffect(() => {
-    fetchAssessmentResult();
+    let pollingInterval = null;
+    const pollAssessmentResult = async () => {
+      setLoading(true);
+      try {
+        const response = await getStudentAssignmentComment(
+          assignment?.id,
+          answered_by
+        );
+        const data = response?.data;
+        setResult(data); // Store parsed data
+        if (data?.assessment_status !== "STARTED") {
+          clearInterval(pollingInterval); // Stop polling when assessment is done
+        }
+      } catch (error) {
+        console.error("Error fetching result", error);
+      } finally {
+        setLoading(false);
+      }
+    };
+    pollAssessmentResult();
+    pollingInterval = setInterval(pollAssessmentResult, 5000);
+    return () => clearInterval(pollingInterval);
   }, []);
 
   const jsonData = (value) => {
@@ -65,15 +69,60 @@ const AIFeedback = ({ assignment, answered_by, totalMarks }) => {
       const data = value ? JSON.parse(value) : value;
       return (
         <>
+        { data?.plagiarism_detection_result && (
+          <>
+            <Typography 
+            
+              sx={{
+                fontSize: "18px",
+                marginTop: 2,
+                marginBottom: 2,
+                textAlign: "center",
+                color: "#831843",
+                fontFamily: "Inter"
+              }}>
+              <VscWarning style={{ marginRight: 4 }} />
+              Plagiarism Detection Result
+            </Typography>
+            <Box
+              sx={{
+                backgroundColor: "#FFF0F5",
+                color: "#4A0033",
+                padding: 4,
+                borderRadius: 4,
+                boxShadow: "0px 2px 8px #f084bc",
+                fontSize: "15px",
+              }}
+            >
+              <Typography sx={{ fontWeight: "bold" }}>
+                {data.plagiarism_detection_result.title}
+              </Typography>
+              <Typography>
+                <strong>Detection Probability:</strong>{" "}
+                {data.plagiarism_detection_result.detection_probability}%
+              </Typography>
+              <Typography>
+                <strong>Human-Like Content:</strong>{" "}
+                {data.plagiarism_detection_result.human_percentage_detected}%
+              </Typography>
+              <Typography>
+                <strong>AI-Like Content:</strong>{" "}
+                {data.plagiarism_detection_result.ai_percentage_detected}%
+              </Typography>
+            </Box>
+          </>
+        )
+        }
           {data?.overall_feedback && (
             <>
               <Typography
-                variant="body1"
                 sx={{
                   fontSize: "18px",
                   marginBottom: 2,
                   textAlign: "center",
                   color: "#04052e",
+                  fontFamily: "Inter",
+                  marginTop: 2
                 }}
               >
                 <VscFeedback style={{ marginRight: 4 }} />
@@ -97,13 +146,13 @@ const AIFeedback = ({ assignment, answered_by, totalMarks }) => {
           {data?.feedback_points?.length > 0 && (
             <>
               <Typography
-                variant="body1"
                 sx={{
                   fontSize: "18px",
                   marginTop: 4,
                   textAlign: "center",
                   marginBottom: 2,
                   color: "#04052e",
+                  fontFamily: "Inter"
                 }}
               >
                 <VscActivateBreakpoints style={{ marginRight: 4 }} />
@@ -132,13 +181,13 @@ const AIFeedback = ({ assignment, answered_by, totalMarks }) => {
           {data?.improvement_points?.length > 0 && (
             <>
               <Typography
-                variant="body1"
                 sx={{
                   fontSize: "18px",
                   marginTop: 4,
                   textAlign: "center",
                   marginBottom: 2,
                   color: "#04052e",
+                  fontFamily: "Inter"
                 }}
               >
                 <VscActivateBreakpoints style={{ marginRight: 4 }} />
@@ -214,6 +263,16 @@ const AIFeedback = ({ assignment, answered_by, totalMarks }) => {
             <Box sx={{ display: "flex", justifyContent: "center", py: 2 }}>
               <CircularProgress />
             </Box>
+          ) : result?.data?.assessment_status === "STARTED" ? (
+            <Typography
+              sx={{ fontStyle: "italic", color: "#8a6d3b", fontSize: "16px" }}
+            >
+              AI Assessed Result is under processing...
+            </Typography>
+          ) : result?.data?.assessment_status === "FAILED" ? (
+            <Typography sx={{ color: "#a94442", fontSize: "16px" }}>
+              AI ASSESSED Result failed.
+            </Typography>
           ) : (
             <>
               <Typography>
