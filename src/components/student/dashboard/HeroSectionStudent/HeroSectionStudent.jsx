@@ -250,7 +250,7 @@ function HeroSectionStudent() {
             </Typography>
           </Box>
 
-          <Grid container spacing={2}>
+          {/* <Grid container spacing={2}>
             <Grid item xs={4}>
               <ScoreCard
                 bgColor="#e2dbff"
@@ -275,7 +275,7 @@ function HeroSectionStudent() {
                 Range={"80%-100%"}
               />
             </Grid>
-          </Grid>
+          </Grid> */}
         </Box>
       </Box>
       <Box
