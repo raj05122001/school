@@ -14,7 +14,7 @@ const Page = () => {
   // const greetingCard = useMemo(() => <GreetingCard />, []);
   const profileCard = useMemo(() => <HeroSectionStudent />, []);
   const watchTimeChart = useMemo(()=><WatchTimeChart />, []);
-  const recentLectures = useMemo(() => <RecentLectures />, []);
+  // const recentLectures = useMemo(() => <RecentLectures />, []);
   const myRank = useMemo(() => <MyRank />, []);
   const myAssignmentAnalytics = useMemo(() => <MyAssignmentAnalytics />, []);
 
@@ -23,7 +23,7 @@ const Page = () => {
       {/* <Box>{greetingCard}</Box> */}
       {/* Overview and Calendar */}
       {profileCard}
-      {recentLectures}
+      {/* {recentLectures} */}
       {/* Lecture and Subject Analytics */}
       <Grid container spacing={2} marginTop={"16px"}>
         <Grid item xs={12} md={4}>
