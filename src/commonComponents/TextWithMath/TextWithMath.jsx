@@ -50,7 +50,7 @@ const TextWithMath = ({ text, color, isShow = false, textStyle = {} }) => {
                   ? "red"
                   : color === "green"
                   ? "green"
-                  : "#3B3D3B",
+                  : color===""? "#3B3D3B" : color,
 
               ...textStyle,
             }}
@@ -82,7 +82,7 @@ const TextWithMath = ({ text, color, isShow = false, textStyle = {} }) => {
                   ? "red"
                   : color === "green"
                   ? "green"
-                  : "#3B3D3B",
+                  : color===""? "#3B3D3B" : color,
               ...textStyle,
             }}
             key={`${offset}-math`}
@@ -113,7 +113,7 @@ const TextWithMath = ({ text, color, isShow = false, textStyle = {} }) => {
             letterSpacing: "-0.42px",
             fontFamily: "Inter",
             color:
-              color === "red" ? "red" : color === "green" ? "green" : "#3B3D3B",
+              color === "red" ? "red" : color === "green" ? "green" : color===""? "#3B3D3B" : color,
             ...textStyle,
           }}
         />
@@ -127,7 +127,7 @@ const TextWithMath = ({ text, color, isShow = false, textStyle = {} }) => {
     <MathJax.Context input="tex">
       <Box
         sx={{
-          color: color === "red" ? "red" : color === "green" ? "green" : "",
+          color: color === "red" ? "red" : color === "green" ? "green" : color===""? "" : color,
         }}
       >
         {textArray?.map((part, index) => (

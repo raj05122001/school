@@ -16,9 +16,15 @@ import {
 } from "@mui/material";
 import UserImage from "@/commonComponents/UserImage/UserImage";
 import { useThemeContext } from "@/hooks/ThemeContext";
-import { getClassAssignment, getStudentAssignment, getteacherClass } from "@/api/apiHelper";
+import {
+  getClassAssignment,
+  getStudentAssignment,
+  getteacherClass,
+} from "@/api/apiHelper";
 import { FiAlertTriangle } from "react-icons/fi";
 import { useSearchParams, useRouter, usePathname } from "next/navigation";
+import Cookies from "js-cookie";
+import { decodeToken } from "react-jwt";
 
 const darkModeStyles = {
   backgroundColor: "#1a1a1a",
@@ -37,6 +43,7 @@ const lightModeStyles = {
 };
 
 const StudentAssignment = () => {
+  const userDetails = decodeToken(Cookies.get("ACCESS_TOKEN"));
   const { isDarkMode } = useThemeContext();
   const [data, setData] = useState([]);
   const [rangeData, setRangeData] = useState([]);
@@ -50,48 +57,108 @@ const StudentAssignment = () => {
   const [selectedOptions, setSelectedOptions] = useState(null);
 
   useEffect(() => {
-    if (selectedOptions?.class_id) {
+    if (selectedOptions?.class_id || Number(userDetails?.user_id) === 35) {
       fetchClassAssignment();
-      fetchStudentAssignment()
+      fetchStudentAssignment();
     }
   }, [selectedOptions, activePage]);
 
   useEffect(() => {
-    if (selectedOptions?.class_id) {
+    if (selectedOptions?.class_id || Number(userDetails?.user_id) === 35) {
       fetchClassAssignment();
     }
   }, [selectedOptions]);
 
   useEffect(() => {
-      fetchClassOptions();
-    }, []);
+    fetchClassOptions();
+  }, []);
 
   const handleChange = (event, value) => {
     setActivePage(value);
   };
 
   const fetchClassOptions = async () => {
-      try {
-        const response = await getteacherClass();
-        setClassOptions(response?.data?.data?.class_subject_list);
-        const findMCA=response?.data?.data?.class_subject_list?.find((val)=>val?.class_id===2 || val?.class_id===27)
-        setSelectedOptions(findMCA);
-      } catch (error) {
-        console.error(error);
-      }
-    };
+    try {
+      const response = await getteacherClass();
+      setClassOptions(response?.data?.data?.class_subject_list);
+      const findMCA = response?.data?.data?.class_subject_list?.find(
+        (val) => val?.class_id === 2 || val?.class_id === 27
+      );
+      setSelectedOptions(findMCA);
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
+  const staticData = [
+    {
+      student_name: "Aditya Verma",
+      total_assignment: 10,
+      completed_assignment: 4,
+      percentage_of_complitation: 40,
+      average_scored_percentage: 73.25,
+      my_assignment_in_which_i_got_less_than_50: 1,
+      my_assignment_in_which_i_got_between_than_50_to_80: 0,
+      my_assignment_in_which_i_got_between_than_80_to_100: 3,
+    },
+    {
+      student_name: "Aisha Gupta",
+      total_assignment: 10,
+      completed_assignment: 4,
+      percentage_of_complitation: 40,
+      average_scored_percentage: 78,
+      my_assignment_in_which_i_got_less_than_50: 0,
+      my_assignment_in_which_i_got_between_than_50_to_80: 2,
+      my_assignment_in_which_i_got_between_than_80_to_100: 2,
+    },
+    {
+      student_name: "Chandrakant Tripathi",
+      total_assignment: 10,
+      completed_assignment: 2,
+      percentage_of_complitation: 20,
+      average_scored_percentage: 81.5,
+      my_assignment_in_which_i_got_less_than_50: 0,
+      my_assignment_in_which_i_got_between_than_50_to_80: 1,
+      my_assignment_in_which_i_got_between_than_80_to_100: 1,
+    },
+    {
+      student_name: "Hrisihta Singh",
+      total_assignment: 10,
+      completed_assignment: 4,
+      percentage_of_complitation: 40,
+      average_scored_percentage: 76,
+      my_assignment_in_which_i_got_less_than_50: 0,
+      my_assignment_in_which_i_got_between_than_50_to_80: 2,
+      my_assignment_in_which_i_got_between_than_80_to_100: 2,
+    },
+    {
+      student_name: "Mohit Chauhan",
+      total_assignment: 10,
+      completed_assignment: 4,
+      percentage_of_complitation: 40,
+      average_scored_percentage: 74.5,
+      my_assignment_in_which_i_got_less_than_50: 0,
+      my_assignment_in_which_i_got_between_than_50_to_80: 3,
+      my_assignment_in_which_i_got_between_than_80_to_100: 1,
+    },
+  ];
 
   const fetchStudentAssignment = async () => {
     setLoading(true);
     try {
-      const response = await getStudentAssignment(
-        selectedOptions?.class_id,
-        activePage,
-        5,
-        true
-      );
-      setData(response?.data?.data?.data);
-      setTotalPage(response?.data?.data?.total);
+      if (Number(userDetails?.user_id) === 35) {
+        setData(staticData);
+        setTotalPage(1);
+      } else {
+        const response = await getStudentAssignment(
+          selectedOptions?.class_id,
+          activePage,
+          5,
+          true
+        );
+        setData(response?.data?.data?.data);
+        setTotalPage(response?.data?.data?.total);
+      }
     } catch (error) {
       console.error(error);
     } finally {
@@ -99,14 +166,36 @@ const StudentAssignment = () => {
     }
   };
 
+  console.log("rangeData : ", rangeData);
+
   const fetchClassAssignment = async () => {
     setLoading(true);
     try {
-      const response = await getClassAssignment(
-        selectedOptions?.class_id,
-        true
+      console.log(
+        "Number(userDetails?.user_id) !== 35 : ",
+        Number(userDetails?.user_id) !== 35
       );
-      setRangeData(response?.data?.data);
+      if (Number(userDetails?.user_id) !== 35) {
+        const response = await getClassAssignment(
+          selectedOptions?.class_id,
+          true
+        );
+        setRangeData(response?.data?.data);
+      } else {
+        const staticRangeData = {
+          total_assignments: 10,
+          average_grade: 18.55,
+          average_percentage: 84.69,
+          student_counts: {
+            range_0_50: 1,
+            range_50_80: 11,
+            range_80_100: 16,
+          },
+          over_all_class_score: 69.23,
+        };
+
+        setRangeData(staticRangeData);
+      }
     } catch (error) {
       console.error(error);
     } finally {
@@ -232,7 +321,7 @@ const StudentAssignment = () => {
             alignItems: "center",
             background: "var(--BG-Color-1, #F3F5F7)",
             borderRadius: "10px",
-            margin:2,
+            margin: 2,
           }}
         >
           <Autocomplete
@@ -275,7 +364,7 @@ const StudentAssignment = () => {
           />
         </Box>
       </Box>
-      <Box sx={{ display: "flex", }}>
+      <Box sx={{ display: "flex" }}>
         <TableContainer
           component={Paper}
           elevation={0}
@@ -284,7 +373,7 @@ const StudentAssignment = () => {
             minHeight: 380,
             height: "100%",
             borderRadius: "10px",
-            border:"none",
+            border: "none",
             overflow: "hidden",
             backdropFilter: "blur(10px)",
             backgroundColor: "rgba(255, 255, 255, 0.2)",
@@ -293,10 +382,15 @@ const StudentAssignment = () => {
           // className="blur_effect_card"
         >
           <Table sx={{ border: "none" }}>
-            <TableHead stickyHeader sx={{backgroundColor: "#F3F5F7",
+            <TableHead
+              stickyHeader
+              sx={{
+                backgroundColor: "#F3F5F7",
                 borderRadius: "10px",
-                border: "none",}}>
-              <TableRow >
+                border: "none",
+              }}
+            >
+              <TableRow>
                 <TableCell
                   sx={{
                     borderTopLeftRadius: "10px",
@@ -386,8 +480,8 @@ const StudentAssignment = () => {
                 </TableCell>
               </TableRow>
             </TableHead>
-            <TableBody sx={{borderBottom: "none"}}>
-              {loading
+            <TableBody sx={{ borderBottom: "none" }}>
+              {loading && Number(userDetails?.user_id) !== 35
                 ? Array.from(new Array(5))?.map((_, index) => (
                     <TableRow key={index}>
                       <TableCell>
@@ -535,19 +629,19 @@ const StudentAssignment = () => {
                         </Box>
                       </TableCell> */}
                       <TableCell align="center">
-                      <Typography
-                            sx={{
-                              color: "var(--Text-Color-1, #3B3D3B)",
-                              fontFamily: "Inter, sans-serif",
-                              fontSize: "14px",
-                              fontStyle: "normal",
-                              fontWeight: 700,
-                              lineHeight: "normal",
-                              marginLeft: "12px",
-                            }}
-                          >
-                            {student?.average_scored_percentage}%
-                          </Typography>
+                        <Typography
+                          sx={{
+                            color: "var(--Text-Color-1, #3B3D3B)",
+                            fontFamily: "Inter, sans-serif",
+                            fontSize: "14px",
+                            fontStyle: "normal",
+                            fontWeight: 700,
+                            lineHeight: "normal",
+                            marginLeft: "12px",
+                          }}
+                        >
+                          {student?.average_scored_percentage}%
+                        </Typography>
                       </TableCell>
                       <TableCell align="center">
                         <Box

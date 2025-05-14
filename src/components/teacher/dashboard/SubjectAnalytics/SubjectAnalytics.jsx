@@ -13,8 +13,11 @@ import { useThemeContext } from "@/hooks/ThemeContext";
 import { FiBarChart2 } from "react-icons/fi";
 import { MdDarkMode, MdLightMode } from "react-icons/md";
 import { watchtimeBySubject } from "@/api/apiHelper";
+import Cookies from "js-cookie";
+import { decodeToken } from "react-jwt";
 
 const SubjectAnalytics = () => {
+  const userDetails = decodeToken(Cookies.get("ACCESS_TOKEN"));
   const { isDarkMode } = useThemeContext();
   const [data, setData] = useState([]);
   const isSmallScreen = useMediaQuery("(max-width:600px)");
@@ -23,10 +26,66 @@ const SubjectAnalytics = () => {
     fetchWatchtimeBySubject();
   }, []);
 
+  const staticData = [
+    {
+        "subject_name": "Machine learning",
+        "watchtime": 52.97
+    },
+    {
+        "subject_name": "Computer network",
+        "watchtime": 242.68
+    },
+    {
+        "subject_name": "Autocad ",
+        "watchtime": 0
+    },
+    {
+        "subject_name": "Data science",
+        "watchtime": 1705.02
+    },
+    {
+        "subject_name": "Chemistry",
+        "watchtime": 22.51
+    },
+    {
+        "subject_name": "Geography ",
+        "watchtime": 0
+    },
+    {
+        "subject_name": "Devops",
+        "watchtime": 0
+    },
+    {
+        "subject_name": "Mutual information ",
+        "watchtime": 0
+    },
+    {
+        "subject_name": "Finance",
+        "watchtime": 0
+    },
+    {
+        "subject_name": "Bharat anand’s tedx talks",
+        "watchtime": 0
+    },
+    {
+        "subject_name": "Operations research",
+        "watchtime": 0
+    },
+    {
+        "subject_name": "Operating system",
+        "watchtime": 0
+    }
+]
+
   const fetchWatchtimeBySubject = async () => {
     try {
+       if (Number(userDetails?.user_id) === 35) {
+        setData(staticData);
+        setTotalPage(1);
+      } else {
       const response = await watchtimeBySubject();
       setData(response?.data?.data);
+      }
     } catch (error) {
       console.error(error);
     }
