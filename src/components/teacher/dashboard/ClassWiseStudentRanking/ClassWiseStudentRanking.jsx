@@ -91,20 +91,52 @@ const ClassWiseStudentRanking = ({ selectedOptions }) => {
   };
 
   useEffect(() => {
-    if (selectedOptions?.class_id) {
+    if (selectedOptions?.class_id || Number(userDetails?.user_id) === 35) {
       fetchCountByCategory();
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [selectedOptions, classTabValue]);
 
+  const staticOveralData = {
+    "active_students": 6,
+    "active_students_gradewise": {
+        "A": 3,
+        "B": 2,
+        "C": 1
+    },
+    "inactive_students": 6,
+    "inactive_students_gradewise": {
+        "D": 5,
+        "E": 1
+    }
+}
+
+const staticClassData = {
+    "active_students": 7,
+    "active_students_gradewise": {
+        "A": 3,
+        "B": 1,
+        "C": 3
+    },
+    "inactive_students": 3,
+    "inactive_students_gradewise": {
+        "D": 2,
+        "E": 1
+    }
+}
+
   const fetchCountByCategory = async () => {
     setLoading(true);
     try {
+       if (Number(userDetails?.user_id) === 35) {
+        setData(isMyClass? staticClassData : staticOveralData)
+       }else{
       const response = await getCountByCategory(
         selectedOptions?.class_id,
         isMyClass ? userDetails?.teacher_id : 0
       );
       setData(response?.data?.data || {});
+    }
     } catch (error) {
       console.error(error);
     } finally {
