@@ -72,11 +72,8 @@ const AssignmentItem = ({
   teacherComments,
   fetchAssignments,
 }) => {
-  const { fetchPresignedUrl } = usePresignedUrl()
-  const {  
-    uploadVideoToS3,
-    uploadProgress
-  } = useFileUploader()
+  const { fetchPresignedUrl } = usePresignedUrl();
+  const { uploadVideoToS3, uploadProgress } = useFileUploader();
 
   const [openAccordian, setOpenAccordian] = useState(false);
   const [answerDescription, setAnswerDescription] = useState("");
@@ -88,7 +85,7 @@ const AssignmentItem = ({
   const excludedTypes = ["VIDEO", "AUDIO", "IMAGE", "LINK"];
   const [assignmentStatus, setAssignmentStatus] = useState("");
   const [loading, setLoading] = useState(false);
-  const [s3Location,setS3Location]=useState("")
+  const [s3Location, setS3Location] = useState("");
   const shouldRenderAccordion =
     assignmentStatus === "data-found" &&
     !excludedTypes.includes(assignmentType);
@@ -146,13 +143,13 @@ const AssignmentItem = ({
         folder: fileConfigs[type]?.Key,
       };
 
-      const signedUrl = await fetchPresignedUrl(data)
+      const signedUrl = await fetchPresignedUrl(data);
 
       const xhr = await uploadVideoToS3(file, signedUrl);
-      const responseURL = xhr?.responseURL?.split('?')[0]
+      const responseURL = xhr?.responseURL?.split("?")[0];
 
-      setS3Location(responseURL)
-      
+      setS3Location(responseURL);
+
       dispatch({
         type: "SET_FILE_LINK",
         payload: { assignmentId: assignment.id, file, type },
@@ -436,8 +433,8 @@ const AssignmentItem = ({
           sx={{
             mb: 4,
             display: "flex",
-            position: "relative",
-            borderRadius: 4,
+            // position: "relative",
+            borderRadius: 2,
             flexDirection: "column",
             // backgroundColor:
             //   isSubmit === true
@@ -445,16 +442,17 @@ const AssignmentItem = ({
             //     : shouldRenderAccordion
             //     ? "#e8e2c3"
             //     : "#ffe0e0",
-            boxShadow:
-              isSubmit === true
-                ? "0px 2px 10px #38ba47"
-                : shouldRenderAccordion
-                ? "0px 2px 10px #151bb3"
-                : "0px 2px 10px #ba5038",
-            p: 2,
+            // boxShadow:
+            //   isSubmit === true
+            //     ? "0px 2px 10px #38ba47"
+            //     : shouldRenderAccordion
+            //     ? "0px 2px 10px #151bb3"
+            //     : "0px 2px 10px #ba5038",
+            justifyContent: "space-between",
+            border: "1px solid #000000",
           }}
         >
-          <label
+          {/* <label
             style={{
               position: "absolute",
               backgroundColor: "red",
@@ -468,9 +466,9 @@ const AssignmentItem = ({
                   ? "#494ee9"
                   : "#ba5038",
               color: "white",
-              width:"150px",
-              textAlign:"center",
-              height:"30px",
+              width: "150px",
+              textAlign: "center",
+              height: "30px",
               padding: "6px 6px",
               borderRadius: "4px",
               fontSize: "12px",
@@ -481,28 +479,47 @@ const AssignmentItem = ({
               : shouldRenderAccordion
               ? "Re-submit to Teacher"
               : "Not Attempted"}
-          </label>
+          </label> */}
           <Box
             sx={{
+              backgroundColor:
+                isSubmit === true
+                  ? " #16AA54"
+                  : shouldRenderAccordion
+                  ? " #0088FE"
+                  : " #FF3B30",
+              p: 1,
+              borderTopRightRadius: 8,
+              borderTopLeftRadius: 8,
               display: "flex",
-              justifyContent: "space-between",
               flexDirection: "row",
-              marginBottom:"8px",
-              border: "1px solid #d3d3d3",
-              padding: 2,
-              borderRadius:"6px",
-              fontSize:"14px"
+              alignItems: "center",
+              justifyContent: "space-between",
             }}
           >
-            <Box sx={{ display: "flex", }}>
-              <Typography variant="body1">
-                {String.fromCharCode(65 + index)}.&nbsp;
-              </Typography>
-              <Box mt={0.3}>
-                <AssignmentTextFormat text={assignment.assignment_text} />
-              </Box>
-            </Box>
-            <Box>
+            <Typography
+              sx={{
+                color: "#FFF",
+                fontFamily: "Inter",
+                fontSize: "16px",
+                fontStyle: "normal",
+                fontWeight: 700,
+                lineHeight: "normal",
+              }}
+            >
+              Question {String.fromCharCode(65 + index)}.&nbsp;
+            </Typography>
+            <Box
+              sx={{
+                backgroundColor: "#fff",
+                borderRadius: "6px",
+                display: "flex",
+                // padding: "8px 12px",
+                alignItems: "center",
+                gap: "6px",
+                alignSelf: "stretch",
+              }}
+            >
               <IconButton onClick={() => setOpenAccordian(false)}>
                 <IoIosArrowUp
                   style={{ color: isDarkMode ? "#fff" : "#000000" }}
@@ -510,31 +527,46 @@ const AssignmentItem = ({
               </IconButton>
             </Box>
           </Box>
-          <hr />
-          <Box sx={{ display: "flex", justifyContent: "space-between", marginTop:"8px" }}>
-            <Typography
-              variant="body2"
+          <Box mt={0.3} sx={{ p: 1 }}>
+            <AssignmentTextFormat text={assignment.assignment_text} />
+          </Box>
+
+          {/* <hr /> */}
+          <Box
+            sx={{
+              display: "flex",
+              justifyContent: "space-between",
+              marginTop: "8px",
+              p: 1,
+            }}
+          >
+            <Box
               sx={{
-                display: "inline-flex",
-                padding: "10px 18px",
-                justifyContent: "center",
+                display: "flex",
+                padding: "8px 14px",
                 alignItems: "center",
-                gap: "8px",
-                textTransform: "none",
-                borderRadius: "8px",
-                background: "#155A03",
-                color: "#FFF",
-                textAlign: "center",
-                fontFeatureSettings: "'liga' off, 'clig' off",
-                fontFamily: "Aptos",
-                fontSize: "14px",
-                fontStyle: "normal",
-                fontWeight: "700",
-                lineHeight: "24px",
-                }}
+                gap: "6px",
+                alignSelf: "stretch",
+                borderRadius: "6px",
+                backgroundColor: "#174321",
+              }}
             >
-              Total Marks: {assignment.assignment_mark}
-            </Typography>
+              <Typography
+                sx={{
+                  color: "#FFF",
+                  leadingTrim: "both",
+                  textEdge: "cap",
+                  fontFamily: "Inter",
+                  fontSize: "14px",
+                  fontStyle: "normal",
+                  fontWeight: 400,
+                  lineHeight: "normal",
+                }}
+              >
+                Total Marks: {assignment.assignment_mark}
+              </Typography>
+            </Box>
+
             <Box sx={{ display: "flex", gap: 2 }}>
               {assignment.assignment_attachment && (
                 <Button
@@ -558,30 +590,145 @@ const AssignmentItem = ({
                 variant="contained"
                 onClick={() => !open && setOpen(true)}
                 sx={{
-                display: "inline-flex",
-                padding: "10px 30px",
-                justifyContent: "center",
-                alignItems: "center",
-                gap: "8px",
-                textTransform: "none",
-                borderRadius: "8px",
-                background: "#141514",
-                color: "#FFF",
-                textAlign: "center",
-                fontFeatureSettings: "'liga' off, 'clig' off",
-                fontFamily: "Aptos",
-                fontSize: "14px",
-                fontStyle: "normal",
-                fontWeight: "700",
-                lineHeight: "24px",
-                "&:hover": {
-                  border: "1px solid #141514",
-                  background: "#E5E5E5",
-                  color: "#141514",
-                },
+                  display: "inline-flex",
+                  padding: "8px 14px",
+                  // justifyContent: "center",
+                  alignItems: "center",
+                  alignSelf: "stretch",
+                  gap: "6px",
+                  textTransform: "none",
+                  borderRadius: "6px",
+                  backgroundColor: "#090909",
+                  "&:hover": {
+
+                    backgroundColor: "#090909",
+
+                  },
                 }}
               >
-                Need Guidance
+                <Box
+                  sx={{
+                    display: "flex",
+                    justifyContent: "center",
+                    alignItems: "center",
+                  }}
+                >
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="19"
+                    height="18"
+                    viewBox="0 0 19 18"
+                    fill="none"
+                  >
+                    <path
+                      d="M6.5 1.5V3.75"
+                      stroke="#EBEDF0"
+                      stroke-width="1.5"
+                      stroke-miterlimit="10"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                    />
+                    <path
+                      d="M12.5 1.5V3.75"
+                      stroke="#EBEDF0"
+                      stroke-width="1.5"
+                      stroke-miterlimit="10"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                    />
+                    <path
+                      d="M3.125 6.81641H15.875"
+                      stroke="#EBEDF0"
+                      stroke-width="1.5"
+                      stroke-miterlimit="10"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                    />
+                    <path
+                      d="M14.9083 11.8262L12.2533 14.4812C12.1483 14.5862 12.0508 14.7812 12.0283 14.9237L11.8858 15.9363C11.8333 16.3038 12.0883 16.5588 12.4558 16.5063L13.4683 16.3638C13.6108 16.3413 13.8133 16.2437 13.9108 16.1387L16.5658 13.4838C17.0233 13.0263 17.2408 12.4938 16.5658 11.8188C15.8983 11.1513 15.3658 11.3687 14.9083 11.8262Z"
+                      stroke="#EBEDF0"
+                      stroke-width="1.5"
+                      stroke-miterlimit="10"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                    />
+                    <path
+                      d="M14.5234 12.207C14.7484 13.017 15.3784 13.647 16.1884 13.872"
+                      stroke="#EBEDF0"
+                      stroke-width="1.5"
+                      stroke-miterlimit="10"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                    />
+                    <path
+                      d="M9.5 16.5H6.5C3.875 16.5 2.75 15 2.75 12.75V6.375C2.75 4.125 3.875 2.625 6.5 2.625H12.5C15.125 2.625 16.25 4.125 16.25 6.375V9"
+                      stroke="#EBEDF0"
+                      stroke-width="1.5"
+                      stroke-miterlimit="10"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                    />
+                    <path
+                      d="M9.49588 10.2734H9.50262"
+                      stroke="#EBEDF0"
+                      stroke-width="1.5"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                    />
+                    <path
+                      d="M6.72244 10.2734H6.72918"
+                      stroke="#EBEDF0"
+                      stroke-width="1.5"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                    />
+                    <path
+                      d="M6.72244 12.5234H6.72918"
+                      stroke="#EBEDF0"
+                      stroke-width="1.5"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                    />
+                  </svg>
+                </Box>
+                <Typography
+                  sx={{
+                    color: "#FFF",
+                    leadingTrim: "both",
+                    textEdge: "cap",
+                    fontFamily: "Inter",
+                    fontSize: "14px",
+                    fontStyle: "normal",
+                    fontWeight: 400,
+                    lineHeight: "normal",
+                  }}
+                >
+                  Need Guidance
+                </Typography>
+                <Box
+                  sx={{
+                    display: "flex",
+                    justifyContent: "center",
+                    alignItems: "center",
+                  }}
+                >
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="17"
+                    height="16"
+                    viewBox="0 0 17 16"
+                    fill="none"
+                  >
+                    <path
+                      d="M6.4668 2.7193L10.8135 7.06596C11.3268 7.5793 11.3268 8.4193 10.8135 8.93263L6.4668 13.2793"
+                      stroke="#EBEDF0"
+                      stroke-width="1.5"
+                      stroke-miterlimit="10"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                    />
+                  </svg>
+                </Box>
               </Button>
               {open ? (
                 <NeedMoreGuide
@@ -596,7 +743,9 @@ const AssignmentItem = ({
           </Box>
 
           <Box sx={{ marginTop: 2 }}>
-            {shouldRenderAccordion && <AIFeedback assignment={assignment} answered_by={answered_by}/>}
+            {shouldRenderAccordion && (
+              <AIFeedback assignment={assignment} answered_by={answered_by} />
+            )}
           </Box>
           {isSubmit === false &&
             (uploadProgress === 100 || answerDescription ? (
@@ -629,7 +778,15 @@ const AssignmentItem = ({
                   alignItems="center"
                   justifyContent="center"
                 >
-                  <Typography variant="subtitle1" sx={{ color: "#10120f", textAlign: "center", padding:"4px", fontSize:"14px"}}>
+                  <Typography
+                    variant="subtitle1"
+                    sx={{
+                      color: "#10120f",
+                      textAlign: "center",
+                      padding: "4px",
+                      fontSize: "14px",
+                    }}
+                  >
                     {!selectedFile && !answerDescription
                       ? isSubmitted
                         ? "Please re-upload a file or enter a description to proceed for resubmitting."
@@ -676,7 +833,7 @@ const AssignmentItem = ({
                   component="label"
                   onChange={(e) => handleFileSelect(e, "IMAGE")}
                 >
-                  <FaPhotoVideo color="#16AA54"/>
+                  <FaPhotoVideo color="#16AA54" />
                   <input hidden accept="image/*" type="file" />
                 </IconButton>
               </Tooltip>
@@ -686,7 +843,7 @@ const AssignmentItem = ({
                   component="label"
                   onChange={(e) => handleFileSelect(e, "AUDIO")}
                 >
-                  <FaFileAudio color="#16AA54"/>
+                  <FaFileAudio color="#16AA54" />
                   <input hidden accept="audio/*" type="file" />
                 </IconButton>
               </Tooltip>
@@ -696,7 +853,7 @@ const AssignmentItem = ({
                   component="label"
                   onChange={(e) => handleFileSelect(e, "VIDEO")}
                 >
-                  <FaRegFileVideo color="#16AA54"/>
+                  <FaRegFileVideo color="#16AA54" />
                   <input hidden accept="video/*" type="file" />
                 </IconButton>
               </Tooltip>
@@ -706,7 +863,7 @@ const AssignmentItem = ({
                   component="label"
                   onChange={(e) => handleFileSelect(e, "FILE")}
                 >
-                  <MdDescription color="#16AA54"/>
+                  <MdDescription color="#16AA54" />
                   <input
                     hidden
                     accept=".pdf,.doc,.docx,.txt,.xlsx,.xls,.pptx"
@@ -821,23 +978,24 @@ const AssignmentItem = ({
       ) : (
         <Box
           sx={{
-            position: "relative",
+            // position: "relative",
             mb: 4,
             display: "flex",
-            borderRadius: 4,
-            flexDirection: "row",
-            boxShadow:
-              isSubmit === true
-                ? "0px 2px 10px #38ba47"
-                : shouldRenderAccordion
-                ? "0px 2px 10px #151bb3"
-                : "0px 2px 10px #ba5038",
-            p: 2,
+            borderRadius: 2,
+            flexDirection: "column",
+            // boxShadow:
+            //   isSubmit === true
+            //     ? "0px 2px 10px #38ba47"
+            //     : shouldRenderAccordion
+            //     ? "0px 2px 10px #151bb3"
+            //     : "0px 2px 10px #ba5038",
+            // pl: 2,
             justifyContent: "space-between",
+            border: "1px solid #000000",
           }}
           onClick={() => setOpenAccordian(true)}
         >
-          <label
+          {/* <label
             style={{
               position: "absolute",
               color: "white",
@@ -863,27 +1021,62 @@ const AssignmentItem = ({
               : shouldRenderAccordion
               ? "Re-submit to Teacher"
               : "Not Attempted"}
-          </label>
-          <Box sx={{ display: "flex", padding: 2, fontSize:"14px", }}>
-            <Typography variant="body1">
-              {String.fromCharCode(65 + index)}.&nbsp;
+          </label> */}
+          <Box
+            sx={{
+              backgroundColor:
+                isSubmit === true
+                  ? " #16AA54"
+                  : shouldRenderAccordion
+                  ? " #0088FE"
+                  : " #FF3B30",
+              p: 1,
+              borderTopRightRadius: 8,
+              borderTopLeftRadius: 8,
+              display: "flex",
+              flexDirection: "row",
+              alignItems: "center",
+              justifyContent: "space-between",
+            }}
+          >
+            <Typography
+              sx={{
+                color: "#FFF",
+                fontFamily: "Inter",
+                fontSize: "16px",
+                fontStyle: "normal",
+                fontWeight: 700,
+                lineHeight: "normal",
+              }}
+            >
+              Question {String.fromCharCode(65 + index)}.&nbsp;
             </Typography>
-            <Box mt={0.3}>
-              <AssignmentTextFormat
-                text={
-                  assignment.assignment_text?.length > 200
-                    ? `${assignment.assignment_text?.slice(0, 200)}...`
-                    : assignment.assignment_text
-                }
-              />
+            <Box
+              sx={{
+                backgroundColor: "#fff",
+                borderRadius: "6px",
+                display: "flex",
+                // padding: "8px 12px",
+                alignItems: "center",
+                gap: "6px",
+                alignSelf: "stretch",
+              }}
+            >
+              <IconButton>
+                <IoIosArrowDown
+                  style={{ color: isDarkMode ? "#fff" : "#000000" }}
+                />
+              </IconButton>
             </Box>
           </Box>
-          <Box>
-            <IconButton>
-              <IoIosArrowDown
-                style={{ color: isDarkMode ? "#fff" : "#000000" }}
-              />
-            </IconButton>
+          <Box mt={0.3} sx={{ p: 1 }}>
+            <AssignmentTextFormat
+              text={
+                assignment.assignment_text?.length > 200
+                  ? `${assignment.assignment_text?.slice(0, 200)}...`
+                  : assignment.assignment_text
+              }
+            />
           </Box>
         </Box>
       )}
@@ -897,7 +1090,7 @@ export const BorderLinearProgress = styled(LinearProgress)(({ theme }) => ({
   height: 64,
   borderRadius: 8,
   [`&.${linearProgressClasses.colorPrimary}`]: {
-    backgroundColor:  "#DAEDD5", // Light blue for light mode
+    backgroundColor: "#DAEDD5", // Light blue for light mode
     ...theme.applyStyles("dark", {
       backgroundColor: "#003366", // Navy blue for dark mode
     }),

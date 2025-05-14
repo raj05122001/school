@@ -90,14 +90,14 @@ const StudentMOLAssignment = ({ id, isDarkMode, class_ID }) => {
     );
   }
   const legendItems = [
-    { label: "Fully Submitted", color: "#77ed84" },
-    { label: "Re-Submit to Teacher", color: "#696ff5" },
-    { label: "Not Attempted", color: "#c96f5b" },
+    { label: "Fully Submitted", color: "#16AA54" },
+    { label: "Re-Submit to Teacher", color: "#0088FE" },
+    { label: "Not Attempted", color: "#FF3B30" },
   ];
   return (
     <Box
       sx={{
-        p: 3,
+        p: 1,
         width: "100%",
         width: "100%",
         borderBottomLeftRadius: "16px",
@@ -131,8 +131,18 @@ const StudentMOLAssignment = ({ id, isDarkMode, class_ID }) => {
             style={{ display: "flex", gap: "8px", margin: 10 }}
           >
             {legendItems?.map((item, index) => (
-              <Box key={index} display="flex" alignItems="center">
-                <Box
+              <Box
+                key={index}
+                sx={{
+                  display: "flex",
+                  padding: "8px 12px",
+                  alignItems: "center",
+                  gap: "6px",
+                  borderRadius: "6px",
+                  backgroundColor: item.color,
+                }}
+              >
+                {/* <Box
                   sx={{
                     width: 16,
                     height: 16,
@@ -140,8 +150,19 @@ const StudentMOLAssignment = ({ id, isDarkMode, class_ID }) => {
                     borderRadius: "4px",
                     marginRight: "8px",
                   }}
-                />
-                <Typography variant="body2" color="textPrimary">
+                /> */}
+                <Typography
+                  sx={{
+                    color: "#FFF",
+                    leadingTrim: "both",
+                    textEdge: "cap",
+                    fontFamily: "Inter",
+                    fontSize: "14px",
+                    fontStyle: "normal",
+                    fontWeight: 400,
+                    lineHeight: "normal",
+                  }}
+                >
                   {item.label}
                 </Typography>
               </Box>
