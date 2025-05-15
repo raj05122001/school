@@ -126,7 +126,7 @@ const AIFeedback = ({ assignment, answered_by, totalMarks }) => {
                 color: "#4A0033",
                 borderRadius: 4,
                 padding: "4px",
-                border: "1px solid #000000",
+                border: "0.568px solid #E0E0E0",
                 fontSize: "15px",
                 p: 2,
                 display:"flex",
@@ -242,13 +242,13 @@ const AIFeedback = ({ assignment, answered_by, totalMarks }) => {
             {data?.overall_feedback && (
                 <Box
                   sx={{
-                    backgroundColor: "#E0F0FE",
+                    backgroundColor: "#fff",
                     color: "#1d1924",
                     borderRadius: 4,
                     padding: 4,
                     // backdropFilter: "blur(10px)",
                     // boxShadow: "0px 2px 8px #1389f0",
-                    border: "1px solid #1389f0",
+                    border: "0.568px solid #E0E0E0",
                     fontSize: "12px",
                     display:"flex",
                     flexDirection:"column",
@@ -265,12 +265,12 @@ const AIFeedback = ({ assignment, answered_by, totalMarks }) => {
             {data?.feedback_points?.length > 0 && (
                 <Box
                   sx={{
-                    backgroundColor: "#edfced",
-                    color: "#174d17",
+                    backgroundColor: "#fff",
+                    color: "#1d1924",
                     padding: 4,
                     borderRadius: 4,
                     // boxShadow: "0px 4px 10px #21ed21",
-                    border: "1px solid #21ed21",
+                    border: "0.568px solid #E0E0E0",
                     fontSize: "12px",
                     display:"flex",
                     flexDirection:"column",
@@ -282,7 +282,7 @@ const AIFeedback = ({ assignment, answered_by, totalMarks }) => {
                   <VscActivateBreakpoints style={{ marginRight: 4 }} />
                   Feedback Points
                 </Typography>
-                  <ul style={{ lineHeight: "1.8" }}>
+                  <ul style={{ lineHeight: "0.8" }}>
                     {data?.feedback_points?.map((point, index) => (
                       <li key={index}>
                         <AssignmentTextFormat text={point} />
@@ -294,12 +294,12 @@ const AIFeedback = ({ assignment, answered_by, totalMarks }) => {
             {data?.improvement_points?.length > 0 && (
                 <Box
                   sx={{
-                    backgroundColor: "#EADDCA",
-                    color: "#4A0404",
+                    backgroundColor: "#fff",
+                    color: "#1d1924",
                     padding: 4,
                     borderRadius: 4,
                     // boxShadow: "0px 4px 10px #a1865d",
-                    border: "1px solid #a1865d",
+                    border: "0.568px solid #E0E0E0",
                     fontSize: "15px",
                     display:"flex",
                     flexDirection:"column",
@@ -310,7 +310,7 @@ const AIFeedback = ({ assignment, answered_by, totalMarks }) => {
                   <VscActivateBreakpoints style={{ marginRight: 4 }} />
                   Improvement Points
                 </Typography>
-                  <ul style={{ lineHeight: "1.8" }}>
+                  <ul style={{ lineHeight: "0.8" }}>
                     {data?.improvement_points?.map((point, index) => (
                       <li key={index}>
                         <AssignmentTextFormat text={point} />
