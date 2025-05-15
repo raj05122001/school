@@ -763,7 +763,7 @@ const AssignmentItem = ({
                 {submitting ? "Submitting..." : "Submit Assignment"}
               </Button>
             ) : (
-              <Box position="relative" width="100%" sx={{ mt: 2 }}>
+              <Box position="relative" width="100%" sx={{ mt: 2, padding:"6px" }}>
                 <BorderLinearProgress
                   variant="determinate"
                   value={uploadProgress}
@@ -805,8 +805,9 @@ const AssignmentItem = ({
               variant="outlined"
               placeholder="Describe about your assignment here..."
               sx={{
-                mt: 2,
-                mb: 2,
+                mb: 0.5,
+                mt:0.5,
+                p:1,
                 "& .MuiOutlinedInput-root": {
                   color: isDarkMode ? "#fff" : "#000000",
                 },
@@ -820,7 +821,7 @@ const AssignmentItem = ({
             />
           )}
           {isSubmit == -false && (
-            <Typography sx={{ fontStyle: "italic", fontSize: "14px", mb: 1 }}>
+            <Typography sx={{ fontStyle: "italic", fontSize: "14px", p:1 }}>
               <i>*Please upload file(s) while giving description.</i>
             </Typography>
           )}
