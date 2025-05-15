@@ -158,7 +158,7 @@ const ListingCard = ({ data, onClick }) => {
             gutterBottom
             sx={{ color: isDarkMode ? primaryColor : "#555", fontFamily: "Inter, sans-serif", fontSize:"12px", fontWeight:500 }}
           >
-            <strong>Description:</strong> {data?.description.length>140? `${data?.description?.slice(0,140)}...`:data?.description || "N/A"}
+            <strong>Description:</strong> {data?.description?.length>140? `${data?.description?.slice(0,140)}...`:data?.description || "N/A"}
           </Typography>
           <Grid container mt={"auto"} pt={2}>
             <Grid item xs={12} sm={8}>
