@@ -10,7 +10,7 @@ export default function ChapterStatus({totalChapters=0,checked=0,notChecked=0}) 
     const stats = [
         {
           icon: <MdOutlineLibraryBooks size={24} />,
-          label: "Total Chapters",
+          label: "Total Lectures",
           value: totalChapters,
         },
         {

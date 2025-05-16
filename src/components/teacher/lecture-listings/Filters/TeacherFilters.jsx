@@ -269,28 +269,28 @@
 
 import React, { useEffect, useState } from "react";
 import { Box, Button, Typography } from "@mui/material";
-import { getClassByCourse } from "@/api/apiHelper";
-import { useRouter,usePathname } from "next/navigation";
+import { getClassByCourse, getteacherClass } from "@/api/apiHelper";
+import { useRouter, usePathname } from "next/navigation";
 
-const TeacherFilters = ({classValue = "All"}) => {
+const TeacherFilters = ({ classValue = "All" }) => {
   const router = useRouter();
-  const pathname = usePathname()
+  const pathname = usePathname();
   const [selected, setSelected] = useState(classValue);
   const [classList, setClassList] = useState([]);
 
   useEffect(() => {
     const fetchData = async () => {
-      const classResponse = await getClassByCourse("", "");
-      setClassList(classResponse?.data?.data || []);
+      const classResponse = await getteacherClass();
+      setClassList(classResponse?.data?.data?.class_subject_list || []);
     };
     fetchData();
   }, []);
 
-  const handleRoute=async(val)=>{
-    console.log("pathname : ",pathname)
-    router.push(`${pathname}?class=${val==="All" ? "":val}`)
-    setSelected(val)
-  }
+  const handleRoute = async (val) => {
+    console.log("pathname : ", pathname);
+    router.push(`${pathname}?class=${val === "All" ? "" : val}`);
+    setSelected(val);
+  };
 
   // class
   // router.push()
@@ -340,8 +340,8 @@ const TeacherFilters = ({classValue = "All"}) => {
           const isActive = cat.name === selected;
           return (
             <Button
-              key={cat.name}
-              onClick={() => handleRoute(cat.name)}
+              key={cat.class_name}
+              onClick={() => handleRoute(cat.class_name)}
               disableRipple
               sx={{
                 whiteSpace: "nowrap",
@@ -361,7 +361,7 @@ const TeacherFilters = ({classValue = "All"}) => {
                 },
               }}
             >
-              {cat.name}
+              {cat.class_name}
             </Button>
           );
         })}
@@ -375,4 +375,3 @@ const TeacherFilters = ({classValue = "All"}) => {
 };
 
 export default TeacherFilters;
-
