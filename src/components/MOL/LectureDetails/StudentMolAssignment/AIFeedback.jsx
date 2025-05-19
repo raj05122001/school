@@ -144,7 +144,10 @@ const AIFeedback = ({ assignment, answered_by, totalMarks }) => {
                 </Typography>
               )}
               <Box sx={{display:"flex", gap:"8px", justifyContent:"space-around", marginTop: 1}}>
-                {data?.plagiarism_detection_result?.detection_probability && (
+                {data?.plagiarism_detection_result?.detection_probability !==
+                  undefined &&
+                  data?.plagiarism_detection_result?.detection_probability !==
+                    null && (
                 <Box
                   sx={{
                     display: "flex",
@@ -166,7 +169,10 @@ const AIFeedback = ({ assignment, answered_by, totalMarks }) => {
                   </Typography>
                 </Box>
               )}
-              {data?.plagiarism_detection_result?.human_percentage_detected && (
+              {data?.plagiarism_detection_result
+                  ?.human_percentage_detected !== undefined &&
+                  data?.plagiarism_detection_result
+                    ?.human_percentage_detected !== null && (
                 <Box
                   sx={{
                     display: "flex",
@@ -189,7 +195,10 @@ const AIFeedback = ({ assignment, answered_by, totalMarks }) => {
                   </Typography>
                 </Box>
               )}
-              {data?.plagiarism_detection_result?.ai_percentage_detected && (
+              {data?.plagiarism_detection_result?.ai_percentage_detected !==
+                  undefined &&
+                  data?.plagiarism_detection_result?.ai_percentage_detected !==
+                    null && (
                 <Box
                   sx={{
                     display: "flex",
@@ -212,7 +221,10 @@ const AIFeedback = ({ assignment, answered_by, totalMarks }) => {
                   </Typography>
                 </Box>
               )}
-              {data?.plagiarism_detection_result?.plagiarism_score && (
+              {data?.plagiarism_detection_result?.plagiarism_score !==
+                  undefined &&
+                  data?.plagiarism_detection_result?.plagiarism_score !==
+                    null && (
                 <Box
                   sx={{
                     display: "flex",

@@ -168,181 +168,191 @@ const AIFeedbackTeacher = ({ assignment, answered_by, totalMarks }) => {
                   marginTop: 1,
                 }}
               >
-                {data?.plagiarism_detection_result?.detection_probability && (
-                  <Box
-                    sx={{
-                      display: "flex",
-                      flexDirection: "column",
-                      gap: "2px",
-                      justifyContent: "center",
-                      alignItems: "center",
-                    }}
-                  >
-                    <Box>
-                      <CircularProgressWithLabel
-                        value={
-                          data?.plagiarism_detection_result
-                            ?.detection_probability
-                        }
-                      />
+                {data?.plagiarism_detection_result?.detection_probability !==
+                  undefined &&
+                  data?.plagiarism_detection_result?.detection_probability !==
+                    null && (
+                    <Box
+                      sx={{
+                        display: "flex",
+                        flexDirection: "column",
+                        gap: "2px",
+                        justifyContent: "center",
+                        alignItems: "center",
+                      }}
+                    >
+                      <Box>
+                        <CircularProgressWithLabel
+                          value={
+                            data?.plagiarism_detection_result
+                              ?.detection_probability
+                          }
+                        />
+                      </Box>
+                      <Typography sx={AIFeedbackTextStyle}>
+                        Detection Probability
+                      </Typography>
                     </Box>
-                    <Typography sx={AIFeedbackTextStyle}>
-                      Detection Probability
-                    </Typography>
-                  </Box>
-                )}
+                  )}
                 {data?.plagiarism_detection_result
-                  ?.human_percentage_detected && (
-                  <Box
-                    sx={{
-                      display: "flex",
-                      flexDirection: "column",
-                      gap: "2px",
-                      justifyContent: "center",
-                      alignItems: "center",
-                    }}
-                  >
-                    <Box>
-                      <CircularProgressWithLabel
-                        value={
-                          data?.plagiarism_detection_result
-                            ?.human_percentage_detected
-                        }
-                      />
+                  ?.human_percentage_detected !== undefined &&
+                  data?.plagiarism_detection_result
+                    ?.human_percentage_detected !== null && (
+                    <Box
+                      sx={{
+                        display: "flex",
+                        flexDirection: "column",
+                        gap: "2px",
+                        justifyContent: "center",
+                        alignItems: "center",
+                      }}
+                    >
+                      <Box>
+                        <CircularProgressWithLabel
+                          value={
+                            data?.plagiarism_detection_result
+                              ?.human_percentage_detected
+                          }
+                        />
+                      </Box>
+                      <Typography sx={AIFeedbackTextStyle}>
+                        Human-Like Content
+                      </Typography>
                     </Box>
-                    <Typography sx={AIFeedbackTextStyle}>
-                      Human-Like Content
-                    </Typography>
-                  </Box>
-                )}
-                {data?.plagiarism_detection_result?.ai_percentage_detected && (
-                  <Box
-                    sx={{
-                      display: "flex",
-                      flexDirection: "column",
-                      gap: "2px",
-                      justifyContent: "center",
-                      alignItems: "center",
-                    }}
-                  >
-                    <Box>
-                      <CircularProgressWithLabel
-                        value={
-                          data?.plagiarism_detection_result
-                            ?.ai_percentage_detected
-                        }
-                      />
+                  )}
+                {data?.plagiarism_detection_result?.ai_percentage_detected !==
+                  undefined &&
+                  data?.plagiarism_detection_result?.ai_percentage_detected !==
+                    null && (
+                    <Box
+                      sx={{
+                        display: "flex",
+                        flexDirection: "column",
+                        gap: "2px",
+                        justifyContent: "center",
+                        alignItems: "center",
+                      }}
+                    >
+                      <Box>
+                        <CircularProgressWithLabel
+                          value={
+                            data?.plagiarism_detection_result
+                              ?.ai_percentage_detected
+                          }
+                        />
+                      </Box>
+                      <Typography sx={AIFeedbackTextStyle}>
+                        AI-Like Content:
+                      </Typography>
                     </Box>
-                    <Typography sx={AIFeedbackTextStyle}>
-                      AI-Like Content:
-                    </Typography>
-                  </Box>
-                )}
-                {data?.plagiarism_detection_result?.plagiarism_score && (
-                  <Box
-                    sx={{
-                      display: "flex",
-                      flexDirection: "column",
-                      gap: "2px",
-                      justifyContent: "center",
-                      alignItems: "center",
-                    }}
-                  >
-                    <Box>
-                      <CircularProgressWithLabel
-                        value={
-                          data?.plagiarism_detection_result?.plagiarism_score
-                        }
-                      />
+                  )}
+                {data?.plagiarism_detection_result?.plagiarism_score !==
+                  undefined &&
+                  data?.plagiarism_detection_result?.plagiarism_score !==
+                    null && (
+                    <Box
+                      sx={{
+                        display: "flex",
+                        flexDirection: "column",
+                        gap: "2px",
+                        justifyContent: "center",
+                        alignItems: "center",
+                      }}
+                    >
+                      <Box>
+                        <CircularProgressWithLabel
+                          value={
+                            data?.plagiarism_detection_result?.plagiarism_score
+                          }
+                        />
+                      </Box>
+                      <Typography sx={AIFeedbackTextStyle}>
+                        Plagiarism Score
+                      </Typography>
                     </Box>
-                    <Typography sx={AIFeedbackTextStyle}>
-                      Plagiarism Score:
-                    </Typography>
-                  </Box>
-                )}
+                  )}
               </Box>
             </Box>
           )}
           <Box sx={{ display: "flex", mt: 1, gap: "8px" }}>
             {data?.overall_feedback && (
-                <Box
-                  sx={{
-                    backgroundColor: "#fff",
-                    color: "#1d1924",
-                    borderRadius: 4,
-                    padding: 4,
-                    // backdropFilter: "blur(10px)",
-                    // boxShadow: "0px 2px 8px #1389f0",
-                    border: "0.568px solid #E0E0E0",
-                    fontSize: "12px",
-                    display:"flex",
-                    flexDirection:"column",
-                    gap:"4px",
-                  }}
-                >
+              <Box
+                sx={{
+                  backgroundColor: "#fff",
+                  color: "#1d1924",
+                  borderRadius: 4,
+                  padding: 4,
+                  // backdropFilter: "blur(10px)",
+                  // boxShadow: "0px 2px 8px #1389f0",
+                  border: "0.568px solid #E0E0E0",
+                  fontSize: "12px",
+                  display: "flex",
+                  flexDirection: "column",
+                  gap: "4px",
+                }}
+              >
                 <Typography sx={AIFeedbackTitleStyle}>
                   <VscFeedback style={{ marginRight: 4 }} />
                   Overall Feedback
                 </Typography>
-                  <AssignmentTextFormat text={data?.overall_feedback} />
-                </Box>
+                <AssignmentTextFormat text={data?.overall_feedback} />
+              </Box>
             )}
             {data?.feedback_points?.length > 0 && (
-                <Box
-                  sx={{
-                    backgroundColor: "#fff",
-                    color: "#1d1924",
-                    padding: 4,
-                    borderRadius: 4,
-                    // boxShadow: "0px 4px 10px #21ed21",
-                    border: "0.568px solid #E0E0E0",
-                    fontSize: "12px",
-                    display:"flex",
-                    flexDirection:"column",
-                    gap:"4px",
-                  }}
-                >
-
+              <Box
+                sx={{
+                  backgroundColor: "#fff",
+                  color: "#1d1924",
+                  padding: 4,
+                  borderRadius: 4,
+                  // boxShadow: "0px 4px 10px #21ed21",
+                  border: "0.568px solid #E0E0E0",
+                  fontSize: "12px",
+                  display: "flex",
+                  flexDirection: "column",
+                  gap: "4px",
+                }}
+              >
                 <Typography sx={AIFeedbackTitleStyle}>
                   <VscActivateBreakpoints style={{ marginRight: 4 }} />
                   Feedback Points
                 </Typography>
-                  <ul style={{ lineHeight: "0.8" }}>
-                    {data?.feedback_points?.map((point, index) => (
-                      <li key={index}>
-                        <AssignmentTextFormat text={point} />
-                      </li>
-                    ))}
-                  </ul>
-                </Box>
+                <ul style={{ lineHeight: "0.8" }}>
+                  {data?.feedback_points?.map((point, index) => (
+                    <li key={index}>
+                      <AssignmentTextFormat text={point} />
+                    </li>
+                  ))}
+                </ul>
+              </Box>
             )}
             {data?.improvement_points?.length > 0 && (
-                <Box
-                  sx={{
-                    backgroundColor: "#fff",
-                    color: "#1d1924",
-                    padding: 4,
-                    borderRadius: 4,
-                    // boxShadow: "0px 4px 10px #a1865d",
-                    border: "0.568px solid #E0E0E0",
-                    fontSize: "15px",
-                    display:"flex",
-                    flexDirection:"column",
-                    gap:"4px",
-                  }}
-                >
+              <Box
+                sx={{
+                  backgroundColor: "#fff",
+                  color: "#1d1924",
+                  padding: 4,
+                  borderRadius: 4,
+                  // boxShadow: "0px 4px 10px #a1865d",
+                  border: "0.568px solid #E0E0E0",
+                  fontSize: "15px",
+                  display: "flex",
+                  flexDirection: "column",
+                  gap: "4px",
+                }}
+              >
                 <Typography sx={AIFeedbackTitleStyle}>
                   <VscActivateBreakpoints style={{ marginRight: 4 }} />
                   Improvement Points
                 </Typography>
-                  <ul style={{ lineHeight: "0.8" }}>
-                    {data?.improvement_points?.map((point, index) => (
-                      <li key={index}>
-                        <AssignmentTextFormat text={point} />
-                      </li>
-                    ))}
-                  </ul>
-                </Box>
+                <ul style={{ lineHeight: "0.8" }}>
+                  {data?.improvement_points?.map((point, index) => (
+                    <li key={index}>
+                      <AssignmentTextFormat text={point} />
+                    </li>
+                  ))}
+                </ul>
+              </Box>
             )}
           </Box>
         </Box>
@@ -357,14 +367,16 @@ const AIFeedbackTeacher = ({ assignment, answered_by, totalMarks }) => {
   };
 
   return (
-    <Box sx={{
+    <Box
+      sx={{
         display: "flex",
         padding: "2px",
         flexDirection: "column",
         alignItems: "flex-start",
         gap: "10px",
         alignSelf: "stretch",
-      }}>
+      }}
+    >
       <Box
         sx={{
           display: "flex",
@@ -376,11 +388,10 @@ const AIFeedbackTeacher = ({ assignment, answered_by, totalMarks }) => {
           color: "#fff",
         }}
       >
-
-            <GiBullseye style={{ marginRight: 3, fontSize: "24px" }} />
-            <Typography
-              variant="body1"
-              sx={{
+        <GiBullseye style={{ marginRight: 3, fontSize: "24px" }} />
+        <Typography
+          variant="body1"
+          sx={{
             color: "#FFF",
             // leadingTrim: "both",
             // textEdge: "cap",
@@ -391,21 +402,21 @@ const AIFeedbackTeacher = ({ assignment, answered_by, totalMarks }) => {
             lineHeight: "19px",
             letterSpacing: "0.32px",
           }}
-            >
-              AI assessed result
-              <br />
-              <i style={{ fontSize: "12px", fontWeight: 400 }}>
-                (This is an AI based result for your imporvement. The final
-                score will be provided by the teacher post resubmission.)
-              </i>
-            </Typography>
-            </Box>
-        <Box>
-          {loading ? (
-            <Box sx={{ display: "flex", justifyContent: "center", py: 2 }}>
-              <CircularProgress />
-            </Box>
-          ) : result?.data?.assessment_status === "STARTED" ? (
+        >
+          AI assessed result
+          <br />
+          <i style={{ fontSize: "12px", fontWeight: 400 }}>
+            (This is an AI based result for your imporvement. The final score
+            will be provided by the teacher post resubmission.)
+          </i>
+        </Typography>
+      </Box>
+      <Box>
+        {loading ? (
+          <Box sx={{ display: "flex", justifyContent: "center", py: 2 }}>
+            <CircularProgress />
+          </Box>
+        ) : result?.data?.assessment_status === "STARTED" ? (
           <Typography
             sx={{ fontStyle: "italic", color: "#8a6d3b", fontSize: "16px" }}
           >
@@ -416,32 +427,9 @@ const AIFeedbackTeacher = ({ assignment, answered_by, totalMarks }) => {
             AI ASSESSED Result failed.
           </Typography>
         ) : (
-            <>
-              <Typography sx={{
-                marginTop: 2,
-                color: "#3D3D3D",
-                fontFeatureSettings: "'liga' off, 'clig' off",
-                fontFamily: "Aptos",
-                fontSize: "16px",
-                fontStyle: "normal",
-                fontWeight: 600,
-                lineHeight: "19px",
-                marginBottom: "2px",
-              }}>
-                <GrScorecard style={{ marginRight: "4px" }} />
-                <strong>Marks Scored:</strong> 
-                <span style={{ fontSize: "20px", marginLeft: "4px" }}>{result?.data?.score}/
-                {totalMarks}</span>
-              </Typography>
-              {result?.data?.score !== undefined && totalMarks && (
-                <ColorLinearProgress
-                  variant="determinate"
-                  sx={{ height: "6px" }}
-                  value={(result?.data?.score / totalMarks) * 100}
-                />
-              )}
-              <Typography
-                sx={{
+          <>
+            <Typography
+              sx={{
                 marginTop: 2,
                 color: "#3D3D3D",
                 fontFeatureSettings: "'liga' off, 'clig' off",
@@ -452,17 +440,43 @@ const AIFeedbackTeacher = ({ assignment, answered_by, totalMarks }) => {
                 lineHeight: "19px",
                 marginBottom: "2px",
               }}
-              >
-                <strong>
-                  <PiChalkboardTeacher style={{ marginRight: "4px" }} />
-                  Comments
-                </strong>
-                <br />
-              </Typography>
-              {jsonData(result?.data?.comment)}
-            </>
-          )}
-        </Box>
+            >
+              <GrScorecard style={{ marginRight: "4px" }} />
+              <strong>Marks Scored:</strong>
+              <span style={{ fontSize: "20px", marginLeft: "4px" }}>
+                {result?.data?.score}/{totalMarks}
+              </span>
+            </Typography>
+            {result?.data?.score !== undefined && totalMarks && (
+              <ColorLinearProgress
+                variant="determinate"
+                sx={{ height: "6px" }}
+                value={(result?.data?.score / totalMarks) * 100}
+              />
+            )}
+            <Typography
+              sx={{
+                marginTop: 2,
+                color: "#3D3D3D",
+                fontFeatureSettings: "'liga' off, 'clig' off",
+                fontFamily: "Aptos",
+                fontSize: "16px",
+                fontStyle: "normal",
+                fontWeight: 600,
+                lineHeight: "19px",
+                marginBottom: "2px",
+              }}
+            >
+              <strong>
+                <PiChalkboardTeacher style={{ marginRight: "4px" }} />
+                Comments
+              </strong>
+              <br />
+            </Typography>
+            {jsonData(result?.data?.comment)}
+          </>
+        )}
+      </Box>
     </Box>
   );
 };
