@@ -254,7 +254,7 @@ const LoginPage = () => {
               }}
             />
           </Box>
-          <Box
+          {/* <Box
             sx={{
               marginTop: "28px",
               display: "flex",
@@ -283,7 +283,7 @@ const LoginPage = () => {
                 {role}
               </Button>
             ))}
-          </Box>
+          </Box> */}
           <Box
             component="form"
             noValidate
@@ -391,7 +391,7 @@ const LoginPage = () => {
                 justifyContent: "space-between",
               }}
             >
-              <Grid item xs={6} className="Jakarta-font-family">
+              {/* <Grid item xs={6} className="Jakarta-font-family">
                 <FormControlLabel
                   control={<Checkbox value="remember" color="primary" />}
                   label="Remember me"
@@ -405,13 +405,13 @@ const LoginPage = () => {
                     letterSpacing: "0.84px",
                   }}
                 />
-              </Grid>
+              </Grid> */}
               <Grid
                 item
                 xs={6}
                 sx={{
                   display: "flex",
-                  justifyContent: "flex-end",
+                  // justifyContent: "flex-end",
                 }}
               >
                 <Link
