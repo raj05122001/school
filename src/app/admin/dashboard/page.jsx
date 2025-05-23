@@ -26,6 +26,7 @@ const Page = () => {
   const [classOptions, setClassOptions] = useState([]);
   const [selectedOptions, setSelectedOptions] = useState(null);
   const [countData, setCountData] = useState({});
+  const [heroCountData, setHeroCountData] = useState({});
   const [loading, setLoading] = useState(true);
   const [topTeachers, setTopTeachers] = useState({});
   const [teacherID, setTeacherID] = useState(null);
@@ -94,7 +95,7 @@ const Page = () => {
     try {
       const response = await getTeacherStudentCount();
       if (response?.success) {
-        setCountData(response?.data);
+        setHeroCountData(response?.data);
       }
     } catch (error) {
       console.error(error);
@@ -102,6 +103,8 @@ const Page = () => {
       setLoading(false);
     }
   };
+
+  console.log("Count Data", countData)
 
   const darkModeStyles = {
     backgroundColor: "#1a1a1a",
@@ -156,7 +159,7 @@ const Page = () => {
           {teacherCount}
         </Grid> */}
         <Box sx={{display:"flex", width:"100%", paddingX:"4px"}}>
-          <HeroAdmin countData={countData} loading={loading} />
+          <HeroAdmin countData={heroCountData} loading={loading} />
         </Box>
         
       </Grid>
