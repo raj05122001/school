@@ -149,16 +149,22 @@ const ClassWiseStudentRanking = ({ selectedOptions }) => {
         p: 3,
         display: "flex",
         flexDirection: "column",
-        height: "100%",
+        // height: "100%",
+        marginTop:"16px",
+        backgroundColor:"#fff",
+        borderRadius: "20px",
       }}
-      className="blur_effect_card"
     >
       <Box sx={{ display: "flex", mb: 2,alignItems:'center',gap:1 }}>
        <FaRankingStar color="#3B3D3B" size={22}/>
         <Typography
-          variant="h6"
-          className={`${isDarkMode ? "dark-heading" : "light-heading"}`}
-          whiteSpace="nowrap"
+          sx={{
+                    fontWeight: 600,
+                    fontFamily: "Inter, sans-serif",
+                    fontSize: "22px",
+                    fontStyle: "normal",
+                    lineHeight: "normal",
+                  }}
         >
           Student Ranking
         </Typography>

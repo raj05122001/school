@@ -5,13 +5,21 @@ import { Box, Grid, Autocomplete, TextField, Typography } from "@mui/material";
 import ClassWiseStudentRanking from "@/components/admin/dashboard/ClassWiseStudentRanking/ClassWiseStudentRanking";
 import ClassAssignment from "@/components/admin/dashboard/ClassAssignment/ClassAssignment";
 import StudentAssignment from "@/components/admin/dashboard/StudentAssignment/StudentAssignment";
-import { getTeacherStudentCount, getAllSubject } from "@/api/apiHelper";
+import {
+  getTeacherStudentCount,
+  getAllSubject,
+  getTeacherLectureCompletion,
+  getWatchtimeComparison,
+  getTopTeachers,
+} from "@/api/apiHelper";
 import { useThemeContext } from "@/hooks/ThemeContext";
 import StudentCount from "@/components/admin/dashboard/StudentCount/StudentCount";
 import TeacherCount from "@/components/admin/dashboard/TeacherCount/TeacherCount";
 import TeacherRanking from "@/components/admin/dashboard/TeacherRanking/TeacherRanking";
 import TotalLectures from "@/components/admin/dashboard/TotalLectures/TotalLectures";
 import AverageLectureDuration from "@/components/admin/dashboard/AverageLectureDuration/AverageLectureDuration";
+import HeroAdmin from "@/components/admin/dashboard/HeroAdmin/HeroAdmin";
+import TeacherGraph from "@/components/admin/dashboard/TeacherRanking/TeacherGraph";
 
 const Page = () => {
   const { isDarkMode } = useThemeContext();
@@ -19,11 +27,57 @@ const Page = () => {
   const [selectedOptions, setSelectedOptions] = useState(null);
   const [countData, setCountData] = useState({});
   const [loading, setLoading] = useState(true);
+  const [topTeachers, setTopTeachers] = useState({});
+  const [teacherID, setTeacherID] = useState(null);
+  const [data, setData] = useState([]);
+  const [watchData, setWatchData] = useState([]);
+  // const [loading, setLoading] = useState(true);
+  const [loading2, setLoading2] = useState(false);
+  const [loading3, setLoading3] = useState(false);
 
   useEffect(() => {
     fetchClassOptions();
     fetchCountData();
+    fetchTopTeachers();
   }, []);
+
+  const fetchTopTeachers = async () => {
+    setLoading(true);
+    try {
+      const response = await getTopTeachers();
+      if (response?.success) {
+        setTopTeachers(response?.data);
+        const topTeachersArray = Object.values(response?.data);
+        handleTeacherSelect(topTeachersArray?.[0]?.["Organizer ID"]);
+      }
+    } catch (error) {
+      console.error("Error fetching top teachers", error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleTeacherSelect = async (id) => {
+    setTeacherID(id);
+
+    setLoading2(true);
+    setLoading3(true);
+
+    try {
+      const [lectureResp, watchResp] = await Promise.all([
+        getTeacherLectureCompletion(id),
+        getWatchtimeComparison(id),
+      ]);
+
+      if (lectureResp?.success) setCountData(lectureResp?.data);
+      if (watchResp?.success) setWatchData(watchResp?.data);
+    } catch (error) {
+      console.error("Error fetching teacher data", error);
+    } finally {
+      setLoading2(false);
+      setLoading3(false);
+    }
+  };
 
   const fetchClassOptions = async () => {
     try {
@@ -36,7 +90,7 @@ const Page = () => {
   };
 
   const fetchCountData = async () => {
-    setLoading(true)
+    setLoading(true);
     try {
       const response = await getTeacherStudentCount();
       if (response?.success) {
@@ -44,8 +98,8 @@ const Page = () => {
       }
     } catch (error) {
       console.error(error);
-    } finally{
-      setLoading(false)
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -68,32 +122,15 @@ const Page = () => {
   const currentStyles = isDarkMode ? darkModeStyles : lightModeStyles;
 
   // const greetingCard = useMemo(() => <GreetingCard />, []);
-  const totalLectures = useMemo(
-    () => <TotalLectures countData={countData} loading={loading}/>,
-    [countData, loading]
-  );
-  const averageLectureDuration = useMemo(
-    () => <AverageLectureDuration countData={countData} loading={loading} />,
-    [countData, loading]
-  );
-  const studentCount = useMemo(
-    () => <StudentCount countData={countData} loading={loading} />,
-    [countData, loading]
-  );
-  const teacherCount = useMemo(
-    () => <TeacherCount countData={countData} loading={loading} />,
-    [countData, loading]
-  );
-  const teacherRanking = useMemo(() => <TeacherRanking />, []);
+  // const teacherRanking = useMemo(
+  //   () => (
 
-  const classAssignment = useMemo(
-    () => <ClassAssignment selectedOptions={selectedOptions} />,
-    [selectedOptions]
-  );
-  const studentAssignment = useMemo(
-    () => <StudentAssignment selectedOptions={selectedOptions} />,
-    [selectedOptions]
-  );
+  //   ),
+  //   []
+  // );
+
+  const classAssignment = useMemo(() => <ClassAssignment />, []);
+  const studentAssignment = useMemo(() => <StudentAssignment />, []);
   const classWiseStudentRanking = useMemo(
     () => <ClassWiseStudentRanking selectedOptions={selectedOptions} />,
     [selectedOptions]
@@ -106,7 +143,7 @@ const Page = () => {
 
       {/* Profile, Lecture Duration, Subject Completion */}
       <Grid container spacing={1} mt={3}>
-        <Grid item xs={12} sm={6} lg={3}>
+        {/* <Grid item xs={12} sm={6} lg={3}>
           {totalLectures}
         </Grid>
         <Grid item xs={12} sm={6} lg={3}>
@@ -117,13 +154,31 @@ const Page = () => {
         </Grid>
         <Grid item xs={12} lg={3}>
           {teacherCount}
-        </Grid>
+        </Grid> */}
+        <Box sx={{display:"flex", width:"100%", paddingX:"4px"}}>
+          <HeroAdmin countData={countData} loading={loading} />
+        </Box>
+        
       </Grid>
-      <Grid item xs={12} md={9} mt={4}>
-        {teacherRanking}
-      </Grid>
+      <Box sx={{ display: "flex", gap: "6px" }}>
+        <Box sx={{ flex: "0 0 60%" }}>
+          <TeacherRanking
+            topTeachers={topTeachers}
+            loading={loading}
+            onTeacherSelect={handleTeacherSelect}
+          />
+        </Box>
+        <Box sx={{ flex: "0 0 40%" }}>{classWiseStudentRanking}</Box>
+      </Box>
+      <Box>
+        <TeacherGraph
+          teacherID={teacherID}
+          countData={countData}
+          watchData={watchData}
+        />
+      </Box>
 
-      <Box
+      {/* <Box
         sx={{
           display: "flex",
           justifyContent: "space-between",
@@ -183,20 +238,11 @@ const Page = () => {
             )}
           />
         </Box>
+      </Box> */}
+      <Box sx={{ display: "flex", gap: "4px" }}>
+        <Box sx={{ flex: "0 0 40%" }}>{classAssignment}</Box>
+        <Box sx={{ flex: "0 0 60%" }}>{studentAssignment}</Box>
       </Box>
-      <Grid container direction="row" spacing={2} mt={1}>
-        <Grid
-          item
-          xs={9}
-          sx={{ display: "flex", flexDirection: "column", gap: 2 }}
-        >
-          {classAssignment}
-          {studentAssignment}
-        </Grid>
-        <Grid item xs={3}>
-          {classWiseStudentRanking}
-        </Grid>
-      </Grid>
     </Box>
   );
 };

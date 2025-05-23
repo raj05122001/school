@@ -36,207 +36,144 @@ import {
 import { BASE_URL_MEET } from "@/constants/apiconfig";
 import Image from "next/image";
 import TeacherTableSkeleton from "./TeacherTableSkeleton";
+import TeacherGraph from "./TeacherGraph";
 
 const StarRating = styled(CiStar)({
   color: "#FFD700",
   marginBottom: "4px",
 });
 
-const TeacherRanking = () => {
-  const { isDarkMode } = useThemeContext();
-  const [topTeacher, setTopTeachers] = useState({});
-  const [teacherID, setTeacherID] = useState(1);
-  const [countData, setCountData] = useState([]);
-  const [watchData, setWatchData] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const [loading2, setLoading2] = useState(true);
-  const [loading3, setLoading3] = useState(true);
+const TeacherRanking = ({ topTeachers, loading, onTeacherSelect }) => {
+  // const { isDarkMode } = useThemeContext();
+  // const [topTeacher, setTopTeachers] = useState({});
+  // const [teacherID, setTeacherID] = useState(1);
+  // const [countData, setCountData] = useState([]);
+  // const [watchData, setWatchData] = useState([]);
+  // const [loading, setLoading] = useState(true);
+  // const [loading2, setLoading2] = useState(true);
+  // const [loading3, setLoading3] = useState(true);
 
-  useEffect(() => {
-    fetchTopTeachers();
-  }, []);
+  // useEffect(() => {
+  //   fetchTopTeachers();
+  // }, []);
 
-  const fetchTopTeachers = async () => {
-    setLoading(true);
-    try {
-      const response = await getTopTeachers();
-      if (response?.success) {
-        setTopTeachers(response?.data);
-        const topTeachersArray = Object.values(response?.data);
-        handleRowClick(topTeachersArray?.[0]?.["Organizer ID"]);
-      }
-    } catch (error) {
-      console.error("Error fetching data", error);
-    } finally {
-      setLoading(false);
-    }
-  };
+  // const fetchTopTeachers = async () => {
+  //   setLoading(true);
+  //   try {
+  //     const response = await getTopTeachers();
+  //     if (response?.success) {
+  //       setTopTeachers(response?.data);
+  //       const topTeachersArray = Object.values(response?.data);
+  //       handleRowClick(topTeachersArray?.[0]?.["Organizer ID"]);
+  //     }
+  //   } catch (error) {
+  //     console.error("Error fetching data", error);
+  //   } finally {
+  //     setLoading(false);
+  //   }
+  // };
 
-  const fetchTeacherLectureCount = async (teacherID) => {
-    setLoading2(true);
-    try {
-      const response = await getTeacherLectureCompletion(teacherID);
-      if (response?.success) {
-        setCountData(response?.data);
-      }
-    } catch (error) {
-      console.error("Error fetching response", error);
-    } finally {
-      setLoading2(false);
-    }
-  };
+  // const fetchTeacherLectureCount = async (teacherID) => {
+  //   setLoading2(true);
+  //   try {
+  //     const response = await getTeacherLectureCompletion(teacherID);
+  //     if (response?.success) {
+  //       setCountData(response?.data);
+  //     }
+  //   } catch (error) {
+  //     console.error("Error fetching response", error);
+  //   } finally {
+  //     setLoading2(false);
+  //   }
+  // };
 
-  const fetchWatchtimeComparison = async (teacherID) => {
-    setLoading3(true);
-    try {
-      const response = await getWatchtimeComparison(teacherID);
-      if (response?.success) {
-        setWatchData(response?.data);
-      }
-    } catch (error) {
-      console.error("Error fetching response", error);
-    } finally {
-      setLoading3(false);
-    }
-  };
+  // const fetchWatchtimeComparison = async (teacherID) => {
+  //   setLoading3(true);
+  //   try {
+  //     const response = await getWatchtimeComparison(teacherID);
+  //     if (response?.success) {
+  //       setWatchData(response?.data);
+  //     }
+  //   } catch (error) {
+  //     console.error("Error fetching response", error);
+  //   } finally {
+  //     setLoading3(false);
+  //   }
+  // };
 
-  const topTeachersArray = Object.values(topTeacher);
+  const topTeachersArray = Object.values(topTeachers);
 
-  const handleRowClick = (id) => {
-    setTeacherID(id);
-    fetchTeacherLectureCount(id);
-    fetchWatchtimeComparison(id);
-  };
+  // const handleRowClick = (id) => {
+  //   setTeacherID(id);
+  //   fetchTeacherLectureCount(id);
+  //   fetchWatchtimeComparison(id);
+  // };
   return (
-    <Box
-      sx={{
-        padding: 2,
-        width: "100%",
-        margin: "0 auto",
-        height: "100%",
-        color: isDarkMode ? "#FFF8DC" : "#36454F",
-        background: isDarkMode
-          ? ""
-          : "linear-gradient(135deg, #fdfcfb 0%, #e2d1c3 100%)",
-      }}
-      className="blur_effect_card"
-    >
-      <Box sx={{ display: "flex" }}>
-        <Grid container spacing={2}>
-          <Grid item xs={12} sm={3}>
-            <Box>
-              <Typography variant="h4" align="left" gutterBottom>
-                <TbTrendingUp
-                  style={{ marginRight: "2px", marginTop: "2px" }}
-                />
-                Trending Teachers
-              </Typography>
-              {/* Top 3 Teachers on the Left */}
-              <Box
-                sx={{
-                  display: "flex",
-                  flexDirection: "column",
-                  justifyContent: "center",
-                  alignItems: "center",
-                  width: "100%",
-                  // marginLeft: "16px",
-                }}
-              >
-                {loading ? (
-                  <Box
-                    sx={{
-                      backgroundColor: "rgba(255, 255, 255, 0.2)",
-                      backdropFilter: "blur(10px)",
-                      borderRadius: "10px",
-                      padding: "16px",
-                      display: "flex",
-                      flexDirection: "column",
-                      alignItems: "center",
-                      boxShadow: isDarkMode
-                        ? "0 6px 10px #D3D3D3"
-                        : "0 6px 10px #FBCEB1",
-                      margin: "8px 0",
-                      width: "100%",
-                      textAlign: "center",
-                    }}
-                  >
-                    <Typography variant="h2" sx={{ color: "#36454F" }} > 
-                     <Box display={"flex"} alignItems={"center"} justifyContent={"center"}>
-                     <Skeleton variant="circular" width={100} height={100}/>
-                     </Box> 
-                      <Skeleton variant="text" width={150} height={40} />
-                      <Skeleton variant="text" width={150} height={20} />
-                      <Skeleton variant="text" width={150} height={20} />
-                    </Typography>
-                  </Box>
-                ) : (
-                  topTeachersArray?.map((teacher, index) => (
-                    <Box
-                      key={index}
-                      sx={{
-                        backgroundColor: "rgba(255, 255, 255, 0.2)",
-                        backdropFilter: "blur(10px)",
-                        borderRadius: "10px",
-                        padding: "16px",
-                        display: "flex",
-                        flexDirection: "column",
-                        alignItems: "center",
-                        boxShadow: isDarkMode
-                          ? "0 6px 10px #D3D3D3"
-                          : "0 6px 10px #FBCEB1",
-                        margin: "8px 0",
-                        width: "100%",
-                        textAlign: "center",
-                      }}
-                    >
-                      {/* <Avatar sx={{ width: 56, height: 56, marginBottom: "8px" }}>
-                {teacher?.Name[0]}
-              </Avatar> */}
-                      <Image
-                        src={
-                          teacher?.["Profile Pic"]
-                            ? `${BASE_URL_MEET}/media/${teacher?.["Profile Pic"]}`
-                            : "/TopTeachers.png"
-                        }
-                        alt="Teacher pic"
-                        width={100}
-                        height={100}
-                        style={{ borderRadius: "100%" }}
-                      />
-                      <Typography variant="h6" mt={2}>
-                        {teacher?.Name}
-                      </Typography>
-                      <Typography variant="subtitle2" color="textSecondary">
-                        Total Lectures {teacher["Total Lectures"] || 0}
-                      </Typography>
-                      <Typography variant="subtitle2" color="textSecondary">
-                        Completed Lectures {teacher["Completed Lectures"] || 0}
-                      </Typography>
-                      <Box
-                        sx={{
-                          display: "flex",
-                          alignItems: "center",
-                          marginTop: "8px",
-                        }}
-                      >
-                        <StarRating />
-                        <Typography variant="body2">
-                          {parseFloat(teacher["Average Feedback"]).toFixed(2) ||
-                            0}
-                        </Typography>
-                      </Box>
-                    </Box>
-                  ))
-                )}
-              </Box>
-            </Box>
-          </Grid>
-          <Grid item xs={12} sm={9}>
+      <Box sx={{ display: "flex", marginTop:"16px"}}>
+
             {/* Teachers Table on the Right */}
-            <Box>
-              <Typography variant="h4" align="center" gutterBottom>
-                <FaChalkboardTeacher /> All Teachers
-              </Typography>
+            <Box
+              sx={{
+                flexGrow: 1,
+                p: 2,
+                backgroundColor: "var(--Website_color-white, #FFF)",
+                borderRadius: "20px",
+                width:"100%"
+              }}
+            >
+              <Box
+                sx={{ display: "flex", alignItems: "center", gap: 1, mb: 2 }}
+              >
+                <Box sx={{ height: "24px", width: "24px", flexShrink: 0 }}>
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="24"
+                    height="24"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                  >
+                    <path
+                      d="M21.6602 10.4395L20.6802 14.6195C19.8402 18.2295 18.1802 19.6895 15.0602 19.3895C14.5602 19.3495 14.0202 19.2595 13.4402 19.1195L11.7602 18.7195C7.59018 17.7295 6.30018 15.6695 7.28018 11.4895L8.26018 7.29952C8.46018 6.44952 8.70018 5.70952 9.00018 5.09952C10.1702 2.67952 12.1602 2.02952 15.5002 2.81952L17.1702 3.20952C21.3602 4.18952 22.6402 6.25952 21.6602 10.4395Z"
+                      stroke="#3B3D3B"
+                      stroke-width="2"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                    />
+                    <path
+                      d="M15.0599 19.3896C14.4399 19.8096 13.6599 20.1596 12.7099 20.4696L11.1299 20.9896C7.15985 22.2696 5.06985 21.1996 3.77985 17.2296L2.49985 13.2796C1.21985 9.30961 2.27985 7.20961 6.24985 5.92961L7.82985 5.40961C8.23985 5.27961 8.62985 5.16961 8.99985 5.09961C8.69985 5.70961 8.45985 6.44961 8.25985 7.29961L7.27985 11.4896C6.29985 15.6696 7.58985 17.7296 11.7599 18.7196L13.4399 19.1196C14.0199 19.2596 14.5599 19.3496 15.0599 19.3896Z"
+                      stroke="#3B3D3B"
+                      stroke-width="2"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                    />
+                    <path
+                      d="M12.6401 8.53027L17.4901 9.76027"
+                      stroke="#3B3D3B"
+                      stroke-width="2"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                    />
+                    <path
+                      d="M11.6602 12.4004L14.5602 13.1404"
+                      stroke="#3B3D3B"
+                      stroke-width="2"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                    />
+                  </svg>
+                </Box>
+                <Typography
+                  sx={{
+                    fontWeight: 600,
+                    fontFamily: "Inter, sans-serif",
+                    fontSize: "22px",
+                    fontStyle: "normal",
+                    lineHeight: "normal",
+                  }}
+                >
+                  All Teachers
+                </Typography>
+              </Box>
 
               {loading ? (
                 <Box sx={{ mt: 4 }}>
@@ -245,25 +182,112 @@ const TeacherRanking = () => {
               ) : (
                 <TableContainer
                   component={Paper}
-                  className="blur_effect_card"
-                  sx={{ margin: "0 auto", maxHeight: 600 }}
+                  elevation={0}
+                  sx={{
+                    maxHeight: topTeachersArray?.length > 5 ? 500 : "auto", // Set scroll height only when needed
+                    overflowY:
+                      topTeachersArray?.length > 5 ? "scroll" : "visible",
+                    borderRadius: "10px",
+                    border: "none",
+                    scrollbarWidth: "none", // Firefox
+                    msOverflowStyle: "none", // IE/Edge
+                    "&::-webkit-scrollbar": {
+                      display: "none", // Chrome, Safari, Edge
+                    },
+                  }}
                 >
-                  <Table>
-                    <TableHead stickyHeader>
+                  <Table sx={{ border: "none" }}>
+                    <TableHead
+                      stickyHeader
+                      sx={{
+                        backgroundColor: "#F3F5F7",
+                        borderRadius: "10px",
+                        border: "none",
+                      }}
+                    >
                       <TableRow>
-                        <TableCell>Profile</TableCell>
-                        <TableCell>Teacher</TableCell>
-                        <TableCell>Total Lectures</TableCell>
-                        <TableCell>Completed Lectures</TableCell>
-                        <TableCell>Average Rating</TableCell>
+                        <TableCell
+                          sx={{
+                            borderTopLeftRadius: "10px",
+                            borderBottomLeftRadius: "10px",
+                            border: "none",
+                            color: "#3B3D3B",
+                            fontFamily: "Inter",
+                            fontWeight: "600",
+                            fontStyle: "normal",
+                            lineHeight: "normal",
+                            fontSize: "14px",
+                          }}
+                        >
+                          Profile
+                        </TableCell>
+                        <TableCell
+                          sx={{
+                            border: "none",
+                            color: "#3B3D3B",
+                            fontFamily: "Inter",
+                            fontWeight: "600",
+                            fontStyle: "normal",
+                            lineHeight: "normal",
+                            fontSize: "14px",
+                          }}
+                        >
+                          Teacher
+                        </TableCell>
+                        <TableCell
+                          sx={{
+                            border: "none",
+                            color: "#3B3D3B",
+                            fontFamily: "Inter",
+                            fontWeight: "600",
+                            fontStyle: "normal",
+                            lineHeight: "normal",
+                            fontSize: "14px",
+                          }}
+                        >
+                          Total Lectures
+                        </TableCell>
+                        <TableCell
+                          sx={{
+                            border: "none",
+                            color: "#3B3D3B",
+                            fontFamily: "Inter",
+                            fontWeight: "600",
+                            fontStyle: "normal",
+                            lineHeight: "normal",
+                            fontSize: "14px",
+                          }}
+                        >
+                          Completed Lectures
+                        </TableCell>
+                        <TableCell
+                          sx={{
+                            borderTopRightRadius: "10px",
+                            borderBottomRightRadius: "10px",
+                            border: "none",
+                            color: "#3B3D3B",
+                            fontFamily: "Inter",
+                            fontWeight: "600",
+                            fontStyle: "normal",
+                            lineHeight: "normal",
+                            fontSize: "14px",
+                          }}
+                        >
+                          Average Rating
+                        </TableCell>
                       </TableRow>
                     </TableHead>
-                    <TableBody>
+                    <TableBody sx={{ borderBottom: "none" }}>
                       {topTeachersArray?.map((teacher, index) => (
                         <TableRow
                           key={index}
+                          sx={{
+                            cursor: "pointer",
+                            backgroundColor: "#fff",
+                          }}
                           onClick={() =>
-                            handleRowClick(teacher?.["Organizer ID"])
+                            // handleRowClick(teacher?.["Organizer ID"])
+                            onTeacherSelect(teacher?.["Organizer ID"])
                           }
                         >
                           <TableCell>
@@ -282,16 +306,71 @@ const TeacherRanking = () => {
                             </Box>
                           </TableCell>
 
-                          <TableCell>{teacher?.Name}</TableCell>
-
-                          <TableCell>{teacher?.["Total Lectures"]}</TableCell>
                           <TableCell>
-                            {teacher["Completed Lectures"] || 0}
+                            <Typography
+                              sx={{
+                                fontWeight: 700,
+                                color: "#3B3D3B",
+                                fontFamily: "Inter, sans-serif",
+                                fontSize: "14px",
+                                fontStyle: "normal",
+                                lineHeight: "normal",
+                                width: "105px",
+                              }}
+                              noWrap
+                            >
+                              {teacher?.Name}
+                            </Typography>
+                          </TableCell>
+
+                          <TableCell>
+                            <Typography
+                              sx={{
+                                fontWeight: 700,
+                                color: "#3B3D3B",
+                                fontFamily: "Inter, sans-serif",
+                                fontSize: "14px",
+                                fontStyle: "normal",
+                                lineHeight: "normal",
+                                width: "41px",
+                                height: "18px",
+                                flexShrink: 0,
+                              }}
+                            >
+                              {teacher?.["Total Lectures"]}
+                            </Typography>
                           </TableCell>
                           <TableCell>
-                            {parseFloat(teacher["Average Feedback"]).toFixed(
-                              2
-                            ) || 0}
+                            <Typography
+                              sx={{
+                                fontWeight: 700,
+                                color: "#3B3D3B",
+                                fontFamily: "Inter, sans-serif",
+                                fontSize: "14px",
+                                fontStyle: "normal",
+                                lineHeight: "normal",
+                                width: "105px",
+                              }}
+                            >
+                              {teacher["Completed Lectures"] || 0}
+                            </Typography>
+                          </TableCell>
+                          <TableCell>
+                            <Typography
+                              sx={{
+                                fontWeight: 700,
+                                color: "#3B3D3B",
+                                fontFamily: "Inter, sans-serif",
+                                fontSize: "14px",
+                                fontStyle: "normal",
+                                lineHeight: "normal",
+                                width: "105px",
+                              }}
+                            >
+                              {parseFloat(teacher["Average Feedback"]).toFixed(
+                                2
+                              ) || 0}
+                            </Typography>
                           </TableCell>
                         </TableRow>
                       ))}
@@ -299,133 +378,8 @@ const TeacherRanking = () => {
                   </Table>
                 </TableContainer>
               )}
-
-              <Box>
-                <Box display={"flex"} gap={2}>
-                  {/* Line Chart for Lecture Completion Data */}
-                  {teacherID && countData?.length > 0 && (
-                    <Box
-                      sx={{ marginTop: 4, width: "100%", height: "20%" }}
-                      className="blur_effect_card"
-                    >
-                      <Typography
-                        mt={3}
-                        variant="h6"
-                        align="center"
-                        gutterBottom
-                      >
-                        Lecture Completion Analytics
-                      </Typography>
-                      <ResponsiveContainer width="100%" height={400}>
-                        <LineChart
-                          data={countData}
-                          margin={{ top: 20, right: 30, left: 0, bottom: 50 }}
-                        >
-                          <CartesianGrid strokeDasharray="3 3" />
-                          <XAxis
-                            dataKey="date"
-                            tick={{ fontSize: 10 }}
-                            angle={-45}
-                            dy={10}
-                            textAnchor="end"
-                            interval="preserveStartEnd"
-                          />
-                          <YAxis tick={{ fontSize: 10 }} />
-                          <Tooltip />
-                          <Legend
-                            layout="horizontal"
-                            verticalAlign="top"
-                            align="center"
-                          />
-                          <Line
-                            type="monotone"
-                            dataKey="teacher_data"
-                            stroke="#8884d8"
-                            name="Teacher Lecture Count"
-                          />
-                          <Line
-                            type="monotone"
-                            dataKey="avg_data"
-                            stroke="#82ca9d"
-                            name="Average Lecture Count"
-                          />
-                        </LineChart>
-                      </ResponsiveContainer>
-                    </Box>
-                  )}
-
-                  {/* Line Chart for Lecture Watchime Data Comparison */}
-                  {teacherID && watchData?.length > 0 && (
-                    <Box
-                      sx={{ marginTop: 4, width: "100%", height: "20%" }}
-                      className="blur_effect_card"
-                    >
-                      <Typography
-                        mt={3}
-                        variant="h6"
-                        align="center"
-                        gutterBottom
-                      >
-                        Lecture Watchtime Analytics
-                      </Typography>
-                      <ResponsiveContainer width="100%" height={400}>
-                        <LineChart
-                          data={watchData}
-                          margin={{ top: 20, right: 30, left: 0, bottom: 50 }}
-                        >
-                          <CartesianGrid strokeDasharray="3 3" />
-                          <XAxis
-                            dataKey="date"
-                            tick={{ fontSize: 10 }}
-                            angle={-45}
-                            dy={10}
-                            textAnchor="end"
-                            interval="preserveStartEnd"
-                          />
-                          <YAxis tick={{ fontSize: 10 }} />
-                          <Tooltip />
-                          <Legend
-                            layout="horizontal"
-                            verticalAlign="top"
-                            align="center"
-                          />
-                          <Line
-                            type="monotone"
-                            dataKey="teacher_data"
-                            stroke="#8884d8"
-                            name="Watchtime"
-                          />
-                          <Line
-                            type="monotone"
-                            dataKey="avg_data"
-                            stroke="#82ca9d"
-                            name="Average Lecture Watchtime"
-                          />
-                        </LineChart>
-                      </ResponsiveContainer>
-                    </Box>
-                  )}
-                </Box>
-                <Typography
-                  sx={{
-                    // mt: 2,
-                    textAlign: "center",
-                    fontSize: "12px",
-                    color: isDarkMode ? "#f0f0f0" : "#2b2b2b",
-                  }}
-                >
-                  Select a teacher to view detailed analytics. The charts will
-                  display trends over time, including the number of lectures
-                  completed and watch time analytics, allowing a comparison
-                  between the selected teacher&apos;s performance and the
-                  overall average.
-                </Typography>
-              </Box>
             </Box>
-          </Grid>
-        </Grid>
       </Box>
-    </Box>
   );
 };
 
