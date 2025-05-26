@@ -420,7 +420,7 @@ function HeaderMOL({
             onClick={() => setDialogOpen(!dialogOpen)}
             sx={{
               display: "flex",
-              padding: "12px 16px",
+              padding: "10px 16px",
               justifyContent: "center",
               alignItems: "center",
               gap: "8px",
@@ -437,24 +437,24 @@ function HeaderMOL({
                 fontFeatureSettings: "'liga' off, 'clig' off",
                 fontSize: "20px",
                 fontStyle: "normal",
+                fontFamily: "Inter Tight, sans-serif",
                 fontWeight: 700,
-                fontFamily: "Inter, sans-serif",
                 lineHeight: "24px",
               }}
             >
-              Delete Lecture
+              Delete
             </Typography>
           </Button>
           
         )} 
 
-        { (
+        {/* { (
             <Button
               
             >
               
             </Button>
-          )} 
+          )}  */}
         {isEdit && !lectureData?.is_released && (
           <Button
             variant="contained"
