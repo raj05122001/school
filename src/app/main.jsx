@@ -86,7 +86,7 @@ const Main = ({ children }) => {
     <Suspense>
       <Toaster position="bottom-center" reverseOrder={false} />
       {pathname === "/login" ||
-      pathname === "/forget-password" ||
+      pathname === "/forgot-password" ||
       pathname === "/registration" ||
       pathname === "/signup" ||
       pathname === "/vipsbot" ||
