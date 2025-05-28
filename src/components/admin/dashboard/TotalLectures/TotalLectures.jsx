@@ -57,7 +57,7 @@ const TotalLectures = ({ countData, loading }) => {
             position: "relative",
             display: "flex",
             alignItems: "center",
-            p: 2,
+            p: 3,
             fill: "var(--Secondary_Black, #141514)",
             boxShadow: "0 4px 30px rgba(0, 0, 0, 0.1)",
             borderRadius: "100%",

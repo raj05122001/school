@@ -14,6 +14,7 @@ import {
   Typography,
   Pagination,
   Skeleton,
+  LinearProgress,
 } from "@mui/material";
 import CircularProgress, {
   circularProgressClasses,
@@ -34,6 +35,8 @@ import TableSkeleton from "@/commonComponents/Skeleton/TableSkeleton/TableSkelet
 
 import { MdOutlineTrackChanges } from "react-icons/md";
 import AdminFilters from "@/components/teacher/lecture-listings/Filters/AdminFilters";
+import SearchWithFilter from "@/components/teacher/Assignment/SearchWithFilter";
+import CalendarIconCustom from "@/commonComponents/CalendarIconCustom/CalendarIconCustom";
 
 const Page = () => {
   const { isDarkMode, primaryColor, secondaryColor } = useThemeContext();
@@ -114,6 +117,13 @@ const Page = () => {
     }
   };
 
+  const statusColorMap = {
+    COMPLETED: "#2ecc71", // green
+    UPCOMMING: "#3498db", // blue
+    MISSED: "#f1c40f", // yellow
+    CANCELLED: "#e74c3c", // red
+  };
+
   const mapData = {
     COMPLETED: "completed_lectures",
     UPCOMMING: "upcomming_lectures",
@@ -164,6 +174,15 @@ const Page = () => {
     [classValue, subject, searchQuery, month, lectureType]
   );
 
+  const tableCellStyle = {
+    fontWeight: 700,
+    color: "#3B3D3B",
+    fontFamily: "Inter, sans-serif",
+    fontSize: "14px",
+    fontStyle: "normal",
+    lineHeight: "normal",
+  };
+
   return (
     <Box
       sx={{
@@ -172,9 +191,9 @@ const Page = () => {
         minHeight: "100vh",
       }}
     >
-      {filters}
+      {/* {filters} */}
 
-      <Grid container spacing={2} sx={{ marginBottom: 2 }}>
+      {/* <Grid container spacing={2} sx={{ marginBottom: 2 }}>
         {["COMPLETED", "UPCOMMING", "MISSED", "CANCELLED"]?.map((value) =>
           tabLoader ? (
             <Grid item xs={3} key={value} sx={{ position: "relative" }}>
@@ -268,157 +287,342 @@ const Page = () => {
             </Grid>
           )
         )}
-      </Grid>
+      </Grid> */}
+
+      <Box
+        sx={{
+          borderRadius: "20px",
+          backgroundColor: "#fff",
+          padding: "32px",
+          // maxWidth: "1300px",
+          // margin: "0 auto",
+          display: "flex",
+          alignItems: "center",
+          alignSelf: "stretch",
+          // gap: "16px",
+        }}
+      >
+        <Grid container spacing={8}>
+          {["COMPLETED", "UPCOMMING", "MISSED", "CANCELLED"]?.map((value) =>
+            tabLoader ? (
+              <Grid item xs={12} sm={6} md={3} key={value}>
+                <Skeleton
+                  variant="rectangular"
+                  sx={{
+                    borderRadius: 2,
+                    height: 80,
+                  }}
+                />
+              </Grid>
+            ) : (
+              <Grid item xs={12} sm={6} md={3} key={value}>
+                <Card
+                  onClick={() => handleChange(value, "status")}
+                  className="blur_effect_card"
+                  sx={{
+                    display: "flex",
+                    width: "100%",
+                    height: "50px",
+                    padding: "5.5px 9px",
+                    justifyContent: "space-between",
+                    alignItems: "center",
+                    borderRadius: "7px",
+                    border: "0.5px solid #C1C1C1",
+                    cursor: "pointer",
+                    gap: "10px",
+                  }}
+                >
+                  <Box sx={{ flex: 1 }}>
+                    <Typography
+                      // variant="subtitle2"
+                      sx={{
+                        color: "#3B3D3B",
+                        fontFeatureSettings: "'liga' off, 'clig' off",
+                        fontFamily: "Inter",
+                        fontSize: "14px",
+                        fontStyle: "normal",
+                        fontWeight: "600",
+                        lineHeight: "19px",
+                        marginBottom: "4px",
+                      }}
+                    >
+                      {value.charAt(0) + value.slice(1).toLowerCase()}
+                    </Typography>
+                    <LinearProgress
+                      variant="determinate"
+                      value={lectureCount[mapData[value]]?.percent || 0}
+                      sx={{
+                        height: 7,
+                        borderRadius: 5,
+                        [`& .MuiLinearProgress-bar`]: {
+                          backgroundColor: statusColorMap[value],
+                        },
+                        backgroundColor: "#f0f0f0",
+                      }}
+                    />
+                  </Box>
+
+                  <Typography
+                    sx={{
+                      color: "#3B3D3B",
+                      leadingTrim: "both",
+                      textEdge: "cap",
+                      fontFeatureSettings: "'liga' off, 'clig' off",
+                      fontFamily: "Inter",
+                      fontSize: "18.192px",
+                      fontStyle: "normal",
+                      fontWeight: "600",
+                      lineHeight: "18.712px",
+                    }}
+                  >{`${
+                    lectureCount[mapData[value]]?.percent || 0
+                  }%`}</Typography>
+                </Card>
+              </Grid>
+            )
+          )}
+        </Grid>
+      </Box>
+
+      <SearchWithFilter />
 
       {/* Table */}
-      {loading ? (
-        <Box sx={{ mt: 4 }}>
-          <TableSkeleton row={9} />
-        </Box>
-      ) : (
-        <TableContainer
-          component={Paper}
-          className="blur_effect_card"
-          sx={{
-            maxHeight: 420,
-            mt: 4,
-            background: isDarkMode
-              ? ""
-              : "linear-gradient(to top, #dfe9f3 0%, white 100%)",
-          }}
-        >
-          <Table className="blur_effect_card">
-            <TableHead>
-              <TableRow
-                className="blur_effect_card"
-                sx={{
-                  background: isDarkMode
-                    ? "radial-gradient(circle at 10% 20%, rgb(87, 108, 117) 0%, rgb(37, 50, 55) 100.2%)"
-                    : "radial-gradient(circle at 18.7% 37.8%, rgb(250, 250, 250) 0%, rgb(225, 234, 238) 90%)",
-                  position: "sticky",
-                  top: 0,
-                  zIndex: 1,
-                }}
-              >
-                <TableCell
+      <Box
+        sx={{
+          display: "flex",
+          padding: "24px 32px 32px 32px",
+          flexDirection: "column",
+          alignItems: "center",
+          gap: "16px",
+          alignSelf: "stretch",
+          borderRadius: "20px",
+          background: "#fff",
+          marginTop: "10px",
+          height: "75vh",
+        }}
+      >
+        {loading ? (
+          <Box sx={{ mt: 4 }}>
+            <TableSkeleton row={9} />
+          </Box>
+        ) : (
+          <TableContainer
+            component={Paper}
+            elevation={0}
+            sx={{
+              height: lectureData?.data?.length > 4 ? "100%" : "auto",
+              overflowY: lectureData?.data?.length > 4 ? "scroll" : "visible",
+              borderRadius: "10px",
+              border: "none",
+              scrollbarWidth: "none",
+              msOverflowStyle: "none",
+              "&::-webkit-scrollbar": {
+                display: "none",
+              },
+            }}
+          >
+            <Table sx={{ border: "none" }}>
+              <TableHead sx={{
+                  backgroundColor: "#F3F5F7",
+                  borderRadius: "10px",
+                  border: "none",
+                }}>
+                <TableRow
                   sx={{
-                    color: isDarkMode ? "#F9F6EE" : "#353935",
                     position: "sticky",
+                    top: 0,
+                    zIndex: 1,
+                    backgroundColor: "#F3F5F7",
                   }}
                 >
-                  Name
-                </TableCell>
-                <TableCell
-                  sx={{
-                    color: isDarkMode ? "#F9F6EE" : "#353935",
-                    position: "sticky",
-                  }}
-                >
-                  Type
-                </TableCell>
-                <TableCell
-                  sx={{
-                    color: isDarkMode ? "#F9F6EE" : "#353935",
-                    position: "sticky",
-                  }}
-                >
-                  Date
-                </TableCell>
-                <TableCell
-                  sx={{
-                    color: isDarkMode ? "#F9F6EE" : "#353935",
-                    position: "sticky",
-                  }}
-                >
-                  Time
-                </TableCell>
-                <TableCell
-                  sx={{
-                    color: isDarkMode ? "#F9F6EE" : "#353935",
-                    position: "sticky",
-                  }}
-                >
-                  Class
-                </TableCell>
-                <TableCell
-                  sx={{
-                    color: isDarkMode ? "#F9F6EE" : "#353935",
-                    position: "sticky",
-                  }}
-                >
-                  Subject Name
-                </TableCell>
-                <TableCell
-                  sx={{
-                    color: isDarkMode ? "#F9F6EE" : "#353935",
-                    position: "sticky",
-                  }}
-                >
-                  Chapter
-                </TableCell>
-                {status === "UPCOMMING" && (
+                <TableCell sx={{
+                      borderTopLeftRadius: "10px",
+                      borderBottomLeftRadius: "10px",
+                      border: "none",
+                      color: "#3B3D3B",
+                      fontFamily: "Inter",
+                      fontWeight: "600",
+                      fontStyle: "normal",
+                      lineHeight: "normal",
+                      fontSize: "14px",
+                    }}></TableCell>
                   <TableCell
                     sx={{
-                      color: isDarkMode ? "#F9F6EE" : "#353935",
+                      border: "none",
+                      color: "#3B3D3B",
+                      fontFamily: "Inter",
+                      fontWeight: "600",
+                      fontStyle: "normal",
+                      lineHeight: "normal",
+                      fontSize: "14px",
                       position: "sticky",
                     }}
                   >
-                    Action
+                    Name
                   </TableCell>
-                )}
-              </TableRow>
-            </TableHead>
-            <TableBody sx={{ color: isDarkMode ? "#36454F" : "#FFFFF0" }}>
-              {lectureData?.data?.length > 0 ? (
-                lectureData?.data?.map((lecture, index) => (
-                  <TableRow
-                    key={index}
-                    sx={{ color: isDarkMode ? "#36454F" : "#FFFFF0" }}
+                  <TableCell
+                    sx={{
+                      border: "none",
+                      color: "#3B3D3B",
+                      fontFamily: "Inter",
+                      fontWeight: "600",
+                      fontStyle: "normal",
+                      lineHeight: "normal",
+                      fontSize: "14px",
+                      position: "sticky",
+                    }}
                   >
-                    <TableCell sx={{}}>{lecture.title}</TableCell>
-                    <TableCell sx={{}}>
-                      <LectureType lectureType={lecture?.type} />
-                    </TableCell>
-                    <TableCell sx={{}}>{lecture.schedule_date}</TableCell>
-                    <TableCell sx={{}}>{lecture.schedule_time}</TableCell>
-                    <TableCell sx={{}}>
-                      {lecture?.lecture_class?.name}
-                    </TableCell>
-                    <TableCell sx={{}}>
-                      {lecture?.chapter?.subject?.name}
-                    </TableCell>
-                    <TableCell sx={{}}>{lecture?.chapter?.chapter}</TableCell>
-                    {status === "UPCOMMING" && (
-                      <TableCell sx={{}}>
-                        <Box
-                          sx={{ display: "flex", alignItems: "center", gap: 1 }}
-                        >
-                          <MdOutlineEmergencyRecording
-                            size={22}
-                            style={{ cursor: "pointer" }}
-                            onClick={() => handleLectureRecord(lecture)}
-                          />
-                          <GrEdit
-                            size={18}
-                            style={{ cursor: "pointer" }}
-                            onClick={() => handleCreateLecture(lecture, true)}
-                          />
-                        </Box>
-                      </TableCell>
-                    )}
-                  </TableRow>
-                ))
-              ) : (
-                <TableRow>
-                  <TableCell colSpan={7} sx={{ textAlign: "center" }}>
-                    No Data Available
+                    Type
                   </TableCell>
+                  <TableCell
+                    sx={{
+                      border: "none",
+                      color: "#3B3D3B",
+                      fontFamily: "Inter",
+                      fontWeight: "600",
+                      fontStyle: "normal",
+                      lineHeight: "normal",
+                      fontSize: "14px",
+                      position: "sticky",
+                    }}
+                  >
+                    Date
+                  </TableCell>
+                  <TableCell
+                    sx={{
+                      border: "none",
+                      color: "#3B3D3B",
+                      fontFamily: "Inter",
+                      fontWeight: "600",
+                      fontStyle: "normal",
+                      lineHeight: "normal",
+                      fontSize: "14px",
+                      position: "sticky",
+                    }}
+                  >
+                    Time
+                  </TableCell>
+                  <TableCell
+                    sx={{
+                      border: "none",
+                      color: "#3B3D3B",
+                      fontFamily: "Inter",
+                      fontWeight: "600",
+                      fontStyle: "normal",
+                      lineHeight: "normal",
+                      fontSize: "14px",
+                      position: "sticky",
+                    }}
+                  >
+                    Class
+                  </TableCell>
+                  <TableCell
+                    sx={{
+                      border: "none",
+                      color: "#3B3D3B",
+                      fontFamily: "Inter",
+                      fontWeight: "600",
+                      fontStyle: "normal",
+                      lineHeight: "normal",
+                      fontSize: "14px",
+                      position: "sticky",
+                    }}
+                  >
+                    Subject Name
+                  </TableCell>
+                  <TableCell
+                    sx={{
+                      borderTopRightRadius: "10px",
+                      borderBottomRightRadius: "10px",
+                      border: "none",
+                      color: "#3B3D3B",
+                      fontFamily: "Inter",
+                      fontWeight: "600",
+                      fontStyle: "normal",
+                      lineHeight: "normal",
+                      fontSize: "14px",
+                      position: "sticky",
+                    }}
+                  >
+                    Chapter
+                  </TableCell>
+                  {status === "UPCOMMING" && (
+                    <TableCell
+                      sx={{
+                        borderTopRightRadius: "10px",
+                        borderBottomRightRadius: "10px",
+                        border: "none",
+                        color: "#3B3D3B",
+                        fontFamily: "Inter",
+                        fontWeight: "600",
+                        fontStyle: "normal",
+                        lineHeight: "normal",
+                        fontSize: "14px",
+                        position: "sticky",
+                      }}
+                    >
+                      Action
+                    </TableCell>
+                  )}
                 </TableRow>
-              )}
-            </TableBody>
-          </Table>
-        </TableContainer>
-      )}
+              </TableHead>
+              <TableBody sx={{ color: isDarkMode ? "#36454F" : "#FFFFF0" }}>
+                {lectureData?.data?.length > 0 ? (
+                  lectureData?.data?.map((lecture, index) => (
+                    <TableRow
+                      key={index}
+                    >
+                    <TableCell><CalendarIconCustom date={lecture.schedule_date} /></TableCell>
+                    
+                      <TableCell sx={tableCellStyle}>{lecture.title}</TableCell>
+                      <TableCell sx={tableCellStyle}>
+                        <LectureType lectureType={lecture?.type} />
+                      </TableCell>
+                      <TableCell sx={tableCellStyle}>{lecture.schedule_date}</TableCell>
+                      <TableCell sx={tableCellStyle}>{lecture.schedule_time}</TableCell>
+                      <TableCell sx={tableCellStyle}>
+                        {lecture?.lecture_class?.name}
+                      </TableCell>
+                      <TableCell sx={tableCellStyle}>
+                        {lecture?.chapter?.subject?.name}
+                      </TableCell>
+                      <TableCell sx={tableCellStyle}>{lecture?.chapter?.chapter}</TableCell>
+                      {status === "UPCOMMING" && (
+                        <TableCell sx={{}}>
+                          <Box
+                            sx={{
+                              display: "flex",
+                              alignItems: "center",
+                              gap: 1,
+                            }}
+                          >
+                            <MdOutlineEmergencyRecording
+                              size={22}
+                              style={{ cursor: "pointer" }}
+                              onClick={() => handleLectureRecord(lecture)}
+                            />
+                            <GrEdit
+                              size={18}
+                              style={{ cursor: "pointer" }}
+                              onClick={() => handleCreateLecture(lecture, true)}
+                            />
+                          </Box>
+                        </TableCell>
+                      )}
+                    </TableRow>
+                  ))
+                ) : (
+                  <TableRow>
+                    <TableCell colSpan={7} sx={{ textAlign: "center" }}>
+                      No Data Available
+                    </TableCell>
+                  </TableRow>
+                )}
+              </TableBody>
+            </Table>
+          </TableContainer>
+        )}
+      </Box>
 
       {lectureData?.data?.length > 0 && lectureData?.total > 1 ? (
         <Box

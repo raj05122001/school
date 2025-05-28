@@ -60,7 +60,7 @@ const Page = () => {
         encodeURI(searchQuery),
         lectureType,
         activePage,
-        9,
+        16,
         month,
         encodeURI(subject),
         encodeURI(classValue)
@@ -142,14 +142,14 @@ const Page = () => {
       {filters}
       <Grid container spacing={2}>
         {isLoading ? (
-          Array.from({ length: 9 }, (_, ind) => (
-            <Grid item xs={12} sm={4} key={ind} spacing={2}>
+          Array.from({ length: 16 }, (_, ind) => (
+            <Grid item xs={12} sm={4} md={3} key={ind} spacing={2}>
               <LectureListingCardSkeleton />
             </Grid>
           ))
         ) : lectureList?.data?.length > 0 ? (
           lectureList?.data?.map((value, index) => (
-            <Grid item xs={12} sm={4} key={index}>
+            <Grid item xs={12} sm={4} md={3} key={index}>
               <ListingCard data={value} onClick={handleChangeRoute} />
             </Grid>
           ))

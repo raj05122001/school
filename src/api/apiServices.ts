@@ -123,6 +123,13 @@ export default class apiServices {
       .catch((error) => console.error(error));
   };
 
+  public getStudentDetails = async (studentId) => {
+    return await this.axiosInstance
+      .get(`/api/v1/student/${studentId}/`)
+      .then((Response) => Response)
+      .catch((error) => console.error(error));
+  };
+
   public createNewClass = async (formData) => {
     return await this.axiosInstance
       .post(`/api/v1/administration/class/`, formData)
@@ -669,6 +676,13 @@ export default class apiServices {
       .catch((error) => console.error(error));
   };
 
+  public updateStudentDetails = async (studentId, formData) => {
+    return await this.axiosInstance
+      .patch(`/api/v1/student/${studentId}/`, formData)
+      .then((Response) => Response)
+      .catch((error) => console.error(error));
+  };
+
   public updateFeedback = async (teacherId, formData) => {
     return await this.axiosInstance
       .patch(`/api/v1/lecture_feedback/${teacherId}/`, formData)
@@ -1138,6 +1152,13 @@ public resetPassword = async (email,data) => {
       .post(`/api/v1/account/users/forgot_password/?email=${email}`, data)
       .then((Response) => Response.data)
       // .catch((error) => console.error(error));
+};
+
+  public changeProfilePassword = async (userID, formData) => {
+    return await this.axiosInstance
+      .put(`/api/v1/account/users/${userID}/change_password/`, formData)
+      .then((Response) => Response)
+      .catch((error) => console.error(error));
   };
 
 }

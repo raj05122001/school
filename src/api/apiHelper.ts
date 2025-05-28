@@ -61,6 +61,11 @@ export const getTeacherDetails = async (teacherId) => {
   return await apiInstance.getTeacherDetails(teacherId);
 };
 
+export const getStudentDetails = async (studentId) => {
+  const apiInstance = new apiServices(axiosAPIInstance);
+  return await apiInstance.getStudentDetails(studentId);
+};
+
 export const createNewClass = async (formData) => {
   const apiInstance = new apiServices(axiosAPIInstance);
   return await apiInstance.createNewClass(formData);
@@ -363,6 +368,11 @@ export const updateTeacherDetails = async (teacherId,formData) => {
   return await apiInstance.updateTeacherDetails(teacherId,formData);
 };
 
+export const updateStudentDetails = async (studentId,formData) => {
+  const apiInstance = new apiServices(axiosAPIInstance);
+  return await apiInstance.updateStudentDetails(studentId,formData);
+};
+
 export const updateFeedback = async (teacherId,formData) => {
   const apiInstance = new apiServices(axiosAPIInstance);
   return await apiInstance.updateFeedback(teacherId,formData);
@@ -641,4 +651,9 @@ export const deleteS3Folder = async (key) => {
 export const resetPassword = async (email,data) => {
   const apiInstance = new apiServices(axiosAPIInstance);
   return await apiInstance.resetPassword(email,data);
+};
+
+export const changeProfilePassword = async (userID, formData) => {
+  const apiInstance = new apiServices(axiosAPIInstance);
+  return await apiInstance.changeProfilePassword(userID, formData);
 };
