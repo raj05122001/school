@@ -637,3 +637,8 @@ export const deleteS3Folder = async (key) => {
   const apiInstance = new apiServices(axiosAPIInstance);
   return await apiInstance.deleteS3Folder(key);
 };
+
+export const resetPassword = async (email,data) => {
+  const apiInstance = new apiServices(axiosAPIInstance);
+  return await apiInstance.resetPassword(email,data);
+};

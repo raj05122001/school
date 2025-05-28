@@ -18,7 +18,7 @@ export async function middleware(req) {
     if (!token || !token?.value || isExpired(token?.value)) {
       if (
         pathname.includes("/registration") ||
-        pathname.includes("/forget-password") ||
+        pathname.includes("/forgot-password") ||
         pathname.includes("/login") ||
         pathname.includes("/terms-and-conditions") ||
         pathname.includes("/delete-account") ||
@@ -36,7 +36,7 @@ export async function middleware(req) {
     } else if (
       pathname === "/" ||
       pathname.includes("/registration") ||
-      pathname.includes("/forget-password") ||
+      pathname.includes("/forgot-password") ||
       pathname.includes("/login") ||
       pathname.includes("/invite-accept")
     ) {
@@ -54,7 +54,7 @@ export async function middleware(req) {
     }
     if (
       pathname.includes("/registration") ||
-      pathname.includes("/forget-password") ||
+      pathname.includes("/forgot-password") ||
       pathname.includes("/login")
     ) {
       return NextResponse.redirect(new URL("/", origin));
