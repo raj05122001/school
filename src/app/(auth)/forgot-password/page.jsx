@@ -257,7 +257,7 @@ const ForgotPassword = () => {
                 width: "100%",
               }}
             >
-              Enter your email address and we'll send you an OTP to reset your
+              Enter your email address and we&apos;ll send you an OTP to reset your
               password.
             </Typography>
 
@@ -374,7 +374,7 @@ const ForgotPassword = () => {
                 width: "100%",
               }}
             >
-              We've sent a 6-digit OTP to {formData.email}. Please enter it
+              We&apos;ve sent a 6-digit OTP to {formData.email}. Please enter it
               below.
             </Typography>
 
