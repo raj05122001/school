@@ -1156,7 +1156,7 @@ public resetPassword = async (email,data) => {
 
   public changeProfilePassword = async (userID, formData) => {
     return await this.axiosInstance
-      .put(`/api/v1/account/users/{userID}/change_password/`, formData)
+      .put(`/api/v1/account/users/${userID}/change_password/`, formData)
       .then((Response) => Response)
       .catch((error) => console.error(error));
   };

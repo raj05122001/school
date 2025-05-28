@@ -36,7 +36,7 @@ const EditDetailsPage = () => {
   const [initialData, setInitialData] = useState({});
   const [passwordData, setPasswordData] = useState({
   old_password: "",
-  new_password: "",
+  password: "",
 });
 
 const handlePasswordChange = (e) => {
@@ -160,11 +160,11 @@ console.log("Password Data", passwordData)
       toast.error("Failed to update details.");
     }
 
-    if (passwordData.old_password && passwordData.new_password) {
+    if (passwordData.old_password && passwordData.password) {
     try {
       const response = await changeProfilePassword(userID, passwordData);
       toast.success("Password changed successfully.");
-      setPasswordData({ old_password: "", new_password: "" });
+      setPasswordData({ old_password: "", password: "" });
     } catch (error) {
       toast.error(error.response?.data?.message || "Failed to change password.");
     }
@@ -475,8 +475,8 @@ console.log("Password Data", passwordData)
         <TextField
           fullWidth
           type="password"
-          name="new_password"
-          value={passwordData.new_password}
+          name="password"
+          value={passwordData.password}
           onChange={handlePasswordChange}
           variant="outlined"
           size="small"
