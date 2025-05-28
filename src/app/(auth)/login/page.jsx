@@ -415,9 +415,13 @@ const LoginPage = () => {
                 }}
               >
                 <Link
-                  href="#"
+                  onClick={(e) => {
+                    e.preventDefault();
+                    router.push("/forgot-password");
+                  }}
                   variant="body2"
                   sx={{
+                    cursor:"pointer",
                     color: "var(--Primary_Green, #16AA54)",
                     textAlign: "right",
                     fontSize: "14px",
