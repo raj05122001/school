@@ -217,7 +217,7 @@ const LoginPage = () => {
           >
             VidyaAI
           </Typography>
-          <Box
+          {/* <Box
             sx={{
               color: "var(--Secondary_Black, #141514)",
               width: "100%",
@@ -253,7 +253,7 @@ const LoginPage = () => {
                 marginBottom: "9px",
               }}
             />
-          </Box>
+          </Box> */}
           {/* <Box
             sx={{
               marginTop: "28px",
@@ -520,7 +520,7 @@ const LoginPage = () => {
             >
               By signing in to VidyaAI you agree to our{" "}
               <Link
-                onClick={() => router.push("/login")}
+                onClick={() => router.push("/terms-and-conditions")}
                 sx={{
                   color: "#1976d2",
                   cursor: "pointer",
