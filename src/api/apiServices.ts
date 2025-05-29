@@ -1148,7 +1148,8 @@ export default class apiServices {
   };
 
 public resetPassword = async (email,data) => {
-    return await this.axiosInstance
+    return await this.authAxiosInstance
+
       .post(`/api/v1/account/users/forgot_password/?email=${email}`, data)
       .then((Response) => Response.data)
       // .catch((error) => console.error(error));
