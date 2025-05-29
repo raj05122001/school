@@ -38,7 +38,15 @@ const RegistationPage = () => {
         height: "100vh",
       }}
     >
-      {/* Left Side with Gradient Background */}
+      {/* Left Side Login Form */}
+      {accesskey && email && verifyotp ? (
+        <UserData />
+      ) : accesskey && email ? (
+        <VerifyOtp />
+      ) : (
+        <AccessKey />
+      )}
+      {/* Right Side Login Design */}
       {!isMobile && (
         <Grid
           item
@@ -46,50 +54,74 @@ const RegistationPage = () => {
           sm={4}
           md={6}
           sx={{
-            // background: "linear-gradient(to bottom right, #1976d2, #00c853)",
-            backgroundImage: "url('/loginBG3.jpg')", // Add background image
-            backgroundSize: "cover", // Ensure the image covers the entire page
-            backgroundPosition: "center", // Center the image
-            position: "relative", // Ensures the overlay text is positioned correctly
+            display: "inline-flex",
+            // padding: "247px 32px 231px 31px",
+            flexDirection: "column",
+            // justifyContent: "flex-end",
+            alignItems: "center",
+            backgroundColor: "#fff",
           }}
         >
-          {/* Overlay Text */}
           <Box
             sx={{
-              position: "absolute",
-              top: "25%",
-              left: "25%",
-              // transform: "translate(-50%, -50%)",
-              color: "#fff",
-              textAlign: "left",
-              animation: "slideFade 1s ease-in-out",
-              ...textAnimation,
+              display: "flex",
+              alignItems: "center",
+              gap: "25px",
+              backgroundColor: "#fff",
+              // marginTop: "247px",
+              // marginBotton: "231px",
+              // marginLeft: "31px",
+              // maginRight: "32px",
+              margin: "auto",
             }}
           >
-            <Typography
-              variant="h3"
-              sx={{ fontWeight: "bold", color: "#EDEADE" }}
+            {/* Image 1: Takes 50% of the width */}
+            <Box
+              sx={{
+                width: "388px",
+                height: "546px",
+                aspectRatio: "194 / 273",
+                background:
+                  'url("/Illustration_indian 1.png") lightgray 50% / cover no-repeat',
+                flexShrink: 0,
+                backgroundColor: "#fff",
+              }}
+            />
+            {/* Images 2 and 3: Stack vertically and take remaining 50% */}
+            <Box
+              sx={{
+                flex: 1,
+                display: "flex",
+                flexDirection: "column",
+                gap: "10px",
+              }}
             >
-              Welcome to
-              <br />
-              <Box sx={{ p: 1 }}>
-                <Logo />
-              </Box>
-            </Typography>
-            <Typography variant="h5" sx={{ mt: 1, color: "#191970" }}>
-              Your AI-powered Learning Companion
-            </Typography>
+              <Box
+                sx={{
+                  width: "253px",
+                  height: "259px",
+                  aspectRatio: "253 / 259",
+                  background:
+                    'url("/Illustration_euro 1.png") lightgray 50% / cover no-repeat',
+                  flexShrink: 0,
+                  backgroundColor: "#fff",
+                }}
+              />
+
+              <Box
+                sx={{
+                  width: "253px",
+                  height: "259px",
+                  aspectRatio: "253 / 259",
+                  background:
+                    'url("/Illustration_arabic 1.png") lightgray 50% / cover no-repeat',
+                  flexShrink: 0,
+                  backgroundColor: "#fff",
+                }}
+              />
+            </Box>
           </Box>
         </Grid>
-      )}
-
-      {/* Right Side Login Form */}
-      {accesskey && email && verifyotp ? (
-        <UserData />
-      ) : accesskey && email ? (
-        <VerifyOtp />
-      ) : (
-        <AccessKey />
       )}
     </Grid>
   );
