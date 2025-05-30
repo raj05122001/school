@@ -509,7 +509,7 @@ const Sidebar = ({ open, setOpen }) => {
                       </Typography>
                     </Box>
                   </Box>
-                  <Box
+                 {userDetails?.role!=="ADMIN"? <Box
                     sx={{
                       display: "flex",
                       flexDirection: "column",
@@ -557,7 +557,7 @@ const Sidebar = ({ open, setOpen }) => {
                     >
                       Setup Profile
                     </Button>
-                  </Box>
+                  </Box>:""}
                   <Box>
                     <MenuItem
                       sx={{

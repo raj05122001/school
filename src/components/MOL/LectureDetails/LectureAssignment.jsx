@@ -34,7 +34,7 @@ import AssignmentTextFormat from "@/commonComponents/TextWithMath/AssignmentText
 
 const userDetails = decodeToken(Cookies.get("ACCESS_TOKEN"));
 
-const LectureAssignment = ({ id, isDarkMode, class_ID, isEdit }) => {
+const LectureAssignment = ({ id, isDarkMode, class_ID, isEdit, isAdmin=false }) => {
   const [assignments, setAssignments] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -339,7 +339,7 @@ const LectureAssignment = ({ id, isDarkMode, class_ID, isEdit }) => {
                 >
                   {lectureTitle}
                 </Typography>
-                <Button
+             {!isAdmin &&   <Button
                   variant="contained"
                   sx={{
                     fontFamily: "Inter",
@@ -353,7 +353,7 @@ const LectureAssignment = ({ id, isDarkMode, class_ID, isEdit }) => {
                   onClick={() => setOpenDialog(true)}
                 >
                   Create
-                </Button>
+                </Button>}
               </Box>
               {assignments?.map((assignment, index) =>
                 editedAssignmentId === assignment.id ? (
@@ -445,7 +445,7 @@ const LectureAssignment = ({ id, isDarkMode, class_ID, isEdit }) => {
                             alignItems: "center",
                           }}
                         >
-                          <Box
+                         {!isAdmin && <Box
                             sx={{
                               display: "flex",
                               alignItems: "center",
@@ -485,7 +485,7 @@ const LectureAssignment = ({ id, isDarkMode, class_ID, isEdit }) => {
                               size="small"
                               sx={{ width: 80, mr: 1 }}
                             />
-                          </Box>
+                          </Box>}
                           <Box sx={{ display: "flex", gap: 1 }}>
                             {assignment.assignment_attachment && (
                               <Button
@@ -511,7 +511,7 @@ const LectureAssignment = ({ id, isDarkMode, class_ID, isEdit }) => {
                                 Download
                               </Button>
                             )}
-                            <Button
+                        {!isAdmin &&    <Button
                               variant="contained"
                               onClick={() => handleAssignAssignment(assignment)}
                               sx={{
@@ -531,7 +531,7 @@ const LectureAssignment = ({ id, isDarkMode, class_ID, isEdit }) => {
                               }}
                             >
                               {assignment.is_assigned ? "Assigned" : "Assign"}
-                            </Button>
+                            </Button>}
                           </Box>
                           <Box sx={{ display: "flex", alignItems: "center" }}>
                             <FaEdit

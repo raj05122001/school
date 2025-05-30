@@ -20,6 +20,7 @@ const LectureDetails = ({
   marksData = {},
   isStudent = false,
   setMarksData,
+  isAdmin=false
 }) => {
   const { isDarkMode } = useThemeContext();
   const [value, setValue] = useState(0);
@@ -85,6 +86,7 @@ const LectureDetails = ({
         isDarkMode={isDarkMode}
         class_ID={class_ID}
         isEdit={true}
+        isAdmin={isAdmin}
       />
     ),
     [id, isDarkMode, class_ID]

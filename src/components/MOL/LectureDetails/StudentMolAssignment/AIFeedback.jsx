@@ -40,7 +40,7 @@ const ColorLinearProgress = styled(LinearProgress)(({ theme, value }) => {
   };
 });
 
-const AIFeedback = ({ assignment, answered_by, totalMarks }) => {
+const AIFeedback = ({ assignment, answered_by, totalMarks, apiResult }) => {
   const [result, setResult] = useState({});
   const [loading, setLoading] = useState(false);
 
@@ -88,6 +88,7 @@ const AIFeedback = ({ assignment, answered_by, totalMarks }) => {
     fontWeight: 600,
     lineHeight: "18.712px",
   };
+
   const jsonData = (value) => {
     function CircularProgressWithLabel({ value }) {
       return (
@@ -381,10 +382,12 @@ const AIFeedback = ({ assignment, answered_by, totalMarks }) => {
         >
           AI Assessed Result
           <br />
-          <i style={{ fontSize: "12px", fontWeight: 400 }}>
+        {apiResult?.message && apiResult?.message !=="Success"? <i style={{ fontSize: "12px", fontWeight: 400 }}>
+            ({apiResult?.message})
+          </i>:  <i style={{ fontSize: "12px", fontWeight: 400 }}>
             (This is an AI based result for your imporvement. The final score
             will be provided by the teacher post resubmission.)
-          </i>
+          </i>}
         </Typography>
       </Box>
 

@@ -14,6 +14,8 @@ import {
   TextField,
   Autocomplete,
   Paper,
+  Pagination,
+  Stack,
 } from "@mui/material";
 import { useThemeContext } from "@/hooks/ThemeContext";
 import DarkMode from "@/components/DarkMode/DarkMode";
@@ -22,7 +24,7 @@ import Image from "next/image";
 import { BASE_URL_MEET } from "@/constants/apiconfig";
 
 const Page = () => {
-  const [tabValue, setTabValue] = useState(0); // Track the selected tab (0 for Student, 1 for Teacher)
+  const [tabValue, setTabValue] = useState(0);
   const [dropdownValue, setDropdownValue] = useState("");
   const [teacherData, setTeacherData] = useState([]);
   const [filteredTeacherData, setFilteredTeacherData] = useState([]);
@@ -30,14 +32,23 @@ const Page = () => {
   const [studentData, setStudentData] = useState([]);
   const [filteredStudentData, setFilteredStudentData] = useState([]);
   const [classOptions, setClassOptions] = useState([]);
+  
+  // Pagination states
+  const [currentPage, setCurrentPage] = useState(1);
+  const [pageSize] = useState(10);
+  const [totalStudents, setTotalStudents] = useState(0);
+  const [totalTeachers, setTotalTeachers] = useState(0);
 
   // Fetch Teacher Data
-  const fetchTeacherData = async () => {
+  const fetchTeacherData = async (page = 1, size = 10) => {
     try {
-      const response = await getAllTeachers("", "", "", "", "", 1, 10);
+      const response = await getAllTeachers("", "", "", "", "", page, size);
       const teacherList = response?.data?.data?.data || [];
+      const total = response?.data?.data?.count || 0;
+      
       setTeacherData(teacherList);
       setFilteredTeacherData(teacherList);
+      setTotalTeachers(total);
 
       const uniqueDepartments = Array.from(
         new Set(teacherList?.map((item) => item.department?.name || ""))
@@ -49,12 +60,15 @@ const Page = () => {
   };
 
   // Fetch Student Data
-  const fetchStudentData = async () => {
+  const fetchStudentData = async (page = 1, size = 10) => {
     try {
-      const response = await getAllStudent("", "", "", "", "", 1, 10);
+      const response = await getAllStudent("", "", "", "", "", page, size);
       const studentList = response?.data?.data?.data || [];
+      const total = response?.data?.data?.count || 0;
+      
       setStudentData(studentList);
       setFilteredStudentData(studentList);
+      setTotalStudents(total);
 
       const uniqueClasses = Array.from(
         new Set(studentList?.map((item) => item.user_class?.name || ""))
@@ -67,15 +81,14 @@ const Page = () => {
 
   const handleDropdownChange = (event, newValue) => {
     setDropdownValue(newValue);
+    setCurrentPage(1); // Reset to first page when filtering
 
     if (tabValue === 0) {
-      // Filter Student Data
       const filteredData = studentData?.filter(
         (student) => student.user_class?.name === newValue
       );
       setFilteredStudentData(newValue ? filteredData : studentData);
     } else {
-      // Filter Teacher Data
       const filteredData = teacherData?.filter(
         (teacher) => teacher.department?.name === newValue
       );
@@ -83,13 +96,23 @@ const Page = () => {
     }
   };
 
+  const handlePageChange = (event, newPage) => {
+    setCurrentPage(newPage);
+  };
+
+  const handleTabChange = (event, newValue) => {
+    setTabValue(newValue);
+    setCurrentPage(1); // Reset to first page when switching tabs
+    setDropdownValue(""); // Reset filter when switching tabs
+  };
+
   useEffect(() => {
     if (tabValue === 0) {
-      fetchStudentData();
+      fetchStudentData(currentPage, pageSize);
     } else {
-      fetchTeacherData();
+      fetchTeacherData(currentPage, pageSize);
     }
-  }, [tabValue]);
+  }, [tabValue, currentPage, pageSize]);
 
   const { isDarkMode } = useThemeContext();
 
@@ -97,7 +120,6 @@ const Page = () => {
   const teacherHeaders = [
     "Teacher",
     "Lectures Done",
-    "Allotted Lecture Hours",
     "Total Lectures",
     "Email",
     "Experience",
@@ -105,6 +127,11 @@ const Page = () => {
   ];
 
   const dropdownOptions = tabValue === 0 ? classOptions : departmentOptions;
+  
+  // Calculate total pages
+  const totalPages = tabValue === 0 
+    ? Math.ceil(totalStudents / pageSize)
+    : Math.ceil(totalTeachers / pageSize);
 
   return (
     <Box padding={2}>
@@ -123,16 +150,14 @@ const Page = () => {
         >
           <Tabs
             value={tabValue}
-            onChange={(event, newValue) => setTabValue(newValue)}
+            onChange={handleTabChange}
             indicatorColor="none"
             textColor="primary"
             centered
             sx={{
               ".MuiTabs-flexContainer": {
                 gap: 2,
-
                 padding: "8px 496px 8px 20px",
-                // borderRadius: "12px",
                 borderTopLeftRadius: "12px",
                 borderTopRightRadius: "12px",
                 display: "flex",
@@ -202,7 +227,6 @@ const Page = () => {
               )}
               sx={{ minWidth: 200 }}
             />
-            {/* <DarkMode /> */}
           </Box>
         </Box>
 
@@ -215,9 +239,10 @@ const Page = () => {
             overflow: "hidden",
             backdropFilter: "blur(10px)",
             backgroundColor: "rgba(255, 255, 255, 0.2)",
+            overflowX: "auto",
           }}
         >
-          <Table sx={{ border: "none" }}>
+          <Table sx={{ border: "none", minWidth: 1000 }}>
             <TableHead
               sx={{
                 backgroundColor: "#F3F5F7",
@@ -237,10 +262,11 @@ const Page = () => {
                     fontStyle: "normal",
                     lineHeight: "normal",
                     fontSize: "14px",
+                    width: "80px",
                   }}
                 ></TableCell>
                 {(tabValue === 0 ? studentHeaders : teacherHeaders)?.map(
-                  (header) => (
+                  (header, index) => (
                     <TableCell
                       key={header}
                       sx={{
@@ -251,12 +277,18 @@ const Page = () => {
                         fontStyle: "normal",
                         lineHeight: "normal",
                         fontSize: "14px",
+                        width: 
+                          header === "Email" ? "200px" :
+                          header === "Teacher" || header === "Student" ? "150px" :
+                          header === "Experience" ? "100px" :
+                          header === "Rating" ? "80px" :
+                          header === "Lectures Done" ? "120px" :
+                          header === "Total Lectures" ? "120px" :
+                          "auto",
                         borderTopRightRadius:
-                          header === "Batch Year" ||
-                          (header === "rating" && "10px"),
+                          index === (tabValue === 0 ? studentHeaders : teacherHeaders).length - 1 ? "10px" : "0px",
                         borderBottomRightRadius:
-                          header === "Batch Year" ||
-                          (header === "rating" && "10px"),
+                          index === (tabValue === 0 ? studentHeaders : teacherHeaders).length - 1 ? "10px" : "0px",
                       }}
                     >
                       {header}
@@ -269,7 +301,7 @@ const Page = () => {
               {tabValue === 0 &&
                 filteredStudentData?.map((student) => (
                   <TableRow key={student?.id}>
-                    <TableCell>
+                    <TableCell sx={{ width: "80px" }}>
                       <Image
                         src={
                           student?.user?.profile_pic
@@ -291,10 +323,12 @@ const Page = () => {
                           fontSize: "14px",
                           fontStyle: "normal",
                           lineHeight: "normal",
-                          width: "105px",
+                          maxWidth: "150px",
+                          overflow: "hidden",
+                          textOverflow: "ellipsis",
+                          whiteSpace: "nowrap",
                         }}
                       >
-                        {" "}
                         {student?.user?.full_name}
                       </Typography>
                     </TableCell>
@@ -307,11 +341,8 @@ const Page = () => {
                           fontSize: "14px",
                           fontStyle: "normal",
                           lineHeight: "normal",
-                          width: "41px",
-                          height: "18px",
-                          flexShrink: 0,
                         }}
-                        nowrap
+                        noWrap
                       >
                         {student?.user_class?.name}
                       </Typography>
@@ -325,8 +356,12 @@ const Page = () => {
                           fontSize: "14px",
                           fontStyle: "normal",
                           lineHeight: "normal",
-                          width: "105px",
+                          maxWidth: "200px",
+                          overflow: "hidden",
+                          textOverflow: "ellipsis",
+                          whiteSpace: "nowrap",
                         }}
+                        title={student?.user?.email}
                       >
                         {student?.user?.email}
                       </Typography>
@@ -340,7 +375,6 @@ const Page = () => {
                           fontSize: "14px",
                           fontStyle: "normal",
                           lineHeight: "normal",
-                          width: "105px",
                         }}
                       >
                         {student?.batch_year}
@@ -351,7 +385,7 @@ const Page = () => {
               {tabValue === 1 &&
                 filteredTeacherData?.map((teacher) => (
                   <TableRow key={teacher?.user?.id}>
-                    <TableCell>
+                    <TableCell sx={{ width: "80px" }}>
                       <Image
                         src={
                           teacher?.user?.profile_pic
@@ -364,9 +398,7 @@ const Page = () => {
                         alt="Teacher pic"
                       />
                     </TableCell>
-                    <TableCell
-                      sx={{ color: isDarkMode ? "#F0EAD6" : "#36454F" }}
-                    >
+                    <TableCell>
                       <Typography
                         sx={{
                           fontWeight: 700,
@@ -375,8 +407,12 @@ const Page = () => {
                           fontSize: "14px",
                           fontStyle: "normal",
                           lineHeight: "normal",
-                          width: "105px",
+                          maxWidth: "150px",
+                          overflow: "hidden",
+                          textOverflow: "ellipsis",
+                          whiteSpace: "nowrap",
                         }}
+                        title={teacher?.user.full_name}
                       >
                         {teacher?.user.full_name}
                       </Typography>
@@ -390,10 +426,9 @@ const Page = () => {
                           fontSize: "14px",
                           fontStyle: "normal",
                           lineHeight: "normal",
-                          width: "105px",
+                          textAlign: "center",
                         }}
                       >
-                        {" "}
                         {teacher?.lectures_done}
                       </Typography>
                     </TableCell>
@@ -406,22 +441,7 @@ const Page = () => {
                           fontSize: "14px",
                           fontStyle: "normal",
                           lineHeight: "normal",
-                          width: "105px",
-                        }}
-                      >
-                        {teacher?.alloted_lecturehour}
-                      </Typography>
-                    </TableCell>
-                    <TableCell>
-                      <Typography
-                        sx={{
-                          fontWeight: 700,
-                          color: "#3B3D3B",
-                          fontFamily: "Inter, sans-serif",
-                          fontSize: "14px",
-                          fontStyle: "normal",
-                          lineHeight: "normal",
-                          width: "105px",
+                          textAlign: "center",
                         }}
                       >
                         {teacher?.total_lectures}
@@ -436,8 +456,12 @@ const Page = () => {
                           fontSize: "14px",
                           fontStyle: "normal",
                           lineHeight: "normal",
-                          width: "105px",
+                          maxWidth: "200px",
+                          overflow: "hidden",
+                          textOverflow: "ellipsis",
+                          whiteSpace: "nowrap",
                         }}
+                        title={teacher?.user?.email}
                       >
                         {teacher?.user?.email}
                       </Typography>
@@ -451,7 +475,7 @@ const Page = () => {
                           fontSize: "14px",
                           fontStyle: "normal",
                           lineHeight: "normal",
-                          width: "105px",
+                          textAlign: "center",
                         }}
                       >
                         {teacher?.experience}
@@ -466,7 +490,7 @@ const Page = () => {
                           fontSize: "14px",
                           fontStyle: "normal",
                           lineHeight: "normal",
-                          width: "105px",
+                          textAlign: "center",
                         }}
                       >
                         {teacher?.avg_feedback?.toFixed(1)}
@@ -477,6 +501,65 @@ const Page = () => {
             </TableBody>
           </Table>
         </TableContainer>
+
+        {/* Pagination Component */}
+        <Box 
+          sx={{ 
+            display: 'flex', 
+            justifyContent: 'center', 
+            alignItems: 'center', 
+            marginTop: 3,
+            gap: 2
+          }}
+        >
+          <Typography
+            sx={{
+              color: "#3B3D3B",
+              fontFamily: "Inter",
+              fontSize: "14px",
+              fontWeight: "500",
+            }}
+          >
+            Total: {tabValue === 0 ? totalStudents : totalTeachers} {tabValue === 0 ? 'Students' : 'Teachers'}
+          </Typography>
+          
+          <Pagination
+            count={totalPages}
+            page={currentPage}
+            onChange={handlePageChange}
+            color="primary"
+            size="medium"
+            showFirstButton
+            showLastButton
+            sx={{
+              '& .MuiPaginationItem-root': {
+                color: '#3B3D3B',
+                fontFamily: 'Inter',
+                '&:hover': {
+                  backgroundColor: 'rgba(59, 61, 59, 0.1)',
+                },
+                '&.Mui-selected': {
+                  backgroundColor: '#1976d2',
+                  color: 'white',
+                  '&:hover': {
+                    backgroundColor: '#1565c0',
+                  },
+                },
+              },
+            }}
+          />
+          
+          <Typography
+            sx={{
+              color: "#3B3D3B",
+              fontFamily: "Inter",
+              fontSize: "14px",
+              fontWeight: "500",
+            }}
+          >
+            Page {currentPage} of {totalPages}
+          </Typography>
+        </Box>
       </Box>
     </Box>
   );

@@ -744,7 +744,7 @@ const AssignmentItem = ({
 
           <Box sx={{ marginTop: 2 }}>
             {shouldRenderAccordion && (
-              <AIFeedback assignment={assignment} answered_by={answered_by} />
+              <AIFeedback assignment={assignment} answered_by={answered_by} apiResult={result} />
             )}
           </Box>
           {isSubmit === false &&
