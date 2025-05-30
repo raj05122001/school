@@ -18,6 +18,7 @@ import {
   GlobalStyles,
   IconButton,
   InputAdornment,
+  Tooltip,
 } from "@mui/material";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
@@ -76,13 +77,20 @@ const CreatingLecture = ({
   const [fileStatus, setFileStatus] = useState(false);
   const inputRef = useRef(null);
   const fileRef = useRef(null);
-  const [fileName, setFileName] = useState(null)
+  const [fileName, setFileName] = useState(null);
   // Dropdown options state
   const [classOptions, setClassOptions] = useState([]);
   const [subjectOptions, setSubjectOptions] = useState([]);
   const [chapterOptions, setChapterOptions] = useState([]);
   const [topicOptions, setTopicOptions] = useState([]);
   const [attachments, setAttachments] = useState([]);
+  const [errors, setErrors] = useState({
+    class: false,
+    subject: false,
+    chapter: false,
+    topic: false,
+    messages: {},
+  });
 
   const encodeURI = (value) => encodeURIComponent(value);
 
@@ -102,31 +110,31 @@ const CreatingLecture = ({
   }
 
   const getAttachments = async () => {
-      try {
-        const apiResponse = await getLecAttachment(lecture?.id);
-        const response  = apiResponse?.data?.data;
-        console.log("Response attachment", response)
-        setFileName(response[0])
-        fileRef.current = response[0]
-      } catch (error) {
-        console.error(error);
-      }
-    };
+    try {
+      const apiResponse = await getLecAttachment(lecture?.id);
+      const response = apiResponse?.data?.data;
+      console.log("Response attachment", response);
+      setFileName(response[0]);
+      fileRef.current = response[0];
+    } catch (error) {
+      console.error(error);
+    }
+  };
 
   const handleRemoveFile = async () => {
-      try {
-        await deleteAttachment(fileName?.id);
-        getAttachments();
-      } catch (error) {
-        console.error(error);
-      }
-    };
+    try {
+      await deleteAttachment(fileName?.id);
+      getAttachments();
+    } catch (error) {
+      console.error(error);
+    }
+  };
 
-  console.log("New File Name", fileName)
+  console.log("New File Name", fileName);
 
   useEffect(() => {
     if (isEditMode && lecture) {
-      getAttachments()
+      getAttachments();
       setSelectedClass(
         {
           name: lecture?.lecture_class?.name,
@@ -269,12 +277,46 @@ const CreatingLecture = ({
     const selectedFile = e?.target?.files?.[0];
     console.log("Selected file is:", selectedFile);
     fileRef.current = selectedFile;
-    setFileName(selectedFile)
-    console.log("FileRef is", fileRef)
+    setFileName(selectedFile);
+    console.log("FileRef is", fileRef);
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    // Validation logic
+    const hasError = {
+      class: !selectedClass && !lecture?.lecture_class,
+      subject: !lectureSubject && !lecture?.subject,
+      chapter: !lectureChapter && !lecture?.chapter,
+      topic: !lectureTopics && !lecture?.topics,
+    };
+
+    const hasAnyError = Object.values(hasError).some(Boolean);
+
+    if (hasAnyError) {
+      setErrors({
+        class: hasError.class,
+        subject: hasError.subject,
+        chapter: hasError.chapter,
+        topic: hasError.topic,
+        messages: {
+          class: hasError.class ? "Class is required" : "",
+          subject: hasError.subject ? "Subject is required" : "",
+          chapter: hasError.chapter ? "Chapter is required" : "",
+          topic: hasError.topic ? "Topic is required" : "",
+        },
+      });
+      return; // Stop submission
+    }
+
+    // Reset errors if validation passes
+    setErrors({
+      class: false,
+      subject: false,
+      chapter: false,
+      topic: false,
+      messages: {},
+    });
     // Create a new FormData object to send to the API
 
     const checkCondition = (firstValue, secondValue) => {
@@ -363,8 +405,6 @@ const CreatingLecture = ({
     }
   };
 
-
-
   return isLoading ? (
     <Box className="overlay">
       <Box className="loader"></Box>
@@ -419,9 +459,10 @@ const CreatingLecture = ({
             lineHeight: "normal",
           }}
         >
-          Create Lecture
+          {isEditMode ? "Update Lecture" : "Create Lecture"}
         </Box>
         {isEditMode && lecture?.id && (
+          <Tooltip title="Delete lecture" placement="top" arrow>
           <Box
             sx={{
               position: "absolute",
@@ -433,8 +474,10 @@ const CreatingLecture = ({
               flex: 1,
             }}
           >
-            <MdDelete size={20} onClick={() => onDeleteLecture()} />
+            
+              <MdDelete size={20} onClick={() => onDeleteLecture()} />
           </Box>
+          </Tooltip>
         )}
         <Button onClick={handleClose} color="primary" sx={{}}>
           <svg
@@ -479,6 +522,7 @@ const CreatingLecture = ({
                 onChange={setSelectedClassName}
                 label={"Class"}
                 value={selectedClass}
+                helperText={errors.messages.class}
                 // disabled={isEditMode} // Disable in edit mode
               />
             </Grid>
@@ -491,6 +535,7 @@ const CreatingLecture = ({
                 onChange={setSubjectName}
                 label={"Subject"}
                 value={lectureSubject}
+                helperText={errors.messages.subject}
                 // disabled={isEditMode} // Disable in edit mode
               />
             </Grid>
@@ -503,6 +548,7 @@ const CreatingLecture = ({
                 onChange={setChapterName}
                 label={"Chapter"}
                 value={lectureChapter}
+                helperText={errors.messages.chapter}
                 // disabled={isEditMode} // Disable in edit mode
               />
             </Grid>
@@ -515,6 +561,7 @@ const CreatingLecture = ({
                 onChange={setTopicsName}
                 label={"Name (Topics)"}
                 value={lectureTopics}
+                helperText={errors.messages.topic}
               />
             </Grid>
 
@@ -824,7 +871,10 @@ const CreatingLecture = ({
                       }}
                     >
                       {fileName?.name?.length > 24
-                        ? `${fileName?.name?.slice(0, 14)}...${fileName?.name?.slice(
+                        ? `${fileName?.name?.slice(
+                            0,
+                            14
+                          )}...${fileName?.name?.slice(
                             fileName?.name?.length - 7,
                             fileName?.name?.length
                           )}`
