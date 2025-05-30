@@ -15,6 +15,7 @@ import {
   CardMedia,
   Divider,
   Paper,
+  Tooltip,
 } from "@mui/material";
 import { AiOutlineDownload } from "react-icons/ai";
 import { BiSolidRightArrowCircle } from "react-icons/bi";
@@ -55,7 +56,6 @@ const CheckAssignment = ({ assignment, index, fetchAssignmentAnswer }) => {
   const { fetchPresignedUrl } = usePresignedUrl();
 
   const answered_by = Number(assignment?.answer_by?.id);
-
 
   const isChecked = assignment?.is_checked || false;
 
@@ -113,7 +113,6 @@ const CheckAssignment = ({ assignment, index, fetchAssignmentAnswer }) => {
         return "#454545";
     }
   };
-
 
   const handleGradeSubmission = useCallback(async () => {
     setIsLoading(true);
@@ -479,8 +478,12 @@ const CheckAssignment = ({ assignment, index, fetchAssignmentAnswer }) => {
               )}
               {renderAnswerContent(assignment)}
             </Box>
-            <Box sx={{marginTop:1}}>
-              <AIFeedbackTeacher assignment={assignment} answered_by={answered_by} totalMarks={assignment.assignment_que.assignment_mark}/>
+            <Box sx={{ marginTop: 1 }}>
+              <AIFeedbackTeacher
+                assignment={assignment}
+                answered_by={answered_by}
+                totalMarks={assignment.assignment_que.assignment_mark}
+              />
             </Box>
             <Paper
               elevation={isDarkMode ? 3 : 0}
@@ -511,27 +514,40 @@ const CheckAssignment = ({ assignment, index, fetchAssignmentAnswer }) => {
                   >
                     Marks Obtained
                   </Typography>
-                  <TextField
-                    hiddenLabel={true}
-                    type="number"
-                    variant="outlined"
-                    fullWidth
-                    value={grades}
-                    onChange={(e) => setGrades(e.target.value)}
-                    InputLabelProps={{
-                      style: {
-                        color: isDarkMode ? "#d7e4fc" : "",
-                        borderRadius: "12px",
-                      },
-                    }}
-                    InputProps={{
-                      sx: {
-                        backdropFilter: "blur(10px)",
-                        backgroundColor: "#FFFFFF",
-                        borderRadius: "12px",
-                      },
-                    }}
-                  />
+                  <Tooltip
+                    title={
+                      Number(grades) > assignment.assignment_que.assignment_mark
+                        ? "Marks obtained should not exceed total marks"
+                        : ""
+                    }
+                    open={
+                      Number(grades) > assignment.assignment_que.assignment_mark
+                    }
+                    placement="bottom-start"
+                    arrow
+                  >
+                    <TextField
+                      hiddenLabel={true}
+                      type="number"
+                      variant="outlined"
+                      fullWidth
+                      value={grades}
+                      onChange={(e) => setGrades(e.target.value)}
+                      InputLabelProps={{
+                        style: {
+                          color: isDarkMode ? "#d7e4fc" : "",
+                          borderRadius: "12px",
+                        },
+                      }}
+                      InputProps={{
+                        sx: {
+                          backdropFilter: "blur(10px)",
+                          backgroundColor: "#FFFFFF",
+                          borderRadius: "12px",
+                        },
+                      }}
+                    />
+                  </Tooltip>
                 </Grid>
                 <Grid item xs={12} sm={12}>
                   <Typography

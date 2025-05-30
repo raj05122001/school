@@ -8,6 +8,7 @@ const CustomAutocomplete = ({
   label,
   value,
   disabled,
+  helperText = "",
 }) => {
   const { isDarkMode } = useThemeContext();
 
@@ -48,6 +49,7 @@ const CustomAutocomplete = ({
           {...params}
           label={label}
           variant="outlined"
+          helperText={helperText}
           onChange={(event) => handleChange(event.target.value)}
           InputLabelProps={{
             style: {},

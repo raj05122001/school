@@ -511,7 +511,8 @@ const LectureAssignment = ({ id, isDarkMode, class_ID, isEdit, isAdmin=false }) 
                                 Download
                               </Button>
                             )}
-                        {!isAdmin &&    <Button
+                     
+                            {!isAdmin && assignment?.assignment_mark !== undefined && assignment?.assignment_mark !== null && assignment?.assignment_mark !== 0 && <Button
                               variant="contained"
                               onClick={() => handleAssignAssignment(assignment)}
                               sx={{
