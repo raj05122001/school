@@ -93,37 +93,6 @@ const Page = () => {
               {/* <DarkMode /> */}
               <Button
                 variant="contained"
-                color="primary"
-                onClick={handleOpenDialog}
-                sx={{
-                  mt: 2,
-                  display: "inline-flex",
-                  padding: "12px 32px",
-                  justifyContent: "center",
-                  alignItems: "center",
-                  gap: "8px",
-                  textTransform: "none",
-                  borderRadius: "8px",
-                  background: "#141514",
-                  color: "#FFF",
-                  textAlign: "center",
-                  fontFeatureSettings: "'liga' off, 'clig' off",
-                  fontFamily: "Aptos",
-                  fontSize: "16px",
-                  fontStyle: "normal",
-                  fontWeight: "700",
-                  lineHeight: "24px",
-                  "&:hover": {
-                    border: "1px solid #141514",
-                    background: "#E5E5E5",
-                    color: "#141514",
-                  },
-                }}
-              >
-                <MdAdd fontSize={16} size={22} /> New Lecture
-              </Button>
-              <Button
-                variant="contained"
                 color="secondary"
                 onClick={() => downloadExcel()}
                 sx={{

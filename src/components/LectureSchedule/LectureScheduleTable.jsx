@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import {
   Table,
   TableBody,
@@ -18,6 +18,9 @@ import { AiOutlineExclamationCircle } from "react-icons/ai";
 import { useSearchParams, useRouter } from "next/navigation";
 import { decodeToken } from "react-jwt";
 import Cookies from "js-cookie";
+import { GrEdit } from "react-icons/gr";
+import { MdOutlineEmergencyRecording } from "react-icons/md";
+import { AppContextProvider } from "@/app/main";
 
 const TABLE_HEAD = [
   "Title",
@@ -27,8 +30,9 @@ const TABLE_HEAD = [
   "Chapter",
   "Academic Year",
   "Starting Time",
-  "Allotted hr",
+  "Action",
 ];
+
 
 const LectureScheduleTable = () => {
   const userDetails = decodeToken(Cookies.get("ACCESS_TOKEN"));
@@ -38,6 +42,13 @@ const LectureScheduleTable = () => {
   const [lectureData, setLectureData] = useState([]);
   const [loading, setLoading] = useState(true); // Loading state
   const activePage = parseInt(searchParams.get("activePage")) || 1;
+
+  const {
+      openRecordingDrawer,
+      openCreateLecture,
+      handleCreateLecture,
+      handleLectureRecord,
+    } = useContext(AppContextProvider);
 
   const fetchLectureData = async (page = 1) => {
     try {
@@ -146,20 +157,32 @@ const LectureScheduleTable = () => {
           </Table>
         </TableContainer>
       ) : lectureData?.data?.length > 0 ? (
-        <TableContainer elevation={0} component={Paper} sx={{
+        <TableContainer
+          elevation={0}
+          component={Paper}
+          sx={{
             borderRadius: "10px",
-            border:"none",
+            border: "none",
             overflow: "hidden",
             backdropFilter: "blur(10px)",
             backgroundColor: "rgba(255, 255, 255, 0.2)",
-        }}>
+          }}
+        >
           <Table sx={{ border: "none" }}>
-            <TableHead sx={{backgroundColor: "#F3F5F7",
+            <TableHead
+              sx={{
+                backgroundColor: "#F3F5F7",
                 borderRadius: "10px",
-                border: "none",}}> 
-              <TableRow sx={{backgroundColor: "#d9d9d9",
-                borderRadius: "10px",
-                border: "none",}}>
+                border: "none",
+              }}
+            >
+              <TableRow
+                sx={{
+                  backgroundColor: "#d9d9d9",
+                  borderRadius: "10px",
+                  border: "none",
+                }}
+              >
                 {TABLE_HEAD?.map((head) => (
                   <TableCell
                     key={head}
@@ -197,8 +220,25 @@ const LectureScheduleTable = () => {
                       ? formatTime(lecture?.schedule_time)
                       : "-"}
                   </TableCell>
-                  <TableCell sx={{ color: isDarkMode ? "white" : "black" }}>
-                    {lecture?.duration ?? "-"}
+                  <TableCell sx={{}}>
+                    <Box
+                      sx={{
+                        display: "flex",
+                        alignItems: "center",
+                        gap: 1,
+                      }}
+                    >
+                      <MdOutlineEmergencyRecording
+                        size={22}
+                        style={{ cursor: "pointer" }}
+                        onClick={() => handleLectureRecord(lecture)}
+                      />
+                      <GrEdit
+                        size={18}
+                        style={{ cursor: "pointer" }}
+                        onClick={() => handleCreateLecture(lecture, true)}
+                      />
+                    </Box>
                   </TableCell>
                 </TableRow>
               ))}

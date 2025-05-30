@@ -22,6 +22,7 @@ import { FaGraduationCap, FaBook } from "react-icons/fa";
 import { RiBookOpenLine } from "react-icons/ri";
 import stc from "string-to-color";
 import { AppContextProvider } from "@/app/main";
+import { MdOutlineEmergencyRecording } from "react-icons/md";
 
 const LecturePopover = ({ data, isOrganizer }) => {
   const {
@@ -100,12 +101,12 @@ const LecturePopover = ({ data, isOrganizer }) => {
             color: "white", // Replace with your primary color
             fontSize: "0.75rem", // Equivalent to text-xs
             fontWeight: 400, // Equivalent to font-normal
-            backgroundColor:"#16AA54",
-            padding:"5px",
-            width:"60px",
-            borderRadius:"7px",
-            fontWeight:900,
-            fontFamily:"Roboto"
+            backgroundColor: "#16AA54",
+            padding: "5px",
+            width: "60px",
+            borderRadius: "7px",
+            fontWeight: 900,
+            fontFamily: "Roboto",
           }}
         >
           {formattedStartTime}
@@ -234,6 +235,18 @@ const LecturePopover = ({ data, isOrganizer }) => {
                 </Grid>
                 {isOrganizer && (
                   <Grid item xs={1}>
+                    <IconButton
+                      size="small"
+                      color="primary"
+                      onClick={(event) =>
+                        handleLectureRecord(data.event.extendedProps)
+                      }
+                    >
+                      <MdOutlineEmergencyRecording
+                        size={22}
+                        style={{ cursor: "pointer" }}
+                      />
+                    </IconButton>
                     <IconButton
                       size="small"
                       color="primary"

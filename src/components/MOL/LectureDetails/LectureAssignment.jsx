@@ -511,7 +511,7 @@ const LectureAssignment = ({ id, isDarkMode, class_ID, isEdit }) => {
                                 Download
                               </Button>
                             )}
-                            <Button
+                            {assignment?.assignment_mark !== undefined && assignment?.assignment_mark !== null && assignment?.assignment_mark !== 0 && <Button
                               variant="contained"
                               onClick={() => handleAssignAssignment(assignment)}
                               sx={{
@@ -531,7 +531,7 @@ const LectureAssignment = ({ id, isDarkMode, class_ID, isEdit }) => {
                               }}
                             >
                               {assignment.is_assigned ? "Assigned" : "Assign"}
-                            </Button>
+                            </Button>}
                           </Box>
                           <Box sx={{ display: "flex", alignItems: "center" }}>
                             <FaEdit

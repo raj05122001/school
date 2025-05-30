@@ -174,11 +174,6 @@ const SubjectAnalytics = () => {
           <FiBarChart2 size={22} style={{ marginRight: "8px" }} />
           Watch Time by Subject
         </Typography>
-        {isDarkMode ? (
-          <MdDarkMode style={{ fontSize: "24px", color: "#f0f0f0" }} />
-        ) : (
-          <MdLightMode style={{ fontSize: "24px", color: "#2b2b2b" }} />
-        )}
       </Box>
       <Box sx={{ width: "100%", height: "300px" }}>
         <ResponsiveContainer width="100%" height="100%">
@@ -197,7 +192,7 @@ const SubjectAnalytics = () => {
             <Tooltip
               formatter={(value, name, props) => {
                 if (name === "Watchtime") {
-                  return [`${value?.toFixed(2)}`, "Watchtime"]; // Format watchtime with 2 decimal places
+                  return [`${value?.toFixed(2)} mins`, "Watchtime"]; // Format watchtime with 2 decimal places
                 }
                 return null; // Skip other data keys
               }}
