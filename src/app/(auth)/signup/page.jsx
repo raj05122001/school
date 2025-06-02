@@ -58,13 +58,14 @@ const SignupPage = () => {
   const [serverError, setServerError] = useState(null);
   const [classOptions, setClassOptions] = useState([]);
   const [departmentOptions, setDepartmentOptions] = useState([]);
-  const [openDialog, setOpenDialog] = useState(false); // For Create Department Dialog
-  const [newDepartment, setNewDepartment] = useState(""); // Input for new department
+  const [openDialog, setOpenDialog] = useState(false);
+  const [newDepartment, setNewDepartment] = useState("");
   const [showDept, setShowDept] = useState(true);
   const isMobile = useMediaQuery("(max-width:600px)");
 
   const isTeacher = roleParam === "TEACHER";
 
+  // Fixed validation schema
   const validationSchema = yup.object().shape({
     name: yup.string().required("Name is required"),
     email: yup.string().email("Invalid email").required("Email is required"),
@@ -73,23 +74,32 @@ const SignupPage = () => {
       .matches(/^[0-9]{10}$/, "Phone number must be 10 digits")
       .required("Phone number is required"),
     role: yup.string().required("Role is required"),
-    newPassword: yup
-      .string()
-      .matches(
-        /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/,
-        "Password must be at least 8 characters long and contain at least one uppercase letter, one lowercase letter, one number, and one special character"
-      )
-      .required("Password is required"),
-    confirmPassword: yup
-      .string()
-      .oneOf([yup.ref("newPassword"), null], "Passwords must match")
-      .required("Confirm Password is required"),
-    subject:
-      !isTeacher &&
-      yup
-        .number()
-        .typeError("Please select/fill class before submitting")
-        .required("Please select/fill class before submitting"),
+newPassword: yup
+  .string()
+  .matches(
+    /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?])[A-Za-z\d!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]{8,}$/,
+    "Password must be at least 8 characters long and contain at least one uppercase letter, one lowercase letter, one number, and one special character"
+  )
+  .required("Password is required"),
+confirmPassword: yup
+  .string()
+  .oneOf([yup.ref("newPassword")], "Passwords must match")
+  .required("Confirm Password is required"),
+    // Fixed conditional validation
+    subject: !isTeacher
+      ? yup
+          .object()
+          .nullable()
+          .required("Please select a class")
+          .typeError("Please select a class")
+      : yup.object().nullable(),
+    department: isTeacher
+      ? yup
+          .number()
+          .nullable()
+          .required("Please select or create a department")
+          .typeError("Please select or create a department")
+      : yup.number().nullable(),
   });
 
   const {
@@ -98,6 +108,7 @@ const SignupPage = () => {
     setError,
     clearErrors,
     setValue,
+    watch,
     formState: { errors },
   } = useForm({
     defaultValues: {
@@ -106,7 +117,7 @@ const SignupPage = () => {
       phone: "",
       role: roleParam || "",
       department: null,
-      class: "",
+      subject: null, // Changed from empty string to null
       newPassword: "",
       confirmPassword: "",
     },
@@ -150,11 +161,10 @@ const SignupPage = () => {
     try {
       const response = await postDepartment({ name: newDepartment.trim() });
       if (response?.data?.success) {
-        const newDept = response.data.data; // Assuming API returns the created department object
+        const newDept = response.data.data;
         setDepartmentOptions((prev) => [...prev, newDept]);
         toast.success("Department created successfully!");
         setNewDepartment("");
-        // Update the form field with the new department's ID
         setValue("department", newDept.id);
       } else {
         toast.error("Failed to create department.");
@@ -168,6 +178,8 @@ const SignupPage = () => {
   const onSubmit = async (data) => {
     setLoading(true);
     setServerError(null);
+    
+    // Fixed payload construction
     const payload = {
       full_name: data.name,
       email: data.email,
@@ -176,10 +188,9 @@ const SignupPage = () => {
       password: data.newPassword,
       country_code: "+91",
       time_zone: "IND",
-      department:
-        data.department?.value || data.department?.id || data.department || "",
+      department: data.department || "",
       subjects: 9,
-      student_class: data.subject || "",
+      student_class: isTeacher ? "" : (data.subject?.id || data.subject?.value || ""),
     };
 
     try {
@@ -198,7 +209,7 @@ const SignupPage = () => {
               message: messages.join(". "),
             });
           });
-          toast.error(messages.join(". "));
+          toast.error("Please check the form for errors.");
         } else {
           setServerError("An unexpected error occurred. Please try again.");
           toast.error("Signup failed. Please check the details.");
@@ -239,8 +250,8 @@ const SignupPage = () => {
           justifyContent: "center",
           gap: "28px",
           background: `${isMobile ? "url('/mobileLoginBG2.jpg')" : "#fff"}`,
-          backgroundSize: "cover", // Ensure the image covers the entire page
-          backgroundPosition: "center", // Center the image
+          backgroundSize: "cover",
+          backgroundPosition: "center",
           padding: 2,
           animation: "slideFade 1s ease-in-out",
           ...textAnimation,
@@ -297,6 +308,7 @@ const SignupPage = () => {
             VidyaAI
           </Typography>
         </Box>
+        
         <Box
           sx={{
             width: "100%",
@@ -343,7 +355,6 @@ const SignupPage = () => {
           >
             {/* Name and Email */}
             <Box sx={{ display: "flex", gap: 2 }}>
-              {/* Name Field */}
               <Box sx={{ width: "100%" }}>
                 <span
                   style={{
@@ -364,14 +375,13 @@ const SignupPage = () => {
                   render={({ field }) => (
                     <TextField
                       {...field}
-                      // label="Name"
                       fullWidth
                       required
                       margin="normal"
                       error={!!errors.name}
                       helperText={errors.name?.message}
                       InputLabelProps={{
-                        shrink: true, // Ensures the label shrinks when value is present
+                        shrink: true,
                         style: { color: "#555" },
                       }}
                       InputProps={{
@@ -392,7 +402,6 @@ const SignupPage = () => {
                 />
               </Box>
 
-              {/* Email Field (Read-Only) */}
               <Box sx={{ width: "100%" }}>
                 <span
                   style={{
@@ -407,36 +416,43 @@ const SignupPage = () => {
                 >
                   E-mail
                 </span>
-                <TextField
-                  // label="Email"
-                  fullWidth
-                  required
-                  margin="normal"
-                  value={emailParam || ""}
-                  InputLabelProps={{
-                    shrink: true, // Ensures the label shrinks when value is present
-                    style: { color: "#555" },
-                  }}
-                  InputProps={{
-                    style: {
-                      color: "#000",
-                      borderRadius: "12px",
-                      margin: 0,
-                    },
-                  }}
-                  sx={{
-                    backgroundColor: "#fff",
-                    borderRadius: "12px",
-                    margin: 0,
-                  }}
-                  variant="outlined"
+                <Controller
+                  name="email"
+                  control={control}
+                  render={({ field }) => (
+                    <TextField
+                      {...field}
+                      fullWidth
+                      required
+                      margin="normal"
+                      error={!!errors.email}
+                      helperText={errors.email?.message}
+                      InputLabelProps={{
+                        shrink: true,
+                        style: { color: "#555" },
+                      }}
+                      InputProps={{
+                        readOnly: !!emailParam,
+                        style: {
+                          color: "#000",
+                          borderRadius: "12px",
+                          margin: 0,
+                        },
+                      }}
+                      sx={{
+                        backgroundColor: "#fff",
+                        borderRadius: "12px",
+                        margin: 0,
+                      }}
+                      variant="outlined"
+                    />
+                  )}
                 />
               </Box>
             </Box>
 
             {/* Password and Confirm Password */}
             <Box sx={{ display: "flex", gap: 2, marginTop: 2 }}>
-              {/* Password Field */}
               <Box sx={{ width: "100%" }}>
                 <span
                   style={{
@@ -457,7 +473,6 @@ const SignupPage = () => {
                   render={({ field }) => (
                     <TextField
                       {...field}
-                      // label="Password"
                       type={showPassword ? "text" : "password"}
                       fullWidth
                       required
@@ -502,7 +517,6 @@ const SignupPage = () => {
                 />
               </Box>
 
-              {/* Confirm Password Field */}
               <Box sx={{ width: "100%" }}>
                 <span
                   style={{
@@ -523,7 +537,6 @@ const SignupPage = () => {
                   render={({ field }) => (
                     <TextField
                       {...field}
-                      // label="Confirm Password"
                       type={showConfirmPassword ? "text" : "password"}
                       fullWidth
                       required
@@ -572,7 +585,6 @@ const SignupPage = () => {
 
             {/* Phone and Role */}
             <Box sx={{ display: "flex", gap: 2, marginTop: 2 }}>
-              {/* Phone Number Field */}
               <Box sx={{ width: "100%" }}>
                 <span
                   style={{
@@ -593,7 +605,6 @@ const SignupPage = () => {
                   render={({ field }) => (
                     <TextField
                       {...field}
-                      // label="Phone Number"
                       fullWidth
                       required
                       margin="normal"
@@ -621,7 +632,6 @@ const SignupPage = () => {
                 />
               </Box>
 
-              {/* Role Field (Read-Only) */}
               <Box sx={{ width: "100%" }}>
                 <span
                   style={{
@@ -636,26 +646,33 @@ const SignupPage = () => {
                 >
                   Role
                 </span>
-                <TextField
-                  // label="Role"
-                  fullWidth
-                  required
-                  margin="normal"
-                  value={roleParam || ""}
-                  InputProps={{
-                    readOnly: true,
-                    style: { color: "#000", borderRadius: "12px", margin: 0 },
-                  }}
-                  InputLabelProps={{
-                    shrink: true,
-                    style: { color: "#555" },
-                  }}
-                  sx={{
-                    backgroundColor: "#fff",
-                    borderRadius: "12px",
-                    margin: 0,
-                  }}
-                  variant="outlined"
+                <Controller
+                  name="role"
+                  control={control}
+                  render={({ field }) => (
+                    <TextField
+                      {...field}
+                      fullWidth
+                      required
+                      margin="normal"
+                      error={!!errors.role}
+                      helperText={errors.role?.message}
+                      InputProps={{
+                        readOnly: !!roleParam,
+                        style: { color: "#000", borderRadius: "12px", margin: 0 },
+                      }}
+                      InputLabelProps={{
+                        shrink: true,
+                        style: { color: "#555" },
+                      }}
+                      sx={{
+                        backgroundColor: "#fff",
+                        borderRadius: "12px",
+                        margin: 0,
+                      }}
+                      variant="outlined"
+                    />
+                  )}
                 />
               </Box>
             </Box>
@@ -663,145 +680,131 @@ const SignupPage = () => {
             {/* Department or Subject */}
             <Box sx={{ marginTop: 2 }}>
               {isTeacher ? (
-                // Department Autocomplete for Teachers
                 <>
-                  <span
-                    style={{
-                      display: "flex",
-                      gap: "8px",
-                      alignItems: "center",
-                    }}
-                  >
-                    <span style={{ flexBasis: "80%", flexGrow: 1 }}>
-                      <Box sx={{ width: "100%" }}>
-                        <span
-                          style={{
-                            color: "var(--Secondary_Black, #141514)",
-                            fontSize: "16px",
-                            fontStyle: "normal",
-                            fontWeight: 600,
-                            lineHeight: "118.18%",
-                            letterSpacing: "0.8px",
-                            fontFamily: "Inter, sans-serif",
-                          }}
-                        >
-                          Department
-                        </span>
-                        <Controller
-                          name="department"
-                          control={control}
-                          render={({
-                            field: { onChange, value },
-                            fieldState: { error },
-                          }) => (
-                            <Autocomplete
-                              freeSolo
-                              options={departmentOptions}
-                              getOptionLabel={(option) =>
-                                typeof option === "string"
-                                  ? option
-                                  : option.name || ""
-                              }
-                              value={
-                                departmentOptions.find(
-                                  (dept) => dept.id === value
-                                ) || null
-                              }
-                              onChange={(event, newValue) => {
-                                if (typeof newValue === "string") {
-                                  // For free solo input, set the name as value
-                                  onChange(null); // Reset the value to null since the ID isn't available yet
-                                  setNewDepartment(newValue); // Update state for creating a new department
-                                } else if (newValue && newValue.id) {
-                                  // For selected department, set the ID
-                                  onChange(newValue.id);
-                                  setNewDepartment(""); // Clear new department since it's an existing one
-                                } else {
-                                  onChange(null);
-                                  setNewDepartment("");
-                                }
-                              }}
-                              onInputChange={(event, newInputValue) => {
-                                setNewDepartment(newInputValue); // Update new department input
-                              }}
-                              renderInput={(params) => (
-                                <TextField
-                                  {...params}
-                                  // label="Department"
-                                  required
-                                  margin="normal"
-                                  error={!!error}
-                                  helperText={error ? error.message : null}
-                                  InputProps={{
-                                    style: {
-                                      color: "#000",
-                                      borderRadius: "12px",
-                                      margin: 0,
-                                    },
-                                  }}
-                                  sx={{
-                                    backgroundColor: "#fff",
-                                    borderRadius: "12px",
-                                    margin: 0,
-                                  }}
-                                  variant="outlined"
-                                />
-                              )}
-                            />
-                          )}
-                        />
-                      </Box>
-                    </span>
-                    <Box
-                      sx={{
-                        display: "flex",
-                        alignItems: "center",
-                        justifyContent: "center",
-                        marginTop: 2,
-                      }}
-                    >
-                      <Button
-                        variant="contained"
-                        color="primary"
-                        onClick={handleCreateDepartment}
-                        sx={{
-                          display: "flex",
-                          justifyContent: "center",
-                          alignItems: "center",
-                          height: "52px",
-                          padding: "24px",
-                          gap: "12px",
-                          flexShrink: 0,
-                          alignSelf: "stretch",
-                          borderRadius: "12px",
-                          background: "var(--Secondary_Black, #141514)",
-                          textTransform: "none",
-                          color: "#fff",
-                          ":hover": { backgroundColor: "#fff", color: "black" },
+                  <Box sx={{ display: "flex", gap: 1, alignItems: "flex-end" }}>
+                    <Box sx={{ flex: 1 }}>
+                      <span
+                        style={{
+                          color: "var(--Secondary_Black, #141514)",
+                          fontSize: "16px",
+                          fontStyle: "normal",
+                          fontWeight: 600,
+                          lineHeight: "118.18%",
+                          letterSpacing: "0.8px",
+                          fontFamily: "Inter, sans-serif",
                         }}
                       >
-                        <Typography
-                          sx={{
-                            fontSize: "16px",
-                            fontStyle: "normal",
-                            fontWeight: 600,
-                            lineHeight: "normal",
-                            fontFamily: "Inter, sans-serif",
-                          }}
-                        >
-                          Create
-                        </Typography>
-                      </Button>
+                        Department
+                      </span>
+                      <Controller
+                        name="department"
+                        control={control}
+                        render={({
+                          field: { onChange, value },
+                          fieldState: { error },
+                        }) => (
+                          <Autocomplete
+                            freeSolo
+                            options={departmentOptions}
+                            getOptionLabel={(option) =>
+                              typeof option === "string"
+                                ? option
+                                : option.name || ""
+                            }
+                            value={
+                              departmentOptions.find(
+                                (dept) => dept.id === value
+                              ) || null
+                            }
+                            onChange={(event, newValue) => {
+                              if (typeof newValue === "string") {
+                                onChange(null);
+                                setNewDepartment(newValue);
+                              } else if (newValue && newValue.id) {
+                                onChange(newValue.id);
+                                setNewDepartment("");
+                              } else {
+                                onChange(null);
+                                setNewDepartment("");
+                              }
+                            }}
+                            onInputChange={(event, newInputValue) => {
+                              setNewDepartment(newInputValue);
+                            }}
+                            renderInput={(params) => (
+                              <TextField
+                                {...params}
+                                required
+                                margin="normal"
+                                error={!!error}
+                                helperText={error ? error.message : null}
+                                InputProps={{
+                                  ...params.InputProps,
+                                  style: {
+                                    color: "#000",
+                                    borderRadius: "12px",
+                                    margin: 0,
+                                  },
+                                }}
+                                sx={{
+                                  backgroundColor: "#fff",
+                                  borderRadius: "12px",
+                                  margin: 0,
+                                }}
+                                variant="outlined"
+                              />
+                            )}
+                          />
+                        )}
+                      />
                     </Box>
-                  </span>
-                  <span style={{ fontStyle: "italic", fontSize: "12px" }}>
-                    * Please click on Create button if it is not present in the
-                    list.
-                  </span>
+                    
+                    <Button
+                      variant="contained"
+                      color="primary"
+                      onClick={handleCreateDepartment}
+                      disabled={!newDepartment.trim()}
+                      sx={{
+                        height: "56px",
+                        minWidth: "100px",
+                        borderRadius: "12px",
+                        background: "var(--Secondary_Black, #141514)",
+                        textTransform: "none",
+                        color: "#fff",
+                        ":hover": { backgroundColor: "#333" },
+                        marginBottom: "8px",
+                      }}
+                    >
+                      Create
+                    </Button>
+                  </Box>
+                  <Typography
+                    variant="caption"
+                    sx={{
+                      fontStyle: "italic",
+                      fontSize: "12px",
+                      color: "#666",
+                      mt: 1,
+                    }}
+                  >
+                    * Please click on Create button if the department is not in the list.
+                  </Typography>
                 </>
               ) : (
-                // Class Field for Students
                 <Box sx={{ width: "100%" }}>
+                  <span
+                    style={{
+                      color: "var(--Secondary_Black, #141514)",
+                      fontSize: "16px",
+                      fontStyle: "normal",
+                      fontWeight: 600,
+                      lineHeight: "118.18%",
+                      letterSpacing: "0.8px",
+                      fontFamily: "Inter, sans-serif",
+                    }}
+                  >
+                    Class
+                  </span>
                   <Controller
                     name="subject"
                     control={control}
@@ -812,21 +815,15 @@ const SignupPage = () => {
                       <Autocomplete
                         options={classOptions}
                         getOptionLabel={(option) =>
-                          typeof option === "string"
-                            ? option
-                            : option.name || ""
+                          typeof option === "string" ? option : option.name || ""
                         }
-                        value={
-                          classOptions.find((option) => option.id === value) ||
-                          null
-                        }
+                        value={value || null}
                         onChange={(event, newValue) => {
-                          onChange(newValue ? newValue.id : null);
+                          onChange(newValue);
                         }}
                         renderInput={(params) => (
                           <TextField
                             {...params}
-                            label="Class"
                             required
                             margin="normal"
                             error={!!error}
@@ -836,6 +833,7 @@ const SignupPage = () => {
                               style: { color: "#555" },
                             }}
                             InputProps={{
+                              ...params.InputProps,
                               style: {
                                 color: "#000",
                                 borderRadius: "12px",
@@ -871,14 +869,8 @@ const SignupPage = () => {
               variant="contained"
               disabled={loading}
               sx={{
-                display: "flex",
-                justifyContent: "center",
-                alignItems: "center",
+                mt: 3,
                 height: "52px",
-                padding: "24px",
-                gap: "12px",
-                flexShrink: 0,
-                alignSelf: "stretch",
                 borderRadius: "12px",
                 border: "1px solid var(--Secondary_Black, #141514)",
                 background: "var(--White-Color, #FFF)",
@@ -901,7 +893,7 @@ const SignupPage = () => {
             </Button>
 
             {/* Link to Login */}
-            <Grid container justifyContent="center">
+            <Grid container justifyContent="center" sx={{ mt: 2 }}>
               <Grid item>
                 <Typography variant="body2">
                   Already have an account?{" "}
@@ -913,10 +905,7 @@ const SignupPage = () => {
                   </Link>
                 </Typography>
               </Grid>
-            </Grid>
-          </Box>
-        </Box>
-      </Grid>
+      
       {/* Left Side Background */}
       {!isMobile && (
         <Grid
@@ -926,9 +915,7 @@ const SignupPage = () => {
           md={6}
           sx={{
             display: "inline-flex",
-            // padding: "247px 32px 231px 31px",
             flexDirection: "column",
-            // justifyContent: "flex-end",
             alignItems: "center",
             backgroundColor: "#fff",
           }}
@@ -939,10 +926,6 @@ const SignupPage = () => {
               alignItems: "center",
               gap: "25px",
               backgroundColor: "#fff",
-              // marginTop: "247px",
-              // marginBotton: "231px",
-              // marginLeft: "31px",
-              // maginRight: "32px",
               margin: "auto",
             }}
           >
@@ -994,6 +977,10 @@ const SignupPage = () => {
           </Box>
         </Grid>
       )}
+    </Grid>
+    </Box>
+    </Box>
+    </Grid>
     </Grid>
   );
 };
