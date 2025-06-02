@@ -16,6 +16,7 @@ import { decodeToken } from "react-jwt";
 import PersonalisedRecommendations from "@/components/student/MOL/PersonalisedRecommendations/PersonalisedRecommendations";
 import AudioPlayer from "@/components/AudioPlayer/AudioPlayer";
 import LectureAttachments from "@/components/MOL/LectureAttachment/LectureAttachment";
+import LectureDescription from "@/commonComponents/LectureDescription/LectureDescription";
 
 const LecturePage = ({ params }) => {
   const { id } = params;
@@ -69,6 +70,16 @@ const LecturePage = ({ params }) => {
   const headerMOL = useMemo(
     () => (
       <HeaderMOL lectureData={lectureData} isEdit={false} isShowPic={true} />
+    ),
+    [lectureData]
+  );
+
+  const descriptionMOL = useMemo(
+    () => (
+      <LectureDescription
+        lectureData={lectureData}
+        isShowPic={true}
+      />
     ),
     [lectureData]
   );
@@ -144,6 +155,7 @@ const LecturePage = ({ params }) => {
                 {videoPlayer}
               </Box>
             )}
+            {descriptionMOL}
             {lectureOverview}
             {lectureDetails}
             {personalisedRecommendations}

@@ -236,7 +236,7 @@ const LectureDescription = ({ lectureData, isShowPic = false, loading,videoTimeS
         </Box>
 
         {isShowPic && (
-          <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
+          <Box sx={{ display: "flex", alignItems: "center", gap: 1, marginTop: 1 }}>
             {loading ? (
               <>
                 <Skeleton variant="circular" width={40} height={40} />
@@ -247,8 +247,17 @@ const LectureDescription = ({ lectureData, isShowPic = false, loading,videoTimeS
                 <UserImage
                   profilePic={lectureData?.organizer?.profile_pic}
                   name={lectureData?.organizer?.full_name}
+                  width={40}
+                  height={40}
                 />
-                <Typography>{lectureData?.organizer?.full_name}</Typography>
+                <Typography sx={{
+            color: "#3B3D3B",
+            fontFamily: "Inter",
+            fontSize: "16px",
+            fontStyle: "normal",
+            fontWeight: "700",
+            lineHeight: "normal",
+          }}>{lectureData?.organizer?.full_name}</Typography>
               </>
             )}
           </Box>
