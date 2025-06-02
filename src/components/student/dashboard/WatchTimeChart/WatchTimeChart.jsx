@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Box, Typography, Select, MenuItem } from "@mui/material";
+import { Tooltip as DropdownTooltip, Box, Typography, Select, MenuItem } from "@mui/material";
 import { PieChart, Pie, Cell, Tooltip, Legend } from "recharts";
 import { useThemeContext } from "@/hooks/ThemeContext";
 import { GiSandsOfTime } from "react-icons/gi";
@@ -127,10 +127,13 @@ function WatchTimeChart() {
             }}
           >
             {subjects?.map((subject) => (
-              <MenuItem key={subject.id} value={subject.id}>
-                {subject.name.length > 20
-                  ? `${subject.name.slice(0, 20)}...`
-                  : subject.name}
+              <MenuItem key={subject?.id} value={subject?.id}>
+              <DropdownTooltip key={subject?.id} title={subject?.name}>
+                {subject?.name?.length > 20
+                  ? `${subject?.name?.slice(0, 20)}...`
+                  : subject?.name}
+              </DropdownTooltip>
+                
               </MenuItem>
             ))}
           </Select>

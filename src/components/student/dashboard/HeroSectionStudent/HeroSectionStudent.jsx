@@ -6,6 +6,7 @@ import {
   Typography,
   Avatar,
   IconButton,
+  Tooltip,
 } from "@mui/material";
 import { FaEdit } from "react-icons/fa";
 import { decodeToken } from "react-jwt";
@@ -101,8 +102,8 @@ function HeroSectionStudent() {
               <Image
                 src={`${BASE_URL_MEET}${userDetails?.profile_pic}`}
                 alt="Profile"
-                width={100}
-                height={100}
+                width={42}
+                height={42}
                 style={{ borderRadius: "50%", marginRight: 2 }}
               />
             ) : (
@@ -118,19 +119,42 @@ function HeroSectionStudent() {
             {/* Card Content */}
             <Box sx={{}}>
               {/* Teacher Name */}
-              <Typography
-                sx={{
-                  color: "#fff",
-                  fontFamily: "Inter, sans-serif",
-                  fontSize: "14px",
-                  fontStyle: "normal",
-                  fontWeight: 700,
-                  lineHeight: "14.99px",
-                  alignSelf: "stretch",
-                }}
-              >
-                {capitalizeWords(userDetails?.full_name)}
-              </Typography>
+              {userDetails?.full_name?.length > 10 ? (
+                          <Tooltip title={userDetails?.full_name}>
+                            <Typography
+                              variant="body1"
+                              sx={{
+                                color: "#fff",
+                                fontFamily: "Inter, sans-serif",
+                                fontSize: "14px",
+                                fontStyle: "normal",
+                                fontWeight: 700,
+                                lineHeight: "14.99px",
+                                alignSelf: "stretch",
+                                cursor: "pointer", // Optional: indicate tooltip
+                              }}
+                            >
+                              {userDetails?.full_name?.length > 12
+                                ? `${capitalizeWords(userDetails.full_name.slice(0, 12))}...`
+                                : capitalizeWords(userDetails?.full_name)}
+                            </Typography>
+                          </Tooltip>
+                        ) : (
+                          <Typography
+                            variant="body1"
+                            sx={{
+                              color: "#fff",
+                              fontFamily: "Inter, sans-serif",
+                              fontSize: "14px",
+                              fontStyle: "normal",
+                              fontWeight: 700,
+                              lineHeight: "14.99px",
+                              alignSelf: "stretch",
+                            }}
+                          >
+                            {capitalizeWords(userDetails?.full_name)}
+                          </Typography>
+                        )}
 
               {/* Class and Department */}
               {/* <Typography variant="body2" color={"white"}>

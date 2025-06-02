@@ -407,18 +407,39 @@ const Sidebar = ({ open, setOpen }) => {
                   />
                 </Box>
                 <Box>
-                  <Typography
-                    variant="body1"
-                    sx={{
-                      color: "#282D32",
-                      fontWeight: 700,
-                      fontSize: "16px",
-                      lineHeight: "18.91px",
-                      fontFamily: "Inter, sans-serif",
-                    }}
-                  >
-                    {userDetails?.full_name}
-                  </Typography>
+                  {userDetails?.full_name?.length > 10 ? (
+                    <Tooltip title={userDetails?.full_name}>
+                      <Typography
+                        variant="body1"
+                        sx={{
+                          color: "#282D32",
+                          fontWeight: 700,
+                          fontSize: "16px",
+                          lineHeight: "18.91px",
+                          fontFamily: "Inter, sans-serif",
+                          cursor: "pointer", // Optional: indicate tooltip
+                        }}
+                      >
+                        {userDetails?.full_name?.length > 12
+                          ? `${userDetails.full_name.slice(0, 12)}...`
+                          : userDetails?.full_name}
+                      </Typography>
+                    </Tooltip>
+                  ) : (
+                    <Typography
+                      variant="body1"
+                      sx={{
+                        color: "#282D32",
+                        fontWeight: 700,
+                        fontSize: "16px",
+                        lineHeight: "18.91px",
+                        fontFamily: "Inter, sans-serif",
+                      }}
+                    >
+                      {userDetails?.full_name}
+                    </Typography>
+                  )}
+
                   <Typography
                     variant="body1"
                     sx={{
@@ -509,55 +530,59 @@ const Sidebar = ({ open, setOpen }) => {
                       </Typography>
                     </Box>
                   </Box>
-                 {userDetails?.role!=="ADMIN"? <Box
-                    sx={{
-                      display: "flex",
-                      flexDirection: "column",
-                      gap: "7px",
-                    }}
-                  >
-                    <Button
-                      variant="outlined"
-                      color="primary"
-                      onClick={() => {
-                        if (userDetails?.role === "TEACHER") {
-                          console.log("Role:", userDetails?.role); // debug log
-                          handleClose(); // close menu if needed
-                          router.push("/teacher/myprofile");
-                        } else if(userDetails?.role === "STUDENT") {
-                          console.log("Role:", userDetails?.role); // debug log
-                          handleClose(); // close menu if needed
-                          router.push("/student/myprofile");
-                        }
-                      }}
+                  {userDetails?.role !== "ADMIN" ? (
+                    <Box
                       sx={{
-                        mt: 2,
-                        display: "inline-flex",
-                        padding: "12px 32px",
-                        justifyContent: "center",
-                        alignItems: "center",
-                        gap: "8px",
-                        textTransform: "none",
-                        borderRadius: "8px",
-                        background: "#141514",
-                        color: "#FFF",
-                        textAlign: "center",
-                        fontFeatureSettings: "'liga' off, 'clig' off",
-                        fontFamily: "Aptos",
-                        fontSize: "16px",
-                        fontStyle: "normal",
-                        fontWeight: "700",
-                        lineHeight: "24px",
-                        "&:hover": {
-                          border: "1px solid #141514",
-                          background: "#E5E5E5",
-                          color: "#141514",
-                        },
+                        display: "flex",
+                        flexDirection: "column",
+                        gap: "7px",
                       }}
                     >
-                      Setup Profile
-                    </Button>
-                  </Box>:""}
+                      <Button
+                        variant="outlined"
+                        color="primary"
+                        onClick={() => {
+                          if (userDetails?.role === "TEACHER") {
+                            console.log("Role:", userDetails?.role); // debug log
+                            handleClose(); // close menu if needed
+                            router.push("/teacher/myprofile");
+                          } else if (userDetails?.role === "STUDENT") {
+                            console.log("Role:", userDetails?.role); // debug log
+                            handleClose(); // close menu if needed
+                            router.push("/student/myprofile");
+                          }
+                        }}
+                        sx={{
+                          mt: 2,
+                          display: "inline-flex",
+                          padding: "12px 32px",
+                          justifyContent: "center",
+                          alignItems: "center",
+                          gap: "8px",
+                          textTransform: "none",
+                          borderRadius: "8px",
+                          background: "#141514",
+                          color: "#FFF",
+                          textAlign: "center",
+                          fontFeatureSettings: "'liga' off, 'clig' off",
+                          fontFamily: "Aptos",
+                          fontSize: "16px",
+                          fontStyle: "normal",
+                          fontWeight: "700",
+                          lineHeight: "24px",
+                          "&:hover": {
+                            border: "1px solid #141514",
+                            background: "#E5E5E5",
+                            color: "#141514",
+                          },
+                        }}
+                      >
+                        Setup Profile
+                      </Button>
+                    </Box>
+                  ) : (
+                    ""
+                  )}
                   <Box>
                     <MenuItem
                       sx={{

@@ -34,7 +34,13 @@ import AssignmentTextFormat from "@/commonComponents/TextWithMath/AssignmentText
 
 const userDetails = decodeToken(Cookies.get("ACCESS_TOKEN"));
 
-const LectureAssignment = ({ id, isDarkMode, class_ID, isEdit, isAdmin=false }) => {
+const LectureAssignment = ({
+  id,
+  isDarkMode,
+  class_ID,
+  isEdit,
+  isAdmin = false,
+}) => {
   const [assignments, setAssignments] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -339,21 +345,23 @@ const LectureAssignment = ({ id, isDarkMode, class_ID, isEdit, isAdmin=false }) 
                 >
                   {lectureTitle}
                 </Typography>
-             {!isAdmin &&   <Button
-                  variant="contained"
-                  sx={{
-                    fontFamily: "Inter",
-                    fontSize: "14px",
-                    backgroundColor: "#16AA54",
-                    textTransform: "none",
-                    "&:hover": {
-                      backgroundColor: "#7ecf73", // customize these shades as needed
-                    },
-                  }}
-                  onClick={() => setOpenDialog(true)}
-                >
-                  Create
-                </Button>}
+                {!isAdmin && (
+                  <Button
+                    variant="contained"
+                    sx={{
+                      fontFamily: "Inter",
+                      fontSize: "14px",
+                      backgroundColor: "#16AA54",
+                      textTransform: "none",
+                      "&:hover": {
+                        backgroundColor: "#7ecf73", // customize these shades as needed
+                      },
+                    }}
+                    onClick={() => setOpenDialog(true)}
+                  >
+                    Create
+                  </Button>
+                )}
               </Box>
               {assignments?.map((assignment, index) =>
                 editedAssignmentId === assignment.id ? (
@@ -445,47 +453,55 @@ const LectureAssignment = ({ id, isDarkMode, class_ID, isEdit, isAdmin=false }) 
                             alignItems: "center",
                           }}
                         >
-                         {!isAdmin && <Box
-                            sx={{
-                              display: "flex",
-                              alignItems: "center",
-                              justifyContent: "space-between",
-                              mt: "auto",
-                            }}
-                          >
-                            <span
-                              style={{
-                                marginRight: 2,
-                                fontSize: "14px",
-                                fontFamily: "Inter",
+                          {!isAdmin && (
+                            <Box
+                              sx={{
+                                display: "flex",
+                                alignItems: "center",
+                                justifyContent: "space-between",
+                                mt: "auto",
                               }}
                             >
-                              Marks:
-                            </span>
-                            <TextField
-                              type="number"
-                              InputLabelProps={{
-                                style: { color: isDarkMode ? "#d7e4fc" : "" },
-                              }}
-                              InputProps={{
-                                sx: {
-                                  backdropFilter: "blur(10px)",
-                                  backgroundColor: "rgba(255, 255, 255, 0.5)",
-                                  "& .MuiOutlinedInput-notchedOutline": {},
-                                },
-                              }}
-                              value={assignment.assignment_mark}
-                              onChange={(e) =>
-                                handleMarkChange(
-                                  assignment.id,
-                                  Number(e.target.value)
-                                )
-                              }
-                              variant="outlined"
-                              size="small"
-                              sx={{ width: 80, mr: 1 }}
-                            />
-                          </Box>}
+                              <span
+                                style={{
+                                  marginRight: 2,
+                                  fontSize: "14px",
+                                  fontFamily: "Inter",
+                                }}
+                              >
+                                Marks:
+                              </span>
+                              <TextField
+                                type="number"
+                                inputProps={{ min: 0 }} // Prevent negative numbers
+                                InputLabelProps={{
+                                  style: { color: isDarkMode ? "#d7e4fc" : "" },
+                                }}
+                                onKeyDown={(e) => {
+                                  if (e.key === "-" || e.key === "e") {
+                                    e.preventDefault(); // Block negative sign and exponent
+                                  }
+                                }}
+                                InputProps={{
+                                  sx: {
+                                    backdropFilter: "blur(10px)",
+                                    backgroundColor: "rgba(255, 255, 255, 0.5)",
+                                    "& .MuiOutlinedInput-notchedOutline": {},
+                                  },
+                                }}
+                                value={assignment.assignment_mark}
+                                onChange={(e) => {
+                                  const value = Number(e.target.value);
+                                  if (value >= 0) {
+                                    handleMarkChange(assignment.id, value);
+                                  }
+                                }}
+                                variant="outlined"
+                                size="small"
+                                sx={{ width: 80, mr: 1 }}
+                              />
+                            </Box>
+                          )}
                           <Box sx={{ display: "flex", gap: 1 }}>
                             {assignment.assignment_attachment && (
                               <Button
@@ -511,28 +527,37 @@ const LectureAssignment = ({ id, isDarkMode, class_ID, isEdit, isAdmin=false }) 
                                 Download
                               </Button>
                             )}
-                     
-                            {!isAdmin && assignment?.assignment_mark !== undefined && assignment?.assignment_mark !== null && assignment?.assignment_mark !== 0 && <Button
-                              variant="contained"
-                              onClick={() => handleAssignAssignment(assignment)}
-                              sx={{
-                                // backgroundColor: assignment.is_assigned
-                                //   ? "green"
-                                //   : "#89CFF0",
-                                backgroundColor: assignment?.is_assigned
-                                  ? "#92d689"
-                                  : "#93f089",
-                                color: "#fff",
-                                textTransform: "none",
-                                "&:hover": {
-                                  backgroundColor: assignment?.is_assigned
-                                    ? "#7ecf73"
-                                    : "#7be676", // customize these shades as needed
-                                },
-                              }}
-                            >
-                              {assignment.is_assigned ? "Assigned" : "Assign"}
-                            </Button>}
+
+                            {!isAdmin &&
+                              assignment?.assignment_mark !== undefined &&
+                              assignment?.assignment_mark !== null &&
+                              assignment?.assignment_mark !== 0 && (
+                                <Button
+                                  variant="contained"
+                                  onClick={() =>
+                                    handleAssignAssignment(assignment)
+                                  }
+                                  sx={{
+                                    // backgroundColor: assignment.is_assigned
+                                    //   ? "green"
+                                    //   : "#89CFF0",
+                                    backgroundColor: assignment?.is_assigned
+                                      ? "#92d689"
+                                      : "#93f089",
+                                    color: "#fff",
+                                    textTransform: "none",
+                                    "&:hover": {
+                                      backgroundColor: assignment?.is_assigned
+                                        ? "#7ecf73"
+                                        : "#7be676", // customize these shades as needed
+                                    },
+                                  }}
+                                >
+                                  {assignment.is_assigned
+                                    ? "Assigned"
+                                    : "Assign"}
+                                </Button>
+                              )}
                           </Box>
                           <Box sx={{ display: "flex", alignItems: "center" }}>
                             <FaEdit
