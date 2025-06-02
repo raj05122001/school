@@ -247,7 +247,7 @@
 
 import React, { useEffect, useState } from "react";
 import { Box, Button, Typography } from "@mui/material";
-import { getClassByCourse, getSubjectByClass } from "@/api/apiHelper";
+import { getClassByCourse, getMySubject, getSubjectByClass } from "@/api/apiHelper";
 import { useRouter, usePathname } from "next/navigation";
 
 const StudentFilters = ({
@@ -265,8 +265,8 @@ const StudentFilters = ({
 
   useEffect(() => {
     const fetchData = async () => {
-      const subjectResponse = await getSubjectByClass("", "");
-      setSubjectList(subjectResponse?.data?.data || []);
+      const subjectResponse = await getMySubject("", "");
+      setSubjectList(subjectResponse?.data || []);
     };
     fetchData();
   }, []);

@@ -160,119 +160,127 @@ const AssignmentTable = ({ data }) => {
             </TableRow>
           </TableHead>
           <TableBody sx={{ borderBottom: "none" }}>
-            {data?.map((lecture,index) => (
-              <TableRow
-                key={index}
-                hover
-                sx={{
-                  cursor: "pointer",
-                  backgroundColor: isDarkMode ? "#1e1e1e" : "#fff",
-                }}
-              >
-                <TableCell>
-                  <CalendarIconCustom date={lecture?.schedule_date} />
-                </TableCell>
-                <TableCell>
-                  <Tooltip
-                    title={`Title: ${lecture?.title || ""}`}
-                    arrow
-                    placement="top-start"
-                  >
-                    <Typography
-                      variant="h6"
-                      sx={{
-                        fontWeight: 700,
-                        color: "#3B3D3B",
-                        fontFamily: "Inter, sans-serif",
-                        fontSize: "14px",
-                        fontStyle: "normal",
-                        lineHeight: "normal",
-                        width: "105px",
-                      }}
-                      noWrap
+            {data?.length > 0 ? (
+              data?.map((lecture, index) => (
+                <TableRow
+                  key={index}
+                  hover
+                  sx={{
+                    cursor: "pointer",
+                    backgroundColor: isDarkMode ? "#1e1e1e" : "#fff",
+                  }}
+                >
+                  <TableCell>
+                    <CalendarIconCustom date={lecture?.schedule_date} />
+                  </TableCell>
+                  <TableCell>
+                    <Tooltip
+                      title={`Title: ${lecture?.title || ""}`}
+                      arrow
+                      placement="top-start"
                     >
-                      {lecture?.title?.length > 24
-                        ? `${lecture?.title?.slice(0, 24)}...`
-                        : lecture?.title}
-                    </Typography>
-                  </Tooltip>
-                </TableCell>
-                <TableCell>
-                  <Tooltip
-                    title={`Chapter: ${lecture?.chapter?.chapter || ""}`}
-                    arrow
-                    placement="top-start"
-                  >
-                    <span
-                      style={{
-                        fontWeight: 700,
-                        color: "#3B3D3B",
-                        fontFamily: "Inter, sans-serif",
-                        fontSize: "14px",
-                        fontStyle: "normal",
-                        lineHeight: "normal",
-                        width: "131px",
-                        height: "18px",
-                        flexShrink: 0,
-                      }}
+                      <Typography
+                        variant="h6"
+                        sx={{
+                          fontWeight: 700,
+                          color: "#3B3D3B",
+                          fontFamily: "Inter, sans-serif",
+                          fontSize: "14px",
+                          fontStyle: "normal",
+                          lineHeight: "normal",
+                          width: "105px",
+                        }}
+                        noWrap
+                      >
+                        {lecture?.title?.length > 24
+                          ? `${lecture?.title?.slice(0, 24)}...`
+                          : lecture?.title}
+                      </Typography>
+                    </Tooltip>
+                  </TableCell>
+                  <TableCell>
+                    <Tooltip
+                      title={`Chapter: ${lecture?.chapter?.chapter || ""}`}
+                      arrow
+                      placement="top-start"
                     >
-                      {lecture?.chapter?.chapter}
-                    </span>
-                  </Tooltip>
-                </TableCell>
-                <TableCell>
-                  <Tooltip
-                    title={`Class: ${lecture?.lecture_class?.name || ""}`}
-                    arrow
-                    placement="top-start"
-                  >
-                    <span
-                      style={{
-                        fontWeight: 700,
-                        color: "#3B3D3B",
-                        fontFamily: "Inter, sans-serif",
-                        fontSize: "14px",
-                        fontStyle: "normal",
-                        lineHeight: "normal",
-                        width: "105px",
-                      }}
+                      <span
+                        style={{
+                          fontWeight: 700,
+                          color: "#3B3D3B",
+                          fontFamily: "Inter, sans-serif",
+                          fontSize: "14px",
+                          fontStyle: "normal",
+                          lineHeight: "normal",
+                          width: "131px",
+                          height: "18px",
+                          flexShrink: 0,
+                        }}
+                      >
+                        {lecture?.chapter?.chapter}
+                      </span>
+                    </Tooltip>
+                  </TableCell>
+                  <TableCell>
+                    <Tooltip
+                      title={`Class: ${lecture?.lecture_class?.name || ""}`}
+                      arrow
+                      placement="top-start"
                     >
-                      {lecture?.lecture_class?.name || ""}
-                    </span>
-                  </Tooltip>
-                </TableCell>
-                <TableCell>
-                  <Tooltip
-                    title={`Subject: ${lecture?.chapter?.subject?.name}`}
-                    arrow
-                    placement="top-start"
-                  >
-                    <Typography
-                      variant="body2"
-                      sx={{
-                        fontWeight: 700,
-                        color: "#3B3D3B",
-                        fontFamily: "Inter, sans-serif",
-                        fontSize: "14px",
-                        fontStyle: "normal",
-                        lineHeight: "normal",
-                        width: "105px",
-                      }}
+                      <span
+                        style={{
+                          fontWeight: 700,
+                          color: "#3B3D3B",
+                          fontFamily: "Inter, sans-serif",
+                          fontSize: "14px",
+                          fontStyle: "normal",
+                          lineHeight: "normal",
+                          width: "105px",
+                        }}
+                      >
+                        {lecture?.lecture_class?.name || ""}
+                      </span>
+                    </Tooltip>
+                  </TableCell>
+                  <TableCell>
+                    <Tooltip
+                      title={`Subject: ${lecture?.chapter?.subject?.name}`}
+                      arrow
+                      placement="top-start"
                     >
-                      {lecture?.chapter?.subject?.name}
-                    </Typography>
-                  </Tooltip>
-                </TableCell>
-                <TableCell>{lecture?.checked_assignments}</TableCell>
-                <TableCell>{lecture?.total_submitted_assignments}</TableCell>
-                <TableCell onClick={() => handleChangeRoute(lecture?.id)}>
-                  <img
-                    src="/arrow-square-right.png"
-                    style={{ width: "24px", height: "24px" }}
-                  />
+                      <Typography
+                        variant="body2"
+                        sx={{
+                          fontWeight: 700,
+                          color: "#3B3D3B",
+                          fontFamily: "Inter, sans-serif",
+                          fontSize: "14px",
+                          fontStyle: "normal",
+                          lineHeight: "normal",
+                          width: "105px",
+                        }}
+                      >
+                        {lecture?.chapter?.subject?.name}
+                      </Typography>
+                    </Tooltip>
+                  </TableCell>
+                  <TableCell>{lecture?.checked_assignments}</TableCell>
+                  <TableCell>{lecture?.total_submitted_assignments}</TableCell>
+                  <TableCell onClick={() => handleChangeRoute(lecture?.id)}>
+                    <img
+                      src="/arrow-square-right.png"
+                      style={{ width: "24px", height: "24px" }}
+                    />
+                  </TableCell>
+                </TableRow>
+              ))
+            ) : (
+              <TableRow>
+                <TableCell colSpan={7} sx={{ textAlign: "center" }}>
+                  No Data Available
                 </TableCell>
               </TableRow>
-            ))}
+            )}
           </TableBody>
         </Table>
       </TableContainer>

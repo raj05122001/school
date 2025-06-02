@@ -448,7 +448,7 @@ export default function Page({ suggestionInput, setIsOpenChatBot }) {
                 <Box
                   sx={{
                     width: "100%",
-                    height: "100%",
+                    height: "92%",
                     overflowY: "auto", // Enable scrolling
                     bgcolor: "grey.100",
                     p: 2,
@@ -527,7 +527,7 @@ export default function Page({ suggestionInput, setIsOpenChatBot }) {
                       overflowY: "auto",
                       padding: "16px",
                       width: chatHistory.length > 0 ? "99%" : "100%",
-                      height: "100%",
+                      height: "80%",
                     }}
                     ref={graphRef}
                   >
