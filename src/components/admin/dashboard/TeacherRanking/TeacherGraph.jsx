@@ -13,7 +13,7 @@ import {
 function TeacherGraph({ teacherID, countData, watchData }) {
   return (
     <Box>
-      <Box display={"flex"} gap={2}>
+      <Box display={"flex"} flexDirection={"column"} gap={2}>
         {/* Line Chart for Lecture Completion Data */}
         {teacherID && countData?.length > 0 && (
           <Box

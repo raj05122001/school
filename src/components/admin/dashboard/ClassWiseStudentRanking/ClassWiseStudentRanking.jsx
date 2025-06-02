@@ -149,8 +149,7 @@ const ClassWiseStudentRanking = ({ selectedOptions }) => {
         p: 3,
         display: "flex",
         flexDirection: "column",
-        // height: "100%",
-        marginTop:"16px",
+        height: "100%",
         backgroundColor:"#fff",
         borderRadius: "20px",
       }}

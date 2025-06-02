@@ -39,46 +39,8 @@ const Page = () => {
   useEffect(() => {
     fetchClassOptions();
     fetchCountData();
-    fetchTopTeachers();
   }, []);
 
-  const fetchTopTeachers = async () => {
-    setLoading(true);
-    try {
-      const response = await getTopTeachers();
-      if (response?.success) {
-        setTopTeachers(response?.data);
-        const topTeachersArray = Object.values(response?.data);
-        handleTeacherSelect(topTeachersArray?.[0]?.["Organizer ID"]);
-      }
-    } catch (error) {
-      console.error("Error fetching top teachers", error);
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  const handleTeacherSelect = async (id) => {
-    setTeacherID(id);
-
-    setLoading2(true);
-    setLoading3(true);
-
-    try {
-      const [lectureResp, watchResp] = await Promise.all([
-        getTeacherLectureCompletion(id),
-        getWatchtimeComparison(id),
-      ]);
-
-      if (lectureResp?.success) setCountData(lectureResp?.data);
-      if (watchResp?.success) setWatchData(watchResp?.data);
-    } catch (error) {
-      console.error("Error fetching teacher data", error);
-    } finally {
-      setLoading2(false);
-      setLoading3(false);
-    }
-  };
 
   const fetchClassOptions = async () => {
     try {
@@ -164,22 +126,12 @@ const Page = () => {
         
       </Grid>
       <Box sx={{ display: "flex", gap: "6px" }}>
-        <Box sx={{ flex: "0 0 60%" }}>
+        <Box >
           <TeacherRanking
-            topTeachers={topTeachers}
-            loading={loading}
-            onTeacherSelect={handleTeacherSelect}
           />
         </Box>
-        <Box sx={{ flex: "0 0 40%" }}>{classWiseStudentRanking}</Box>
       </Box>
-      <Box>
-        <TeacherGraph
-          teacherID={teacherID}
-          countData={countData}
-          watchData={watchData}
-        />
-      </Box>
+
 
       {/* <Box
         sx={{
@@ -242,9 +194,10 @@ const Page = () => {
           />
         </Box>
       </Box> */}
-      <Box sx={{ display: "flex", gap: "4px" }}>
-        <Box sx={{ flex: "0 0 40%" }}>{classAssignment}</Box>
-        <Box sx={{ flex: "0 0 60%" }}>{studentAssignment}</Box>
+      <Box sx={{ flex: "0 0 60%" ,mt:4}}>{studentAssignment}</Box>
+      <Box sx={{ display: "flex", gap: "8px",mt:4 }}>
+        <Box sx={{ flex: "0 0 50%" }}>{classAssignment}</Box>
+        <Box sx={{ flex: "0 0 50%" }}>{classWiseStudentRanking}</Box>
       </Box>
     </Box>
   );

@@ -214,7 +214,7 @@ const ClassAssignment = () => {
             borderRadius: "20px",
             background: "#FFF",
             width: "100%",
-            // height:"100%"
+            height:"100%"
           }}
         >
           <Box
