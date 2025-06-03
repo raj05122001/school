@@ -124,6 +124,13 @@ const EditDetailsPage = () => {
         userDetails?.teacher_id,
         updateData
       );
+
+      console.log("response : ",response?.data?.data?.new_token)
+      const accessToken = response?.data?.data?.new_token?.access
+      const refreshToken = response?.data?.data?.new_token?.refresh
+      console.log("refreshToken : ",refreshToken,", accessToken : ",accessToken)
+      Cookies.set("ACCESS_TOKEN", accessToken, { expires: 7 }); // Store access token in cookies
+      Cookies.set("REFRESH_TOKEN", refreshToken, { expires: 30 }); // Store refresh token in cookies
       toast.success("Details updated successfully.");
     } catch (error) {
       console.error("Update error:", error);

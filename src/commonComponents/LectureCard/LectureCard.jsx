@@ -393,6 +393,11 @@ export function BasicModal({ open, setOpen, id, getAllLecture = () => {} }) {
       setError("No file selected. Please choose a Files to upload.");
       return;
     }
+     if (files.length>5) {
+      setError("You can upload a maximum of 5 files.");
+      return;
+    }
+    
     setIsLoading(true);
     try {
       setLoading(true);
@@ -401,7 +406,8 @@ export function BasicModal({ open, setOpen, id, getAllLecture = () => {} }) {
       files.forEach((file) => {
         formData.append("pdf", file);
       });
-      await uploadS3Video(id, formData);
+      const response = await uploadS3Video(id, formData);
+      console.log("response : ",response)
       toast.success("Lecture has been uploaded");
       resetStates();
       getAllLecture();
