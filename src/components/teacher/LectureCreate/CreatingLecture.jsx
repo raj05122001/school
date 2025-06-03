@@ -285,10 +285,10 @@ const CreatingLecture = ({
     e.preventDefault();
     // Validation logic
     const hasError = {
-      class: !selectedClass && !lecture?.lecture_class,
-      subject: !lectureSubject && !lecture?.subject,
-      chapter: !lectureChapter && !lecture?.chapter,
-      topic: !lectureTopics && !lecture?.topics,
+      class: !selectedClass && !selectedClassName && !lecture?.lecture_class,
+      subject: !lectureSubject && !subjectName && !lecture?.subject,
+      chapter: !lectureChapter && !chapterName && !lecture?.chapter,
+      topic: !lectureTopics && !topicsName && !lecture?.topics,
     };
 
     const hasAnyError = Object.values(hasError).some(Boolean);
@@ -463,20 +463,19 @@ const CreatingLecture = ({
         </Box>
         {isEditMode && lecture?.id && (
           <Tooltip title="Delete lecture" placement="top" arrow>
-          <Box
-            sx={{
-              position: "absolute",
-              right: "16px", // Align the delete button to the right
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "flex-end",
-              cursor: "pointer",
-              flex: 1,
-            }}
-          >
-            
+            <Box
+              sx={{
+                position: "absolute",
+                right: "16px", // Align the delete button to the right
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "flex-end",
+                cursor: "pointer",
+                flex: 1,
+              }}
+            >
               <MdDelete size={20} onClick={() => onDeleteLecture()} />
-          </Box>
+            </Box>
           </Tooltip>
         )}
         <Button onClick={handleClose} color="primary" sx={{}}>
