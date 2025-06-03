@@ -1,5 +1,5 @@
 import React, { useRef, useMemo, useCallback } from 'react';
-import JoditEditor from 'jodit-react';
+import JoditEditor, { Jodit } from 'jodit-react';
 
 const TextEditor = ({ text, onChange }) => {
   const editor = useRef(null);
@@ -30,6 +30,11 @@ const TextEditor = ({ text, onChange }) => {
     removeButtons: ['file', 'video'],
     defaultFont: 'Arial',
     defaultFontSizePoints: '14',
+    controls: {
+    fontsize: {
+      list: Jodit.atom(['8px','10px', '12px', '14px', '16px', '18px', '20px', '24px', '36px','40px'])
+    }
+  },
     style: {
       fontFamily: 'Arial',
       color: '#333333',

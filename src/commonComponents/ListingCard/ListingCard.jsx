@@ -171,7 +171,7 @@ const ListingCard = ({ data, onClick }) => {
                   gutterBottom
                   sx={{ color: isDarkMode ? primaryColor : "#555", fontFamily: "Inter, sans-serif",fontSize:"13px", fontWeight:500,m:0 }}
                 >
-                  {dayjs(data?.schedule_date).fromNow()}
+                  {dayjs(`${data?.schedule_date} ${data?.schedule_time}`).fromNow()}
                 </Typography>
               </Box>
             </Grid>
