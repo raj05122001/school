@@ -20,7 +20,7 @@ const LectureDetails = ({
   marksData = {},
   isStudent = false,
   setMarksData,
-  isAdmin=false
+  isAdmin = false,
 }) => {
   const { isDarkMode } = useThemeContext();
   const [value, setValue] = useState(0);
@@ -100,20 +100,23 @@ const LectureDetails = ({
     <Box
       sx={{
         alignSelf: "stretch",
-        borderRadius: "0px 0px 16px 16px",
-        background: "#fff",
         borderRadius: "16px",
+        background: "#fff",
+        width: "100%",
       }}
     >
       <Typography
         sx={{
           color: "#3B3D3B",
           fontFamily: "Inter",
-          fontSize: "20px",
+          fontSize: { xs: "18px", md: "20px" },
           fontStyle: "normal",
           fontWeight: "700",
           lineHeight: "normal",
-          padding: "21px 0px 6px 20px",
+          padding: {
+            xs: "16px 16px 6px 16px",
+            md: "21px 20px 6px 20px",
+          },
         }}
       >
         Lecture Details
@@ -141,27 +144,31 @@ const LectureDetails = ({
         onChange={handleChange}
         aria-label="lecture overview tabs"
         indicatorColor="none"
+        variant="scrollable"
+        scrollButtons="auto"
         sx={{
+          width: "100%",
           ".MuiTabs-flexContainer": {
-            gap: 2,
-
-            padding: "8px 496px 8px 20px",
-            // borderRadius: "12px",
+            gap: { xs: 1, md: 2 },
             borderTopLeftRadius: "12px",
             borderTopRightRadius: "12px",
             display: "flex",
             alignItems: "center",
             borderBottom: "0.5px solid var(--Stroke-Color-1, #C1C1C1)",
           },
+          ".MuiTabs-scroller": {
+            overflow: "auto !important",
+          },
           ".MuiTab-root": {
             color: "#3B3D3B",
-            padding: "10px 20px",
+            padding: { xs: "8px 12px", md: "10px 20px" },
             minHeight: 0,
             marginTop: "8px",
             textAlign: "center",
-            fontSize: "16px",
+            fontSize: { xs: "14px", md: "16px" },
             fontFamily: "Aptos",
             textTransform: "none",
+            minWidth: { xs: "auto", md: "120px" },
             "&:hover": {
               backgroundColor: "#e0e0e0",
               boxShadow: "0px 2px 8px rgba(0, 0, 0, 0.1)",
@@ -184,18 +191,24 @@ const LectureDetails = ({
         <Tab label="Reference" />
       </Tabs>
 
-      {/* Render tab content conditionally based on selected tab */}
-      {value === 0 && memoizedLectureNotes}
-      {value === 1 &&
-        (userDetails?.role === "STUDENT"
-          ? memoizedStudentMCQ
-          : memoizedLectureMCQ)}
-      {value === 2 && memoizedLectureQuestions}
-      {value === 3 &&
-        (userDetails?.role === "STUDENT"
-          ? memoizedStudentMOLAssignment
-          : memoizedLectureAssignment)}
-      {value === 4 && memoizedLectureReferrence}
+      {/* Tab content with responsive padding */}
+      <Box
+        sx={{
+          width: "100%",
+        }}
+      >
+        {value === 0 && memoizedLectureNotes}
+        {value === 1 &&
+          (userDetails?.role === "STUDENT"
+            ? memoizedStudentMCQ
+            : memoizedLectureMCQ)}
+        {value === 2 && memoizedLectureQuestions}
+        {value === 3 &&
+          (userDetails?.role === "STUDENT"
+            ? memoizedStudentMOLAssignment
+            : memoizedLectureAssignment)}
+        {value === 4 && memoizedLectureReferrence}
+      </Box>
     </Box>
   );
 };
