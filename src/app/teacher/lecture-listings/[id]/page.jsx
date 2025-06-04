@@ -31,7 +31,7 @@ const LecturePage = ({ params }) => {
   const [lectureData, setLectureData] = useState({});
   const theme = useTheme(); // Access theme to apply dynamic styling
   const [loading, setLoading] = useState(true);
-  const [videoTimeStamp,setVideoTimeStamp]=useState(0)
+  const [videoTimeStamp, setVideoTimeStamp] = useState(0);
 
   useEffect(() => {
     if (id) {
@@ -55,13 +55,10 @@ const LecturePage = ({ params }) => {
   };
 
   const handleReleased = async () => {
-    
     try {
       await releasedLecture(id, { is_released: true });
       getMeetingByID();
-      toast.success(
-        "Lecture has been published."
-      );
+      toast.success("Lecture has been published.");
     } catch (error) {
       console.error(error);
       toast.error("Failed to update lecture status. Please try again.");
@@ -70,7 +67,16 @@ const LecturePage = ({ params }) => {
 
   const classID = lectureData?.lecture_class?.id;
 
-  const videoPlayer = useMemo(() => <VideoPlayer id={id} duration={lectureData?.duration} setVideoTimeStamp={setVideoTimeStamp} />, [id,lectureData?.duration]);
+  const videoPlayer = useMemo(
+    () => (
+      <VideoPlayer
+        id={id}
+        duration={lectureData?.duration}
+        setVideoTimeStamp={setVideoTimeStamp}
+      />
+    ),
+    [id, lectureData?.duration]
+  );
   const headerMOL = useMemo(
     () => (
       <HeaderMOL
@@ -85,15 +91,16 @@ const LecturePage = ({ params }) => {
   );
 
   const descriptionMOL = useMemo(
-    ()=>(
+    () => (
       <LectureDescription
         lectureData={lectureData}
         isShowPic={false}
         loading={loading}
         videoTimeStamp={videoTimeStamp}
-      />), [lectureData,videoTimeStamp]
-    
-  )
+      />
+    ),
+    [lectureData, videoTimeStamp]
+  );
   const lectureOverview = useMemo(
     () => <LectureOverview lectureId={id} isEdit={true} />,
     [id]
@@ -127,23 +134,33 @@ const LecturePage = ({ params }) => {
         gap: 2,
       }}
     >
-      <Box sx={{marginBottom:"4px", paddingBottom:"4px", height:"80%"}}>
+      <Box sx={{ marginBottom: "4px", paddingBottom: "4px", height: "80%" }}>
         {headerMOL}
-      </Box>  
-
+      </Box>
 
       <Grid container spacing={2}>
         {/* Main Content */}
-        <Grid item xs={12} md={8.2} lg={8.2}>
-          <Box sx={{ display: "flex", flexDirection: "column", gap: 2 }}>
+        <Grid item xs={12} sm={12} md={12} lg={9} xl={9}>
+          <Box
+            sx={{
+              display: "flex",
+              flexDirection: "column",
+              gap: 2,
+              height: "100%",
+            }}
+          >
             {lectureData?.video_src === "PDF" ? (
-              <AudioPlayer audio={`${process.env.NEXT_PUBLIC_URL}${lectureData?.audio}`} id={id} duration={lectureData?.duration}/>
+              <AudioPlayer
+                audio={`${process.env.NEXT_PUBLIC_URL}${lectureData?.audio}`}
+                id={id}
+                duration={lectureData?.duration}
+              />
             ) : (
               <Box sx={{ maxHeight: "500px", width: "100%", height: 500 }}>
                 {videoPlayer}
               </Box>
             )}
-            {descriptionMOL}            
+            {descriptionMOL}
             {lectureOverview}
             {lectureDetails}
             {/* {articles} */}
@@ -151,13 +168,31 @@ const LecturePage = ({ params }) => {
         </Grid>
 
         {/* Sidebar */}
-        <Grid item xs={12} md={3.8} lg={3.8}>
-          <Box sx={{ display: "flex", flexDirection: "column", gap: 2 }}>
-            {lectureAnalytics}
-            {lectureAttachment}
-            {ratingSection}
-            {commentSection}
-          </Box>
+        <Grid item xs={12} sm={12} md={12} lg={3} xl={3}>
+          {[
+            [lectureAnalytics, lectureAttachment],
+            [ratingSection, commentSection],
+          ].map((section, index) => (
+            <Box
+              key={index}
+              sx={{
+                display: "flex",
+                flexDirection: { xs: "row", lg: "column" },
+                gap: 2,
+                width: "100%",
+                mb: index === 0 ? 2 : 0, 
+                mt: { xs: index === 1 ? 2 : 0, md: 0 },
+                overflowX: { xs: "auto", lg: "visible" },
+                "& > *": {
+                  flex: { xs: "1 1 0", lg: "none" },
+                  width: { xs: "calc(50% - 1rem)", lg: "100%" },
+                  minWidth: { xs: "150px", lg: "auto" },
+                },
+              }}
+            >
+              {section}
+            </Box>
+          ))}
         </Grid>
       </Grid>
     </Box>
