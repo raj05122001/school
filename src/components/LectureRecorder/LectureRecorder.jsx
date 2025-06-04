@@ -177,7 +177,7 @@ const LectureRecorder = ({ open, closeDrawer, recordingData }) => {
        console.log("bucketName : ",bucketName?.data?.bucket_name)
 
         const response = await axios.post(
-            'http://43.204.143.10/merge-process-video',
+            'https://vidya-s3.ultimeet.io/merge-process-video',
             {
               s3_file_name: `videos/${recordingData.id}.mp4`,
               s3_bucket_name: bucketName?.data?.bucket_name,
