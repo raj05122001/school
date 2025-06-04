@@ -657,3 +657,8 @@ export const changeProfilePassword = async (userID, formData) => {
   const apiInstance = new apiServices(axiosAPIInstance);
   return await apiInstance.changeProfilePassword(userID, formData);
 };
+
+export const getBucketName = async () => {
+  const apiInstance = new apiServices(axiosAPIInstance);
+  return await apiInstance.getBucketName();
+};

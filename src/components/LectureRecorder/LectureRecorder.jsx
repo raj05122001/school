@@ -16,6 +16,7 @@ import {
   updateLectureAttachment,
   uploadAudioFile,
   uploadS3Video,
+  getBucketName
 } from "@/api/apiHelper";
 import BottomTabs from "./BottomTabs/BottomTabs";
 import axios from "axios";
@@ -27,7 +28,7 @@ import usePresignedUrl from "@/hooks/usePresignedUrl";
 import usefileUploader from "@/hooks/usefileUploader";
 
 const LectureRecorder = ({ open, closeDrawer, recordingData }) => {
-  const {isTrialAccount,s3FileName}=useContext(AppContextProvider)
+  const {isTrialAccount}=useContext(AppContextProvider)
   const videoRef = useRef(null);
   const currentTimeLocal = new Date().toLocaleTimeString("en-GB", {
     hour: "2-digit",
@@ -171,9 +172,32 @@ const LectureRecorder = ({ open, closeDrawer, recordingData }) => {
   };
 
   const mergeChunks = async () => {
-    await axios.post(
-      `https://9eg2j1kaxd.execute-api.ap-south-1.amazonaws.com/mergeVideo/${recordingData.id}?folderType=edu`
-    );
+    try{
+       const bucketName = await getBucketName()
+       console.log("bucketName : ",bucketName?.data?.bucket_name)
+
+        const response = await axios.post(
+            'http://43.204.143.10/merge-process-video',
+            {
+              s3_file_name: `videos/${recordingData.id}.mp4`,
+              s3_bucket_name: bucketName?.data?.bucket_name,
+              lectureid: recordingData.id
+            },
+            {
+              headers: {
+                'accept': 'application/json',
+                'Content-Type': 'application/json'
+              }
+            }
+          );
+
+        console.log("merge-process-video response : ",response)
+    }catch(error){
+      console.error(error);
+    }
+    // await axios.post(
+    //   `https://9eg2j1kaxd.execute-api.ap-south-1.amazonaws.com/mergeVideo/${recordingData.id}?folderType=edu`
+    // );
   };
 
   const submitLecture = async () => {

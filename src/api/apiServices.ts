@@ -1162,4 +1162,11 @@ public resetPassword = async (email,data) => {
       .catch((error) => console.error(error));
   };
 
+  public getBucketName = async () => {
+    return await this.axiosInstance
+      .get(`/api/v1/get_bucket_name/`)
+      .then((Response) => Response.data)
+      .catch((error) => console.error(error));
+  };
+
 }
