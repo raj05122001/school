@@ -106,7 +106,7 @@ const LectureAttachments = ({ lectureId, isDarkMode }) => {
         borderRadius: 6,
         backgroundColor:"#fff",
         p: 3,
-        mt: 2,
+        mt: { xs:0, lg:2 },
       }}
     >
       <Box

@@ -353,6 +353,21 @@ const Sidebar = ({ open, setOpen }) => {
                                 }}
                                 onClick={() => router.push(child.href)}
                               >
+                                <ListItemIcon
+                                  sx={{
+                                    color:
+                                      pathname === child.href
+                                        ? "#16AA54"
+                                        : "#8C8F90",
+                                    minWidth: open ? "unset" : "20px",
+                                    mr: open ? 2 : 0,
+                                    display: "flex",
+                                    justifyContent: "center",
+                                    alignItems: "center",
+                                  }}
+                                >
+                                  {child.icon}
+                                </ListItemIcon>
                                 {open && (
                                   <ListItemText
                                     primary={child.text}
