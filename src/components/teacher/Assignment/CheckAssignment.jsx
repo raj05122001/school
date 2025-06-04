@@ -47,54 +47,40 @@ import AIFeedbackTeacher from "@/components/MOL/LectureDetails/StudentMolAssignm
 
 const CheckAssignment = ({ assignment, index, fetchAssignmentAnswer }) => {
   const { isDarkMode, primaryColor, secondaryColor } = useThemeContext();
+
+  // === Local state for grading/commenting ===
   const [grades, setGrades] = useState(assignment?.marks_obtained || 0);
   const [comment, setComment] = useState(assignment?.comment_by_teacher || "");
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState(null);
+
+  // === Local state for expand/collapse ===
   const [open, setOpen] = useState(false);
+
+  // === Local state for previewing the student’s submitted file ===
+  // When the teacher clicks on “download” or the preview, we set selectedFile to a presigned URL
   const [selectedFile, setSelectedFile] = useState(null);
+
+  // === New state: presigned URL of the student’s answer for inline rendering ===
+  const [answerSignedUrl, setAnswerSignedUrl] = useState("");
+
   const { fetchPresignedUrl } = usePresignedUrl();
+  const defaultLayoutPluginInstance = defaultLayoutPlugin();
 
   const answered_by = Number(assignment?.answer_by?.id);
-
   const isChecked = assignment?.is_checked || false;
-
-  const defaultLayoutPluginInstance = defaultLayoutPlugin();
 
   const getExtensionFromUrl = (url) => {
     try {
-      const cleanUrl = url.split("?")[0]; // Remove query parameters
+      const cleanUrl = url.split("?")[0];
       return cleanUrl.split(".").pop()?.toLowerCase();
     } catch {
       return "";
     }
   };
 
-  // const getFileIcon = (url) => {
-  //   // const extension = url?.split(".").pop()?.toLowerCase();
-  //   const extension = getExtensionFromUrl(selectedFile);
-  //   switch (extension) {
-  //     case "pdf":
-  //       return <BsFiletypePdf size={24} />;
-  //     case "doc":
-  //     case "docx":
-  //       return <BsFiletypeDoc size={24} />;
-  //     case "txt":
-  //       return <BsFiletypeTxt size={24} />;
-  //     case "xls":
-  //     case "xlsx":
-  //       return <BsFiletypeXls size={24} />;
-  //     case "ppt":
-  //     case "pptx":
-  //       return <BsFiletypePpt size={24} />;
-  //     default:
-  //       return <AiOutlineDownload size={24} />;
-  //   }
-  // };
-
   const getFileColor = (url) => {
-    // const extension = url?.split(".").pop()?.toLowerCase();
-    const extension = getExtensionFromUrl(selectedFile);
+    const extension = getExtensionFromUrl(url);
     switch (extension) {
       case "pdf":
         return "#d32f2f";
@@ -114,6 +100,66 @@ const CheckAssignment = ({ assignment, index, fetchAssignmentAnswer }) => {
     }
   };
 
+  // === Fetch presigned URL for the student's answer once assignment.answer_link is known ===
+  useEffect(() => {
+    async function fetchAnswerUrl() {
+      if (!assignment?.answer_link) {
+        setAnswerSignedUrl("");
+        return;
+      }
+
+      try {
+        const fileLink = assignment.answer_link;
+        console.log("fileLink : ",fileLink)
+        const keyPath = new URL(fileLink).pathname.slice(1);
+        const decodeKey = decodeURIComponent(keyPath);
+        const idx = decodeKey.lastIndexOf("/");
+        const folder = decodeKey.substring(0, idx + 1);
+        const fileName = decodeKey.substring(idx + 1);
+
+        const data = {
+          file_name: fileName,
+          file_type: "",
+          operation: "download",
+          folder: folder,
+        };
+
+        const signed = await fetchPresignedUrl(data);
+        setAnswerSignedUrl(signed?.presigned_url || "");
+        console.log("signed?.presigned_url: ",signed?.presigned_url)
+      } catch (err) {
+        console.error("Error fetching answer URL:", err);
+        setAnswerSignedUrl("");
+      }
+    }
+
+    fetchAnswerUrl();
+  }, [assignment.answer_link, fetchPresignedUrl]);
+
+  // === When teacher clicks on a file icon to preview the submission ===
+  const handleSelectFile = async (fileLink) => {
+    try {
+      const keyPath = new URL(fileLink).pathname.slice(1);
+      const decodeKey = decodeURIComponent(keyPath);
+      const idx = decodeKey.lastIndexOf("/");
+      const folder = decodeKey.substring(0, idx + 1);
+      const fileName = decodeKey.substring(idx + 1);
+
+      const data = {
+        file_name: fileName,
+        file_type: "",
+        operation: "download",
+        folder: folder,
+      };
+
+      const signedUrl = await fetchPresignedUrl(data);
+      setSelectedFile(signedUrl?.presigned_url || null);
+    } catch (err) {
+      console.error(err);
+    }
+  };
+
+  // === Grade submission (or update) ===
   const handleGradeSubmission = useCallback(async () => {
     setIsLoading(true);
     setError(null);
@@ -132,121 +178,23 @@ const CheckAssignment = ({ assignment, index, fetchAssignmentAnswer }) => {
     } finally {
       setIsLoading(false);
     }
-  }, [assignment, grades, comment]);
+  }, [assignment, grades, comment, fetchAssignmentAnswer]);
 
+  // === Helper to strip query params and decode filename ===
   const replaceString = (value) => {
     try {
-      const val = value?.split("/");
-      return decodeURIComponent(val?.[val?.length - 1]);
-    } catch (error) {
+      const val = value.split("/");
+      return decodeURIComponent(val[val.length - 1]);
+    } catch {
       return value;
     }
   };
 
-  const handleSelectFile = async (fileLink) => {
-    const keyPath = new URL(fileLink).pathname.slice(1);
-    const decodeKey = decodeURIComponent(keyPath);
-    const idx = decodeKey.lastIndexOf("/");
-    const file1 = decodeKey.substring(0, idx + 1);
-    const file2 = decodeKey.substring(idx + 1);
-
-    const data = {
-      file_name: file2,
-      file_type: "",
-      operation: "download",
-      folder: file1,
-    };
-
-    try {
-      const signedUrl = await fetchPresignedUrl(data);
-      setSelectedFile(signedUrl?.presigned_url);
-    } catch (error) {
-      console.error(error);
-    }
-  };
-
-  const renderAnswerContent = useCallback(
-    (assignment) => {
-      const { answer_type, answer_link } = assignment;
-
-      if (!answer_link) return null;
-
-      if (answer_type === "IMAGE") {
-        return (
-          <CardMedia
-            component="img"
-            image={answer_link}
-            alt="Answer Image"
-            sx={{ height: 300, objectFit: "contain", mt: 2, borderRadius: 2 }}
-            onClick={() => handleSelectFile(answer_link)}
-          />
-        );
-      } else if (answer_type === "VIDEO") {
-        return (
-          <CardMedia component="video" controls sx={{ height: 300, mt: 2 }}>
-            <source src={answer_link} type="video/mp4" />
-            Your browser does not support the video tag.
-          </CardMedia>
-        );
-      } else if (answer_type === "AUDIO") {
-        return (
-          <Box mt={2}>
-            <AudioPlayer audio={answer_link} isShowBrekpoint={false} />
-          </Box>
-        );
-      } else {
-        // Generic fallback for files
-        return (
-          <Box
-            mt={2}
-            sx={{
-              display: "flex",
-              gap: 2,
-              alignItems: "center",
-              border: "1px solid",
-              borderColor: isDarkMode ? "grey.700" : "divider",
-              borderRadius: "8px",
-              padding: "8px",
-              backgroundColor: isDarkMode
-                ? "rgba(255,255,255,0.1)"
-                : "background.paper",
-              boxShadow: 2,
-              width: "287px",
-            }}
-            onClick={() => handleSelectFile(answer_link)}
-          >
-            <Box>
-              {getFileIcon(answer_link, {
-                style: {
-                  fontSize: "24px",
-                  marginRight: "8px",
-                  color: "#16AA54",
-                },
-              })}
-            </Box>
-            <Typography
-              variant="body2"
-              sx={{
-                color: isDarkMode ? "#F9F6EE" : "text.primary",
-                fontWeight: 500,
-                wordBreak: "break-word",
-              }}
-            >
-              {replaceString(answer_link)}
-            </Typography>
-          </Box>
-        );
-      }
-    },
-    [getFileIcon, isDarkMode]
-  );
-
+  // === Overlay that shows when “selectedFile” is set ===
   const renderFileOverlay = () => {
     if (!selectedFile) return null;
-
-    // const extension = selectedFile?.split(".").pop()?.toLowerCase();
     const extension = getExtensionFromUrl(selectedFile);
-    let content;
+    let content = null;
 
     if (extension === "pdf") {
       content = (
@@ -271,7 +219,7 @@ const CheckAssignment = ({ assignment, index, fetchAssignmentAnswer }) => {
             width="100%"
             height="100%"
             style={{ border: "none" }}
-          ></iframe>
+          />
         </Box>
       );
     } else if (["jpg", "jpeg", "png", "gif"].includes(extension)) {
@@ -284,7 +232,6 @@ const CheckAssignment = ({ assignment, index, fetchAssignmentAnswer }) => {
         />
       );
     } else {
-      // Unknown format - just show a link to download
       content = (
         <Typography variant="h6" sx={{ color: "#fff" }}>
           <a href={selectedFile} download style={{ color: "#fff" }}>
@@ -346,6 +293,7 @@ const CheckAssignment = ({ assignment, index, fetchAssignmentAnswer }) => {
           mb: 3,
         }}
       >
+        {/* === Header: Question number + icons + expand/collapse === */}
         <Box
           sx={{
             display: "flex",
@@ -425,6 +373,7 @@ const CheckAssignment = ({ assignment, index, fetchAssignmentAnswer }) => {
                 </span>
               </Typography>
             </Box>
+
             {open ? (
               <IconButton>
                 <IoIosArrowUp />
@@ -440,6 +389,8 @@ const CheckAssignment = ({ assignment, index, fetchAssignmentAnswer }) => {
         {open ? (
           <CardContent sx={{ pt: 0 }}>
             <Divider sx={{ mb: 2 }} />
+
+            {/* === Full question text === */}
             <Box sx={{ display: "flex", justifyContent: "space-between" }}>
               <Typography
                 variant="body1"
@@ -452,11 +403,14 @@ const CheckAssignment = ({ assignment, index, fetchAssignmentAnswer }) => {
                 />
               </Typography>
             </Box>
+
+            {/* === Student Submission Section === */}
             <Box
               sx={{
                 backgroundColor: "#DCF9E8",
                 borderRadius: "12px",
                 padding: "12px",
+                mt: 2,
               }}
             >
               <Typography
@@ -466,6 +420,7 @@ const CheckAssignment = ({ assignment, index, fetchAssignmentAnswer }) => {
               >
                 Submission
               </Typography>
+
               {assignment?.answer_description && (
                 <Typography
                   variant="body1"
@@ -476,8 +431,76 @@ const CheckAssignment = ({ assignment, index, fetchAssignmentAnswer }) => {
                   {assignment?.answer_description}
                 </Typography>
               )}
-              {renderAnswerContent(assignment)}
+
+              {/* === Inline rendering based on answer type === */}
+              {assignment.answer_type === "IMAGE" && answerSignedUrl && (
+                <CardMedia
+                  component="img"
+                  image={answerSignedUrl}
+                  alt="Answer Image"
+                  sx={{ height: 300, objectFit: "contain", mt: 2, borderRadius: 2 }}
+                  onClick={() => handleSelectFile(assignment.answer_link)}
+                />
+              )}
+
+              {assignment.answer_type === "VIDEO" && answerSignedUrl && (
+                <CardMedia component="video" controls sx={{ height: 300, mt: 2 }}>
+                  <source src={answerSignedUrl} type="video/mp4" />
+                  Your browser does not support the video tag.
+                </CardMedia>
+              )}
+
+              {assignment.answer_type === "AUDIO" && answerSignedUrl && (
+                <Box mt={2}>
+                  <AudioPlayer audio={answerSignedUrl} isShowBrekpoint={false} />
+                </Box>
+              )}
+
+              {["IMAGE", "VIDEO", "AUDIO"].indexOf(assignment.answer_type) < 0 && assignment.answer_link && answerSignedUrl && (
+                // Generic fallback for other files (PDF, DOCX, etc.)
+                <Box
+                  mt={2}
+                  sx={{
+                    display: "flex",
+                    gap: 2,
+                    alignItems: "center",
+                    border: "1px solid",
+                    borderColor: isDarkMode ? "grey.700" : "divider",
+                    borderRadius: "8px",
+                    padding: "8px",
+                    backgroundColor: isDarkMode
+                      ? "rgba(255,255,255,0.1)"
+                      : "background.paper",
+                    boxShadow: 2,
+                    width: "287px",
+                    cursor: "pointer",
+                  }}
+                  onClick={() => handleSelectFile(assignment.answer_link)}
+                >
+                  <Box>
+                    {getFileIcon(assignment.answer_link, {
+                      style: {
+                        fontSize: "24px",
+                        marginRight: "8px",
+                        color: getFileColor(assignment.answer_link),
+                      },
+                    })}
+                  </Box>
+                  <Typography
+                    variant="body2"
+                    sx={{
+                      color: isDarkMode ? "#F9F6EE" : "text.primary",
+                      fontWeight: 500,
+                      wordBreak: "break-word",
+                    }}
+                  >
+                    {replaceString(assignment.answer_link)}
+                  </Typography>
+                </Box>
+              )}
             </Box>
+
+            {/* === AI Feedback (Teacher version) === */}
             <Box sx={{ marginTop: 1 }}>
               <AIFeedbackTeacher
                 assignment={assignment}
@@ -485,6 +508,8 @@ const CheckAssignment = ({ assignment, index, fetchAssignmentAnswer }) => {
                 totalMarks={assignment.assignment_que.assignment_mark}
               />
             </Box>
+
+            {/* === Grading & Comments Section === */}
             <Paper
               elevation={isDarkMode ? 3 : 0}
               sx={{
@@ -494,14 +519,12 @@ const CheckAssignment = ({ assignment, index, fetchAssignmentAnswer }) => {
                 backgroundColor: "#F3F5F7",
               }}
             >
-              {/* <Typography variant="h6" sx={{ mb: 2, color: "#141514", fontWeight:600,fontSize:"16px" }}>
-              Marks Obtained
-              </Typography> */}
               {error && (
                 <Alert severity="error" sx={{ mb: 2 }}>
                   {error}
                 </Alert>
               )}
+
               <Grid container spacing={2}>
                 <Grid item xs={12} sm={12}>
                   <Typography
@@ -549,6 +572,7 @@ const CheckAssignment = ({ assignment, index, fetchAssignmentAnswer }) => {
                     />
                   </Tooltip>
                 </Grid>
+
                 <Grid item xs={12} sm={12}>
                   <Typography
                     variant="h6"
@@ -636,7 +660,7 @@ const CheckAssignment = ({ assignment, index, fetchAssignmentAnswer }) => {
                 <AssignmentTextFormat
                   text={
                     assignment.assignment_que.assignment_text?.length > 200
-                      ? `${assignment.assignment_que.assignment_text?.slice(
+                      ? `${assignment.assignment_que.assignment_text.slice(
                           0,
                           200
                         )}...`
@@ -648,6 +672,7 @@ const CheckAssignment = ({ assignment, index, fetchAssignmentAnswer }) => {
           </CardContent>
         )}
       </Card>
+
       {renderFileOverlay()}
     </>
   );

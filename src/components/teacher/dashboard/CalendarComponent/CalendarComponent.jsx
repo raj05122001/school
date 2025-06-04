@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useContext, useEffect, useRef, useState } from "react";
 import FullCalendar from "@fullcalendar/react";
 import dayGridPlugin from "@fullcalendar/daygrid";
 import timeGridPlugin from "@fullcalendar/timegrid";
@@ -15,6 +15,7 @@ import { formatTime } from "@/helper/Helper";
 import { Skeleton } from "@mui/material";
 import { decodeToken } from "react-jwt";
 import Cookies from "js-cookie";
+import { AppContextProvider } from "@/app/main";
 
 // Helper to get current month and year
 const getCurrentMonthYear = () => {
@@ -26,6 +27,12 @@ const getCurrentMonthYear = () => {
 
 const CalendarComponent = ({ maxHeight = "585px" }) => {
   const userDetails = decodeToken(Cookies.get("ACCESS_TOKEN"));
+    const {
+      openRecordingDrawer,
+      openCreateLecture,
+      handleCreateLecture,
+      handleLectureRecord,
+    } = useContext(AppContextProvider);
   const { isDarkMode, primaryColor } = useThemeContext();
 
   const [currentMonth, setCurrentMonth] = useState(getCurrentMonthYear());
@@ -39,8 +46,10 @@ const CalendarComponent = ({ maxHeight = "585px" }) => {
   });
 
   useEffect(() => {
-    fetchData();
-  }, [currentMonth]);
+    if(!openCreateLecture){
+      fetchData();
+    }
+  }, [currentMonth,openCreateLecture]);
 
   const fetchData = async () => {
     setIsLoading(true);

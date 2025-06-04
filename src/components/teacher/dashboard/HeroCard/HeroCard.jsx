@@ -9,7 +9,7 @@ function HeroCard({ averageDuration }) {
   return (
     <Box
       sx={{
-        width: "715px",
+        width: "100%",
         height: "316px",
         display: "flex",
         flexShrink: 0,

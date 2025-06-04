@@ -115,25 +115,14 @@ total_duration:0
 
   return (
     <Box sx={{ flexGrow: 1, m: 2 }}>
-      {/* Greeting Card */}
-      {/* <Box>{greetingCard}</Box> */}
-
-      {/* Profile, Lecture Duration, Subject Completion */}
-      {/* <Grid container spacing={2} mt={3}>
-        <Grid item xs={12} sm={6} lg={5}>
-          {profileCard}
-        </Grid>
-        <Grid item xs={12} sm={6} lg={3}>
-          {lectureDuration}
-        </Grid>
-        <Grid item xs={12} lg={4}>
-          {subjectCompletion}
-        </Grid>
-      </Grid> */}
-      <Box sx={{display:"flex", gap:"16px"}}>
+      <Grid container direction="row" spacing={2} mt={2}>
+        <Grid item xs={12} md={7}>
       <HeroCard averageDuration={averageDuration}/>
+      </Grid>
+      <Grid item xs={12} md={5}>
       <ClassProf />
-      </Box>
+      </Grid>
+      </Grid>
 
       {/* Overview and Calendar */}
       <Grid container direction="row" spacing={2} mt={2}>
@@ -148,99 +137,9 @@ total_duration:0
         </Grid>
       </Grid>
 
-      {/* Student Queries, Analytics Reports, and Class Statistics */}
-      {/* <Grid container spacing={2} mt={4}>
-        <Grid item xs={12} md={4}>
-          {studentQueries}
-        </Grid>
-        <Grid item xs={12} md={4}>
-          {analyticsReports}
-        </Grid>
-        <Grid item xs={12} md={4}>
-          {classStatistics}
-        </Grid>
-      </Grid> */}
-
-      {/* <Box
-        sx={{
-          display: "flex",
-          justifyContent: "space-between",
-          alignItems: "center",
-          mt: 6,
-          p:2
-        }}
-      >
-        <Typography
-          variant="h4"
-          className={`${isDarkMode ? "dark-heading" : "light-heading"}`}
-          component="div"
-          sx={{
-            display: "flex",
-            justifyContent: "center",
-            alignItems: "center",
-            mt:4
-          }}
-        >
-          Class Proficiency
-        </Typography> 
-        <Box sx={{ display: "flex", gap: 2, alignItems: "center" }}>
-          <Autocomplete
-            freeSolo
-            id="class"
-            disableClearable
-            options={classOptions?.map((option) => option.class_name)}
-            value={selectedOptions?.class_name || ""} // Set value to the class name only
-            onChange={(event, newValue) => {
-              const selected = classOptions.find(
-                (option) => option.class_name === newValue
-              );
-              setSelectedOptions(selected || null); // Set selected option object
-            }}
-            renderInput={(params) => (
-              <TextField
-                {...params}
-                placeholder="Select Class"
-                variant="outlined"
-                InputProps={{
-                  ...params.InputProps,
-                  type: "search",
-                  sx: {
-                    backdropFilter: "blur(10px)",
-                    backgroundColor: "rgba(255, 255, 255, 0.2)",
-                    color: currentStyles.inputColor,
-                    height: 45,
-                    width: 200,
-                    "& .MuiOutlinedInput-notchedOutline": {
-                      border: "none",
-                    },
-                  },
-                }}
-                sx={{
-                  boxShadow: currentStyles.boxShadow,
-                  borderRadius: 10,
-                }}
-              />
-            )}
-          />
-        </Box> 
-      </Box> */}
       <Box sx={{marginY:"16px", width:"100%",}}>
         {studentAssignment}
       </Box>
-      
-      {/* <Grid container direction="row" spacing={2} mt={1}>
-        <Grid
-          item
-          xs={10}
-          sx={{ display: "flex", flexDirection: "column", gap: 2, width:"100%" }}
-        >
-          {classAssignment}
-          {studentAssignment}
-        </Grid>
-        <Grid item xs={3}>
-          {classWiseStudentRanking}
-        </Grid>
-      </Grid> */}
 
       {/* Lecture and Subject Analytics */}
       <Grid container spacing={2} mt={4}>

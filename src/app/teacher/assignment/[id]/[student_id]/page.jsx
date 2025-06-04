@@ -146,7 +146,7 @@ const Page = ({ params }) => {
                         Total Assignments: {listData?.data?.length}
                       </Typography>
                     </Box>
-                    <Box display="flex" alignItems="center">
+                    {/* <Box display="flex" alignItems="center">
                       <TbSquareRoundedPercentage
                         style={{ marginRight: "8px" }}
                         size={20}
@@ -158,7 +158,7 @@ const Page = ({ params }) => {
                       >
                         Checked Assignments: {listData?.data?.length}
                       </Typography>
-                    </Box>
+                    </Box> */}
                   </Box>
                 </CardContent>
               </Card>

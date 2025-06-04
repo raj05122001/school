@@ -528,15 +528,13 @@ const LectureAssignment = ({
                               </Button>
                             )}
 
-                            {!isAdmin &&
-                              assignment?.assignment_mark !== undefined &&
-                              assignment?.assignment_mark !== null &&
-                              assignment?.assignment_mark !== 0 && (
+                            {!isAdmin && (
                                 <Button
                                   variant="contained"
                                   onClick={() =>
                                     handleAssignAssignment(assignment)
                                   }
+                                  disabled={!assignment?.assignment_mark}
                                   sx={{
                                     // backgroundColor: assignment.is_assigned
                                     //   ? "green"

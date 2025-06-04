@@ -72,6 +72,8 @@ const LecturePopover = ({ data, isOrganizer }) => {
     schedule_time,
   } = data.event.extendedProps;
 
+  const lectureId = data?.event?._def?.publicId
+
   const formattedStartTime = formatTime(schedule_time);
   const formattedDate = schedule_date && format(new Date(schedule_date), "PP");
   const initials = getInitials(chapter?.subject?.name);
@@ -251,7 +253,7 @@ const LecturePopover = ({ data, isOrganizer }) => {
                       size="small"
                       color="primary"
                       onClick={(event) =>
-                        handleCreateLecture(data.event.extendedProps, true)
+                        handleCreateLecture({...data.event.extendedProps,id:lectureId}, true)
                       }
                     >
                       <AiOutlineEdit size={20} />

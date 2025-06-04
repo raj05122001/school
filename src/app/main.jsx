@@ -62,6 +62,7 @@ const Main = ({ children }) => {
 
   const handleCreateLecture = (value = "", isEditMode = false) => {
     if (isEditMode) {
+      console.log("value : ",value)
       setRecordingData(value);
       setIsEditLecture(true);
       setOpenCreateLecture(true);
