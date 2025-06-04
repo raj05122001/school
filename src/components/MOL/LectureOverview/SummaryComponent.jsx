@@ -188,6 +188,7 @@ const SummaryComponent = ({
       sx={{
         p: 3,
         width: "100%",
+        maxWidth: "100%",
         borderBottomLeftRadius: "16px",
         borderBottomRightRadius: "16px",
         color: "#3B3D3B",
@@ -196,16 +197,17 @@ const SummaryComponent = ({
         height: "100%",
         minHeight: 400,
         maxHeight: 500,
-        scrollbarWidth: "none", // Firefox
-        msOverflowStyle: "none", // IE/Edge
+        boxSizing: "border-box",
+        scrollbarWidth: "none",
+        msOverflowStyle: "none",
         "&::-webkit-scrollbar": {
-          display: "none", // Chrome, Safari, Edge
+          display: "none",
         },
       }}
       ref={summaryBoxRef}
     >
       {loading ? (
-        <Box>
+        <Box sx={{ width: "100%", maxWidth: "100%" }}>
           <Skeleton variant="rectangular" height={40} sx={{ mb: 2 }} />
           <Skeleton variant="text" height={30} sx={{ mb: 1 }} />
           <Skeleton variant="text" height={30} sx={{ mb: 1 }} />
@@ -216,7 +218,13 @@ const SummaryComponent = ({
           <Skeleton variant="text" height={30} sx={{ mb: 1 }} />
         </Box>
       ) : isEditData ? (
-        <Box sx={{ position: "relative" }}>
+        <Box
+          sx={{
+            position: "relative",
+            width: "100%",
+            maxWidth: "100%",
+          }}
+        >
           <Box
             sx={{
               display: "flex",
@@ -224,7 +232,7 @@ const SummaryComponent = ({
               position: "absolute",
               right: 4,
               top: 4,
-              zIndex: 10, // Ensures the button is above other elements
+              zIndex: 10,
             }}
           >
             <IconButton
@@ -236,12 +244,24 @@ const SummaryComponent = ({
               <FaSave size={24} />
             </IconButton>
           </Box>
-          <TextEditor text={summary[0]} onChange={onChange} />
+          <Box
+            sx={{
+              width: "100%",
+              maxWidth: "100%",
+              "& .ql-editor": {
+                // Quill editor specific
+                maxWidth: "100%",
+                wordWrap: "break-word",
+              },
+            }}
+          >
+            {/* <TextEditor text={summary[0]} onChange={onChange} /> */}
+          </Box>
         </Box>
       ) : summary?.length > 0 ? (
-        <Box>
+        <Box sx={{ width: "100%", maxWidth: "100%" }}>
           {isEdit && (
-            <Box sx={{ display: "flex", justifyContent: "flex-end" }}>
+            <Box sx={{ display: "flex", justifyContent: "flex-end", mb: 1 }}>
               <FaEdit
                 size={24}
                 onClick={() => {
@@ -252,7 +272,19 @@ const SummaryComponent = ({
               />
             </Box>
           )}
-          <TextWithMath text={stringToHtml(summary[0])} />
+          <Box
+            sx={{
+              width: "100%",
+              maxWidth: "100%",
+              overflow:'auto',
+              wordBreak: "break-word",
+              "& *": {
+                maxWidth: "100% !important",
+              },
+            }}
+          >
+            <TextWithMath text={stringToHtml(summary[0])} />
+          </Box>
         </Box>
       ) : (
         <Box

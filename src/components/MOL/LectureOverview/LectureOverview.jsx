@@ -69,6 +69,7 @@ const LectureOverview = ({
         borderRadius: "0px 0px 16px 16px",
         background: "#fff",
         borderRadius: "16px",
+        overflow:'auto'
       }}
     >
       <Typography
@@ -111,7 +112,7 @@ const LectureOverview = ({
           ".MuiTabs-flexContainer": {
             gap: 2,
 
-            padding: "8px 496px 8px 20px",
+            padding: "8px 16px 8px 20px",
             // borderRadius: "12px",
             borderTopLeftRadius: "12px",
             borderTopRightRadius: "12px",
