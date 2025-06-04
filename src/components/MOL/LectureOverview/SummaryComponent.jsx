@@ -188,20 +188,20 @@ const SummaryComponent = ({
       sx={{
         p: 3,
         width: "100%",
-        maxWidth: "100%",
+        maxWidth: { xs: "300px", sm: "650px", md: "750px", xl: "900px" },
         borderBottomLeftRadius: "16px",
         borderBottomRightRadius: "16px",
         color: "#3B3D3B",
         backgroundColor: "#fff",
-        overflowY: "auto",
+        overflow: "auto",
         height: "100%",
         minHeight: 400,
         maxHeight: 500,
         boxSizing: "border-box",
-        scrollbarWidth: "none",
-        msOverflowStyle: "none",
+        scrollbarWidth: "none", // Firefox
+        msOverflowStyle: "none", // IE and Edge
         "&::-webkit-scrollbar": {
-          display: "none",
+          display: "none", // Chrome, Safari, Opera
         },
       }}
       ref={summaryBoxRef}
@@ -255,7 +255,7 @@ const SummaryComponent = ({
               },
             }}
           >
-            {/* <TextEditor text={summary[0]} onChange={onChange} /> */}
+            <TextEditor text={summary[0]} onChange={onChange} />
           </Box>
         </Box>
       ) : summary?.length > 0 ? (
@@ -274,9 +274,6 @@ const SummaryComponent = ({
           )}
           <Box
             sx={{
-              width: "100%",
-              maxWidth: "100%",
-              overflow:'auto',
               wordBreak: "break-word",
               "& *": {
                 maxWidth: "100% !important",
@@ -289,8 +286,6 @@ const SummaryComponent = ({
       ) : (
         <Box
           sx={{
-            width: "100%",
-            height: "100%",
             textAlign: "center",
             display: "flex",
             justifyContent: "center",

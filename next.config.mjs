@@ -12,7 +12,11 @@ const nextConfig = {
         hostname: 'dev-vidyaai.ultimeet.io',
         pathname: '**',
       },
-      
+      {
+        protocol: 'https',
+        hostname: 'vidyaai-poc-backend.ultimeet.io',
+        pathname: '**',
+      },
     ],
   },
   env: {
