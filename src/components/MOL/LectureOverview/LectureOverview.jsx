@@ -69,7 +69,6 @@ const LectureOverview = ({
         borderRadius: "0px 0px 16px 16px",
         background: "#fff",
         borderRadius: "16px",
-        overflow:'auto'
       }}
     >
       <Typography
