@@ -155,7 +155,7 @@ const ForgotPassword = () => {
 
     const apiData = {
       password: formData.password,
-      otp: formData.otp,
+      otp: Number(formData.otp),
     };
 
     try {
