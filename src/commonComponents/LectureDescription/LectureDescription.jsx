@@ -65,6 +65,8 @@ const LectureDescription = ({ lectureData, isShowPic = false, loading,videoTimeS
       .catch((err) => console.error("Could not copy text:", err));
   };
 
+  console.log("lectureData : ",lectureData)
+
   return (
     <Box
       sx={{
@@ -112,6 +114,33 @@ const LectureDescription = ({ lectureData, isShowPic = false, loading,videoTimeS
 
       <Button onClick={handleCopyShareUrl} variant="outlined" sx={{mr:2}}>Copy Share URL</Button>
     </Box>
+
+        <Box sx={{ mb: 1 }}>
+          {loading ? (
+            <Skeleton width="80%" height={30} />
+          ) : (
+            <Typography sx={keyCSS}>
+              Organizer Name:{" "}
+              <Tooltip
+                title={lectureData?.organizer?.full_name || "Description not available"}
+              >
+                <span
+                  style={{
+                    color: "#3B3D3B",
+                    fontFamily: "Inter",
+                    fontSize: "14px",
+                    fontStyle: "normal",
+                    fontWeight: "400",
+                    lineHeight: "18px",
+                    letterSpacing: "-0.42px",
+                  }}
+                >
+                  {truncateText(lectureData?.organizer?.full_name || "N/A")}
+                </span>
+              </Tooltip>
+            </Typography>
+          )}
+        </Box>
       
 
       <Box sx={{ flex: 2, width:"95%" }}>
@@ -158,11 +187,11 @@ const LectureDescription = ({ lectureData, isShowPic = false, loading,videoTimeS
           ) : (
             <>
               <Typography sx={keyCSS}>
-                Class:{" "}
+                Institute:{" "}
                 <Tooltip
                   title={
                     lectureData?.lecture_class?.name ||
-                    "Class name not available"
+                    "Institute name not available"
                   }
                 >
                   <span style={valCSS}>
@@ -171,11 +200,11 @@ const LectureDescription = ({ lectureData, isShowPic = false, loading,videoTimeS
                 </Tooltip>
               </Typography>
               <Typography sx={keyCSS}>
-                Subject:{" "}
+                Class:{" "}
                 <Tooltip
                   title={
                     lectureData?.chapter?.subject?.name ||
-                    "Subject name not available"
+                    "Class name not available"
                   }
                 >
                   <span style={valCSS}>
@@ -184,11 +213,11 @@ const LectureDescription = ({ lectureData, isShowPic = false, loading,videoTimeS
                 </Tooltip>
               </Typography>
               <Typography sx={keyCSS}>
-                Chapter:{" "}
+                Subject:{" "}
                 <Tooltip
                   title={
                     lectureData?.chapter?.chapter ||
-                    "Chapter name not available"
+                    "Subject name not available"
                   }
                 >
                   <span style={valCSS}>

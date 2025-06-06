@@ -53,7 +53,7 @@ const ClassAssignment = ({selectedOptions}) => {
                 alignItems="flex-start"
               >
                 <Typography variant="h6" gutterBottom color={primaryColor}>
-                  Overall Class Score
+                  Overall Institute Score
                 </Typography>
                 {loading ? (
                   <>

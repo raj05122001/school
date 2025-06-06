@@ -206,7 +206,7 @@ const CoursePlaylist = ({ params }) => {
               <Typography
                 sx={{ fontWeight: 400, fontSize: "12px", color: "#8C8F90" }}
               >
-                Class
+                Institute
               </Typography>
               <Typography
                 sx={{ fontWeight: 700, fontSize: "14px", color: "#3B3D3B" }}
@@ -219,7 +219,7 @@ const CoursePlaylist = ({ params }) => {
               <Typography
                 sx={{ fontWeight: 400, fontSize: "12px", color: "#8C8F90" }}
               >
-                Subject
+                Class
               </Typography>
               <Typography
                 sx={{ fontWeight: 700, fontSize: "14px", color: "#3B3D3B" }}
@@ -232,7 +232,7 @@ const CoursePlaylist = ({ params }) => {
               <Typography
                 sx={{ fontWeight: 400, fontSize: "12px", color: "#8C8F90" }}
               >
-                Chapter
+                Subject
               </Typography>
               <Typography
                 sx={{ fontWeight: 700, fontSize: "14px", color: "#3B3D3B" }}

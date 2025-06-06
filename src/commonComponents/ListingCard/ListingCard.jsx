@@ -137,21 +137,21 @@ const ListingCard = ({ data, onClick }) => {
             gutterBottom
             sx={{ color: isDarkMode ? primaryColor : "#555", fontFamily: "Inter, sans-serif", fontSize:"12px", fontWeight:500,mt:1 }}
           >
-            <strong>Class:</strong> {data?.lecture_class?.name}
+            <strong>Institute:</strong> {data?.lecture_class?.name}
           </Typography>
           <Typography
             variant="body1"
             gutterBottom
             sx={{ color: isDarkMode ? primaryColor : "#555", fontFamily: "Inter, sans-serif", fontSize:"12px", fontWeight:500 }}
           >
-            <strong>Subject:</strong> {data?.chapter?.subject?.name}
+            <strong>Class:</strong> {data?.chapter?.subject?.name}
           </Typography>
           <Typography
             variant="body1"
             gutterBottom
             sx={{ color: isDarkMode ? primaryColor : "#555", fontFamily: "Inter, sans-serif", fontSize:"12px", fontWeight:500 }}
           >
-            <strong>Chapter:</strong> {data?.chapter?.chapter}
+            <strong>Subject:</strong> {data?.chapter?.chapter}
           </Typography>
           <Typography
             variant="body1"

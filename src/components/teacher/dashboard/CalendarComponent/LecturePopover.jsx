@@ -199,7 +199,7 @@ const LecturePopover = ({ data, isOrganizer }) => {
                     )}
                     {chapter && (
                       <Grid item>
-                        <Tooltip title={`Chapter: ${chapter.chapter}`}>
+                        <Tooltip title={`Subject: ${chapter.chapter}`}>
                           <Grid container alignItems="center" spacing={1}>
                             <Grid item>
                               <FaBook size={16} />

@@ -7,7 +7,7 @@ const CustomAutocomplete = ({
   onChange,
   label,
   value,
-  disabled,
+  disabled=false,
   helperText = "",
 }) => {
   const { isDarkMode } = useThemeContext();
@@ -38,6 +38,7 @@ const CustomAutocomplete = ({
       freeSolo
       disableClearable
       options={options}
+      disabled={disabled}
       value={value}
       getOptionLabel={(option) => option.name}
       // disabled = {disabled}

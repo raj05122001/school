@@ -514,7 +514,7 @@ const LectureTabs = () => {
                       position: "sticky",
                     }}
                   >
-                    Class
+                    Institute
                   </TableCell>
                   <TableCell
                     sx={{
@@ -528,7 +528,7 @@ const LectureTabs = () => {
                       position: "sticky",
                     }}
                   >
-                    Subject Name
+                    Class Name
                   </TableCell>
                   <TableCell
                     sx={{
@@ -544,7 +544,7 @@ const LectureTabs = () => {
                       position: "sticky",
                     }}
                   >
-                    Chapter
+                    Subject
                   </TableCell>
                   {status === "UPCOMMING" && (
                     <TableCell

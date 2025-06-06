@@ -32,16 +32,9 @@ function SubjectCompletion() {
     fetchSubjectCompletion();
   }, []);
 
-  const data = [
-    { name: "Completed", value: completionData?.Completion_percentage },
-    { name: "Pending", value: completionData?.total_lectures_count },
-  ];
-
-  const perc=(completionData?.total_lectures_count * completionData?.Completion_percentage)/100
-
   return (
     <Box sx={{ position: 'relative' }}>
-      <FacebookCircularProgress value={perc}/>
+      <FacebookCircularProgress value={Number(completionData?.Completion_percentage)}/>
       <Box
         sx={{
           width:"100%",
@@ -170,7 +163,7 @@ function FacebookCircularProgress({value=0}) {
         })}
         size={170}
         thickness={2}
-        value={100}
+        value={value}
       />
       <CircularProgress
         variant="determinate"
@@ -189,7 +182,7 @@ function FacebookCircularProgress({value=0}) {
         })}
         size={170}
         thickness={2}
-        value={value}
+        value={100-value}
       />
     </Box>
   );

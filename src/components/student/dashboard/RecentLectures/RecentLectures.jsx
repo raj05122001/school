@@ -132,10 +132,10 @@ const RecentLectures = () => {
               <TableRow>
                 <TableCell />
                 <TableCell>Topic</TableCell>
-                <TableCell>Class</TableCell>
+                <TableCell>Institute</TableCell>
                 <TableCell>Time</TableCell>
+                <TableCell>Class</TableCell>
                 <TableCell>Subject</TableCell>
-                <TableCell>Chapter</TableCell>
               </TableRow>
             </TableHead>
             <TableBody>
@@ -250,7 +250,7 @@ const RecentLectures = () => {
                           fontSize: "14px",
                         }}
                       >
-                        Class
+                        Institute
                       </TableCell>
                       <TableCell
                         sx={{
@@ -276,7 +276,7 @@ const RecentLectures = () => {
                           fontSize: "14px",
                         }}
                       >
-                        Subject
+                        Class
                       </TableCell>
                       <TableCell
                         sx={{
@@ -289,7 +289,7 @@ const RecentLectures = () => {
                           fontSize: "14px",
                         }}
                       >
-                        Chapter
+                        Subject
                       </TableCell>
                     </TableRow>
                   </TableHead>

@@ -6,8 +6,12 @@ import CircularProgress, {
 } from "@mui/material/CircularProgress";
 
 function LectureDuration({ averageDuration }) {
-  const perc =
-    (averageDuration?.total_duration * averageDuration?.avg_duration) / 100;
+ const perc = averageDuration?.total_duration > 0 
+  ? (averageDuration?.avg_duration / averageDuration?.total_duration) * 100 
+  : 0;
+
+    console.log("averageDuration?.total_duration : ",averageDuration?.total_duration)
+    console.log("averageDuration?.avg_duration : ",averageDuration?.avg_duration)
   return (
     <Box sx={{ position: "relative" }}>
       <FacebookCircularProgress value={perc} />
@@ -133,7 +137,7 @@ function FacebookCircularProgress({ value = 0 }) {
         })}
         size={170}
         thickness={2}
-        value={100}
+        value={value}
       />
       <CircularProgress
         variant="determinate"
@@ -152,7 +156,7 @@ function FacebookCircularProgress({ value = 0 }) {
         })}
         size={170}
         thickness={2}
-        value={value}
+        value={100-value}
       />
     </Box>
   );

@@ -54,6 +54,8 @@ const SignupPage = () => {
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const emailParam = searchParams.get("email");
   const roleParam = searchParams.get("role");
+  const institute_id = searchParams.get("institute_id");
+
   const [loading, setLoading] = useState(false);
   const [serverError, setServerError] = useState(null);
   const [classOptions, setClassOptions] = useState([]);
@@ -74,32 +76,32 @@ const SignupPage = () => {
       .matches(/^[0-9]{10}$/, "Phone number must be 10 digits")
       .required("Phone number is required"),
     role: yup.string().required("Role is required"),
-newPassword: yup
-  .string()
-  .matches(
-    /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?])[A-Za-z\d!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]{8,}$/,
-    "Password must be at least 8 characters long and contain at least one uppercase letter, one lowercase letter, one number, and one special character"
-  )
-  .required("Password is required"),
-confirmPassword: yup
-  .string()
-  .oneOf([yup.ref("newPassword")], "Passwords must match")
-  .required("Confirm Password is required"),
+    newPassword: yup
+      .string()
+      .matches(
+        /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?])[A-Za-z\d!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]{8,}$/,
+        "Password must be at least 8 characters long and contain at least one uppercase letter, one lowercase letter, one number, and one special character"
+      )
+      .required("Password is required"),
+    confirmPassword: yup
+      .string()
+      .oneOf([yup.ref("newPassword")], "Passwords must match")
+      .required("Confirm Password is required"),
     // Fixed conditional validation
-    subject: !isTeacher
-      ? yup
-          .object()
-          .nullable()
-          .required("Please select a class")
-          .typeError("Please select a class")
-      : yup.object().nullable(),
-    department: isTeacher
-      ? yup
-          .number()
-          .nullable()
-          .required("Please select or create a department")
-          .typeError("Please select or create a department")
-      : yup.number().nullable(),
+    // subject: !isTeacher
+    //   ? yup
+    //       .object()
+    //       .nullable()
+    //       .required("Please select a class")
+    //       .typeError("Please select a class")
+    //   : yup.object().nullable(),
+    // department: isTeacher
+    //   ? yup
+    //       .number()
+    //       .nullable()
+    //       .required("Please select or create a department")
+    //       .typeError("Please select or create a department")
+    //   : yup.number().nullable(),
   });
 
   const {
@@ -116,8 +118,8 @@ confirmPassword: yup
       email: emailParam || "",
       phone: "",
       role: roleParam || "",
-      department: null,
-      subject: null, // Changed from empty string to null
+      // department: null,
+      // subject: null, // Changed from empty string to null
       newPassword: "",
       confirmPassword: "",
     },
@@ -139,9 +141,9 @@ confirmPassword: yup
     }
   };
 
-  useEffect(() => {
-    fetchData();
-  }, [roleParam]);
+  // useEffect(() => {
+  //   fetchData();
+  // }, [roleParam]);
 
   const handleCreateDepartment = async () => {
     if (!newDepartment.trim()) {
@@ -178,7 +180,7 @@ confirmPassword: yup
   const onSubmit = async (data) => {
     setLoading(true);
     setServerError(null);
-    
+
     // Fixed payload construction
     const payload = {
       full_name: data.name,
@@ -188,9 +190,10 @@ confirmPassword: yup
       password: data.newPassword,
       country_code: "+91",
       time_zone: "IND",
-      department: data.department || "",
+      department: institute_id || "",
       subjects: 9,
-      student_class: isTeacher ? "" : (data.subject?.id || data.subject?.value || ""),
+      student_class: institute_id || "",
+      // student_class: isTeacher ? "" : (data.subject?.id || data.subject?.value || ""),
     };
 
     try {
@@ -308,7 +311,7 @@ confirmPassword: yup
             VidyaAI
           </Typography>
         </Box>
-        
+
         <Box
           sx={{
             width: "100%",
@@ -678,7 +681,7 @@ confirmPassword: yup
             </Box>
 
             {/* Department or Subject */}
-            <Box sx={{ marginTop: 2 }}>
+            {/* <Box sx={{ marginTop: 2 }}>
               {isTeacher ? (
                 <>
                   <Box sx={{ display: "flex", gap: 1, alignItems: "flex-end" }}>
@@ -853,7 +856,7 @@ confirmPassword: yup
                   />
                 </Box>
               )}
-            </Box>
+            </Box> */}
 
             {/* Server Error Message */}
             {serverError && (
@@ -905,82 +908,90 @@ confirmPassword: yup
                   </Link>
                 </Typography>
               </Grid>
-      
-      {/* Left Side Background */}
-      {!isMobile && (
-        <Grid
-          item
-          xs={false}
-          sm={4}
-          md={6}
-          sx={{
-            display: "inline-flex",
-            flexDirection: "column",
-            alignItems: "center",
-            backgroundColor: "#fff",
-          }}
-        >
+
+            </Grid>
+          </Box>
+        </Box>
+      </Grid>
+
+      <Grid xs={12}
+        sm={4}
+        md={6}
+        pt={2}
+        backgroundColor="white"
+      >
+        {/* Left Side Background */}
+        {!isMobile && (
           <Box
+            item
+            xs={false}
+            sm={4}
+            md={6}
             sx={{
-              display: "flex",
+              display: "inline-flex",
+              flexDirection: "column",
               alignItems: "center",
-              gap: "25px",
               backgroundColor: "#fff",
-              margin: "auto",
             }}
           >
-            {/* Image 1: Takes 50% of the width */}
             <Box
               sx={{
-                width: "388px",
-                height: "546px",
-                aspectRatio: "194 / 273",
-                background:
-                  'url("/Illustration_indian 1.png") lightgray 50% / cover no-repeat',
-                flexShrink: 0,
-                backgroundColor: "#fff",
-              }}
-            />
-            {/* Images 2 and 3: Stack vertically and take remaining 50% */}
-            <Box
-              sx={{
-                flex: 1,
                 display: "flex",
-                flexDirection: "column",
-                gap: "10px",
+                alignItems: "center",
+                gap: "25px",
+                backgroundColor: "#fff",
+                margin: "auto",
               }}
             >
+              {/* Image 1: Takes 50% of the width */}
               <Box
                 sx={{
-                  width: "253px",
-                  height: "259px",
-                  aspectRatio: "253 / 259",
+                  width: "388px",
+                  height: "546px",
+                  aspectRatio: "194 / 273",
                   background:
-                    'url("/Illustration_euro 1.png") lightgray 50% / cover no-repeat',
+                    'url("/Illustration_indian 1.png") lightgray 50% / cover no-repeat',
                   flexShrink: 0,
                   backgroundColor: "#fff",
                 }}
               />
+              {/* Images 2 and 3: Stack vertically and take remaining 50% */}
+              <Box
+                sx={{
+                  flex: 1,
+                  display: "flex",
+                  flexDirection: "column",
+                  gap: "10px",
+                }}
+              >
+                <Box
+                  sx={{
+                    width: "253px",
+                    height: "259px",
+                    aspectRatio: "253 / 259",
+                    background:
+                      'url("/Illustration_euro 1.png") lightgray 50% / cover no-repeat',
+                    flexShrink: 0,
+                    backgroundColor: "#fff",
+                  }}
+                />
 
-              <Box
-                sx={{
-                  width: "253px",
-                  height: "259px",
-                  aspectRatio: "253 / 259",
-                  background:
-                    'url("/Illustration_arabic 1.png") lightgray 50% / cover no-repeat',
-                  flexShrink: 0,
-                  backgroundColor: "#fff",
-                }}
-              />
+                <Box
+                  sx={{
+                    width: "253px",
+                    height: "259px",
+                    aspectRatio: "253 / 259",
+                    background:
+                      'url("/Illustration_arabic 1.png") lightgray 50% / cover no-repeat',
+                    flexShrink: 0,
+                    backgroundColor: "#fff",
+                  }}
+                />
+              </Box>
             </Box>
           </Box>
-        </Grid>
-      )}
-    </Grid>
-    </Box>
-    </Box>
-    </Grid>
+        )}
+      </Grid>
     </Grid>
   );
 };

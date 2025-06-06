@@ -172,7 +172,7 @@ const SubjectAnalytics = () => {
           className={`${isDarkMode ? "dark-heading" : "light-heading"}`}
         >
           <FiBarChart2 size={22} style={{ marginRight: "8px" }} />
-          Watch Time by Subject
+          Watch Time by Class
         </Typography>
       </Box>
       <Box sx={{ width: "100%", height: "300px" }}>

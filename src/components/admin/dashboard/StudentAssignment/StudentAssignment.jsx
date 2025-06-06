@@ -542,7 +542,7 @@ const StudentAssignment = () => {
             renderInput={(params) => (
               <TextField
                 {...params}
-                placeholder="Select Class"
+                placeholder="Select Institute"
                 variant="outlined"
                 InputProps={{
                   ...params.InputProps,

@@ -43,7 +43,7 @@ const ClassStatistics = () => {
             variant="h6"
             className={`${isDarkMode ? "dark-heading" : "light-heading"}`}
           >
-            Class Statistics
+            Institute Statistics
           </Typography>
         </Box>
         <Typography
@@ -129,7 +129,7 @@ const ClassStatistics = () => {
         </Box>
         <Box sx={{ width: "100%", height: "100%" }}>
           <Typography variant="body2" gutterBottom sx={{ color: textColor }}>
-            Class Progress
+            Institute Progress
           </Typography>
           <LinearProgress
             variant="determinate"

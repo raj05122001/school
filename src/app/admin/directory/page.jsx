@@ -204,7 +204,7 @@ const Page = () => {
               renderInput={(params) => (
                 <TextField
                   {...params}
-                  placeholder={tabValue === 0 ? "Class" : "Department"}
+                  placeholder={tabValue === 0 ? "Institute" : "Department"}
                   variant="outlined"
                   InputLabelProps={{
                     style: { color: isDarkMode ? "#d7e4fc" : "" },

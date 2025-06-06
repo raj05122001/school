@@ -161,7 +161,7 @@ const LectureCard = ({ lecture, getAllLecture = () => {} }) => {
         </TableCell>
         <TableCell>
           <Tooltip
-            title={`Class: ${lecture?.lecture_class?.name || ""}`}
+            title={`Institute: ${lecture?.lecture_class?.name || ""}`}
             arrow
             placement="top-start"
           >
@@ -202,7 +202,7 @@ const LectureCard = ({ lecture, getAllLecture = () => {} }) => {
         </TableCell>
         <TableCell>
           <Tooltip
-            title={`Subject: ${lecture?.chapter?.subject?.name || ""}`}
+            title={`Class: ${lecture?.chapter?.subject?.name || ""}`}
             arrow
             placement="top-start"
           >
@@ -225,7 +225,7 @@ const LectureCard = ({ lecture, getAllLecture = () => {} }) => {
         </TableCell>
         <TableCell>
           <Tooltip
-            title={`Chapter: ${lecture?.chapter?.chapter || ""}`}
+            title={`Subject: ${lecture?.chapter?.chapter || ""}`}
             arrow
             placement="top-start"
           >

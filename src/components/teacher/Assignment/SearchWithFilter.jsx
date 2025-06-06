@@ -24,8 +24,11 @@ import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import dayjs from "dayjs";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { getClassByCourse, getSubjectByClass } from "@/api/apiHelper";
+import Cookies from "js-cookie";
+import { decodeToken } from "react-jwt";
 
 export default function SearchWithFilter() {
+  const userDetail = decodeToken(Cookies.get("ACCESS_TOKEN"));
   const searchParams = useSearchParams();
   const router = useRouter();
   const pathname = usePathname();
@@ -63,19 +66,15 @@ export default function SearchWithFilter() {
   // Fetch subjects whenever class changes
   useEffect(() => {
     async function loadSubjects() {
-      if (!filterClass) {
-        setSubjectList([]);
-        return;
-      }
       try {
-        const res = await getSubjectByClass(filterClass, "");
+        const res = await getSubjectByClass(userDetail?.department, "");
         setSubjectList(res?.data?.data || []);
       } catch (err) {
         console.error("Error loading subjects", err);
       }
     }
     loadSubjects();
-  }, [filterClass]);
+  }, [userDetail?.department]);
 
   // Sync state with URL params
   useEffect(() => {
@@ -165,7 +164,7 @@ export default function SearchWithFilter() {
         <DialogContent>
           <LocalizationProvider dateAdapter={AdapterDayjs}>
             <Grid container spacing={2} sx={{ mt: 1 }}>
-              <Grid item xs={12} sm={4}>
+              {/* <Grid item xs={12} sm={4}>
                 <Autocomplete
                   freeSolo
                   options={classList.map((c) => c.name)}
@@ -174,7 +173,7 @@ export default function SearchWithFilter() {
                   renderInput={(params) => (
                     <TextField
                       {...params}
-                      label="Class"
+                      label="Institute"
                       InputProps={{
                         ...params.InputProps,
                         endAdornment: filterClass ? (
@@ -190,7 +189,7 @@ export default function SearchWithFilter() {
                     />
                   )}
                 />
-              </Grid>
+              </Grid> */}
               <Grid item xs={12} sm={4}>
                 <Autocomplete
                   freeSolo
@@ -200,7 +199,7 @@ export default function SearchWithFilter() {
                   renderInput={(params) => (
                     <TextField
                       {...params}
-                      label="Subject"
+                      label="Class"
                       InputProps={{
                         ...params.InputProps,
                         endAdornment: filterSubject ? (
@@ -215,7 +214,6 @@ export default function SearchWithFilter() {
                       }}
                     />
                   )}
-                  disabled={!filterClass}
                 />
               </Grid>
               <Grid item xs={12} sm={4}>

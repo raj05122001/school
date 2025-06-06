@@ -129,7 +129,7 @@ const Page = ({ params }) => {
                         fontWeight="bold"
                         color={isDarkMode ? primaryColor : "#555"}
                       >
-                        Class: {userData?.user_class?.name}
+                        Institute: {userData?.user_class?.name}
                       </Typography>
                     </Box>
 

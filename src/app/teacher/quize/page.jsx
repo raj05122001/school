@@ -109,7 +109,7 @@ function Page() {
           />
           <TextField
             fullWidth
-            label="Subject"
+            label="Class"
             value={quiz.subject}
             onChange={handleSubjectChange}
             margin="normal"

@@ -90,7 +90,20 @@ const AssignmentTable = ({ data }) => {
                   fontSize: "14px",
                 }}
               >
-                Chapter
+                Subject
+              </TableCell>
+              <TableCell
+                sx={{
+                  border: "none",
+                  color: "#3B3D3B",
+                  fontFamily: "Inter",
+                  fontWeight: "600",
+                  fontStyle: "normal",
+                  lineHeight: "normal",
+                  fontSize: "14px",
+                }}
+              >
+                Institute
               </TableCell>
               <TableCell
                 sx={{
@@ -104,19 +117,6 @@ const AssignmentTable = ({ data }) => {
                 }}
               >
                 Class
-              </TableCell>
-              <TableCell
-                sx={{
-                  border: "none",
-                  color: "#3B3D3B",
-                  fontFamily: "Inter",
-                  fontWeight: "600",
-                  fontStyle: "normal",
-                  lineHeight: "normal",
-                  fontSize: "14px",
-                }}
-              >
-                Subject
               </TableCell>
               <TableCell
                 sx={{
@@ -200,7 +200,7 @@ const AssignmentTable = ({ data }) => {
                   </TableCell>
                   <TableCell>
                     <Tooltip
-                      title={`Chapter: ${lecture?.chapter?.chapter || ""}`}
+                      title={`Subject: ${lecture?.chapter?.chapter || ""}`}
                       arrow
                       placement="top-start"
                     >
@@ -244,7 +244,7 @@ const AssignmentTable = ({ data }) => {
                   </TableCell>
                   <TableCell>
                     <Tooltip
-                      title={`Subject: ${lecture?.chapter?.subject?.name}`}
+                      title={`Class: ${lecture?.chapter?.subject?.name}`}
                       arrow
                       placement="top-start"
                     >

@@ -69,7 +69,7 @@ const VerifyOtp = () => {
         toast.success(apiResponse?.data?.message);
         setLoading(false);
         router.push(
-          `/signup/?accesskey=${accesskey}&email=${email}&verifyotp=true&role=${apiResponse?.data?.data?.generated_for}`
+          `/signup/?accesskey=${accesskey}&email=${email}&verifyotp=true&role=${apiResponse?.data?.data?.generated_for}&institute_id=${apiResponse?.data?.data?.institute_id}`
         );
       } else {
         toast.error(apiResponse?.data?.message || "Failed to verify OTP.");

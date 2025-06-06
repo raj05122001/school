@@ -1,8 +1,11 @@
 import { getClassAssignment, getteacherClass } from "@/api/apiHelper";
 import { Autocomplete, Box, TextField, Typography } from "@mui/material";
+import Cookies from "js-cookie";
 import React, { useState, useEffect } from "react";
+import { decodeToken } from "react-jwt";
 
 const ClassProf = () => {
+  const userDetail = decodeToken(Cookies.get("ACCESS_TOKEN"));
   const [classOptions, setClassOptions] = useState([]);
   const [selectedOptions, setSelectedOptions] = useState(null);
   const [data, setData] = useState({});
@@ -13,10 +16,10 @@ const ClassProf = () => {
   }, []);
 
   useEffect(() => {
-    if (selectedOptions?.class_id) {
+    if (userDetail?.department_id) {
       fetchClassAssignment();
     }
-  }, [selectedOptions]);
+  }, [userDetail?.department_id]);
 
   const fetchClassOptions = async () => {
     try {
@@ -34,7 +37,7 @@ const ClassProf = () => {
     setLoading(true);
     try {
       const response = await getClassAssignment(
-        selectedOptions?.class_id,
+        userDetail?.department_id,
         true
       );
       setData(response?.data?.data);
@@ -142,10 +145,10 @@ const ClassProf = () => {
               lineHeight: "normal",
             }}
           >
-            Class Proficiency
+            Institute Proficiency
           </Typography>
         </Box>
-        <Box
+        {/* <Box
           sx={{
             display: "flex",
             gap: "10px",
@@ -169,7 +172,7 @@ const ClassProf = () => {
             renderInput={(params) => (
               <TextField
                 {...params}
-                placeholder="Select Class"
+                placeholder="Select Institute"
                 variant="outlined"
                 InputProps={{
                   ...params.InputProps,
@@ -192,7 +195,7 @@ const ClassProf = () => {
               />
             )}
           />
-        </Box>
+        </Box> */}
       </Box>
       <Box
         sx={{
@@ -276,7 +279,7 @@ const ClassProf = () => {
               lineHeight: "normal",
             }}
           >
-            Overall Class Participation
+            Overall Institute Participation
           </Typography>
           <Box sx={{display:"flex", justifyContent:"space-between", width:"100%"}}>
             <Typography

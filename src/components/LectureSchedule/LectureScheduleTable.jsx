@@ -25,9 +25,9 @@ import { AppContextProvider } from "@/app/main";
 const TABLE_HEAD = [
   "Title",
   "Date",
+  "Institute",
   "Class",
   "Subject",
-  "Chapter",
   "Academic Year",
   "Starting Time",
   "Action",

@@ -162,10 +162,10 @@ const OverviewSection = () => {
               <TableRow>
                 <TableCell />
                 <TableCell>Topic</TableCell>
-                <TableCell>Class</TableCell>
+                <TableCell>Institute</TableCell>
                 <TableCell>Time</TableCell>
+                <TableCell>Class</TableCell>
                 <TableCell>Subject</TableCell>
-                <TableCell>Chapter</TableCell>
                 <TableCell>Action</TableCell>
               </TableRow>
             </TableHead>
@@ -281,7 +281,7 @@ const OverviewSection = () => {
                     fontSize: "14px",
                   }}
                 >
-                  Class
+                  Institute
                 </TableCell>
                 <TableCell
                   sx={{
@@ -307,7 +307,7 @@ const OverviewSection = () => {
                     fontSize: "14px",
                   }}
                 >
-                  Subject
+                  Class
                 </TableCell>
                 <TableCell
                   sx={{
@@ -320,7 +320,7 @@ const OverviewSection = () => {
                     fontSize: "14px",
                   }}
                 >
-                  Chapter
+                  Subject
                 </TableCell>
                 <TableCell
                   sx={{
@@ -377,10 +377,10 @@ const OverviewSection = () => {
                     {[
                       "",
                       "Topic",
-                      "Class",
+                      "Institute",
                       "Time",
+                      "Class",
                       "Subject",
-                      "Chapter",
                       "Action",
                     ].map((heading, i) => (
                       <TableCell key={i}>

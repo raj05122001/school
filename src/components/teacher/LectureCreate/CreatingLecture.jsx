@@ -49,9 +49,7 @@ import { IoCloseOutline } from "react-icons/io5";
 import getFileIcon from "@/commonComponents/FileIcon/FileIcon";
 import { DemoContainer } from "@mui/x-date-pickers/internals/demo";
 import { MobileTimePicker } from "@mui/x-date-pickers/MobileTimePicker";
-import { AiOutlineClockCircle } from "react-icons/ai";
-
-// const userDetails = decodeToken(Cookies.get("ACCESS_TOKEN"));
+import { AiOutlineClockCircle } from "react-icons/ai";;
 
 const CreatingLecture = ({
   open,
@@ -59,6 +57,7 @@ const CreatingLecture = ({
   lecture,
   isEditMode = false,
 }) => {
+  const userDetail = decodeToken(Cookies.get("ACCESS_TOKEN"));
   const { isDarkMode } = useThemeContext();
   const [isLoading, setIsLoading] = useState(false);
   const [lectureSubject, setLectureSubject] = useState(null);
@@ -169,7 +168,11 @@ const CreatingLecture = ({
           name: item?.name,
         }));
 
+        const selectedValue = response?.data?.find((val) => Number(val.id) === Number(userDetail?.department_id))
+
+        setSelectedClass(selectedValue)
         setClassOptions(classNames); // Set the mapped class names in state
+
       } catch (error) {
         console.error("Failed to fetch class options", error);
       }
@@ -301,8 +304,8 @@ const CreatingLecture = ({
         topic: hasError.topic,
         messages: {
           class: hasError.class ? "Class is required" : "",
-          subject: hasError.subject ? "Subject is required" : "",
-          chapter: hasError.chapter ? "Chapter is required" : "",
+          subject: hasError.subject ? "Class is required" : "",
+          chapter: hasError.chapter ? "Subject is required" : "",
           topic: hasError.topic ? "Topic is required" : "",
         },
       });
@@ -333,9 +336,10 @@ const CreatingLecture = ({
         checkCondition(lectureSubject, subjectName) || lecture?.subject?.id,
       chapter:
         checkCondition(lectureChapter, chapterName) || lecture?.chapter?.id,
-      lecture_class:
-        checkCondition(selectedClass, selectedClassName) ||
-        lecture?.lecture_class?.id,
+      // lecture_class:
+      //   checkCondition(selectedClass, selectedClassName) ||
+      //   lecture?.lecture_class?.id,
+      lecture_class: userDetail?.department_id,
       topics: topicsName || lecture?.topics,
       title: topicsName || lecture?.title,
       organizer: Number(userDetails.teacher_id),
@@ -519,10 +523,10 @@ const CreatingLecture = ({
                 options={classOptions}
                 onSelect={setSelectedClass}
                 onChange={setSelectedClassName}
-                label={"Class"}
+                label={"Institute"}
                 value={selectedClass}
                 helperText={errors.messages.class}
-                // disabled={isEditMode} // Disable in edit mode
+              disabled={true} // Disable in edit mode
               />
             </Grid>
 
@@ -532,10 +536,10 @@ const CreatingLecture = ({
                 options={subjectOptions}
                 onSelect={setLectureSubject}
                 onChange={setSubjectName}
-                label={"Subject"}
+                label={"Class"}
                 value={lectureSubject}
                 helperText={errors.messages.subject}
-                // disabled={isEditMode} // Disable in edit mode
+              // disabled={isEditMode} // Disable in edit mode
               />
             </Grid>
 
@@ -545,10 +549,10 @@ const CreatingLecture = ({
                 options={chapterOptions}
                 onSelect={setLectureChapter}
                 onChange={setChapterName}
-                label={"Chapter"}
+                label={"Subject"}
                 value={lectureChapter}
                 helperText={errors.messages.chapter}
-                // disabled={isEditMode} // Disable in edit mode
+              // disabled={isEditMode} // Disable in edit mode
               />
             </Grid>
 
@@ -871,12 +875,12 @@ const CreatingLecture = ({
                     >
                       {fileName?.name?.length > 24
                         ? `${fileName?.name?.slice(
-                            0,
-                            14
-                          )}...${fileName?.name?.slice(
-                            fileName?.name?.length - 7,
-                            fileName?.name?.length
-                          )}`
+                          0,
+                          14
+                        )}...${fileName?.name?.slice(
+                          fileName?.name?.length - 7,
+                          fileName?.name?.length
+                        )}`
                         : fileName?.name}
                     </Typography>
                   </Box>

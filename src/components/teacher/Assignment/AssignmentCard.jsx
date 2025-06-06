@@ -89,7 +89,7 @@ const AssignmentCard = ({ data, onClick }) => {
             sx={{ color: isDarkMode ? primaryColor : "#555", fontSize: "14px" }}
           >
             <LuDot />
-            <strong>Subject:</strong> {data?.chapter?.subject?.name}
+            <strong>Class:</strong> {data?.chapter?.subject?.name}
           </Typography>
           <Typography
             variant="subtitle1"
@@ -97,7 +97,7 @@ const AssignmentCard = ({ data, onClick }) => {
             sx={{ color: isDarkMode ? primaryColor : "#555", fontSize: "14px" }}
           >
             <LuDot />
-            <strong>Chapter:</strong> {data?.chapter?.chapter}
+            <strong>Subject:</strong> {data?.chapter?.chapter}
           </Typography>
           <Typography
             variant="subtitle1"

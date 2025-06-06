@@ -299,7 +299,7 @@ const ClassAssignment = () => {
                   lineHeight: "normal",
                 }}
               >
-                Class Proficiency
+                Institute Proficiency
               </Typography>
             </Box>
             <Box
@@ -326,7 +326,7 @@ const ClassAssignment = () => {
                 renderInput={(params) => (
                   <TextField
                     {...params}
-                    placeholder="Select Class"
+                    placeholder="Select Institute"
                     variant="outlined"
                     InputProps={{
                       ...params.InputProps,
@@ -433,7 +433,7 @@ const ClassAssignment = () => {
                   lineHeight: "normal",
                 }}
               >
-                Overall Class Participation
+                Overall Institute Participation
               </Typography>
               <Box sx={{display:"flex", justifyContent:"space-between", width:"100%"}}>
                 <Typography

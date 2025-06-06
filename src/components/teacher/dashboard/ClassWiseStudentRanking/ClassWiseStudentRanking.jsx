@@ -75,7 +75,7 @@ const ClassWiseStudentRanking = ({ selectedOptions }) => {
   const [data, setData] = useState({});
   const [loading, setLoading] = useState(true);
   const [statusTabValue, setStatusTabValue] = useState(0);
-  const [classTabValue, setClassTabValue] = useState("Overall");
+  const [classTabValue, setClassTabValue] = useState("MyClass");
   const [modalOpen, setModalOpen] = useState(false);
   const [selectedGrad, setSelectedGrad] = useState("");
 
@@ -249,7 +249,7 @@ const staticClassData = {
             value={classTabValue}
             exclusive
             onChange={handleClassTabChange}
-            aria-label="Class Selection"
+            aria-label="Institute Selection"
             sx={{
               width: "100%", // Ensure the ToggleButtonGroup takes full width
               "& .MuiToggleButtonGroup-grouped": {
@@ -269,11 +269,11 @@ const staticClassData = {
               },
             }}
           >
-            <ToggleButton value="Overall" aria-label="Overall Class">
+            {/* <ToggleButton value="Overall" aria-label="Overall Class">
               Overall
-            </ToggleButton>
+            </ToggleButton> */}
             <ToggleButton value="MyClass" aria-label="My Class">
-              Class
+              Institute
             </ToggleButton>
           </ToggleButtonGroup>
         </Box>
