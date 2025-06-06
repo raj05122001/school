@@ -21,6 +21,8 @@ const RecorderErrorMessage = ({
     return `${hrs > 0 ? `${hrs}h ` : ""}${mins > 0 ? `${mins}m ` : ""}${sec}s`;
   };
 
+  
+
   return (
     <Box>
       {lectureStoped?.isProccess &&
