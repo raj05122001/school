@@ -1,6 +1,6 @@
 import React from "react";
 import { BiErrorCircle } from "react-icons/bi";
-import { MdCheckCircle } from "react-icons/md"; // Added icon for success
+import { MdCheckCircle } from "react-icons/md"; 
 import { CircularProgress, Box, Typography } from "@mui/material";
 
 const RecorderErrorMessage = ({
