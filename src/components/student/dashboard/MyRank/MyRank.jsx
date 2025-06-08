@@ -52,6 +52,7 @@ function MyRank() {
         width: "100%",
         p: 2,
         height: "100%",
+        maxHeight:"400px"
       }}
       className="blur_effect_card"
     >
@@ -94,17 +95,18 @@ function MyRank() {
           </Typography>
         </Box>
       </Box>
+
       <Box
         sx={{
           display: "flex",
           justifyContent: "center",
           alignItems: "center",
           width: "100%",
-          height: "400px", // Adjust as needed
+          height: "300px", // Adjust as needed
         }}
       >
         <ResponsiveContainer width="60%" height="80%">
-          <FunnelChart width={450} height={300}>
+          <FunnelChart width={250} height={200}>
             <Funnel dataKey="value" data={data} isAnimationActive width="100%">
               <LabelList
                 position="outside"

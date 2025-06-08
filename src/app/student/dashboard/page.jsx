@@ -19,17 +19,17 @@ const Page = () => {
   const myAssignmentAnalytics = useMemo(() => <MyAssignmentAnalytics />, []);
 
   return (
-    <Box sx={{ flexGrow: 1, m: 2, }}>
+    <Box sx={{ m: 2,height:'100%',display:'flex', flexDirection:"column",gap:4 }}>
       {/* <Box>{greetingCard}</Box> */}
       {/* Overview and Calendar */}
       {profileCard}
       {recentLectures}
       {/* Lecture and Subject Analytics */}
-      <Grid container spacing={2} marginTop={"16px"}>
-        <Grid item xs={12} md={4}>
+      <Grid container spacing={2}>
+        <Grid item xs={12} lg={5} md={5}>
           {watchTimeChart}
         </Grid>
-        <Grid item xs={12} md={8}>
+        <Grid item xs={12} lg={7} md={7}>
           {myRank}
         </Grid>
       </Grid>

@@ -48,7 +48,7 @@ const RecentLectures = () => {
         backgroundColor: "var(--Website_color-white, #FFF)",
         borderRadius: "20px",
         width:"100%",
-        marginTop:"16px",
+        // marginTop:"16px",
       }}
     >
       <Box sx={{ display: "flex", alignItems: "center", gap: 1, mb: 2 }}>

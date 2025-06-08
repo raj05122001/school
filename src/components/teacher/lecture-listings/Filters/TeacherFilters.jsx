@@ -269,7 +269,7 @@
 
 import React, { useEffect, useState } from "react";
 import { Box, Button, Typography } from "@mui/material";
-import { getClassByCourse, getteacherClass } from "@/api/apiHelper";
+import { getClassByCourse, getteacherClass, watchtimeBySubject } from "@/api/apiHelper";
 import { useRouter, usePathname } from "next/navigation";
 
 const TeacherFilters = ({ classValue = "All" }) => {
@@ -280,20 +280,17 @@ const TeacherFilters = ({ classValue = "All" }) => {
 
   useEffect(() => {
     const fetchData = async () => {
-      const classResponse = await getteacherClass();
-      setClassList(classResponse?.data?.data?.class_subject_list || []);
+      const classResponse = await watchtimeBySubject();
+      setClassList(classResponse?.data?.data || []);
     };
     fetchData();
   }, []);
 
   const handleRoute = async (val) => {
     console.log("pathname : ", pathname);
-    router.push(`${pathname}?class=${val === "All" ? "" : val}`);
+    router.push(`${pathname}?subject=${val === "All" ? "" : val}`);
     setSelected(val);
   };
-
-  // class
-  // router.push()
 
   return (
     <Box sx={{ width: "100%", overflow: "hidden" }}>
@@ -337,11 +334,11 @@ const TeacherFilters = ({ classValue = "All" }) => {
         </Button>
 
         {classList.map((cat) => {
-          const isActive = cat.name === selected;
+          const isActive = cat.subject_name === selected;
           return (
             <Button
-              key={cat.class_name}
-              onClick={() => handleRoute(cat.class_name)}
+              key={cat.subject_name}
+              onClick={() => handleRoute(cat.subject_name)}
               disableRipple
               sx={{
                 whiteSpace: "nowrap",
@@ -361,7 +358,7 @@ const TeacherFilters = ({ classValue = "All" }) => {
                 },
               }}
             >
-              {cat.class_name}
+              {cat.subject_name}
             </Button>
           );
         })}
