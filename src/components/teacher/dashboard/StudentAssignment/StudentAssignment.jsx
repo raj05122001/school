@@ -57,14 +57,14 @@ const StudentAssignment = () => {
   const [selectedOptions, setSelectedOptions] = useState(null);
 
   useEffect(() => {
-    if (selectedOptions?.class_id || Number(userDetails?.user_id) === 35) {
+    if (selectedOptions?.class_id) {
       fetchClassAssignment();
       fetchStudentAssignment();
     }
   }, [selectedOptions, activePage]);
 
   useEffect(() => {
-    if (selectedOptions?.class_id || Number(userDetails?.user_id) === 35) {
+    if (selectedOptions?.class_id) {
       fetchClassAssignment();
     }
   }, [selectedOptions]);
@@ -90,66 +90,9 @@ const StudentAssignment = () => {
     }
   };
 
-  const staticData = [
-    {
-      student_name: "Aditya Verma",
-      total_assignment: 10,
-      completed_assignment: 4,
-      percentage_of_complitation: 40,
-      average_scored_percentage: 73.25,
-      my_assignment_in_which_i_got_less_than_50: 1,
-      my_assignment_in_which_i_got_between_than_50_to_80: 0,
-      my_assignment_in_which_i_got_between_than_80_to_100: 3,
-    },
-    {
-      student_name: "Aisha Gupta",
-      total_assignment: 10,
-      completed_assignment: 4,
-      percentage_of_complitation: 40,
-      average_scored_percentage: 78,
-      my_assignment_in_which_i_got_less_than_50: 0,
-      my_assignment_in_which_i_got_between_than_50_to_80: 2,
-      my_assignment_in_which_i_got_between_than_80_to_100: 2,
-    },
-    {
-      student_name: "Chandrakant Tripathi",
-      total_assignment: 10,
-      completed_assignment: 2,
-      percentage_of_complitation: 20,
-      average_scored_percentage: 81.5,
-      my_assignment_in_which_i_got_less_than_50: 0,
-      my_assignment_in_which_i_got_between_than_50_to_80: 1,
-      my_assignment_in_which_i_got_between_than_80_to_100: 1,
-    },
-    {
-      student_name: "Hrisihta Singh",
-      total_assignment: 10,
-      completed_assignment: 4,
-      percentage_of_complitation: 40,
-      average_scored_percentage: 76,
-      my_assignment_in_which_i_got_less_than_50: 0,
-      my_assignment_in_which_i_got_between_than_50_to_80: 2,
-      my_assignment_in_which_i_got_between_than_80_to_100: 2,
-    },
-    {
-      student_name: "Mohit Chauhan",
-      total_assignment: 10,
-      completed_assignment: 4,
-      percentage_of_complitation: 40,
-      average_scored_percentage: 74.5,
-      my_assignment_in_which_i_got_less_than_50: 0,
-      my_assignment_in_which_i_got_between_than_50_to_80: 3,
-      my_assignment_in_which_i_got_between_than_80_to_100: 1,
-    },
-  ];
-
   const fetchStudentAssignment = async () => {
     setLoading(true);
     try {
-      if (Number(userDetails?.user_id) === 35) {
-        setData(staticData);
-        setTotalPage(1);
-      } else {
         const response = await getStudentAssignment(
           selectedOptions?.class_id,
           activePage,
@@ -158,7 +101,6 @@ const StudentAssignment = () => {
         );
         setData(response?.data?.data?.data);
         setTotalPage(response?.data?.data?.total);
-      }
     } catch (error) {
       console.error(error);
     } finally {

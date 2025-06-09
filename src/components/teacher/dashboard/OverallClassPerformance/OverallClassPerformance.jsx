@@ -17,88 +17,6 @@ function OverallClassPerformance() {
 
   const fetchRatingsCount = async () => {
     try {
-      if (Number(userDetails?.user_id) === 35) {
-        const response = {
-          data:{
-            data:{
-          count_of_5: 1,
-          count_of_4: 2,
-          count_of_3: 1,
-          count_of_2: 0,
-          count_of_1: 0,
-        }
-          }
-        };
-        // Calculate total ratings
-        const total =
-          (response?.data?.data?.count_of_5 || 0) +
-          (response?.data?.data?.count_of_4 || 0) +
-          (response?.data?.data?.count_of_3 || 0) +
-          (response?.data?.data?.count_of_2 || 0) +
-          (response?.data?.data?.count_of_1 || 0);
-
-        // Transform the data structure for progress bars
-        const transformedData = [
-          {
-            rating: "5",
-            count: response?.data?.data?.count_of_5 || 0,
-            percentage:
-              total > 0
-                ? (
-                    ((response?.data?.data?.count_of_5 || 0) / total) *
-                    100
-                  )?.toFixed(2)
-                : "0.00",
-          },
-          {
-            rating: "4",
-            count: response?.data?.data?.count_of_4 || 0,
-            percentage:
-              total > 0
-                ? (
-                    ((response?.data?.data?.count_of_4 || 0) / total) *
-                    100
-                  ).toFixed(2)
-                : "0.00",
-          },
-          {
-            rating: "3",
-            count: response?.data?.data?.count_of_3 || 0,
-            percentage:
-              total > 0
-                ? (
-                    ((response?.data?.data?.count_of_3 || 0) / total) *
-                    100
-                  ).toFixed(2)
-                : "0.00",
-          },
-          {
-            rating: "2",
-            count: response?.data?.data?.count_of_2 || 0,
-            percentage:
-              total > 0
-                ? (
-                    ((response?.data?.data?.count_of_2 || 0) / total) *
-                    100
-                  ).toFixed(2)
-                : "0.00",
-          },
-          {
-            rating: "1",
-            count: response?.data?.data?.count_of_1 || 0,
-            percentage:
-              total > 0
-                ? (
-                    ((response?.data?.data?.count_of_1 || 0) / total) *
-                    100
-                  ).toFixed(2)
-                : "0.00",
-          },
-        ];
-
-        setData(transformedData);
-        setTotalRatings(total);
-      } else {
         const response = await getRatingsCount();
 
         // Calculate total ratings
@@ -170,7 +88,6 @@ function OverallClassPerformance() {
 
         setData(transformedData);
         setTotalRatings(total);
-      }
     } catch (error) {
       console.error(error);
     }
