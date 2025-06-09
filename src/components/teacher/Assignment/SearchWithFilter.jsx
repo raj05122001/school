@@ -124,6 +124,19 @@ export default function SearchWithFilter() {
     setFilterOpen(false);
   };
 
+  // Clear all filters function
+  const handleClearAllFilters = () => {
+    // Clear all state
+    setSearchInput("");
+    setFilterClass("");
+    setFilterSubject("");
+    setFilterDate(null);
+    
+    // Clear all URL parameters
+    router.push(pathname);
+    setFilterOpen(false);
+  };
+
   return (
     <>
       {/* Search bar with filter toggle */}
@@ -179,7 +192,7 @@ export default function SearchWithFilter() {
                         endAdornment: filterClass ? (
                           <InputAdornment position="end">
                             <IconButton onClick={() => setFilterClass("")}
-                              edge="end"
+                              edge="end"
                             >
                               <FaTimes />
                             </IconButton>
@@ -205,7 +218,7 @@ export default function SearchWithFilter() {
                         endAdornment: filterSubject ? (
                           <InputAdornment position="end">
                             <IconButton onClick={() => setFilterSubject("")}
-                              edge="end"
+                              edge="end"
                             >
                               <FaTimes />
                             </IconButton>
@@ -230,6 +243,13 @@ export default function SearchWithFilter() {
         </DialogContent>
         <DialogActions>
           <Button onClick={() => setFilterOpen(false)}>Cancel</Button>
+          <Button 
+            onClick={handleClearAllFilters}
+            color="warning"
+            variant="outlined"
+          >
+            Clear All
+          </Button>
           <Button variant="contained" onClick={handleApplyFilters}>
             Apply
           </Button>

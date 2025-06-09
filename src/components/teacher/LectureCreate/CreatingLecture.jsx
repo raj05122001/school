@@ -690,6 +690,7 @@ const CreatingLecture = ({
                   label="Lecture Date"
                   value={lectureDate}
                   onChange={(newDate) => setLectureDate(newDate)}
+                  minDate={dayjs()} // This disables all past dates
                   slotProps={{
                     textField: {
                       fullWidth: true,

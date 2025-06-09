@@ -411,7 +411,7 @@ const LectureTabs = () => {
         }}
       >
         {loading ? (
-          <Box sx={{ mt: 4 }}>
+          <Box sx={{ mt: 4 ,width:"100%"}}>
             <TableSkeleton row={9} />
           </Box>
         ) : (

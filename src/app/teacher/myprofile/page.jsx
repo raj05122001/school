@@ -12,8 +12,13 @@ import {
   Alert,
   Badge,
   Tooltip,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogContentText,
+  DialogTitle,
 } from "@mui/material";
-import { FaSave, FaCamera } from "react-icons/fa";
+import { FaSave, FaCamera, FaTrash } from "react-icons/fa";
 import { useForm } from "react-hook-form";
 import { decodeToken } from "react-jwt";
 import { BASE_URL_MEET } from "@/constants/apiconfig";
@@ -34,6 +39,11 @@ const EditDetailsPage = () => {
   const fileInputRef = useRef(null);
   const [subject, setSubject] = useState([]);
   const [initialData, setInitialData] = useState({});
+  const [isLoading, setIsLoading] = useState(false);
+  const [hasChanges, setHasChanges] = useState(false);
+  const [profilePicChanged, setProfilePicChanged] = useState(false);
+  const [profilePicRemoved, setProfilePicRemoved] = useState(false);
+  const [removeConfirmOpen, setRemoveConfirmOpen] = useState(false);
 
   const { isDarkMode } = useThemeContext();
 
@@ -42,14 +52,51 @@ const EditDetailsPage = () => {
     handleSubmit,
     setValue,
     reset,
+    watch,
     formState: { errors },
   } = useForm({
     defaultValues: {},
   });
 
+  // Watch all form fields for changes
+  const watchedFields = watch();
+
   useEffect(() => {
     fetchTeacherDetails();
   }, []);
+
+  // Check for changes whenever form data changes
+  useEffect(() => {
+    if (Object.keys(initialData).length > 0) {
+      checkForChanges();
+    }
+  }, [watchedFields, profilePicChanged, profilePicRemoved, initialData]);
+
+  const checkForChanges = () => {
+    const currentData = {
+      full_name: watchedFields.full_name || '',
+      designation: watchedFields.designation || '',
+      experience: watchedFields.experience || '',
+      department: watchedFields.department || '',
+      email: watchedFields.email || '',
+    };
+
+    const initialFormData = {
+      full_name: initialData.full_name || '',
+      designation: initialData.designation || '',
+      experience: initialData.experience || '',
+      department: initialData.department || '',
+      email: initialData.email || '',
+    };
+
+    // Check if any form field has changed
+    const formDataChanged = Object.keys(currentData).some(
+      key => currentData[key] !== initialFormData[key]
+    );
+
+    // Update hasChanges state
+    setHasChanges(formDataChanged || profilePicChanged || profilePicRemoved);
+  };
 
   const fetchTeacherDetails = async () => {
     try {
@@ -95,12 +142,40 @@ const EditDetailsPage = () => {
         return;
       }
       setProfilePicUrl(URL.createObjectURL(file));
+      setProfilePicChanged(true);
+      setProfilePicRemoved(false); // Reset removed state if new pic is selected
     }
+  };
+
+  const handleRemovePicClick = () => {
+    setRemoveConfirmOpen(true);
+  };
+
+  const handleConfirmRemove = () => {
+    setProfilePicUrl(null);
+    setProfilePicRemoved(true);
+    setProfilePicChanged(false); // Reset changed state
+    setRemoveConfirmOpen(false);
+    
+    // Clear the file input
+    if (fileInputRef.current) {
+      fileInputRef.current.value = '';
+    }
+    
+    setSnackbar({
+      open: true,
+      message: "Profile picture removed. Click Save to confirm changes.",
+      severity: "info",
+    });
+  };
+
+  const handleCancelRemove = () => {
+    setRemoveConfirmOpen(false);
   };
 
   useEffect(() => {
     return () => {
-      if (profilePicUrl) {
+      if (profilePicUrl && profilePicUrl.startsWith('blob:')) {
         URL.revokeObjectURL(profilePicUrl);
       }
     };
@@ -108,16 +183,22 @@ const EditDetailsPage = () => {
 
   const onSubmit = async (formData) => {
     const updateData = new FormData();
-
+    
     Object.keys(formData).forEach((key) => {
       if (formData[key] !== initialData[key]) {
         updateData.append(key, formData[key]);
       }
     });
-
-    if (profilePicUrl && profilePicUrl !== initialData.profile_pic) {
+    
+    // Handle profile picture changes
+    if (profilePicRemoved) {
+      // Send empty string or null to indicate removal
+      updateData.append("profile_pic", "");
+    } else if (profilePicUrl && profilePicChanged && fileInputRef.current.files[0]) {
       updateData.append("profile_pic", fileInputRef.current.files[0]);
     }
+
+    setIsLoading(true);
 
     try {
       const response = await updateTeacherDetails(
@@ -125,16 +206,36 @@ const EditDetailsPage = () => {
         updateData
       );
 
-      console.log("response : ",response?.data?.data?.new_token)
-      const accessToken = response?.data?.data?.new_token?.access
-      const refreshToken = response?.data?.data?.new_token?.refresh
-      console.log("refreshToken : ",refreshToken,", accessToken : ",accessToken)
-      Cookies.set("ACCESS_TOKEN", accessToken, { expires: 7 }); // Store access token in cookies
-      Cookies.set("REFRESH_TOKEN", refreshToken, { expires: 30 }); // Store refresh token in cookies
+      console.log("response : ", response?.data?.data?.new_token);
+      const accessToken = response?.data?.data?.new_token?.access;
+      const refreshToken = response?.data?.data?.new_token?.refresh;
+      console.log("refreshToken : ", refreshToken, ", accessToken : ", accessToken);
+      Cookies.set("ACCESS_TOKEN", accessToken, { expires: 7 });
+      Cookies.set("REFRESH_TOKEN", refreshToken, { expires: 30 });
       toast.success("Details updated successfully.");
+      
+      // Reset change tracking after successful update
+      setProfilePicChanged(false);
+      setProfilePicRemoved(false);
+      setHasChanges(false);
+      
+      // Update initial data with new values
+      const updatedInitialData = { ...initialData };
+      Object.keys(formData).forEach((key) => {
+        updatedInitialData[key] = formData[key];
+      });
+      if (profilePicRemoved) {
+        updatedInitialData.profile_pic = null;
+      } else if (profilePicChanged) {
+        updatedInitialData.profile_pic = profilePicUrl;
+      }
+      setInitialData(updatedInitialData);
+      
     } catch (error) {
       console.error("Update error:", error);
       toast.error("Failed to update details.");
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -174,65 +275,135 @@ const EditDetailsPage = () => {
           position: "relative",
         }}
       >
-        <Badge
-          overlap="circular"
-          anchorOrigin={{ vertical: "bottom", horizontal: "right" }}
-          sx={{ cursor: "pointer" }}
-          onClick={handleEditPicClick}
-          badgeContent={
-            <Tooltip title="Edit Profile Picture">
-              <IconButton
-                color="primary"
-                size="small"
-                sx={{ backgroundColor: "#141514", borderRadius: "8px" }}
-              >
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  width="24"
-                  height="24"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                >
-                  <path
-                    d="M11 2H9C4 2 2 4 2 9V15C2 20 4 22 9 22H15C20 22 22 20 22 15V13"
-                    stroke="white"
-                    stroke-width="1.5"
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                  />
-                  <path
-                    d="M16.0399 3.02025L8.15988 10.9003C7.85988 11.2003 7.55988 11.7903 7.49988 12.2203L7.06988 15.2303C6.90988 16.3203 7.67988 17.0803 8.76988 16.9303L11.7799 16.5003C12.1999 16.4403 12.7899 16.1403 13.0999 15.8403L20.9799 7.96025C22.3399 6.60025 22.9799 5.02025 20.9799 3.02025C18.9799 1.02025 17.3999 1.66025 16.0399 3.02025Z"
-                    stroke="white"
-                    stroke-width="1.5"
-                    stroke-miterlimit="10"
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                  />
-                  <path
-                    d="M14.9102 4.15039C15.5802 6.54039 17.4502 8.41039 19.8502 9.09039"
-                    stroke="white"
-                    stroke-width="1.5"
-                    stroke-miterlimit="10"
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                  />
-                </svg>
-              </IconButton>
-            </Tooltip>
-          }
-        >
+        <Box sx={{ position: "relative" }}>
           <Avatar
             src={profilePicUrl}
             alt="Profile Picture"
             sx={{
               width: { xs: 100, sm: 150 },
               height: { xs: 100, sm: 150 },
-              // border: "2px solid #1976d2",
               boxShadow: 3,
               borderRadius: "16px",
             }}
           />
-        </Badge>
+          
+          {/* Edit Button */}
+          <Tooltip title="Edit Profile Picture">
+            <IconButton
+              onClick={handleEditPicClick}
+              sx={{
+                position: "absolute",
+                bottom: -8,
+                right: profilePicUrl ? 32 : -8, // Adjust position when remove button is present
+                backgroundColor: "#141514",
+                borderRadius: "8px",
+                width: 32,
+                height: 32,
+                "&:hover": {
+                  backgroundColor: "#333",
+                },
+              }}
+            >
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="16"
+                height="16"
+                viewBox="0 0 24 24"
+                fill="none"
+              >
+                <path
+                  d="M11 2H9C4 2 2 4 2 9V15C2 20 4 22 9 22H15C20 22 22 20 22 15V13"
+                  stroke="white"
+                  strokeWidth="1.5"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                />
+                <path
+                  d="M16.0399 3.02025L8.15988 10.9003C7.85988 11.2003 7.55988 11.7903 7.49988 12.2203L7.06988 15.2303C6.90988 16.3203 7.67988 17.0803 8.76988 16.9303L11.7799 16.5003C12.1999 16.4403 12.7899 16.1403 13.0999 15.8403L20.9799 7.96025C22.3399 6.60025 22.9799 5.02025 20.9799 3.02025C18.9799 1.02025 17.3999 1.66025 16.0399 3.02025Z"
+                  stroke="white"
+                  strokeWidth="1.5"
+                  strokeMiterlimit="10"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                />
+                <path
+                  d="M14.9102 4.15039C15.5802 6.54039 17.4502 8.41039 19.8502 9.09039"
+                  stroke="white"
+                  strokeWidth="1.5"
+                  strokeMiterlimit="10"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                />
+              </svg>
+            </IconButton>
+          </Tooltip>
+
+          {/* Remove Button - Only show if there's a profile picture */}
+          {profilePicUrl && (
+            <Tooltip title="Remove Profile Picture">
+              <IconButton
+                onClick={handleRemovePicClick}
+                sx={{
+                  position: "absolute",
+                  bottom: -8,
+                  right: -8,
+                  backgroundColor: "#dc3545",
+                  borderRadius: "8px",
+                  width: 32,
+                  height: 32,
+                  "&:hover": {
+                    backgroundColor: "#c82333",
+                  },
+                }}
+              >
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="16"
+                  height="16"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                >
+                  <path
+                    d="M21 5.98C17.67 5.65 14.32 5.48 10.98 5.48C9 5.48 7.02 5.58 5.04 5.78L3 5.98"
+                    stroke="white"
+                    strokeWidth="1.5"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                  />
+                  <path
+                    d="M8.5 4.97L8.72 3.66C8.88 2.71 9 2 10.69 2H13.31C15 2 15.13 2.75 15.28 3.67L15.5 4.97"
+                    stroke="white"
+                    strokeWidth="1.5"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                  />
+                  <path
+                    d="M18.85 9.14L18.2 19.21C18.09 20.78 18 22 15.21 22H8.79C6 22 5.91 20.78 5.8 19.21L5.15 9.14"
+                    stroke="white"
+                    strokeWidth="1.5"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                  />
+                  <path
+                    d="M10.33 16.5H13.66"
+                    stroke="white"
+                    strokeWidth="1.5"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                  />
+                  <path
+                    d="M9.5 12.5H14.5"
+                    stroke="white"
+                    strokeWidth="1.5"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                  />
+                </svg>
+              </IconButton>
+            </Tooltip>
+          )}
+        </Box>
+
         <input
           type="file"
           accept="image/*"
@@ -259,12 +430,11 @@ const EditDetailsPage = () => {
                 sx={{
                   backgroundColor: "#fff",
                   "& .MuiOutlinedInput-root": {
-                    borderRadius: "12px", // This affects the whole input container
+                    borderRadius: "12px",
                   },
                   "& .MuiOutlinedInput-notchedOutline": {
-                    borderRadius: "12px", // This affects the outline (border)
+                    borderRadius: "12px",
                   },
-
                   "& .MuiInputBase-input": {
                     fontSize: "16px",
                     fontWeight: 400,
@@ -297,10 +467,10 @@ const EditDetailsPage = () => {
                 sx={{
                   backgroundColor: "#fff",
                   "& .MuiOutlinedInput-root": {
-                    borderRadius: "12px", // This affects the whole input container
+                    borderRadius: "12px",
                   },
                   "& .MuiOutlinedInput-notchedOutline": {
-                    borderRadius: "12px", // This affects the outline (border)
+                    borderRadius: "12px",
                   },
                   "& .MuiInputBase-input": {
                     fontSize: "16px",
@@ -334,10 +504,10 @@ const EditDetailsPage = () => {
                 sx={{
                   backgroundColor: "#fff",
                   "& .MuiOutlinedInput-root": {
-                    borderRadius: "12px", // This affects the whole input container
+                    borderRadius: "12px",
                   },
                   "& .MuiOutlinedInput-notchedOutline": {
-                    borderRadius: "12px", // This affects the outline (border)
+                    borderRadius: "12px",
                   },
                   "& .MuiInputBase-input": {
                     fontSize: "16px",
@@ -372,10 +542,10 @@ const EditDetailsPage = () => {
                 sx={{
                   backgroundColor: "#fff",
                   "& .MuiOutlinedInput-root": {
-                    borderRadius: "12px", // This affects the whole input container
+                    borderRadius: "12px",
                   },
                   "& .MuiOutlinedInput-notchedOutline": {
-                    borderRadius: "12px", // This affects the outline (border)
+                    borderRadius: "12px",
                   },
                   "& .MuiInputBase-input": {
                     fontSize: "16px",
@@ -415,10 +585,10 @@ const EditDetailsPage = () => {
                 sx={{
                   backgroundColor: "#fff",
                   "& .MuiOutlinedInput-root": {
-                    borderRadius: "12px", // This affects the whole input container
+                    borderRadius: "12px",
                   },
                   "& .MuiOutlinedInput-notchedOutline": {
-                    borderRadius: "12px", // This affects the outline (border)
+                    borderRadius: "12px",
                   },
                   "& .MuiInputBase-input": {
                     fontSize: "16px",
@@ -475,20 +645,20 @@ const EditDetailsPage = () => {
               type="submit"
               variant="contained"
               size="large"
-              // startIcon={<FaSave />}
+              disabled={!hasChanges || isLoading}
               sx={{
                 mt: 2,
                 display: "inline-flex",
                 padding: "24px",
-                width:"175px",
-                height:"52px",
+                width: "175px",
+                height: "52px",
                 justifyContent: "center",
                 alignItems: "center",
                 gap: "8px",
                 textTransform: "none",
                 borderRadius: "8px",
-                background: "#141514",
-                color: "#FFF",
+                background: hasChanges ? "#141514" : "#CCCCCC",
+                color: hasChanges ? "#FFF" : "#888888",
                 textAlign: "center",
                 fontFeatureSettings: "'liga' off, 'clig' off",
                 fontFamily: "Inter",
@@ -496,18 +666,48 @@ const EditDetailsPage = () => {
                 fontStyle: "normal",
                 fontWeight: "600",
                 lineHeight: "normal",
+                cursor: hasChanges ? "pointer" : "not-allowed",
                 "&:hover": {
-                  border: "1px solid #141514",
-                  background: "#E5E5E5",
-                  color: "#141514",
+                  border: hasChanges ? "1px solid #141514" : "none",
+                  background: hasChanges ? "#E5E5E5" : "#CCCCCC",
+                  color: hasChanges ? "#141514" : "#888888",
+                },
+                "&:disabled": {
+                  background: "#CCCCCC",
+                  color: "#888888",
                 },
               }}
             >
-              Save
+              {isLoading ? "Loading..." : "Save"}
             </Button>
           </Box>
         </form>
       </Box>
+
+      {/* Confirmation Dialog for Profile Picture Removal */}
+      <Dialog
+        open={removeConfirmOpen}
+        onClose={handleCancelRemove}
+        aria-labelledby="remove-dialog-title"
+        aria-describedby="remove-dialog-description"
+      >
+        <DialogTitle id="remove-dialog-title">
+          Remove Profile Picture
+        </DialogTitle>
+        <DialogContent>
+          <DialogContentText id="remove-dialog-description">
+            Are you sure you want to remove your profile picture? This action cannot be undone.
+          </DialogContentText>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={handleCancelRemove} color="primary">
+            Cancel
+          </Button>
+          <Button onClick={handleConfirmRemove} color="error" autoFocus>
+            Remove
+          </Button>
+        </DialogActions>
+      </Dialog>
 
       <Snackbar
         open={snackbar.open}
