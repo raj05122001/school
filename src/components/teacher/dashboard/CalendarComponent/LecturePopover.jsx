@@ -241,7 +241,7 @@ const LecturePopover = ({ data, isOrganizer }) => {
                       size="small"
                       color="primary"
                       onClick={(event) =>
-                        handleLectureRecord(data.event.extendedProps)
+                        handleLectureRecord({...data.event.extendedProps,id:lectureId})
                       }
                     >
                       <MdOutlineEmergencyRecording
