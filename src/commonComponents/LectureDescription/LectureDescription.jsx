@@ -120,7 +120,7 @@ const LectureDescription = ({ lectureData, isShowPic = false, loading,videoTimeS
             <Skeleton width="80%" height={30} />
           ) : (
             <Typography sx={keyCSS}>
-              Organizer Name:{" "}
+              Professor:{" "}
               <Tooltip
                 title={lectureData?.organizer?.full_name || "Description not available"}
               >

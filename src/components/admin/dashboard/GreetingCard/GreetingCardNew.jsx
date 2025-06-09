@@ -7,6 +7,7 @@ import { IoPlayCircleOutline } from "react-icons/io5";
 import { FiUpload } from "react-icons/fi";
 import { useRouter } from "next/navigation";
 import { AppContextProvider } from "@/app/main";
+import { capitalizeFullName } from "@/helper/Helper";
 
 function GreetingCardNew() {
   const [userDetails, setUserDetails] = useState(null);
@@ -19,8 +20,6 @@ function GreetingCardNew() {
     }
   }, []);
 
-  const userName = userDetails?.full_name?.split(" ")[0];
-
   return (
     <Box
       sx={{
@@ -29,7 +28,7 @@ function GreetingCardNew() {
         width: "100%",
         height: "75px",
         padding: "13px 6px",
-        justifyContent:'space-between'
+        justifyContent: "space-between",
       }}
     >
       <Typography
@@ -42,18 +41,17 @@ function GreetingCardNew() {
           flexShrink: 0,
         }}
       >
-        Welcome Back {userName}
+        Welcome Back {capitalizeFullName(userDetails?.full_name)}
       </Typography>
       <Box
         sx={{
           display: "flex",
           justifyContent: "space-between",
           alignItems: "center",
-          paddingRight:"12px",
+          paddingRight: "12px",
           gap: "12px",
         }}
       >
-
         {userDetails?.role === "ADMIN" && (
           <Button
             variant="contained"
@@ -69,7 +67,7 @@ function GreetingCardNew() {
               textTransform: "none",
             }}
           >
-            <FiUpload style={{fontSize:"24px"}}/>
+            <FiUpload style={{ fontSize: "24px" }} />
             <Typography
               sx={{
                 color: "#fff",
@@ -85,8 +83,7 @@ function GreetingCardNew() {
               Upload
             </Typography>
           </Button>
-          
-        )}  
+        )}
         {userDetails?.role === "TEACHER" && (
           <Button
             variant="contained"
@@ -101,10 +98,10 @@ function GreetingCardNew() {
               backgroundColor: "#141514",
               textTransform: "none",
               "&:hover": {
-                    border: "1px solid #141514",
-                    background: "#E5E5E5",
-                    color: "#141514",
-                  },
+                border: "1px solid #141514",
+                background: "#E5E5E5",
+                color: "#141514",
+              },
             }}
           >
             <span
@@ -157,18 +154,18 @@ function GreetingCardNew() {
                 fontWeight: 700,
                 lineHeight: "24px",
                 "&:hover": {
-                    color: "#141514",
-                  },
+                  color: "#141514",
+                },
               }}
             >
               Create
             </Typography>
           </Button>
-        )} 
-        {userDetails?.role==="STUDENT" && (
+        )}
+        {userDetails?.role === "STUDENT" && (
           <Button
             variant="contained"
-            onClick={()=>router.push(`/student/lecture-listings/`)}
+            onClick={() => router.push(`/student/lecture-listings/`)}
             sx={{
               display: "flex",
               padding: "12px 16px",
@@ -180,7 +177,7 @@ function GreetingCardNew() {
               textTransform: "none",
             }}
           >
-            <IoPlayCircleOutline style={{color:"#fff", fontSize:"24px"}}/>
+            <IoPlayCircleOutline style={{ color: "#fff", fontSize: "24px" }} />
             <Typography
               sx={{
                 color: "#fff",
