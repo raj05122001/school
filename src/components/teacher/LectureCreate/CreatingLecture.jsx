@@ -540,6 +540,10 @@ const CreatingLecture = ({
                 value={lectureSubject}
                 helperText={errors.messages.subject}
               // disabled={isEditMode} // Disable in edit mode
+                onUpdate={()=>{
+                  setLectureChapter("")
+                  setLectureTopics("")
+                }}
               />
             </Grid>
 
@@ -553,6 +557,7 @@ const CreatingLecture = ({
                 value={lectureChapter}
                 helperText={errors.messages.chapter}
               // disabled={isEditMode} // Disable in edit mode
+                onUpdate={setLectureTopics}
               />
             </Grid>
 

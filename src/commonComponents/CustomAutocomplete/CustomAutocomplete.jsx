@@ -9,6 +9,7 @@ const CustomAutocomplete = ({
   value,
   disabled=false,
   helperText = "",
+  onUpdate={}
 }) => {
   const { isDarkMode } = useThemeContext();
 
@@ -19,6 +20,7 @@ const CustomAutocomplete = ({
   const handleSelect = (newValue) => {
     onSelect(newValue);
     onChange(newValue?.name);
+    onUpdate("")
   };
 
   const handleChange = (newValue) => {
@@ -28,8 +30,10 @@ const CustomAutocomplete = ({
     if (findValue) {
       onSelect(findValue);
       onChange(findValue?.name);
+      onUpdate("")
     } else {
       onChange(newValue);
+      onUpdate("")
     }
   };
 
@@ -40,7 +44,9 @@ const CustomAutocomplete = ({
       options={options}
       disabled={disabled}
       value={value}
-      getOptionLabel={(option) => option.name}
+      getOptionLabel={(option) =>
+        typeof option === "string" ? option : option?.name || ""
+      }
       // disabled = {disabled}
       onChange={(event, newValue) => {
         handleSelect(newValue);
