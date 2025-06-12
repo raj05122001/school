@@ -217,7 +217,7 @@ const Main = ({ children }) => {
                         lineHeight: "28px",
                       }}
                     >
-                      Chatbot
+                      Ai Buddy
                     </span>
                   </Button>
                 </IconButton>
