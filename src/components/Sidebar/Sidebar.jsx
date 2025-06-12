@@ -138,7 +138,7 @@ export const sidebarLinks = {
       show: "STUDENT",
     },
     {
-      text: "Chatbot",
+      text: "Ai Buddy",
       href: "/chat-bot",
       icon: <FaRobot size={22} />,
       show: ["TEACHER", "STUDENT", "ADMIN"],
