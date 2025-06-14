@@ -14,6 +14,7 @@ import { BsChatSquareText } from "react-icons/bs";
 import Image from "next/image";
 import NewChatbot from "@/components/ChatBot/NewChatbot";
 import GreetingCardNew from "@/components/admin/dashboard/GreetingCard/GreetingCardNew";
+import { LanguageProvider } from "@/Context/LanguageContext";
 
 export const AppContextProvider = createContext({});
 
@@ -98,6 +99,7 @@ const Main = ({ children }) => {
         <>{children}</>
       ) : (
         <ThemeProvider>
+          <LanguageProvider>
           <AppContextProvider.Provider
             value={{
               openRecordingDrawer,
@@ -230,6 +232,7 @@ const Main = ({ children }) => {
               </Box>
             )}
           </AppContextProvider.Provider>
+          </LanguageProvider>
         </ThemeProvider>
       )}
     </Suspense>

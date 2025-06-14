@@ -1,8 +1,11 @@
+"use client"
 import { getClassAssignment, getteacherClass } from "@/api/apiHelper";
 import { Autocomplete, Box, TextField, Typography } from "@mui/material";
+import { useTranslations } from "next-intl";
 import React, { useState, useEffect } from "react";
 
-const ClassProf = () => {
+const ClassProf = () =>{
+  const t = useTranslations()
   const [classOptions, setClassOptions] = useState([]);
   const [selectedOptions, setSelectedOptions] = useState(null);
   const [data, setData] = useState({});
@@ -142,7 +145,7 @@ const ClassProf = () => {
               lineHeight: "normal",
             }}
           >
-            Class Proficiency
+            {t("Class Proficiency")}
           </Typography>
         </Box>
         <Box
@@ -276,7 +279,7 @@ const ClassProf = () => {
               lineHeight: "normal",
             }}
           >
-            Overall Class Participation
+            {t("Overall Class Participation")}
           </Typography>
           <Box sx={{display:"flex", justifyContent:"space-between", width:"100%"}}>
             <Typography
@@ -452,7 +455,7 @@ const ClassProf = () => {
               lineHeight: "normal",
             }}
           >
-            Work Assigned
+            {t("Work Assigned")}
           </Typography>
           <Box
             sx={{
