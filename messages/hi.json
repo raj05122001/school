@@ -211,5 +211,11 @@
   "Not Attempted":"प्रयास नहीं किया गया",
   "Please upload a file or enter a description to proceed" : "कृपया आगे बढ़ने के लिए फ़ाइल अपलोड करें या विवरण दर्ज करें। (AI-मूल्यांकन केवल दस्तावेज़ों के लिए किया जाएगा)",
   "Need Guidance":"मार्गदर्शन चाहिए",
-  "Personalised Recommendations": "व्यक्तिगत अनुशंसाएँ"
+  "Personalised Recommendations": "व्यक्तिगत अनुशंसाएँ",
+  "Overall Rating":"समग्र रेटिंग",
+  "Ranking":"श्रेणी",
+  "Recent Uploads":"हाल के अपलोड",
+  "Let's Discuss What's Next":"आइये चर्चा करें कि आगे क्या होगा",
+  "Have a project or a question? We'd love to hear from you":"क्या आपके पास कोई प्रोजेक्ट या सवाल है? हमें आपसे सुनना अच्छा लगेगा।",
+  "Contact Us":"हमसे संपर्क करें"
 }

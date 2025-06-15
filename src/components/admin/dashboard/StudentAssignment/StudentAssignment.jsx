@@ -18,6 +18,7 @@ import UserImage from "@/commonComponents/UserImage/UserImage";
 import { useThemeContext } from "@/hooks/ThemeContext";
 import { getAllSubject, getClassAssignment, getStudentAssignment } from "@/api/apiHelper";
 import { FiAlertTriangle } from "react-icons/fi";
+import { useTranslations } from "next-intl";
 
 const StudentAssignment = () => {
   const { isDarkMode } = useThemeContext();
@@ -28,6 +29,7 @@ const StudentAssignment = () => {
   const [activePage, setActivePage] = useState(1);
   const [totalPage, setTotalPage] = useState(1);
   const [rangeData, setRangeData] = useState([]);
+  const t=useTranslations();
 
   const handleChange = (event, value) => {
     setActivePage(value);
@@ -127,7 +129,7 @@ const StudentAssignment = () => {
     //         alignItems: "center",
     //       }}
     //     >
-    //       Student Proficiency
+    //        {t("Student Proficiency")}
     //     </Typography>
     //     {/* <Autocomplete
     //       freeSolo
@@ -514,7 +516,7 @@ const StudentAssignment = () => {
               lineHeight: "normal",
             }}
           >
-            Student Proficiency
+            {t("Student Proficiency")}
           </Typography>
         </Box>
         <Box

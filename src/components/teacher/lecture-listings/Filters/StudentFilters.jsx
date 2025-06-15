@@ -249,6 +249,7 @@ import React, { useEffect, useState } from "react";
 import { Box, Button, Typography } from "@mui/material";
 import { getClassByCourse, getMySubject, getSubjectByClass } from "@/api/apiHelper";
 import { useRouter, usePathname } from "next/navigation";
+import { useTranslations } from "next-intl";
 
 const StudentFilters = ({
   subject = "All",
@@ -262,6 +263,7 @@ const StudentFilters = ({
   const [selected, setSelected] = useState(subject);
   const [subjectList, setSubjectList] = useState([]);
   const [classList, setClassList] = useState([]);
+  const t=useTranslations();
 
   useEffect(() => {
     const fetchData = async () => {
@@ -359,7 +361,7 @@ const StudentFilters = ({
       </Box>
 
       <Typography variant="h6" sx={{ mt: 2, px: 2 }}>
-        Recent Uploads
+        {t("Recent Uploads")}
       </Typography>
     </Box>
   );

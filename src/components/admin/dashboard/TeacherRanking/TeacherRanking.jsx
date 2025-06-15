@@ -30,6 +30,7 @@ import { getTeacherLectureCompletion, getTopTeachers, getWatchtimeComparison } f
 import { BASE_URL_MEET } from "@/constants/apiconfig";
 import Image from "next/image";
 import TeacherTableSkeleton from "./TeacherTableSkeleton";
+import { useTranslations } from "next-intl";
 
 /**
  * A small wrapper for the profile image to give it a circular border/ring.
@@ -61,6 +62,7 @@ const TeacherRanking = () => {
   const [topTeachers, setTopTeachers] = useState({});
   const [teacherID, setTeacherID] = useState(null);
   const [loading, setLoading] = useState(true);
+  const t=useTranslations();
 
   // On mount, fetch the list of top teachers.
   useEffect(() => {
@@ -241,7 +243,7 @@ const TeacherRanking = () => {
                           fontFamily: "Inter, sans-serif",
                         }}
                       >
-                        Total Lectures
+                       {t(" Total Lectures")}
                       </TableCell>
                       <TableCell
                         sx={{

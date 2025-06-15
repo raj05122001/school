@@ -15,8 +15,10 @@ import { MdDarkMode, MdLightMode } from "react-icons/md";
 import { watchtimeBySubject } from "@/api/apiHelper";
 import Cookies from "js-cookie";
 import { decodeToken } from "react-jwt";
+import { useTranslations } from "next-intl";
 
 const SubjectAnalytics = () => {
+  const t=useTranslations();
   const userDetails = decodeToken(Cookies.get("ACCESS_TOKEN"));
   const { isDarkMode } = useThemeContext();
   const [data, setData] = useState([]);
@@ -172,7 +174,7 @@ const SubjectAnalytics = () => {
           className={`${isDarkMode ? "dark-heading" : "light-heading"}`}
         >
           <FiBarChart2 size={22} style={{ marginRight: "8px" }} />
-          Watch Time by Subject
+          {t("Watch Time by Subject")}
         </Typography>
       </Box>
       <Box sx={{ width: "100%", height: "300px" }}>

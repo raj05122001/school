@@ -8,8 +8,9 @@ import {
 } from "react-icons/fa";
 import { MdArrowForward } from "react-icons/md";
 import { useRouter } from "next/navigation";
-
+import { NextIntlClientProvider, useTranslations } from "next-intl";
 const Footer = () => {
+  const t=useTranslations()
   const router = useRouter();
   const handlePrivacy = () => {
     router.push(`/privacy-policy`);
@@ -75,7 +76,7 @@ const Footer = () => {
               marginBottom: "7px",
             }}
           >
-            Join Our Social Community
+            {t("Join Our Social Community")}
           </Typography>
           <Box
             sx={{
@@ -152,7 +153,7 @@ const Footer = () => {
               // marginBottom: "10px",
             }}
           >
-            Let&apos;s Discuss What&apos;s Next
+            {t("Let's Discuss What's Next")}
           </Typography>
           <Box sx={{display:"flex", flexDirection:"column", gap:"16px"}}>
           <Typography
@@ -165,7 +166,7 @@ const Footer = () => {
               lineHeight: "19px",
             }}
           >
-            Have a project or a question? We&apos;d love to hear from you.
+            {t("Have a project or a question? We'd love to hear from you")}
           </Typography>
           <a
             href="https://www.indiqai.ai/"
@@ -192,7 +193,7 @@ const Footer = () => {
                 
               }}
             >
-              Contact Us
+              {t("Contact Us")}
             </Button>
           </a>
           </Box>

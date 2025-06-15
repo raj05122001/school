@@ -4,8 +4,10 @@ import { useThemeContext } from "@/hooks/ThemeContext";
 import { getRatingsCount } from "@/api/apiHelper";
 import Cookies from "js-cookie";
 import { decodeToken } from "react-jwt";
+import { useTranslations } from "next-intl";
 
 function OverallClassPerformance() {
+  const t=useTranslations();
   const userDetails = decodeToken(Cookies.get("ACCESS_TOKEN"));
   const [data, setData] = useState([]);
   const { isDarkMode } = useThemeContext();
@@ -198,7 +200,7 @@ function OverallClassPerformance() {
           fontFamily: "Inter, sans-serif",
         }}
       >
-        Overall Rating
+        {t("Overall Rating")}
       </Typography>
       {data?.map((item, index) => (
         <Box

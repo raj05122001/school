@@ -30,6 +30,7 @@ import { AiOutlineClose } from "react-icons/ai";
 import { decodeToken } from "react-jwt";
 import Cookies from "js-cookie";
 import { FaRankingStar } from "react-icons/fa6";
+import { useTranslations } from "next-intl";
 
 const RADIAN = Math.PI / 180;
 
@@ -78,6 +79,7 @@ const ClassWiseStudentRanking = ({ selectedOptions }) => {
   const [classTabValue, setClassTabValue] = useState("Overall");
   const [modalOpen, setModalOpen] = useState(false);
   const [selectedGrad, setSelectedGrad] = useState("");
+  const t=useTranslations();
 
   const isMyClass = classTabValue === "MyClass";
 
@@ -234,7 +236,7 @@ const staticClassData = {
               fontWeight: 600,
             }}
           >
-            Ranking
+           {t(" Ranking")}
           </Typography>
         </Box>
         {/* Class Selection Toggle */}

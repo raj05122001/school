@@ -25,6 +25,7 @@ import { FiAlertTriangle } from "react-icons/fi";
 import { useSearchParams, useRouter, usePathname } from "next/navigation";
 import Cookies from "js-cookie";
 import { decodeToken } from "react-jwt";
+import { useTranslations } from "next-intl";
 
 const darkModeStyles = {
   backgroundColor: "#1a1a1a",
@@ -55,7 +56,8 @@ const StudentAssignment = () => {
   const pathname = usePathname();
   const [classOptions, setClassOptions] = useState([]);
   const [selectedOptions, setSelectedOptions] = useState(null);
-
+  const t=useTranslations();
+  
   useEffect(() => {
     if (selectedOptions?.class_id || Number(userDetails?.user_id) === 35) {
       fetchClassAssignment();
@@ -311,7 +313,7 @@ const StudentAssignment = () => {
               lineHeight: "normal",
             }}
           >
-            Student Proficiency
+            {t("Student Proficiency")}
           </Typography>
         </Box>
         <Box
