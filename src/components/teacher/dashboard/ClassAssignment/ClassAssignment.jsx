@@ -3,8 +3,10 @@ import { Grid, Card, Typography, Avatar, Box, Skeleton } from "@mui/material";
 import { FaTrophy, FaCircle } from "react-icons/fa";
 import { getClassAssignment } from "@/api/apiHelper";
 import { useThemeContext } from "@/hooks/ThemeContext";
+import { useTranslations } from "next-intl";
 
 const ClassAssignment = ({selectedOptions}) => {
+  const t = useTranslations()
   const [data, setData] = useState({});
   const [loading, setLoading] = useState(true);
   const { isDarkMode, primaryColor, secondaryColor } = useThemeContext();
@@ -53,7 +55,7 @@ const ClassAssignment = ({selectedOptions}) => {
                 alignItems="flex-start"
               >
                 <Typography variant="h6" gutterBottom color={primaryColor}>
-                  Overall Class Score
+                  {t("Overall Class Score")}
                 </Typography>
                 {loading ? (
                   <>
@@ -66,7 +68,7 @@ const ClassAssignment = ({selectedOptions}) => {
                       {data?.over_all_class_score || 0}
                     </Typography>
                     <Typography variant="body2" color={secondaryColor}>
-                      Average Grade
+                      {t("Average Grade")}
                     </Typography>
                     <Typography variant="body1" color={secondaryColor}>
                       {data?.average_grade || 0}
@@ -101,7 +103,7 @@ const ClassAssignment = ({selectedOptions}) => {
                 alignItems="flex-start"
               >
                 <Typography variant="h6" gutterBottom color={primaryColor}>
-                  Work Assigned
+                  {t("Work Assigned")}
                 </Typography>
                 {loading ? (
                   <>
@@ -114,7 +116,7 @@ const ClassAssignment = ({selectedOptions}) => {
                       {data?.total_assignments || 0}
                     </Typography>
                     <Typography variant="body2" color={secondaryColor}>
-                      Average Percentage
+                      {t("Average Percentage")}
                     </Typography>
                     <Typography variant="body1" color={secondaryColor}>
                       {data?.average_percentage || 0}%

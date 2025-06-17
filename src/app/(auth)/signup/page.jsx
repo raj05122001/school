@@ -32,6 +32,7 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import { useMediaQuery } from "@mui/material";
 import { MdVisibility, MdVisibilityOff } from "react-icons/md";
 import Logo from "@/commonComponents/Logo/Logo";
+import { useTranslations } from "next-intl";
 
 // Define keyframes for animation
 const textAnimation = {
@@ -48,6 +49,7 @@ const textAnimation = {
 };
 
 const SignupPage = () => {
+  const t = useTranslations()
   const router = useRouter();
   const searchParams = useSearchParams();
   const [showPassword, setShowPassword] = useState(false);
@@ -367,7 +369,7 @@ confirmPassword: yup
                     fontFamily: "Inter, sans-serif",
                   }}
                 >
-                  Name
+                  {t("Name")}
                 </span>
                 <Controller
                   name="name"
@@ -694,7 +696,7 @@ confirmPassword: yup
                           fontFamily: "Inter, sans-serif",
                         }}
                       >
-                        Department
+                        {t("Department")}
                       </span>
                       <Controller
                         name="department"

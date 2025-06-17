@@ -236,7 +236,7 @@ const staticClassData = {
               fontWeight: 600,
             }}
           >
-           {t(" Ranking")}
+           {t("Ranking")}
           </Typography>
         </Box>
         {/* Class Selection Toggle */}
@@ -272,10 +272,10 @@ const staticClassData = {
             }}
           >
             <ToggleButton value="Overall" aria-label="Overall Class">
-              Overall
+              {t("Overall")}
             </ToggleButton>
             <ToggleButton value="MyClass" aria-label="My Class">
-              Class
+              {t("Class")}
             </ToggleButton>
           </ToggleButtonGroup>
         </Box>
@@ -311,8 +311,8 @@ const staticClassData = {
           },
         }}
       >
-        <Tab label={`Active`} />
-        <Tab label={`Inactive`} />
+        <Tab label={t(`Active`)} />
+        <Tab label={t(`Inactive`)} />
       </Tabs>
 
       <Box sx={{ display: "flex", flexDirection: "column", gap: 2 }}>
@@ -342,7 +342,7 @@ const staticClassData = {
                   fontSize: "16px",
                 }}
               >
-                Grade {mapData[entry.name]?.grade}
+                {t("Grade")} {mapData[entry.name]?.grade}
               </Typography>
 
               <Box sx={{ flexGrow: 1 }}>
@@ -447,7 +447,7 @@ export const StudentModal = ({
       <DialogTitle
         sx={{ backgroundColor: "#fff", color: "#000", fontFamily: "Inter" }}
       >
-        Student Details
+        {t("Student Details")}
         <IconButton
           aria-label="close"
           onClick={handleClose}
@@ -490,7 +490,7 @@ export const StudentModal = ({
                       fontSize: "14px",
                     }}
                   >
-                    Name
+                    {t("Name")}
                   </TableCell>
                   <TableCell
                     sx={{
@@ -531,7 +531,7 @@ export const StudentModal = ({
                       fontSize: "14px",
                     }}
                   >
-                    Grade
+                    {t("Grade")}
                   </TableCell>
                 </TableRow>
               </TableHead>

@@ -273,8 +273,7 @@ function OverallClassPerformance() {
         </Box>
       ))}
       <Typography sx={{ fontFamily: "Inter, sans-serif", fontSize: "12px" }}>
-        The analytics shows the overall ratings provided by all the students
-        from all the classes taught by the teacher.
+        {t("Rating Text")}
       </Typography>
     </Box>
   );

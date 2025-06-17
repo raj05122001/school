@@ -5,8 +5,10 @@ import { useThemeContext } from "@/hooks/ThemeContext";
 import { GiSandsOfTime } from "react-icons/gi";
 import { getMySubject, getMySubjectWatchtime } from "@/api/apiHelper";
 import LectureDuration from "@/components/teacher/dashboard/LectureDuration/LectureDuration";
+import { useTranslations } from "next-intl";
 
 function WatchTimeChart() {
+  const t = useTranslations()
   const [subjects, setSubjects] = useState([]);
   const [selectedSubject, setSelectedSubject] = useState("");
   const [watchtimeData, setWatchtimeData] = useState(null);
@@ -100,7 +102,7 @@ function WatchTimeChart() {
             variant="h6"
             className={`${isDarkMode ? "dark-heading" : "light-heading"}`}
           >
-            Watchtime
+            {t("Watchtime")}
           </Typography>
         </Box>
 

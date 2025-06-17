@@ -105,7 +105,7 @@ const Footer = () => {
               
               sx={{ color: "#C1C1C1", fontFamily: "Inter", fontSize:"12px", fontStyle:"normal", fontWeight:300, lineHeight:"9px" }}
             >
-              © 2023 IndiqAI. All rights reserved.
+              © 2023 IndiqAI. {t("All rights reserved.")}
             </Typography>
             <Box
               sx={{
@@ -134,7 +134,7 @@ const Footer = () => {
                 sx={{ color: "#C1C1C1", fontFamily: "Inter", fontSize:"12px", fontStyle:"normal", fontWeight:300, lineHeight:"9px" }}
                 onClick={() => handlePrivacy()}
               >
-                Privacy Policy
+                {t("Privacy Policy")}
               </Typography>
             </Box>
           </Box>

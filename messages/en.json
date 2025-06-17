@@ -11,7 +11,7 @@
   "Good Morning": "Good Morning",
   "Good Afternoon": "Good Afternoon",
   "Good Evening": "Good Evening",
-  "Have a nice day!":"Have a nice day!",
+  "Have a nice day!": "Have a nice day!",
   "Department": "Department",
   "Average Duration": "Average Duration",
   "mins": "mins",
@@ -211,6 +211,7 @@
   "Please upload a file or enter a description to proceed": "Please upload a file or enter a description to proceed. (AI-assessment will only be done for documents)",
   "Need Guidance": "Need Guidance",
   "Personalised Recommendations" : "Personalised Recommendations",
+
   "Overall Class Participation" : "Overall Class Participation",
   "Lectures For You":"Lectures For You",
   "Ranking":"Ranking",
@@ -218,5 +219,15 @@
   "Recent Uploads":"Recent Uploads",
   "Let's Discuss What's Next":"Let's Discuss What's Next",
   "Have a project or a question? We'd love to hear from you":"Have a project or a question? We'd love to hear from you.",
-  "Contact Us":"Contact Us"
+  "Contact Us":"Contact Us",
+
+  "Subjects Completed":"Subjects Completed",
+  "Overall":"Overall",
+  "Assignment Range":"Assignment Range",
+  "Avg. Grade": "Avg. Grade",
+  "Avg. Percentage": "Avg. Percentage",
+  "Ai Buddy": "Ai Buddy",
+  "Lecture": "Lecture",
+  "You don&apos;t have any lectures":"You don't have any lectures"
+
 }

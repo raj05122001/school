@@ -526,7 +526,7 @@ const TeacherRanking = () => {
                         type="monotone"
                         dataKey="teacher_data"
                         stroke="#8884d8"
-                        name="Watchtime"
+                        name={t("Watchtime")}
                       />
                       <Line
                         type="monotone"

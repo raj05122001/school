@@ -424,8 +424,7 @@ const t=useTranslations();
                               size={20}
                               style={{ marginRight: 8 }}
                             />
-                            You don&apos;t have any lectures. Please create a
-                            lecture.
+                            {t("No Lectures")}
                           </Typography>
                           <Button
                             variant="contained"
@@ -484,7 +483,7 @@ const t=useTranslations();
                                 stroke-linejoin="round"
                               />
                             </svg>
-                            Create Lecture
+                            {t("Create Lecture")}
                           </Button>
                         </Box>
                       </TableCell>

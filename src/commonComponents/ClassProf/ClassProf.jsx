@@ -172,7 +172,7 @@ const ClassProf = () =>{
             renderInput={(params) => (
               <TextField
                 {...params}
-                placeholder="Select Class"
+                placeholder={t("Select Class")}
                 variant="outlined"
                 InputProps={{
                   ...params.InputProps,
@@ -318,7 +318,7 @@ const ClassProf = () =>{
                 textAlign: "center",
               }}
             >
-              Avg. Grade
+              {t("Avg. Grade")}
             </Typography>
             <Typography
               sx={{
@@ -500,7 +500,7 @@ const ClassProf = () =>{
                   textAlign: "center",
                 }}
               >
-                Avg. Percentage
+                {t("Avg. Percentage")}
               </Typography>
               <Typography
                 sx={{

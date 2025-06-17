@@ -200,8 +200,8 @@ const ClassWiseStudentRanking = ({ selectedOptions }) => {
           },
         }}
       >
-        <Tab label={`Active`} />
-        <Tab label={`Inactive`} />
+        <Tab label={t(`Active`)} />
+        <Tab label={t(`Inactive`)} />
       </Tabs>
 
       <Box sx={{ display: "flex", flexDirection: "column", gap: 2 }}>
@@ -229,7 +229,7 @@ const ClassWiseStudentRanking = ({ selectedOptions }) => {
                   fontSize: "16px",
                 }}
               >
-                Grade {mapData[entry.name]?.grade}
+                {t("Grade")} {mapData[entry.name]?.grade}
               </Typography>
 
               <Box sx={{ flexGrow: 1 }}>
@@ -330,7 +330,7 @@ export const StudentModal = ({
   return (
     <Dialog open={open} onClose={handleClose} fullWidth maxWidth="md">
       <DialogTitle sx={{ backgroundColor: "#3f51b5", color: "#fff" }}>
-        Student Details
+        {t("Student Details")}
         <IconButton
           aria-label="close"
           onClick={handleClose}
@@ -350,12 +350,12 @@ export const StudentModal = ({
             <Table aria-label="student details">
               <TableHead>
                 <TableRow>
-                  <TableCell sx={{ fontWeight: "bold" }}>Name</TableCell>
+                  <TableCell sx={{ fontWeight: "bold" }}>{t("Name")}</TableCell>
                   <TableCell sx={{ fontWeight: "bold" }}>Email Id</TableCell>
                   <TableCell sx={{ fontWeight: "bold" }}>
                     Avg Overall Percentage
                   </TableCell>
-                  <TableCell sx={{ fontWeight: "bold" }}>Grade</TableCell>
+                  <TableCell sx={{ fontWeight: "bold" }}>{t("Grade")}</TableCell>
                 </TableRow>
               </TableHead>
               <TableBody>

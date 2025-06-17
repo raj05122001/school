@@ -337,7 +337,7 @@ const RecentLectures = () => {
               >
                 <FaExclamationCircle size={30} style={{ marginRight: "8px" }} />
                 <Box display="flex" alignItems="center" justifyContent="center">
-                  You don&apos;t have any lectures.
+                  {t("You don&apos;t have any lectures")}.
                 </Box>
               </Typography>
             </Grid>

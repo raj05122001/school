@@ -358,7 +358,7 @@ const EditDetailsPage = () => {
             </Grid>
 
             <Grid item xs={12} sm={6}>
-              <Typography sx={labelCSS}>Department*</Typography>
+              <Typography sx={labelCSS}>{t("Department")}*</Typography>
               <TextField
                 fullWidth
                 variant="outlined"

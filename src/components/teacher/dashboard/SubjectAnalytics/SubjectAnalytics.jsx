@@ -194,7 +194,7 @@ const SubjectAnalytics = () => {
             <Tooltip
               formatter={(value, name, props) => {
                 if (name === "Watchtime") {
-                  return [`${value?.toFixed(2)} mins`, "Watchtime"]; // Format watchtime with 2 decimal places
+                  return [`${value?.toFixed(2)} ${t("mins")}`, t("Watchtime")]; // Format watchtime with 2 decimal places
                 }
                 return null; // Skip other data keys
               }}
@@ -207,7 +207,7 @@ const SubjectAnalytics = () => {
               }}
             />
             <Radar
-              name="Watchtime"
+              name={t("Watchtime")}
               dataKey="watchtime" // Ensure this matches the field in `radarData`
               stroke={isDarkMode ? "#8884d8" : "#82ca9d"}
               fill={isDarkMode ? "#8884d8" : "#82ca9d"}
@@ -225,10 +225,7 @@ const SubjectAnalytics = () => {
           color: isDarkMode ? "#f0f0f0" : "#2b2b2b",
         }}
       >
-        This radar chart displays the watch time for each subject. Each axis
-        represents a subject, and the distance from the center indicates the
-        total watch time. Higher values mean more time spent watching that
-        subject.
+        {t("Radar Chart")}
       </Typography>
     </Box>
   );

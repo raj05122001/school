@@ -50,6 +50,7 @@ import getFileIcon from "@/commonComponents/FileIcon/FileIcon";
 import { DemoContainer } from "@mui/x-date-pickers/internals/demo";
 import { MobileTimePicker } from "@mui/x-date-pickers/MobileTimePicker";
 import { AiOutlineClockCircle } from "react-icons/ai";
+import { useTranslations } from "next-intl";
 
 // const userDetails = decodeToken(Cookies.get("ACCESS_TOKEN"));
 
@@ -59,6 +60,7 @@ const CreatingLecture = ({
   lecture,
   isEditMode = false,
 }) => {
+  const t = useTranslations()
   const { isDarkMode } = useThemeContext();
   const [isLoading, setIsLoading] = useState(false);
   const [lectureSubject, setLectureSubject] = useState(null);
@@ -459,7 +461,7 @@ const CreatingLecture = ({
             lineHeight: "normal",
           }}
         >
-          {isEditMode ? "Update Lecture" : "Create Lecture"}
+          {isEditMode ? t("Update Lecture") : t("Create Lecture")}
         </Box>
         {isEditMode && lecture?.id && (
           <Tooltip title="Delete lecture" placement="top" arrow>
@@ -964,7 +966,7 @@ const CreatingLecture = ({
             },
           }}
         >
-          {isEditMode ? "Update Lecture" : "Create Lecture"}
+          {isEditMode ? t("Update Lecture") : t("Create Lecture")}
         </Button>
       </DialogActions>
     </Dialog>

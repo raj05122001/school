@@ -544,7 +544,7 @@ const StudentAssignment = () => {
             renderInput={(params) => (
               <TextField
                 {...params}
-                placeholder="Select Class"
+                placeholder={t("Select Class")}
                 variant="outlined"
                 InputProps={{
                   ...params.InputProps,
@@ -787,7 +787,7 @@ const StudentAssignment = () => {
                     fontSize: "14px",
                   }}
                 >
-                  Full Name
+                  {t("Full Name")}
                 </TableCell>
                 <TableCell
                   align="center"
@@ -801,7 +801,7 @@ const StudentAssignment = () => {
                     fontSize: "14px",
                   }}
                 >
-                  Work Completed
+                  {t("Work Completed")}
                 </TableCell>
                 <TableCell
                   align="center"
@@ -815,7 +815,7 @@ const StudentAssignment = () => {
                     fontSize: "14px",
                   }}
                 >
-                  Average Score
+                  {t("Average Score")}
                 </TableCell>
                 <TableCell
                   align="center"
@@ -829,7 +829,7 @@ const StudentAssignment = () => {
                     fontSize: "14px",
                   }}
                 >
-                  Needing Attention
+                  {t("Needing Attention")}
                 </TableCell>
                 <TableCell
                   align="center"
@@ -843,7 +843,7 @@ const StudentAssignment = () => {
                     fontSize: "14px",
                   }}
                 >
-                  Can be Improved
+                  {t("Can be Improved")}
                 </TableCell>
                 <TableCell
                   align="center"
@@ -859,7 +859,7 @@ const StudentAssignment = () => {
                     fontSize: "14px",
                   }}
                 >
-                  Mastered
+                  {t("Mastered")}
                 </TableCell>
               </TableRow>
             </TableHead>
@@ -1041,7 +1041,7 @@ const StudentAssignment = () => {
                 size={24}
                 color="gray"
               />
-              <Typography color="textSecondary">No Data Found</Typography>
+              <Typography color="textSecondary">{t("No Data Found")}</Typography>
             </Box>
           )}
         </TableContainer>

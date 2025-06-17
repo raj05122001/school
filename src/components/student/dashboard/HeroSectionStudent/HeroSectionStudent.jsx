@@ -18,8 +18,10 @@ import { useRouter } from "next/navigation";
 import UserImage from "@/commonComponents/UserImage/UserImage";
 import { Paper, Grid } from "@mui/material";
 import { getMyAssignmentAnalytics } from "@/api/apiHelper";
+import { useTranslations } from "next-intl";
 
 function HeroSectionStudent() {
+  const t = useTranslations()
   const router = useRouter();
   const [userDetails, setUserDetails] = useState(null);
   const [myScores, setMyScores] = useState({});
@@ -264,7 +266,7 @@ function HeroSectionStudent() {
                 style={{ width: "24px", height: "24px" }}
               />
               <Typography fontWeight={600} color={"#3B3D3B"}>
-                Average Score %
+                {t("Average Score")} %
               </Typography>
             </Box>
             <Typography variant="h5" color={"#3B3D3B"} fontWeight={700}>
