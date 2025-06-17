@@ -1,4 +1,5 @@
 import { Box, Tooltip, Typography } from "@mui/material";
+import { useTranslations } from "next-intl";
 import React from "react";
 import {
   CartesianGrid,
@@ -11,6 +12,7 @@ import {
 } from "recharts";
 
 function TeacherGraph({ teacherID, countData, watchData }) {
+  const t = useTranslations()
   return (
     <Box>
       <Box display={"flex"} flexDirection={"column"} gap={2}>
@@ -190,7 +192,7 @@ function TeacherGraph({ teacherID, countData, watchData }) {
                   type="monotone"
                   dataKey="teacher_data"
                   stroke="#8884d8"
-                  name="Watchtime"
+                  name={t("Watchtime")}
                 />
                 <Line
                   type="monotone"

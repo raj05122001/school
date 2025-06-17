@@ -22,8 +22,10 @@ import DarkMode from "@/components/DarkMode/DarkMode";
 import { getAllTeachers, getAllStudent } from "@/api/apiHelper";
 import Image from "next/image";
 import { BASE_URL_MEET } from "@/constants/apiconfig";
+import { useTranslations } from "next-intl";
 
 const Page = () => {
+  const t = useTranslations()
   const [tabValue, setTabValue] = useState(0);
   const [dropdownValue, setDropdownValue] = useState("");
   const [teacherData, setTeacherData] = useState([]);
@@ -204,7 +206,7 @@ const Page = () => {
               renderInput={(params) => (
                 <TextField
                   {...params}
-                  placeholder={tabValue === 0 ? "Class" : "Department"}
+                  placeholder={tabValue === 0 ? t("Class") : t("Department")}
                   variant="outlined"
                   InputLabelProps={{
                     style: { color: isDarkMode ? "#d7e4fc" : "" },

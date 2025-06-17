@@ -37,8 +37,10 @@ import { MdOutlineTrackChanges } from "react-icons/md";
 import AdminFilters from "@/components/teacher/lecture-listings/Filters/AdminFilters";
 import SearchWithFilter from "@/components/teacher/Assignment/SearchWithFilter";
 import CalendarIconCustom from "@/commonComponents/CalendarIconCustom/CalendarIconCustom";
+import { useTranslations } from "next-intl";
 
 const Page = () => {
+  const t = useTranslations()
   const { isDarkMode, primaryColor, secondaryColor } = useThemeContext();
   const {
     openRecordingDrawer,
@@ -165,7 +167,7 @@ const Page = () => {
           <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
             <MdOutlineTrackChanges size={30} color={primaryColor} />
             <Typography variant="h4" color={isDarkMode ? "#E5E4E2" : "#36454F"}>
-              Lecture Tracking
+              {t("Lecture Tracking")}
             </Typography>
           </Box>
         }
@@ -458,7 +460,7 @@ const Page = () => {
                       position: "sticky",
                     }}
                   >
-                    Name
+                    {t("Name")}
                   </TableCell>
                   <TableCell
                     sx={{
@@ -614,7 +616,7 @@ const Page = () => {
                 ) : (
                   <TableRow>
                     <TableCell colSpan={7} sx={{ textAlign: "center" }}>
-                      No Data Available
+                      {t("No Data Available")}
                     </TableCell>
                   </TableRow>
                 )}

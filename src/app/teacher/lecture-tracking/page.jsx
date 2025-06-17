@@ -33,8 +33,10 @@ import TableSkeleton from "@/commonComponents/Skeleton/TableSkeleton/TableSkelet
 import { MdOutlineTrackChanges } from "react-icons/md";
 import CalendarIconCustom from "@/commonComponents/CalendarIconCustom/CalendarIconCustom";
 import SearchWithFilter from "@/components/teacher/Assignment/SearchWithFilter";
+import { useTranslations } from "next-intl";
 
 const LectureTabs = () => {
+  const t = useTranslations()
   const { isDarkMode, primaryColor, secondaryColor } = useThemeContext();
   const {
     openRecordingDrawer,
@@ -164,7 +166,7 @@ const LectureTabs = () => {
           <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
             <MdOutlineTrackChanges size={30} color={primaryColor} />
             <Typography variant="h4" color={isDarkMode ? "#E5E4E2" : "#36454F"}>
-              Lecture Tracking
+              {t("Lecture Tracking")}
             </Typography>
           </Box>
         }
@@ -471,7 +473,7 @@ const LectureTabs = () => {
                       position: "sticky",
                     }}
                   >
-                    Name
+                    {t("Name")}
                   </TableCell>
                   <TableCell
                     sx={{
@@ -624,7 +626,7 @@ const LectureTabs = () => {
                 ) : (
                   <TableRow>
                     <TableCell colSpan={7} sx={{ textAlign: "center" }}>
-                      No Data Available
+                      {t("No Data Available")}
                     </TableCell>
                   </TableRow>
                 )}

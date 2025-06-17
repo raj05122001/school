@@ -6,10 +6,12 @@ import { FiBarChart2 } from "react-icons/fi";
 import { MdDarkMode, MdLightMode } from "react-icons/md";
 import { getMyAssignmentAnalytics } from "@/api/apiHelper";
 import { GrScorecard } from "react-icons/gr";
+import { useTranslations } from "next-intl";
 
 const COLORS = ["#00C49F", "#FFBB28"];
 
 const MyAssignmentAnalytics = () => {
+  const t = useTranslations()
   const { isDarkMode } = useThemeContext();
   const [myScores, setMyScores] = useState({})
 
@@ -121,7 +123,7 @@ const MyAssignmentAnalytics = () => {
               }}
             >
               <Typography variant="subtitle1">
-                <GrScorecard /> Average Score Percentage
+                <GrScorecard /> {t("Average Score Percentage")}
               </Typography>
               <Typography variant="h6">{myScores?.average_scored_percentage}%</Typography>
             </Box>

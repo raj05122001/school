@@ -10,13 +10,14 @@ import { MdAdd, MdDownloadForOffline, MdUpload } from "react-icons/md";
 import CreateLectureSchedule from "@/components/LectureSchedule/CreateLectureSchedule";
 import LectureScheduleTable from "@/components/LectureSchedule/LectureScheduleTable";
 import DarkMode from "@/components/DarkMode/DarkMode";
+import { useTranslations } from "next-intl";
 
 const Page = () => {
   const [openDialog, setOpenDialog] = useState(false);
   const { isDarkMode , primaryColor } = useThemeContext();
   const [open, setOpen] = useState(false);
   const [tabValue, setTabValue] = useState(0); // State for controlling tabs
-
+const t=useTranslations()
   const handleOpenDialog = () => {
     setOpenDialog(true);
   };
@@ -84,7 +85,7 @@ const Page = () => {
                 component="h1"
                 gutterBottom
               >
-                Lecture Schedule
+                {t("Lecture Schedule")}
               </Typography>
             </Box>
           </Grid>

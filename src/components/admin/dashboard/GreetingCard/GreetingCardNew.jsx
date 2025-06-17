@@ -7,6 +7,7 @@ import { IoPlayCircleOutline } from "react-icons/io5";
 import { FiUpload } from "react-icons/fi";
 import { useRouter } from "next/navigation";
 import { AppContextProvider } from "@/app/main";
+import LanguageDropdown from "@/commonComponents/languageDropDown/languageDropDown";
 
 function GreetingCardNew() {
   const [userDetails, setUserDetails] = useState(null);
@@ -53,7 +54,7 @@ function GreetingCardNew() {
           gap: "12px",
         }}
       >
-
+<LanguageDropdown/>
         {userDetails?.role === "ADMIN" && (
           <Button
             variant="contained"

@@ -25,6 +25,7 @@ import { FiAlertTriangle } from "react-icons/fi";
 import { useSearchParams, useRouter, usePathname } from "next/navigation";
 import Cookies from "js-cookie";
 import { decodeToken } from "react-jwt";
+import { useTranslations } from "next-intl";
 
 const darkModeStyles = {
   backgroundColor: "#1a1a1a",
@@ -55,7 +56,8 @@ const StudentAssignment = () => {
   const pathname = usePathname();
   const [classOptions, setClassOptions] = useState([]);
   const [selectedOptions, setSelectedOptions] = useState(null);
-
+  const t=useTranslations();
+  
   useEffect(() => {
     if (selectedOptions?.class_id || Number(userDetails?.user_id) === 35) {
       fetchClassAssignment();
@@ -311,7 +313,7 @@ const StudentAssignment = () => {
               lineHeight: "normal",
             }}
           >
-            Student Proficiency
+            {t("Student Proficiency")}
           </Typography>
         </Box>
         <Box
@@ -339,7 +341,7 @@ const StudentAssignment = () => {
             renderInput={(params) => (
               <TextField
                 {...params}
-                placeholder="Select Class"
+                placeholder={t("Select Class")}
                 variant="outlined"
                 InputProps={{
                   ...params.InputProps,
@@ -404,7 +406,7 @@ const StudentAssignment = () => {
                     fontSize: "14px",
                   }}
                 >
-                  Full Name
+                  {t("Full Name")}
                 </TableCell>
                 <TableCell
                   align="center"
@@ -418,7 +420,7 @@ const StudentAssignment = () => {
                     fontSize: "14px",
                   }}
                 >
-                  Work Completed
+                  {t("Work Completed")}
                 </TableCell>
                 <TableCell
                   align="center"
@@ -432,7 +434,7 @@ const StudentAssignment = () => {
                     fontSize: "14px",
                   }}
                 >
-                  Average Score
+                  {t("Average Score")}
                 </TableCell>
                 <TableCell
                   align="center"
@@ -446,7 +448,7 @@ const StudentAssignment = () => {
                     fontSize: "14px",
                   }}
                 >
-                  Needing Attention
+                  {t("Needing Attention")}
                 </TableCell>
                 <TableCell
                   align="center"
@@ -460,7 +462,7 @@ const StudentAssignment = () => {
                     fontSize: "14px",
                   }}
                 >
-                  Can be Improved
+                  {t("Can be Improved")}
                 </TableCell>
                 <TableCell
                   align="center"
@@ -476,7 +478,7 @@ const StudentAssignment = () => {
                     fontSize: "14px",
                   }}
                 >
-                  Mastered
+                  {t("Mastered")}
                 </TableCell>
               </TableRow>
             </TableHead>
@@ -725,7 +727,7 @@ const StudentAssignment = () => {
                 size={24}
                 color="gray"
               />
-              <Typography color="textSecondary">No Data Found</Typography>
+              <Typography color="textSecondary">{t("No Data Found")}</Typography>
             </Box>
           )}
         </TableContainer>
@@ -766,7 +768,7 @@ const StudentAssignment = () => {
                   lineHeight: "normal",
                 }}
               >
-                Assignment Range 0-50
+                {t("Assignment Range")} 0-50
               </Typography>
               <Box>
                 <svg
@@ -823,7 +825,7 @@ const StudentAssignment = () => {
                   lineHeight: "normal",
                 }}
               >
-                Assignment Range 50-80
+                {t("Assignment Range")} 50-80
               </Typography>
               <Box>
                 <svg
@@ -879,7 +881,7 @@ const StudentAssignment = () => {
                   lineHeight: "normal",
                 }}
               >
-                Assignment Range 80-100
+                {t("Assignment Range")} 80-100
               </Typography>
               <Box>
                 <svg

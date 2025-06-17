@@ -16,17 +16,19 @@ import { capitalizeWords } from "@/helper/Helper";
 import { AppContextProvider } from "@/app/main";
 import { useRouter } from "next/navigation";
 import UserImage from "@/commonComponents/UserImage/UserImage";
+import { useTranslations } from "next-intl";
 
 function GreetingCard() {
+  const t = useTranslations()
   const userDetails = decodeToken(Cookies.get("ACCESS_TOKEN"));
   const { handleCreateLecture } = useContext(AppContextProvider);
   const router = useRouter();
 
   const getGreeting = () => {
     const hours = new Date().getHours();
-    if (hours < 12) return "Good Morning";
-    if (hours >= 12 && hours < 17) return "Good Afternoon";
-    return "Good Evening";
+    if (hours < 12) return t("Good Morning");
+    if (hours >= 12 && hours < 17) return t("Good Afternoon");
+    return t("Good Evening");
   };
 
   const handleRoute = () => {
@@ -61,7 +63,7 @@ function GreetingCard() {
             variant="subtitle1"
             sx={{ textAlign: "left", color: "white" }}
           >
-            Have a nice day!
+            {t("Have a nice day!")}
           </Typography>
         </Box>
         <Box sx={{ display: "flex", gap: 3, alignItems: "flex-start" }}>

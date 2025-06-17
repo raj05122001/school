@@ -18,6 +18,7 @@ import UserImage from "@/commonComponents/UserImage/UserImage";
 import { useThemeContext } from "@/hooks/ThemeContext";
 import { getAllSubject, getClassAssignment, getStudentAssignment } from "@/api/apiHelper";
 import { FiAlertTriangle } from "react-icons/fi";
+import { useTranslations } from "next-intl";
 
 const StudentAssignment = () => {
   const { isDarkMode } = useThemeContext();
@@ -28,6 +29,7 @@ const StudentAssignment = () => {
   const [activePage, setActivePage] = useState(1);
   const [totalPage, setTotalPage] = useState(1);
   const [rangeData, setRangeData] = useState([]);
+  const t=useTranslations();
 
   const handleChange = (event, value) => {
     setActivePage(value);
@@ -127,7 +129,7 @@ const StudentAssignment = () => {
     //         alignItems: "center",
     //       }}
     //     >
-    //       Student Proficiency
+    //        {t("Student Proficiency")}
     //     </Typography>
     //     {/* <Autocomplete
     //       freeSolo
@@ -514,7 +516,7 @@ const StudentAssignment = () => {
               lineHeight: "normal",
             }}
           >
-            Student Proficiency
+            {t("Student Proficiency")}
           </Typography>
         </Box>
         <Box
@@ -542,7 +544,7 @@ const StudentAssignment = () => {
             renderInput={(params) => (
               <TextField
                 {...params}
-                placeholder="Select Class"
+                placeholder={t("Select Class")}
                 variant="outlined"
                 InputProps={{
                   ...params.InputProps,
@@ -785,7 +787,7 @@ const StudentAssignment = () => {
                     fontSize: "14px",
                   }}
                 >
-                  Full Name
+                  {t("Full Name")}
                 </TableCell>
                 <TableCell
                   align="center"
@@ -799,7 +801,7 @@ const StudentAssignment = () => {
                     fontSize: "14px",
                   }}
                 >
-                  Work Completed
+                  {t("Work Completed")}
                 </TableCell>
                 <TableCell
                   align="center"
@@ -813,7 +815,7 @@ const StudentAssignment = () => {
                     fontSize: "14px",
                   }}
                 >
-                  Average Score
+                  {t("Average Score")}
                 </TableCell>
                 <TableCell
                   align="center"
@@ -827,7 +829,7 @@ const StudentAssignment = () => {
                     fontSize: "14px",
                   }}
                 >
-                  Needing Attention
+                  {t("Needing Attention")}
                 </TableCell>
                 <TableCell
                   align="center"
@@ -841,7 +843,7 @@ const StudentAssignment = () => {
                     fontSize: "14px",
                   }}
                 >
-                  Can be Improved
+                  {t("Can be Improved")}
                 </TableCell>
                 <TableCell
                   align="center"
@@ -857,7 +859,7 @@ const StudentAssignment = () => {
                     fontSize: "14px",
                   }}
                 >
-                  Mastered
+                  {t("Mastered")}
                 </TableCell>
               </TableRow>
             </TableHead>
@@ -1039,7 +1041,7 @@ const StudentAssignment = () => {
                 size={24}
                 color="gray"
               />
-              <Typography color="textSecondary">No Data Found</Typography>
+              <Typography color="textSecondary">{t("No Data Found")}</Typography>
             </Box>
           )}
         </TableContainer>

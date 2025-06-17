@@ -286,12 +286,14 @@ import React, { useEffect, useState } from "react";
 import { Box, Button, Typography } from "@mui/material";
 import { getClassByCourse, getteacherClass } from "@/api/apiHelper";
 import { useRouter, usePathname } from "next/navigation";
+import { useTranslations } from "next-intl";
 
 const AdminFilters = ({ classValue = "All" }) => {
   const router = useRouter();
   const pathname = usePathname();
   const [selected, setSelected] = useState(classValue);
   const [classList, setClassList] = useState([]);
+  const t= useTranslations();
 
   // useEffect(() => {
   //   const fetchData = async () => {
@@ -391,7 +393,7 @@ const AdminFilters = ({ classValue = "All" }) => {
       </Box>
 
       <Typography variant="h6" sx={{ mt: 2, px: 2 }}>
-        Recent Uploads
+       {t(" Recent Uploads")}
       </Typography>
     </Box>
   );

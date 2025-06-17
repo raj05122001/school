@@ -16,8 +16,10 @@ import { capitalizeWords } from "@/helper/Helper";
 import { AppContextProvider } from "@/app/main";
 import { useRouter } from "next/navigation";
 import UserImage from "@/commonComponents/UserImage/UserImage";
+import { useTranslations } from "next-intl";
 
 function GreetingCard() {
+  const t = useTranslations()
   const userDetails = decodeToken(Cookies.get("ACCESS_TOKEN"));
   const { handleCreateLecture } = useContext(AppContextProvider);
   const router = useRouter();
@@ -124,7 +126,7 @@ function GreetingCard() {
               }}
               onClick={() => handleCreateLecture("", false)}
             >
-              Create Lecture
+              {t("Create Lecture")}
             </Button>
 
             {/* <Button

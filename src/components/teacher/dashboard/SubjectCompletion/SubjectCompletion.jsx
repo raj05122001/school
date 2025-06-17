@@ -6,12 +6,14 @@ import { getSubjectCompletion } from "@/api/apiHelper";
 import CircularProgress, {
   circularProgressClasses,
 } from '@mui/material/CircularProgress';
+import { useTranslations } from "next-intl";
 
 const COLORS = ["#0088FE", "#FF8042"];
 
 function SubjectCompletion() {
   const [isClient, setIsClient] = useState(false);
   const [completionData, setCompletionData] = useState({});
+  const t = useTranslations()
 
   console.log("completionData : ",completionData)
 
@@ -37,7 +39,7 @@ function SubjectCompletion() {
     { name: "Pending", value: completionData?.total_lectures_count },
   ];
 
-  const perc=(completionData?.total_lectures_count * completionData?.Completion_percentage)/100
+  const perc=completionData?.Completion_percentage
 
   return (
     <Box sx={{ position: 'relative' }}>
@@ -130,7 +132,7 @@ function SubjectCompletion() {
             lineHeight: "24px",
           }}
         >
-          Subjects Completed
+          {t("Subjects Completed")}
         </Typography>
 
         {/* Class and Department */}
@@ -163,9 +165,9 @@ function FacebookCircularProgress({value=0}) {
       <CircularProgress
         variant="determinate"
         sx={(theme) => ({
-          color: '#12DD00',
+          color: '#fff',
           ...theme.applyStyles('dark', {
-            color: '#12DD00',
+            color: '#FFFFFF',
           }),
         })}
         size={170}
@@ -176,7 +178,7 @@ function FacebookCircularProgress({value=0}) {
         variant="determinate"
         disableShrink
         sx={(theme) => ({
-          color: '#fff',
+          color: '#12DD00',
           animationDuration: '550ms',
           position: 'absolute',
           left: 0,
@@ -184,7 +186,7 @@ function FacebookCircularProgress({value=0}) {
             strokeLinecap: 'round',
           },
           ...theme.applyStyles('dark', {
-            color: '#FFFFFF',
+            color: '#12DD00',
           }),
         })}
         size={170}

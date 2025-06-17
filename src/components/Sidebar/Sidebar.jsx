@@ -42,45 +42,54 @@ import {
   IoIosArrowUp,
 } from "react-icons/io";
 import { FaRobot } from "react-icons/fa6";
+import { useTranslations } from "next-intl";
 
 // You may adjust widths as per your design
 const drawerWidth = 240;
 const miniDrawerWidth = 60;
 
-export const sidebarLinks = {
+const Sidebar = ({ open, setOpen }) => {
+  const t = useTranslations();
+  const { isDarkMode, primaryColor, secondaryColor } = useThemeContext();
+  const { handleCreateLecture } = useContext(AppContextProvider);
+  const userDetails = decodeToken(Cookies.get("ACCESS_TOKEN"));
+  const router = useRouter();
+  const pathname = usePathname();
+
+  const sidebarLinks = {
   overview: [
     {
-      text: "Admin Directory",
+      text: t("Admin Directory"),
       href: "/admin/directory",
       icon: <MdPerson size={22} />,
       show: "ADMIN",
     },
     {
-      text: "Admin Dashboard",
+      text: t("Admin Dashboard"),
       href: "/admin/dashboard",
       icon: <HiOutlineChartBar size={22} />,
       show: "ADMIN",
     },
     {
-      text: "Lecture",
+      text: t("Lecture"),
       href: "",
       icon: <HiOutlineDocumentDuplicate size={22} />,
       show: "ADMIN",
       children: [
         {
-          text: "Lecture Listings",
+          text: t("Lecture Listings"),
           href: "/admin/lecture-listings",
           icon: <MdVideoLibrary size={22} />,
           show: "ADMIN",
         },
         {
-          text: "Lecture Schedule",
+          text: t("Lecture Schedule"),
           href: "/admin/lecture-schedule",
           icon: <MdSchedule size={22} />,
           show: "ADMIN",
         },
         {
-          text: "Lecture Tracking",
+          text: t("Lecture Tracking"),
           href: "/admin/lecture-tracking",
           icon: <MdTask size={22} />,
           show: "ADMIN",
@@ -88,31 +97,31 @@ export const sidebarLinks = {
       ],
     },
     {
-      text: "Dashboard",
+      text: t("Dashboard"),
       href: "/teacher/dashboard",
       icon: <HiOutlineChartBar size={22} />,
       show: "TEACHER",
     },
     {
-      text: "Lecture",
+      text: t("Lecture"),
       href: "",
       icon: <HiOutlineDocumentDuplicate size={22} />,
       show: "TEACHER",
       children: [
         {
-          text: "Lecture Listings",
+          text: t("Lecture Listings"),
           href: "/teacher/lecture-listings",
           icon: <MdVideoLibrary size={22} />,
           show: "TEACHER",
         },
         {
-          text: "Lecture Schedule",
+          text: t("Lecture Schedule"),
           href: "/teacher/lecture-schedule",
           icon: <MdSchedule size={22} />,
           show: "TEACHER",
         },
         {
-          text: "Lecture Tracking",
+          text: t("Lecture Tracking"),
           href: "/teacher/lecture-tracking",
           icon: <MdTask size={22} />,
           show: "TEACHER",
@@ -120,38 +129,31 @@ export const sidebarLinks = {
       ],
     },
     {
-      text: "Assessment",
+      text: t("Assessment"),
       href: "/teacher/assignment",
       icon: <LuGraduationCap size={22} />,
       show: "TEACHER",
     },
     {
-      text: "Dashboard",
+      text: t("Dashboard"),
       href: "/student/dashboard",
       icon: <HiOutlineChartBar size={22} />,
       show: "STUDENT",
     },
     {
-      text: "Lecture Listings",
+      text: t("Lecture Listings"),
       href: "/student/lecture-listings",
       icon: <HiOutlineDocumentDuplicate size={22} />,
       show: "STUDENT",
     },
     {
-      text: "Ai Buddy",
+      text: t("Ai Buddy"),
       href: "/chat-bot",
       icon: <FaRobot size={22} />,
       show: ["TEACHER", "STUDENT", "ADMIN"],
     },
   ],
 };
-
-const Sidebar = ({ open, setOpen }) => {
-  const { isDarkMode, primaryColor, secondaryColor } = useThemeContext();
-  const { handleCreateLecture } = useContext(AppContextProvider);
-  const userDetails = decodeToken(Cookies.get("ACCESS_TOKEN"));
-  const router = useRouter();
-  const pathname = usePathname();
 
   // Track which parent item is expanded
   const [expandedItem, setExpandedItem] = useState(null);
@@ -726,7 +728,7 @@ const Sidebar = ({ open, setOpen }) => {
                             stroke-linejoin="round"
                           />
                         </svg>{" "}
-                        <Typography>Logout</Typography>
+                        <Typography>{t("Logout")}</Typography>
                       </Box>
                     </MenuItem>
                   </Box>

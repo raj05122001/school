@@ -3,8 +3,10 @@ import { Grid, Card, Typography, Avatar, Box, Skeleton, Autocomplete, TextField 
 import { FaTrophy, FaCircle } from "react-icons/fa";
 import { getAllSubject, getClassAssignment } from "@/api/apiHelper";
 import { useThemeContext } from "@/hooks/ThemeContext";
+import { useTranslations } from "next-intl";
 
 const ClassAssignment = () => {
+  const t = useTranslations()
   const [data, setData] = useState({});
   const [loading, setLoading] = useState(true);
   const { isDarkMode, primaryColor, secondaryColor } = useThemeContext();
@@ -299,7 +301,7 @@ const ClassAssignment = () => {
                   lineHeight: "normal",
                 }}
               >
-                Class Proficiency
+                {t("Class Proficiency")}
               </Typography>
             </Box>
             <Box
@@ -326,7 +328,7 @@ const ClassAssignment = () => {
                 renderInput={(params) => (
                   <TextField
                     {...params}
-                    placeholder="Select Class"
+                    placeholder={t("Select Class")}
                     variant="outlined"
                     InputProps={{
                       ...params.InputProps,
@@ -472,7 +474,7 @@ const ClassAssignment = () => {
                     textAlign: "center",
                   }}
                 >
-                  Avg. Grade
+                  {t("Avg. Grade")}
                 </Typography>
                 <Typography
                   sx={{
@@ -609,7 +611,7 @@ const ClassAssignment = () => {
                   lineHeight: "normal",
                 }}
               >
-                Work Assigned
+                {t("Work Assigned")}
               </Typography>
               <Box
                 sx={{
@@ -654,7 +656,7 @@ const ClassAssignment = () => {
                       textAlign: "center",
                     }}
                   >
-                    Avg. Percentage
+                    {t("Avg. Percentage")}
                   </Typography>
                   <Typography
                     sx={{
