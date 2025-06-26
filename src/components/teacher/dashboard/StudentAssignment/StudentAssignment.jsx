@@ -768,7 +768,7 @@ const StudentAssignment = () => {
                   lineHeight: "normal",
                 }}
               >
-                {t("Assignment Range")} 0-50
+                {t("Assignment Range")} 0-50%
               </Typography>
               <Box>
                 <svg
@@ -825,7 +825,7 @@ const StudentAssignment = () => {
                   lineHeight: "normal",
                 }}
               >
-                {t("Assignment Range")} 50-80
+                {t("Assignment Range")} 50-80%
               </Typography>
               <Box>
                 <svg
@@ -881,7 +881,7 @@ const StudentAssignment = () => {
                   lineHeight: "normal",
                 }}
               >
-                {t("Assignment Range")} 80-100
+                {t("Assignment Range")} 80-100%
               </Typography>
               <Box>
                 <svg

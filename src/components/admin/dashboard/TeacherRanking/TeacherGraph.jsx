@@ -69,7 +69,7 @@ function TeacherGraph({ teacherID, countData, watchData }) {
                   lineHeight: "normal",
                 }}
               >
-                Lecture Completion
+                {t("Lecture Completion")}
               </Typography>
             </Box>
             <ResponsiveContainer width="100%" height={400}>
@@ -164,7 +164,7 @@ function TeacherGraph({ teacherID, countData, watchData }) {
                   lineHeight: "normal",
                 }}
               >
-                Lecture Watch-time
+                {t("Lecture Watch-time")}
               </Typography>
             </Box>
             <ResponsiveContainer width="100%" height={400}>

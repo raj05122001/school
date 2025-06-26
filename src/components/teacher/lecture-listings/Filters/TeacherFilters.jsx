@@ -335,7 +335,7 @@ const TeacherFilters = ({ classValue = "All" }) => {
             },
           }}
         >
-          All
+         {t("All")}
         </Button>
 
         {classList.map((cat) => {

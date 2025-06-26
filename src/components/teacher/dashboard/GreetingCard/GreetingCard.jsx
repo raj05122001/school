@@ -63,7 +63,7 @@ function GreetingCard() {
             variant="subtitle1"
             sx={{ textAlign: "left", color: "white" }}
           >
-            Have a nice day!
+            {t("Have a nice dayx")}!
           </Typography>
         </Box>
         <Box sx={{ display: "flex", gap: 3, alignItems: "flex-start" }}>
@@ -93,7 +93,7 @@ function GreetingCard() {
               }}
               onClick={userDetails?.role !== "STUDENT" ? () => handleCreateLecture("", false) :  () => handleRoute()}
             >
-              Watch Lecture
+               {t("Watch Lecture")}
             </Button>
 
             {/* <Button

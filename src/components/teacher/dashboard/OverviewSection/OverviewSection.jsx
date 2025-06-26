@@ -162,12 +162,12 @@ const t=useTranslations();
             >
               <TableRow>
                 <TableCell />
-                <TableCell>Topic</TableCell>
-                <TableCell>Class</TableCell>
-                <TableCell>Time</TableCell>
-                <TableCell>Subject</TableCell>
-                <TableCell>Chapter</TableCell>
-                <TableCell>Action</TableCell>
+                <TableCell>{t("Topic")}</TableCell>
+                <TableCell>{t("Class")}</TableCell>
+                <TableCell> {t("Time")}</TableCell>
+                <TableCell>{t("Subject")}</TableCell>
+                <TableCell>{t("Chapter")}</TableCell>
+                <TableCell>{t("Action")}</TableCell>
               </TableRow>
             </TableHead>
             <TableBody>
@@ -269,7 +269,7 @@ const t=useTranslations();
                     fontSize: "14px",
                   }}
                 >
-                  Topic
+                  {t("Topic")}
                 </TableCell>
                 <TableCell
                   sx={{
@@ -282,7 +282,7 @@ const t=useTranslations();
                     fontSize: "14px",
                   }}
                 >
-                  Class
+                  {t("Class")}
                 </TableCell>
                 <TableCell
                   sx={{
@@ -295,7 +295,7 @@ const t=useTranslations();
                     fontSize: "14px",
                   }}
                 >
-                  Time
+                  {t("Time")}
                 </TableCell>
                 <TableCell
                   sx={{
@@ -308,7 +308,7 @@ const t=useTranslations();
                     fontSize: "14px",
                   }}
                 >
-                  Subject
+                  {t("Subject")}
                 </TableCell>
                 <TableCell
                   sx={{
@@ -321,7 +321,7 @@ const t=useTranslations();
                     fontSize: "14px",
                   }}
                 >
-                  Chapter
+                 {t("Chapter")}
                 </TableCell>
                 <TableCell
                   sx={{
@@ -336,7 +336,7 @@ const t=useTranslations();
                     fontSize: "14px",
                   }}
                 >
-                  Action
+                   {t("Action")}
                 </TableCell>
               </TableRow>
             </TableHead>

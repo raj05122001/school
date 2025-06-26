@@ -13,8 +13,10 @@ import { decodeToken } from "react-jwt";
 import TextWithMath from "@/commonComponents/TextWithMath/TextWithMath";
 import AssignmentItem from "./StudentMolAssignment/AssignmentItem";
 import { initialState, reducer } from "./StudentMolAssignment/stateManagement";
+import { useTranslations } from "next-intl";
 
 const StudentMOLAssignment = ({ id, isDarkMode, class_ID }) => {
+  const t=useTranslations();
   const [state, dispatch] = useReducer(reducer, initialState);
   const { assignments, loading, error, snackbar } = state;
   const [submittedId, SetSubmittedId] = useState([]);
@@ -90,9 +92,9 @@ const StudentMOLAssignment = ({ id, isDarkMode, class_ID }) => {
     );
   }
   const legendItems = [
-    { label: "Fully Submitted", color: "#16AA54" },
-    { label: "Re-Submit to Teacher", color: "#0088FE" },
-    { label: "Not Attempted", color: "#FF3B30" },
+    { label: t("Fully Submitted"), color: "#16AA54" },
+    { label: t("Re-Submit to Teacher"), color: "#0088FE" },
+    { label: t("Not Attempted"), color: "#FF3B30" },
   ];
   return (
     <Box

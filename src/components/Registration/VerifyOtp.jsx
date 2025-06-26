@@ -8,6 +8,7 @@ import toast from "react-hot-toast";
 import { CircularProgress } from "@mui/material";
 import { useMediaQuery } from "@mui/material";
 import Logo from "@/commonComponents/Logo/Logo";
+import { useTranslations } from "next-intl";
 
 const textAnimation = {
   "@keyframes slideFade": {
@@ -23,6 +24,7 @@ const textAnimation = {
 };
 
 const VerifyOtp = () => {
+  const t=useTranslations();
   const router = useRouter();
   const searchParams = useSearchParams();
   const email = searchParams.get("email");
@@ -175,7 +177,7 @@ const VerifyOtp = () => {
               fontFamily: "Space Grotesk, Arial, sans-serif",
             }}
           >
-            VidyaAI
+           {t("VidyaAI")}
           </Typography>
         </Box>
         <Typography

@@ -11,6 +11,7 @@ import {
 import { Box, Typography, IconButton, Tooltip } from "@mui/material";
 import { useThemeContext } from "@/hooks/ThemeContext";
 import Cookies from "js-cookie";
+import { useTranslations } from "next-intl";
 
 const feedbackOptions = [
   {
@@ -36,6 +37,7 @@ const feedbackOptions = [
 ];
 
 const Feedback = ({ lectureId, data, fetchgetFeedback }) => {
+  const t=useTranslations();
   const { isDarkMode, primaryColor, secondaryColor } = useThemeContext();
   const [selected, setSelected] = useState(data?.average_feedback_parameter);
 
@@ -84,11 +86,10 @@ const Feedback = ({ lectureId, data, fetchgetFeedback }) => {
           variant="h6"
           sx={{ fontWeight: "bold", color: primaryColor }}
         >
-          How was the lecture?
+          {t("How was the lecture?")}
         </Typography>
         <Typography variant="body2" sx={{ color: secondaryColor, mt: 1 }}>
-          Your feedback matters! Choose an emoji to let us know how the lecture
-          went.
+          {t("Your feedback matters! Choose an emoji to let us know how the lecture went")}.
         </Typography>
       </Box>
 

@@ -26,6 +26,7 @@ import { handleErrorResponse } from "@/helper/Helper";
 import { AppContextProvider } from "@/app/main";
 import usePresignedUrl from "@/hooks/usePresignedUrl";
 import usefileUploader from "@/hooks/usefileUploader";
+import { useTranslations } from "next-intl";
 
 const LectureRecorder = ({ open, closeDrawer, recordingData }) => {
   const {isTrialAccount}=useContext(AppContextProvider)
@@ -36,6 +37,7 @@ const LectureRecorder = ({ open, closeDrawer, recordingData }) => {
     second: "2-digit",
     hour12: false,
   });
+  const t=useTranslations();
   const audioRecorderRef = useRef(null);
   const audioStreamRef = useRef(null);
   const mediaRecorderRef = useRef(null);
@@ -826,7 +828,7 @@ const LectureRecorder = ({ open, closeDrawer, recordingData }) => {
                   },
                 }}
               >
-                Cancel
+                {t("Cancel")}
               </Button>
 
               <Box sx={{ display: "flex", justifyContent: "flex-end" }}>

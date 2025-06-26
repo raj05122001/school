@@ -435,7 +435,7 @@ const ClassAssignment = () => {
                   lineHeight: "normal",
                 }}
               >
-                Overall Class Participation
+               {t("Overall Class Participation")}
               </Typography>
               <Box sx={{display:"flex", justifyContent:"space-between", width:"100%"}}>
                 <Typography
@@ -474,7 +474,7 @@ const ClassAssignment = () => {
                     textAlign: "center",
                   }}
                 >
-                  {t("Avg. Grade")}
+                  {t("Avg Grade")}
                 </Typography>
                 <Typography
                   sx={{
@@ -656,7 +656,7 @@ const ClassAssignment = () => {
                       textAlign: "center",
                     }}
                   >
-                    {t("Avg. Percentage")}
+                    {t("Avg Percentage")}
                   </Typography>
                   <Typography
                     sx={{

@@ -23,9 +23,11 @@ import { formatDistanceToNow } from "date-fns";
 import { decodeToken } from "react-jwt";
 import Cookies from "js-cookie";
 import UserImage from "@/commonComponents/UserImage/UserImage";
+import { useTranslations } from "next-intl";
 
 // ReplyCard Component with Skeleton Loader
 const ReplyCard = ({ reply, isDarkMode, secondaryColor, loading }) => {
+  
   if (loading) {
     return (
       <Box display="flex" alignItems="flex-start" mb={2}>
@@ -98,6 +100,7 @@ const CommentCard = ({
   handleSubmitReply,
   loading,
 }) => {
+  const t=useTranslations();
   const [isShowReplyComment, setIsShowReplyComment] = useState(false);
   const [showRepliesCount, setShowRepliesCount] = useState(3);
   const [isReply, setIsReply] = useState(false);
@@ -209,7 +212,7 @@ const CommentCard = ({
         {isReply && (
           <Box display="flex" alignItems="center" pt={2}>
             <InputBase
-              placeholder="Write a reply..."
+              placeholder={t("Write a reply")}
               fullWidth
               sx={{
                 ml: 1,
@@ -262,7 +265,7 @@ const CommentCard = ({
                   size="small"
                   onClick={() => setShowRepliesCount((prev) => prev + 5)}
                 >
-                  View {remainingReplies} more{" "}
+                  {t("View")} {remainingReplies} more{" "}
                   {remainingReplies > 1 ? "replies" : "reply"}
                 </Button>
               </Box>
@@ -276,6 +279,7 @@ const CommentCard = ({
 
 // CommentsSection Component with updated layout for divider and centered message
 const CommentsSection = ({ id }) => {
+  const t = useTranslations()
   const { isDarkMode, primaryColor, secondaryColor } = useThemeContext();
   const [commentData, setCommentData] = useState([]);
   const [text, setText] = useState("");
@@ -363,7 +367,7 @@ const CommentsSection = ({ id }) => {
               lineHeight: "24px",
             }}
           >
-            Comments
+           {t("Comments")}
           </Typography>
           {commentData.length > 0 && (
             <Box
@@ -422,7 +426,7 @@ const CommentsSection = ({ id }) => {
               textAlign="center"
               my={14}
             >
-              No comments yet. Be the first to comment!
+             {t("No comments")}
             </Typography>
           )}
         </CardContent>
@@ -433,7 +437,7 @@ const CommentsSection = ({ id }) => {
 
         <Box display="flex" alignItems="center" pt={2}>
           <InputBase
-            placeholder="Write a comment..."
+            placeholder={t("Write a comment")}
             fullWidth
             sx={{
               ml: 1,

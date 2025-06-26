@@ -24,6 +24,7 @@ import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import dayjs from "dayjs";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { getClassByCourse, getSubjectByClass } from "@/api/apiHelper";
+import { useTranslations } from "next-intl";
 
 export default function SearchWithFilter() {
   const searchParams = useSearchParams();
@@ -46,6 +47,7 @@ export default function SearchWithFilter() {
 
   const [classList, setClassList] = useState([]);
   const [subjectList, setSubjectList] = useState([]);
+  const t=useTranslations();
 
   // Fetch classes on mount
   useEffect(() => {
@@ -143,7 +145,7 @@ export default function SearchWithFilter() {
         >
           <InputBase
             sx={{ ml: 1, flex: 1 }}
-            placeholder="Search"
+            placeholder={t("Search")}
             value={searchInput}
             onChange={(e) => setSearchInput(e.target.value)}
           />
@@ -161,7 +163,7 @@ export default function SearchWithFilter() {
 
       {/* Filter dialog */}
       <Dialog open={filterOpen} onClose={() => setFilterOpen(false)} fullWidth maxWidth="md">
-        <DialogTitle>Search Filters</DialogTitle>
+        <DialogTitle>{t("Search Filters")}</DialogTitle>
         <DialogContent>
           <LocalizationProvider dateAdapter={AdapterDayjs}>
             <Grid container spacing={2} sx={{ mt: 1 }}>
@@ -231,9 +233,9 @@ export default function SearchWithFilter() {
           </LocalizationProvider>
         </DialogContent>
         <DialogActions>
-          <Button onClick={() => setFilterOpen(false)}>Cancel</Button>
+          <Button onClick={() => setFilterOpen(false)}>{t("Cancel")}</Button>
           <Button variant="contained" onClick={handleApplyFilters}>
-            Apply
+            {t("Apply")}
           </Button>
         </DialogActions>
       </Dialog>

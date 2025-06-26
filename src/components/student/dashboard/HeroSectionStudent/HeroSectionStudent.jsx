@@ -21,7 +21,7 @@ import { getMyAssignmentAnalytics } from "@/api/apiHelper";
 import { useTranslations } from "next-intl";
 
 function HeroSectionStudent() {
-  const t = useTranslations()
+  const t = useTranslations();
   const router = useRouter();
   const [userDetails, setUserDetails] = useState(null);
   const [myScores, setMyScores] = useState({});
@@ -234,7 +234,7 @@ function HeroSectionStudent() {
                   lineHeight: "14.99px",
                 }}
               >
-                Vidya AI
+                {t("Vidya AI")}
               </Typography>
             </Box>
           </Box>
@@ -335,6 +335,7 @@ function HeroSectionStudent() {
 export default HeroSectionStudent;
 
 const ScoreCard = ({ bgColor, dotColor, value, Range }) => {
+  const t=useTranslations();
   return (
     <Paper
       elevation={0}
@@ -352,10 +353,10 @@ const ScoreCard = ({ bgColor, dotColor, value, Range }) => {
       <Box display="flex" justifyContent="space-between" alignItems="center">
         <Box>
           <Typography fontSize="16px" fontWeight={600} color="text.primary">
-            Assignment
+           {t("Assignment")}
           </Typography>
           <Typography fontSize="16px" fontWeight={600} color="text.primary">
-            Range {Range}
+            {t("Range")} {Range}
           </Typography>
         </Box>
         <Box

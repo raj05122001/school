@@ -2,8 +2,10 @@ import React, { useEffect, useState, useRef } from "react";
 import { Box, Typography, Link, Button, Skeleton } from "@mui/material";
 import { getLectureResources } from "@/api/apiHelper";
 import { GrResources } from "react-icons/gr";
+import { useTranslations } from "next-intl";
 
 const LectureReferrence = ({ id, isDarkMode }) => {
+  const t=useTranslations();
   const [resources, setResources] = useState([]);
   const [visibleCount, setVisibleCount] = useState(10);
   const [loading, setLoading] = useState(true);
@@ -149,7 +151,7 @@ const LectureReferrence = ({ id, isDarkMode }) => {
               letterSpacing: "-0.48px",
             }}
           >
-            <GrResources /> Lecture Resources
+            <GrResources /> {t("Lecture Resources")}
           </Typography>
 
           {displayedResources?.map((resource, index) => {
@@ -174,7 +176,7 @@ const LectureReferrence = ({ id, isDarkMode }) => {
                     resource.research_papers.title && (
                       <Box sx={{ mb: 1 }}>
                         <Typography sx={refTitleCSS}>
-                          Research Paper:
+                          {t("Research Paper")}:
                         </Typography>
                         <Link
                           href={resource.research_papers.link}
@@ -188,7 +190,7 @@ const LectureReferrence = ({ id, isDarkMode }) => {
                     )}
                   {resource.scopus_data && (
                     <Box sx={{ mb: 1 }}>
-                      <Typography sx={refTitleCSS}>Scopus Link:</Typography>
+                      <Typography sx={refTitleCSS}>{t("Scopus Link")}:</Typography>
                       <Box
                         sx={{ display: "flex", alignItems: "center", gap: 4 }}
                       >
@@ -255,7 +257,7 @@ const LectureReferrence = ({ id, isDarkMode }) => {
                   {resource?.springer_data && (
                     <Box sx={{ mb: 1 }}>
                       <Typography sx={refTitleCSS}>
-                        Springer Link:
+                        {t("Springer Link")}:
                       </Typography>
                       <Box
                         sx={{ display: "flex", alignItems: "center", gap: 4 }}
@@ -286,7 +288,7 @@ const LectureReferrence = ({ id, isDarkMode }) => {
                   )}
                   {resource.youtube_videos && (
                     <Box sx={{ mb: 1 }}>
-                      <Typography sx={refTitleCSS}>YouTube Video:</Typography>
+                      <Typography sx={refTitleCSS}>{t("YouTube Video")}:</Typography>
                       <Box
                         sx={{ display: "flex", alignItems: "center", gap: 4 }}
                       >
@@ -317,7 +319,7 @@ const LectureReferrence = ({ id, isDarkMode }) => {
                   {resource.Google_Book_Links && (
                     <Box sx={{ mb: 1 }}>
                       <Typography sx={refTitleCSS}>
-                        Google Book Link:
+                        {t("Google Book Link")}:
                       </Typography>
                       <Box
                         sx={{ display: "flex", alignItems: "center", gap: 4 }}
@@ -379,7 +381,7 @@ const LectureReferrence = ({ id, isDarkMode }) => {
                 },
               }}
             >
-              Need More
+             {t("Need More")}
             </Button>
           )}
         </Box>

@@ -24,8 +24,12 @@ import Cookies from "js-cookie";
 import { decodeToken } from "react-jwt";
 import { deleteCompletedLecture } from "@/api/apiHelper";
 import { useRouter } from "next/navigation";
+import { useTranslations } from "next-intl";
+
+
 
 const LectureDescription = ({ lectureData, isShowPic = false, loading,videoTimeStamp=0 }) => {
+  const t=useTranslations();
   const formatDuration = (ms) => {
     const hours = Math.floor(ms / (1000 * 60 * 60));
     const minutes = Math.floor((ms % (1000 * 60 * 60)) / (1000 * 60));
@@ -105,12 +109,12 @@ const LectureDescription = ({ lectureData, isShowPic = false, loading,videoTimeS
               marginLeft: "4px",
             }}
           >
-            (facilitated by VidyaAI)
+            ({t("facilitated by VidyaAI")})
           </span>
         </Typography>
       )}
 
-      <Button onClick={handleCopyShareUrl} variant="outlined" sx={{mr:2}}>Copy Share URL</Button>
+      <Button onClick={handleCopyShareUrl} variant="outlined" sx={{mr:2}}>{t("Copy Share URL")}</Button>
     </Box>
       
 
@@ -120,7 +124,7 @@ const LectureDescription = ({ lectureData, isShowPic = false, loading,videoTimeS
             <Skeleton width="80%" height={30} />
           ) : (
             <Typography sx={keyCSS}>
-              Description:{" "}
+             {t('Description')}:{" "}
               <Tooltip
                 title={lectureData?.description || "Description not available"}
               >
@@ -158,7 +162,7 @@ const LectureDescription = ({ lectureData, isShowPic = false, loading,videoTimeS
           ) : (
             <>
               <Typography sx={keyCSS}>
-                Class:{" "}
+                {t("Class")}:{" "}
                 <Tooltip
                   title={
                     lectureData?.lecture_class?.name ||
@@ -171,7 +175,7 @@ const LectureDescription = ({ lectureData, isShowPic = false, loading,videoTimeS
                 </Tooltip>
               </Typography>
               <Typography sx={keyCSS}>
-                Subject:{" "}
+                {t("Subject")}:{" "}
                 <Tooltip
                   title={
                     lectureData?.chapter?.subject?.name ||
@@ -184,7 +188,7 @@ const LectureDescription = ({ lectureData, isShowPic = false, loading,videoTimeS
                 </Tooltip>
               </Typography>
               <Typography sx={keyCSS}>
-                Chapter:{" "}
+                {t("Chapter")}:{" "}
                 <Tooltip
                   title={
                     lectureData?.chapter?.chapter ||
@@ -212,7 +216,7 @@ const LectureDescription = ({ lectureData, isShowPic = false, loading,videoTimeS
           ) : (
             <>
               <Typography sx={keyCSS}>
-                Duration:{" "}
+                {t("Duration")}:{" "}
                 <span style={valCSS}>
                   {lectureData?.duration
                     ? formatDuration(lectureData?.duration)
@@ -220,13 +224,13 @@ const LectureDescription = ({ lectureData, isShowPic = false, loading,videoTimeS
                 </span>
               </Typography>
               <Typography sx={keyCSS}>
-                Scheduled Date:{" "}
+                {t("Scheduled Date")}:{" "}
                 <span style={valCSS}>
                   {lectureData?.schedule_date || "N/A"}
                 </span>
               </Typography>
               <Typography sx={keyCSS}>
-                Scheduled Time:{" "}
+                {t("Scheduled Time")}:{" "}
                 <span style={valCSS}>
                   {lectureData?.schedule_time || "N/A"}
                 </span>

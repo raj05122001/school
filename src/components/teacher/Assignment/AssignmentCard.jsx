@@ -12,10 +12,12 @@ import LectureType from "@/commonComponents/LectureType/LectureType";
 import { Varela_Round } from "next/font/google";
 import { LuDot } from "react-icons/lu";
 import { IoMdCheckmarkCircleOutline } from "react-icons/io";
+import { useTranslations } from "next-intl";
 
 const varelaRound = Varela_Round({ weight: "400", subsets: ["latin"] });
 
 const AssignmentCard = ({ data, onClick }) => {
+  const t=useTranslations();
   const { isDarkMode, primaryColor, secondaryColor } = useThemeContext();
 
   return (
@@ -81,7 +83,7 @@ const AssignmentCard = ({ data, onClick }) => {
             sx={{ color: isDarkMode ? primaryColor : "#555", fontSize: "14px" }}
           >
             <LuDot />
-            <strong>Class:</strong> {data?.lecture_class?.name}
+            <strong>{t("Class")}:</strong> {data?.lecture_class?.name}
           </Typography>
           <Typography
             variant="subtitle1"
@@ -89,7 +91,7 @@ const AssignmentCard = ({ data, onClick }) => {
             sx={{ color: isDarkMode ? primaryColor : "#555", fontSize: "14px" }}
           >
             <LuDot />
-            <strong>Subject:</strong> {data?.chapter?.subject?.name}
+            <strong>{t("Subject")}:</strong> {data?.chapter?.subject?.name}
           </Typography>
           <Typography
             variant="subtitle1"
@@ -97,7 +99,7 @@ const AssignmentCard = ({ data, onClick }) => {
             sx={{ color: isDarkMode ? primaryColor : "#555", fontSize: "14px" }}
           >
             <LuDot />
-            <strong>Chapter:</strong> {data?.chapter?.chapter}
+            <strong>{t("Chapter")}:</strong> {data?.chapter?.chapter}
           </Typography>
           <Typography
             variant="subtitle1"
@@ -105,7 +107,7 @@ const AssignmentCard = ({ data, onClick }) => {
             sx={{ color: isDarkMode ? primaryColor : "#555", fontSize: "14px" }}
           >
             <LuDot />
-            <strong>Total Assignments:</strong>{" "}
+            <strong>{t("Total Assignments")}:</strong>{" "}
             {data?.total_submitted_assignments}
           </Typography>
           <Typography
@@ -114,7 +116,7 @@ const AssignmentCard = ({ data, onClick }) => {
             sx={{ color: isDarkMode ? primaryColor : "#555", fontSize: "14px" }}
           >
             <LuDot />
-            <strong>Checked Assignments:</strong> {data?.checked_assignments}
+            <strong>{t("Checked Assignments")}:</strong> {data?.checked_assignments}
           </Typography>
 
           {/* <Typography

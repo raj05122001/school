@@ -122,7 +122,7 @@ const t=useTranslations()
                 }}
               >
                 <MdDownloadForOffline size={22} style={{ marginRight: 2 }} />{" "}
-                Download Format
+                {t("Download Format")}
               </Button>
               <Button
                 variant="contained"
@@ -154,7 +154,7 @@ const t=useTranslations()
                 }}
               >
                 <MdUpload size={22} style={{ marginRight: 2 }} />
-                Upload
+                {t("Upload")}
               </Button>
               {open && <CreateLectureSchedule open={open} setOpen={setOpen} />}
             </Box>

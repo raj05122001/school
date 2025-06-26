@@ -165,7 +165,7 @@ function WatchTimeChart() {
         <Typography
           sx={{ fontWeight: 700, fontSize: "16px", color: "#3B3D3B" }}
         >
-          Time Remaining
+          {t("Time Remaining")}
         </Typography>
         <Typography
           sx={{ fontWeight: 500, fontSize: "16px", color: "#3B3D3B" }}

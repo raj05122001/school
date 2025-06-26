@@ -99,7 +99,7 @@ const RecorderErrorMessage = ({
                       textAlign: "center",
                     }}
                   >
-                    Time Remaining:{" "}
+                  {t("Time Remaining")}:{" "}
                     <span style={{ color: "gray", fontWeight: "500" }}>
                       {formatTime(timeRemaining)}
                     </span>

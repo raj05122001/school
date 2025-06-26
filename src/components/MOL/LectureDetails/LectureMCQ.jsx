@@ -10,8 +10,10 @@ import {
 import { getLectureQuiz } from "@/api/apiHelper";
 import MathJax from "react-mathjax2";
 import TextWithMath from "@/commonComponents/TextWithMath/TextWithMath";
+import { useTranslations } from "next-intl";
 
 const LectureMCQ = ({ id, isDarkMode }) => {
+  const t=useTranslations();
   const [quizData, setQuizData] = useState([]);
   const [visibleCount, setVisibleCount] = useState(5);
   const [loading, setLoading] = useState(true);
@@ -214,7 +216,7 @@ const LectureMCQ = ({ id, isDarkMode }) => {
                     },
                   }}
                 >
-                  Need More
+                  {t("Need More")}
                 </Button>
               )}
             </List>

@@ -223,7 +223,7 @@ const TeacherRanking = () => {
                           fontFamily: "Inter, sans-serif",
                         }}
                       >
-                        Profile
+                        {t("Profile")}
                       </TableCell>
                       <TableCell
                         sx={{
@@ -233,7 +233,7 @@ const TeacherRanking = () => {
                           fontFamily: "Inter, sans-serif",
                         }}
                       >
-                        Teacher
+                        {t("Teacher")}
                       </TableCell>
                       <TableCell
                         sx={{
@@ -243,7 +243,7 @@ const TeacherRanking = () => {
                           fontFamily: "Inter, sans-serif",
                         }}
                       >
-                       {t(" Total Lectures")}
+                       {t("Total Lectures")}
                       </TableCell>
                       <TableCell
                         sx={{
@@ -253,7 +253,7 @@ const TeacherRanking = () => {
                           fontFamily: "Inter, sans-serif",
                         }}
                       >
-                        Completed Lectures
+                        {t("Completed Lectures")}
                       </TableCell>
                       <TableCell
                         sx={{
@@ -263,7 +263,7 @@ const TeacherRanking = () => {
                           fontFamily: "Inter, sans-serif",
                         }}
                       >
-                        Average Rating
+                        {t("Average Rating")}
                       </TableCell>
                     </TableRow>
                   </TableHead>
@@ -411,7 +411,7 @@ const TeacherRanking = () => {
                       variant="h6"
                       sx={{ fontFamily: "Inter, sans-serif" }}
                     >
-                      Lecture Completion
+                      {t("Lecture Completion")}
                     </Typography>
                   </Stack>
                 </Box>
@@ -496,7 +496,7 @@ const TeacherRanking = () => {
                       variant="h6"
                       sx={{ fontFamily: "Inter, sans-serif" }}
                     >
-                      Lecture Watch‐time
+                     {t("Lecture Watch‐time")}
                     </Typography>
                   </Stack>
                 </Box>

@@ -503,7 +503,7 @@ export const StudentModal = ({
                       fontSize: "14px",
                     }}
                   >
-                    Email Id
+                   {t("Email Id")}
                   </TableCell>
                   <TableCell
                     sx={{
@@ -516,7 +516,7 @@ export const StudentModal = ({
                       fontSize: "14px",
                     }}
                   >
-                    Avg Overall Percentage
+                    {t("Avg Overall Percentage")}
                   </TableCell>
                   <TableCell
                     sx={{

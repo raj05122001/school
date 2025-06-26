@@ -358,7 +358,7 @@ const AdminFilters = ({ classValue = "All" }) => {
             },
           }}
         >
-          All
+          {t("All")}
         </Button>
 
         {classList.map((cat) => {
@@ -393,7 +393,7 @@ const AdminFilters = ({ classValue = "All" }) => {
       </Box>
 
       <Typography variant="h6" sx={{ mt: 2, px: 2 }}>
-       {t(" Recent Uploads")}
+       {t("Recent Uploads")}
       </Typography>
     </Box>
   );

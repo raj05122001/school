@@ -23,6 +23,7 @@ import { BsChevronDown } from "react-icons/bs";
 import Image from "next/image";
 import Logo from "@/commonComponents/Logo/Logo";
 import { useThemeContext } from "@/hooks/ThemeContext";
+import { useTranslations } from "next-intl";
 
 const SpeechRecognition =
   typeof window !== "undefined" &&
@@ -41,6 +42,7 @@ export default function ChatBot({
   setIsOpenChatBot,
   isOpenChatBot,
 }) {
+  const t=useTranslations();
   const { isDarkMode } = useThemeContext();
   const [userTextInput, setUserTextInput] = useState("");
   const [chatHistory, setChatHistory] = useState([]);
@@ -261,7 +263,7 @@ export default function ChatBot({
               </Box>
               {message?.links && (
                 <Box mt={1}>
-                  <Typography variant="body2">Reference:</Typography>
+                  <Typography variant="body2">{t("Reference")}:</Typography>
                   {message?.links?.map((link, index) => (
                     <Box key={index}>{processContent(link)}</Box>
                   ))}
@@ -281,7 +283,7 @@ export default function ChatBot({
             }}
           >
             <FaRobot size={50} sx={{ mb: 2 }} />
-            <Typography variant="h6">Ask me any question</Typography>
+            <Typography variant="h6">{t("Ask me any question")}</Typography>
           </Box>
         )}
         {isLoading && (
@@ -300,7 +302,7 @@ export default function ChatBot({
         <TextField
           fullWidth
           multiline
-          placeholder="Ask me..."
+          placeholder={t("Ask me")}
           value={userTextInput}
           onChange={(e) => setUserTextInput(e.target.value)}
           onKeyPress={handleKeyPress}

@@ -92,7 +92,7 @@ function GreetingCard() {
             }}
             onClick={() => handleRoute()}
           >
-            Watch Lecture
+            {t("Watch Lecture")}
           </Button>
 
           <Button
@@ -108,7 +108,7 @@ function GreetingCard() {
               
             }}
           >
-            Upload Syllabus
+            {t("Upload Syllabus")}
           </Button>
         </Box>
       </Box>

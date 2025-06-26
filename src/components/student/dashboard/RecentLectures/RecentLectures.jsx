@@ -8,6 +8,7 @@ import { getStudentLectures } from "@/api/apiHelper";
 import LectureCardSkeleton from "@/commonComponents/Skeleton/LectureCardSkeleton/LectureCardSkeleton";
 import { FaExclamationCircle } from "react-icons/fa";
 import LectureCardStudent from "@/commonComponents/LectureCard/LectureCardStudent";
+import { useTranslations } from "next-intl";
 
 const iconStyle = {
   fontSize: "24px",
@@ -15,6 +16,7 @@ const iconStyle = {
 };
 
 const RecentLectures = () => {
+  const t=useTranslations();
   const { isDarkMode } = useThemeContext();
   const [allLecture, setAllLecture] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
@@ -100,7 +102,7 @@ const RecentLectures = () => {
             lineHeight: "normal",
           }}
         >
-          Recent Lectures
+         {t("Recent Lectures")}
         </Typography>
       </Box>
 
@@ -131,11 +133,11 @@ const RecentLectures = () => {
             >
               <TableRow>
                 <TableCell />
-                <TableCell>Topic</TableCell>
-                <TableCell>Class</TableCell>
-                <TableCell>Time</TableCell>
-                <TableCell>Subject</TableCell>
-                <TableCell>Chapter</TableCell>
+                <TableCell>{t("Topic")}</TableCell>
+                <TableCell>{t("Class")}</TableCell>
+                <TableCell> {t("Time")}</TableCell>
+                <TableCell>{t("Subject")}</TableCell>
+                <TableCell>{t("Chapter")}</TableCell>
               </TableRow>
             </TableHead>
             <TableBody>
@@ -237,7 +239,7 @@ const RecentLectures = () => {
                           fontSize: "14px",
                         }}
                       >
-                        Topic
+                        {t("Topic")}
                       </TableCell>
                       <TableCell
                         sx={{
@@ -250,7 +252,7 @@ const RecentLectures = () => {
                           fontSize: "14px",
                         }}
                       >
-                        Class
+                      {t("Class")}
                       </TableCell>
                       <TableCell
                         sx={{
@@ -263,7 +265,7 @@ const RecentLectures = () => {
                           fontSize: "14px",
                         }}
                       >
-                        Time
+                      {t("Time")}
                       </TableCell>
                       <TableCell
                         sx={{
@@ -276,7 +278,7 @@ const RecentLectures = () => {
                           fontSize: "14px",
                         }}
                       >
-                        Subject
+                        {t("Subject")}
                       </TableCell>
                       <TableCell
                         sx={{
@@ -289,7 +291,7 @@ const RecentLectures = () => {
                           fontSize: "14px",
                         }}
                       >
-                        Chapter
+                         {t("Chapter")}
                       </TableCell>
                     </TableRow>
                   </TableHead>

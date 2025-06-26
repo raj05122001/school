@@ -5,7 +5,7 @@ import { useTranslations } from "next-intl";
 import React, { useState, useEffect } from "react";
 
 const ClassProf = () =>{
-  const t = useTranslations()
+  const t = useTranslations();  
   const [classOptions, setClassOptions] = useState([]);
   const [selectedOptions, setSelectedOptions] = useState(null);
   const [data, setData] = useState({});
@@ -318,7 +318,7 @@ const ClassProf = () =>{
                 textAlign: "center",
               }}
             >
-              {t("Avg. Grade")}
+              {t("Avg Grade")}
             </Typography>
             <Typography
               sx={{
@@ -500,7 +500,7 @@ const ClassProf = () =>{
                   textAlign: "center",
                 }}
               >
-                {t("Avg. Percentage")}
+                {t("Avg Percentage")}
               </Typography>
               <Typography
                 sx={{

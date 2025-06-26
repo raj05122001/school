@@ -169,7 +169,7 @@ const Page = () => {
             renderInput={(params) => (
               <TextField
                 {...params}
-                placeholder="Select Class"
+                placeholder=t{("Select Class")}
                 variant="outlined"
                 InputProps={{
                   ...params.InputProps,

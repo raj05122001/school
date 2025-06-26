@@ -43,7 +43,7 @@ const ClassStatistics = () => {
             variant="h6"
             className={`${isDarkMode ? "dark-heading" : "light-heading"}`}
           >
-            Class Statistics
+            {t("Class Statistics")}
           </Typography>
         </Box>
         <Typography
@@ -51,7 +51,7 @@ const ClassStatistics = () => {
           align="center"
           sx={{ color: secondaryTextColor }}
         >
-          April 2022
+          {t("April")} 2022
         </Typography>
       </Box>
 
@@ -69,7 +69,7 @@ const ClassStatistics = () => {
             {totalStudents}
           </Typography>
           <Typography variant="body2" sx={{ color: secondaryTextColor }}>
-            Total Students
+            {t("Total Students")}
           </Typography>
         </Grid>
 
@@ -85,7 +85,7 @@ const ClassStatistics = () => {
             {struggling}
           </Typography>
           <Typography variant="body2" sx={{ color: secondaryTextColor }}>
-            Struggling
+            {t("Struggling")}
           </Typography>
         </Grid>
 
@@ -101,7 +101,7 @@ const ClassStatistics = () => {
             {excelling}
           </Typography>
           <Typography variant="body2" sx={{ color: secondaryTextColor }}>
-            Excelling
+            {t("Excelling")}
           </Typography>
         </Grid>
       </Grid>
@@ -129,7 +129,7 @@ const ClassStatistics = () => {
         </Box>
         <Box sx={{ width: "100%", height: "100%" }}>
           <Typography variant="body2" gutterBottom sx={{ color: textColor }}>
-            Class Progress
+            {t("Class Progress")}
           </Typography>
           <LinearProgress
             variant="determinate"

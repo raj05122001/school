@@ -16,6 +16,7 @@ import { useMediaQuery } from "@mui/material";
 import { useRouter } from "next/navigation";
 import { MdVisibility, MdVisibilityOff, MdArrowBack } from "react-icons/md";
 import { resendOneTimePassword, resetPassword } from "@/api/apiHelper";
+import { useTranslations } from "next-intl";
 
 // Keyframes for the text animation
 const textAnimation = {
@@ -32,6 +33,7 @@ const textAnimation = {
 };
 
 const ForgotPassword = () => {
+  const t=useTranslations();
   const router = useRouter();
   const [step, setStep] = useState(1); // 1: Email, 2: OTP, 3: New Password
   const [loading, setLoading] = useState(false);
@@ -257,8 +259,7 @@ const ForgotPassword = () => {
                 width: "100%",
               }}
             >
-              Enter your email address and we&apos;ll send you an OTP to reset your
-              password.
+              {t("Enter your email address and we'll send you an OTP to reset your password")}.
             </Typography>
 
             <Box sx={{ width: "100%" }}>
@@ -273,14 +274,14 @@ const ForgotPassword = () => {
                   fontFamily: "Inter, sans-serif",
                 }}
               >
-                Email Address
+                {t("Email Address")}
               </span>
               <TextField
                 margin="normal"
                 required
                 fullWidth
                 id="email"
-                placeholder="Enter your email address"
+                placeholder={t("Enter your email address")}
                 name="email"
                 type="email"
                 value={formData.email}
@@ -341,7 +342,7 @@ const ForgotPassword = () => {
                     fontFamily: "Inter, sans-serif",
                   }}
                 >
-                  Send OTP
+                  {t("Send OTP")}
                 </Typography>
               )}
             </Button>
@@ -390,14 +391,14 @@ const ForgotPassword = () => {
                   fontFamily: "Inter, sans-serif",
                 }}
               >
-                Enter OTP
+                {t("Enter OTP")}
               </span>
               <TextField
                 margin="normal"
                 required
                 fullWidth
                 id="otp"
-                placeholder="Enter 6-digit OTP"
+                placeholder={t("Enter 6-digit OTP")}
                 name="otp"
                 type="text"
                 inputProps={{ maxLength: 6, pattern: "[0-9]*" }}
@@ -428,7 +429,7 @@ const ForgotPassword = () => {
                     fontFamily: "Inter, sans-serif",
                   }}
                 >
-                  Resend OTP in {otpTimer}s
+                  {t("Resend OTP in")} {otpTimer}s
                 </Typography>
               ) : (
                 <Link
@@ -444,7 +445,7 @@ const ForgotPassword = () => {
                     cursor: "pointer",
                   }}
                 >
-                  Resend OTP
+                  {t("Resend OTP")}
                 </Link>
               )}
             </Box>
@@ -489,7 +490,7 @@ const ForgotPassword = () => {
                     fontFamily: "Inter, sans-serif",
                   }}
                 >
-                  Verify OTP
+                  {t("Verify OTP")}
                 </Typography>
               )}
             </Button>
@@ -522,7 +523,7 @@ const ForgotPassword = () => {
                 width: "100%",
               }}
             >
-              Create a new password for your account.
+              {t("Create a new password for your account.")}
             </Typography>
 
             <Box sx={{ width: "100%" }}>
@@ -537,14 +538,14 @@ const ForgotPassword = () => {
                   fontFamily: "Inter, sans-serif",
                 }}
               >
-                New Password
+                {t("New Password")}
               </span>
               <TextField
                 margin="normal"
                 required
                 fullWidth
                 name="password"
-                placeholder="Enter new password"
+                placeholder={t("Enter new password")}
                 type={showPassword ? "text" : "password"}
                 id="password"
                 value={formData.password}
@@ -588,14 +589,14 @@ const ForgotPassword = () => {
                   fontFamily: "Inter, sans-serif",
                 }}
               >
-                Confirm Password
+                {t("Confirm Password")}
               </span>
               <TextField
                 margin="normal"
                 required
                 fullWidth
                 name="confirmPassword"
-                placeholder="Confirm new password"
+                placeholder={t("Confirm new password")}
                 type={showConfirmPassword ? "text" : "password"}
                 id="confirmPassword"
                 value={formData.confirmPassword}
@@ -671,7 +672,7 @@ const ForgotPassword = () => {
                     fontFamily: "Inter, sans-serif",
                   }}
                 >
-                  Reset Password
+                  {t("Reset Password")}
                 </Typography>
               )}
             </Button>
@@ -686,13 +687,13 @@ const ForgotPassword = () => {
   const getStepTitle = () => {
     switch (step) {
       case 1:
-        return "Forgot Password";
+        return t("Forgot Password");
       case 2:
-        return "Verify OTP";
+        return t("Verify OTP");
       case 3:
-        return "Reset Password";
+        return t("Reset Password");
       default:
-        return "Forgot Password";
+        return t("Forgot Password");
     }
   };
 
@@ -774,7 +775,7 @@ const ForgotPassword = () => {
               fontFamily: "Space Grotesk, Arial, sans-serif",
             }}
           >
-            VidyaAI
+           {t("VidyaAI")}
           </Typography>
         </Box>
 
@@ -810,7 +811,7 @@ const ForgotPassword = () => {
               fontFamily: "Inter, sans-serif",
             }}
           >
-            Welcome to
+            {t("Welcome to")}
           </Typography>
           <Typography
             sx={{
@@ -823,7 +824,7 @@ const ForgotPassword = () => {
               fontFamily: "Space Grotesk, Arial, sans-serif",
             }}
           >
-            VidyaAI
+            {t("VidyaAI")}
           </Typography>
           <Box
             sx={{
@@ -872,7 +873,7 @@ const ForgotPassword = () => {
                 fontFamily: "Inter, sans-serif",
               }}
             >
-              Remember your password?{" "}
+              {t("Remember your password?")}{" "}
               <Link
                 onClick={() => router.push("/login")}
                 sx={{
@@ -883,7 +884,7 @@ const ForgotPassword = () => {
                   fontFamily: "Inter, sans-serif",
                 }}
               >
-                Sign in
+                {t("Sign in")}
               </Link>
             </Typography>
           </Box>

@@ -246,7 +246,7 @@ const Sidebar = ({ open, setOpen }) => {
             paddingLeft: "16px",
           }}
         >
-          MAIN
+          {t("MAIN")}
         </Typography>
 
         {/* Sidebar Links */}
@@ -465,7 +465,7 @@ const Sidebar = ({ open, setOpen }) => {
                       fontSize: "12px",
                     }}
                   >
-                    CCST
+                    {t("CCST")}
                   </Typography>
                 </Box>
               </Box>
@@ -543,7 +543,7 @@ const Sidebar = ({ open, setOpen }) => {
                           fontSize: "12px",
                         }}
                       >
-                        CCST
+                        {t("CCST")}
                       </Typography>
                     </Box>
                   </Box>
@@ -594,7 +594,7 @@ const Sidebar = ({ open, setOpen }) => {
                           },
                         }}
                       >
-                        Setup Profile
+                        {t("Setup Profile")}
                       </Button>
                     </Box>
                   ) : (
@@ -681,7 +681,7 @@ const Sidebar = ({ open, setOpen }) => {
                             stroke-linejoin="round"
                           />
                         </svg>{" "}
-                        <Typography>Information</Typography>
+                        <Typography>{t("Information")}</Typography>
                       </Box>
                     </MenuItem>
 

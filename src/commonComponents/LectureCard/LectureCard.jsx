@@ -40,6 +40,7 @@ import { uploadS3Video } from "@/api/apiHelper";
 import { IoIosCloseCircle } from "react-icons/io";
 import toast from "react-hot-toast";
 import CalendarIconCustom from "../CalendarIconCustom/CalendarIconCustom";
+import { useTranslations } from "next-intl";
 
 const day = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
 
@@ -56,6 +57,7 @@ const LectureCard = ({ lecture, getAllLecture = () => {} }) => {
   } = useContext(AppContextProvider);
 
   const [anchorElUser, setAnchorElUser] = useState(null);
+  const t=useTranslations();
 
   const handleOpenUserMenu = (event) => {
     setAnchorElUser(event?.currentTarget);
@@ -301,7 +303,7 @@ const LectureCard = ({ lecture, getAllLecture = () => {} }) => {
                     }}
                   >
                     <Typography sx={{ textAlign: "center" }}>
-                      Upload File
+                      {t("Upload File")}
                     </Typography>
                   </MenuItem>
                   <MenuItem
@@ -358,7 +360,8 @@ export function BasicModal({ open, setOpen, id, getAllLecture = () => {} }) {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
   const [isLoading, setIsLoading] = useState(false);
-
+  const t=useTranslations();
+  
   const handleClose = (event) => {
     event.stopPropagation();
     if (!loading) {
@@ -459,7 +462,7 @@ export function BasicModal({ open, setOpen, id, getAllLecture = () => {} }) {
             style={{ color: "#E0E0E0", marginBottom: 20 }}
           />
           <Typography variant="h6" sx={{ mb: 2 }} id="upload-dialog-title">
-            Upload Files
+            {t("Upload Files")}
           </Typography>
           {loading && (
             <CircularProgress
@@ -538,7 +541,7 @@ export function BasicModal({ open, setOpen, id, getAllLecture = () => {} }) {
             disabled={loading}
             sx={{ color: "white", borderColor: "grey" }}
           >
-            Cancel
+           {t("Cancel")}
           </Button>
           <Button
             variant="contained"
@@ -550,7 +553,7 @@ export function BasicModal({ open, setOpen, id, getAllLecture = () => {} }) {
               ":hover": { bgcolor: "primary.dark" },
             }}
           >
-            Upload
+            {t("Upload")}
           </Button>
         </Box>
       </DialogActions>

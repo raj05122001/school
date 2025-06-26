@@ -22,8 +22,11 @@ import { changeProfilePassword, getStudentDetails, getTeacherDetails, updateStud
 import toast from "react-hot-toast";
 import { useThemeContext } from "@/hooks/ThemeContext";
 import { letterSpacing } from "@mui/system";
+import { useTranslations } from "next-intl";
 
 const EditDetailsPage = () => {
+  const t=useTranslations();
+  
   const userDetails = decodeToken(Cookies.get("ACCESS_TOKEN"));
   const [profilePicUrl, setProfilePicUrl] = useState(null);
   const [snackbar, setSnackbar] = useState({
@@ -280,7 +283,7 @@ console.log("Password Data", passwordData)
         <form onSubmit={handleSubmit(onSubmit)}>
           <Grid container spacing={2}>
             <Grid item xs={12} sm={6}>
-              <Typography sx={labelCSS}>Full Name*</Typography>
+              <Typography sx={labelCSS}>{t("Full Name")}*</Typography>
               <TextField
                 fullWidth
                 variant="outlined"
@@ -318,7 +321,7 @@ console.log("Password Data", passwordData)
             </Grid>
 
             <Grid item xs={12} sm={6}>
-              <Typography sx={labelCSS}>Roll No.*</Typography>
+              <Typography sx={labelCSS}>{t("Roll No")}.*</Typography>
               <TextField
                 fullWidth
                 variant="outlined"
@@ -355,7 +358,7 @@ console.log("Password Data", passwordData)
             </Grid>
 
             <Grid item xs={12} sm={6}>
-              <Typography sx={labelCSS}>Batch Year*</Typography>
+              <Typography sx={labelCSS}>{t("Batch Year")}*</Typography>
               <TextField
                 fullWidth
                 id="batchYear"
@@ -393,7 +396,7 @@ console.log("Password Data", passwordData)
               />
             </Grid>
             <Grid item xs={12} sm={6}>
-              <Typography sx={labelCSS}>Email*</Typography>
+              <Typography sx={labelCSS}>{t("Email")}*</Typography>
               <TextField
                 fullWidth
                 variant="outlined"
@@ -435,7 +438,7 @@ console.log("Password Data", passwordData)
               />
             </Grid>
             <Grid item xs={12} sm={6}>
-            <Typography sx={labelCSS}>Old Password</Typography>
+            <Typography sx={labelCSS}>{t("Old Password")}</Typography>
         <TextField
           fullWidth
           type="password"
@@ -471,7 +474,7 @@ console.log("Password Data", passwordData)
         />
       </Grid>
       <Grid item xs={12} sm={6}>
-      <Typography sx={labelCSS}>New Password</Typography>
+      <Typography sx={labelCSS}>{t("New Password")}</Typography>
         <TextField
           fullWidth
           type="password"
@@ -610,7 +613,7 @@ console.log("Password Data", passwordData)
                 },
               }}
             >
-              Save
+              {t("Save")}
             </Button>
           </Box>
         </form>

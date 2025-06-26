@@ -3,8 +3,10 @@ import { Box, Typography, Button, Skeleton } from "@mui/material";
 import { getLectureQuestion } from "@/api/apiHelper";
 import MathJax from "react-mathjax2";
 import TextWithMath from "@/commonComponents/TextWithMath/TextWithMath";
+import { useTranslations } from "next-intl";
 
 const LectureQuestions = ({ id, isDarkMode }) => {
+  const t=useTranslations();
   const [questionsData, setQuestionsData] = useState([]);
   const [visibleCount, setVisibleCount] = useState(5);
   const [loading, setLoading] = useState(true);
@@ -91,7 +93,7 @@ const LectureQuestions = ({ id, isDarkMode }) => {
               }}
               gutterBottom
             >
-              Lecture Questions
+              {t("Lecture Questions")}
             </Typography>
             {displayedQuestion?.map((item, index) => (
               <Box key={index} sx={{ mb: 2 }}>
@@ -149,7 +151,7 @@ const LectureQuestions = ({ id, isDarkMode }) => {
                   },
                 }}
               >
-                Need More
+               {t("Need More")}
               </Button>
             )}
           </>

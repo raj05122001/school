@@ -15,8 +15,11 @@ import MathJax from "react-mathjax2";
 import { decodeToken } from "react-jwt";
 import Cookies from "js-cookie";
 import TextWithMath from "@/commonComponents/TextWithMath/TextWithMath";
+import { useTranslations } from "next-intl";
+
 
 const StudentMCQ = ({ id, isDarkMode }) => {
+  const t=useTranslations();
   const [quizData, setQuizData] = useState([]);
   const [visibleCount, setVisibleCount] = useState(5);
   const [loading, setLoading] = useState(true);
@@ -249,7 +252,7 @@ const StudentMCQ = ({ id, isDarkMode }) => {
                       },
                     }}
                   >
-                    Submit
+                   {t("Submit")}
                   </Button>
                 )}
                 {submittedAnswers[item.id] && (
@@ -266,7 +269,7 @@ const StudentMCQ = ({ id, isDarkMode }) => {
                         fontSize: "16px",
                       }}
                     >
-                      Your Answer: &nbsp;
+                      {t("Your Answer")}: &nbsp;
                     </Typography>
                     <TextWithMath
                       text={submittedAnswers[item?.id].yourAnswer}
@@ -286,7 +289,7 @@ const StudentMCQ = ({ id, isDarkMode }) => {
                         ml: 2,
                       }}
                     >
-                      Correct Answer: &nbsp;
+                      {t("Correct Answer")}: &nbsp;
                     </Typography>
                     <TextWithMath
                       text={submittedAnswers[item?.id]?.correctAnswer}
@@ -325,7 +328,7 @@ const StudentMCQ = ({ id, isDarkMode }) => {
                   },
                 }}
               >
-                Need More
+                {t("Need More")}
               </Button>
             )}
           </List>

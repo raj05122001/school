@@ -13,7 +13,7 @@ const COLORS = ["#0088FE", "#FF8042"];
 function SubjectCompletion() {
   const [isClient, setIsClient] = useState(false);
   const [completionData, setCompletionData] = useState({});
-  const t = useTranslations()
+  const t = useTranslations();
 
   console.log("completionData : ",completionData)
 

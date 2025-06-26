@@ -5,6 +5,7 @@ import { FaInfoCircle } from "react-icons/fa";
 import MathJax from "react-mathjax2";
 import usePersonalisedRecommendations from "@/components/student/MOL/usePersonalisedRecommendations";
 import TextWithMath from "@/commonComponents/TextWithMath/TextWithMath";
+import { useTranslations } from "next-intl";
 
 const HighlightsComponent = ({
   lectureId,
@@ -13,6 +14,7 @@ const HighlightsComponent = ({
   isStudent = false,
   setMarksData,
 }) => {
+  const t=useTranslations();
   const [decisions, setDecisions] = useState("");
   const [loading, setLoading] = useState(true);
   const highlightsBoxRef = useRef(null);
@@ -215,7 +217,7 @@ const HighlightsComponent = ({
         >
           <FaInfoCircle size={24} />
           <Typography variant="h5" sx={{ color: "text.secondary", mt: 1 }}>
-            No highlights available.
+            {t("No highlights available")}.
           </Typography>
         </Box>
       )}

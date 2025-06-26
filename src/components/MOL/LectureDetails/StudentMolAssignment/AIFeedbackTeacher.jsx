@@ -21,6 +21,8 @@ import {
   VscWarning,
 } from "react-icons/vsc";
 import { getStudentAssignmentComment } from "@/api/apiHelper";
+import { useTranslations } from "next-intl";
+
 
 const ColorLinearProgress = styled(LinearProgress)(({ theme, value }) => {
   let color = "#FF0000"; // Default: Red for low scores
@@ -29,7 +31,7 @@ const ColorLinearProgress = styled(LinearProgress)(({ theme, value }) => {
   } else if (value >= 50) {
     color = "#FFEB3B"; // Yellow for mid-range scores
   }
-
+  
   return {
     height: 10,
     borderRadius: 5,
@@ -40,6 +42,7 @@ const ColorLinearProgress = styled(LinearProgress)(({ theme, value }) => {
 });
 
 const AIFeedbackTeacher = ({ assignment, answered_by, totalMarks }) => {
+  const t=useTranslations();
   const [result, setResult] = useState({});
   const [loading, setLoading] = useState(false);
 
@@ -293,7 +296,7 @@ const AIFeedbackTeacher = ({ assignment, answered_by, totalMarks }) => {
               >
                 <Typography sx={AIFeedbackTitleStyle}>
                   <VscFeedback style={{ marginRight: 4 }} />
-                  Overall Feedback
+                  {t("Overall Feedback")}
                 </Typography>
                 <AssignmentTextFormat text={data?.overall_feedback} />
               </Box>
@@ -442,7 +445,7 @@ const AIFeedbackTeacher = ({ assignment, answered_by, totalMarks }) => {
               }}
             >
               <GrScorecard style={{ marginRight: "4px" }} />
-              <strong>Marks Scored:</strong>
+              <strong>{t("Marks Scored")}:</strong>
               <span style={{ fontSize: "20px", marginLeft: "4px" }}>
                 {result?.data?.score}/{totalMarks}
               </span>
@@ -469,7 +472,7 @@ const AIFeedbackTeacher = ({ assignment, answered_by, totalMarks }) => {
             >
               <strong>
                 <PiChalkboardTeacher style={{ marginRight: "4px" }} />
-                Comments
+                {t("Comments")}
               </strong>
               <br />
             </Typography>

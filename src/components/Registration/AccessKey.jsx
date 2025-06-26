@@ -15,6 +15,7 @@ import { getOneTimePassword } from "@/api/apiHelper";
 import toast from "react-hot-toast";
 import { useMediaQuery } from "@mui/material";
 import Logo from "@/commonComponents/Logo/Logo";
+import { useTranslations } from "next-intl";
 
 const textAnimation = {
   "@keyframes slideFade": {
@@ -30,6 +31,7 @@ const textAnimation = {
 };
 
 const AccessKey = () => {
+  const t=useTranslations();
   const router = useRouter();
   const searchParams = useSearchParams();
   const pathname = usePathname();
@@ -146,7 +148,7 @@ const AccessKey = () => {
             fontFamily: "Space Grotesk, Arial, sans-serif",
           }}
         >
-          VidyaAI
+         {t("VidyaAI")}
         </Typography>
       </Box>
       {/* Signup Form */}
@@ -169,7 +171,7 @@ const AccessKey = () => {
             fontFamily: "Inter, sans-serif",
           }}
         >
-          Welcome to
+          {t("Welcome to")}
         </Typography>
         <Typography
           sx={{
@@ -182,7 +184,7 @@ const AccessKey = () => {
             fontFamily: "Space Grotesk, Arial, sans-serif",
           }}
         >
-          VidyaAI
+         {t("VidyaAI")}
         </Typography>
         <Box
           component="form"

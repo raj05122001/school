@@ -4,12 +4,14 @@ import { FunnelChart, Funnel, LabelList, ResponsiveContainer } from "recharts";
 import { useThemeContext } from "@/hooks/ThemeContext";
 import { GiBallPyramid } from "react-icons/gi";
 import { getMyRank } from "@/api/apiHelper";
+import { useTranslations } from "next-intl";
 
 function MyRank() {
   const [subject, setSubject] = useState("Math");
   const [myScore, setMyScore] = useState(68); // Dummy score percentage
   const { isDarkMode } = useThemeContext();
   const [myGrade, setMyGrade] = useState(null);
+  const t=useTranslations();
 
   const fetchMyRank = async () => {
     try {
@@ -61,7 +63,7 @@ function MyRank() {
         className={`${isDarkMode ? "dark-heading" : "light-heading"}`}
       >
         <GiBallPyramid style={{ color: isDarkMode ? "#F0EAD6" : "#36454F" }} />{" "}
-        My Rank
+       {t("My Rank")}
       </Typography>
 
       <Box
@@ -90,7 +92,7 @@ function MyRank() {
               fontWeight: "bold",
             }}
           >
-            My Grade: {gradeLabel}
+            {t("My Grade")}:{gradeLabel}
           </Typography>
         </Box>
       </Box>

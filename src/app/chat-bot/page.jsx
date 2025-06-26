@@ -40,6 +40,7 @@ import { usePathname } from "next/navigation";
 import { RiArrowDropDownLine } from "react-icons/ri";
 import TextWithMath from "@/commonComponents/TextWithMath/TextWithMath";
 import AssignmentTextFormat from "@/commonComponents/TextWithMath/AssignmentTextFormat";
+import { useTranslations } from "next-intl";
 
 export default function Page({ suggestionInput, setIsOpenChatBot }) {
   const chatbotRef = useRef();
@@ -52,7 +53,8 @@ export default function Page({ suggestionInput, setIsOpenChatBot }) {
   const [sessionID, setSessionID] = useState(null);
   const [oldChats, setOldChats] = useState([]);
   const [showOldChat, setShowOldChat] = useState(false);
-
+  const t=useTranslations();
+  
   const userDetails = decodeToken(Cookies.get("ACCESS_TOKEN"));
   const userName = userDetails?.username;
   const userID = userDetails?.user_id;
@@ -326,7 +328,7 @@ export default function Page({ suggestionInput, setIsOpenChatBot }) {
                   },
                 }}
               >
-                Fresh Conversation
+                {t("Fresh Conversation")}
               </Button>
 
               {!showOldChat && (
@@ -362,7 +364,7 @@ export default function Page({ suggestionInput, setIsOpenChatBot }) {
                   },
                     }}
                   >
-                    Conversation History
+                    {t("Conversation History")}
                   </Button>
                 </>
               )}
@@ -407,7 +409,7 @@ export default function Page({ suggestionInput, setIsOpenChatBot }) {
                               gutterBottom
                               sx={{ fontSize: "14px" }}
                             >
-                              Session ID - {data?.session?.session_id}
+                              {t("Session ID")} - {data?.session?.session_id}
                               <br />
                               {index + 1}. {data?.user_question}
                             </Typography>
@@ -435,7 +437,7 @@ export default function Page({ suggestionInput, setIsOpenChatBot }) {
                     </List>
                   </Box>
                 ) : (
-                  <Typography>No conversation history available.</Typography>
+                  <Typography>{t("No conversation history available.")}</Typography>
                 ))}
             </Box>
           </Grid>
@@ -458,7 +460,7 @@ export default function Page({ suggestionInput, setIsOpenChatBot }) {
                     alignItems: "center",
                   }}
                 >
-                  <Typography>Previous Queries</Typography>
+                  <Typography>{t("Previous Queries")}</Typography>
                   <List sx={{ width: "100%" }}>
                     {oldChats?.map((data, index) => (
                       <Accordion
@@ -484,7 +486,7 @@ export default function Page({ suggestionInput, setIsOpenChatBot }) {
                             gutterBottom
                             sx={{ fontSize: "14px" }}
                           >
-                            Session ID - {data?.session?.session_id}
+                            {t("Session ID")} - {data?.session?.session_id}
                             <br />
                             {index + 1}. {data?.user_question}
                           </Typography>
@@ -512,7 +514,7 @@ export default function Page({ suggestionInput, setIsOpenChatBot }) {
                   </List>
                 </Box>
               ) : (
-                <Typography>No conversation history available.</Typography>
+                <Typography>{t("No conversation history available.")}</Typography>
               )}
             </Box>
             {/* Chatbot view */}
@@ -586,7 +588,7 @@ export default function Page({ suggestionInput, setIsOpenChatBot }) {
                         }}
                       >
                         <FaRobot size={50} style={{ marginBottom: "16px", fontWeight:400, lineHeight:"normal", fontStyle:"normal", color:"#141514" }} />
-                        <Typography sx={{fontFamily:"Inter", fontSize:"20px", fontWeight:400, lineHeight:"normal", fontStyle:"normal", color:"#141514"}}>Hello! How can I help you?</Typography>
+                        <Typography sx={{fontFamily:"Inter", fontSize:"20px", fontWeight:400, lineHeight:"normal", fontStyle:"normal", color:"#141514"}}>{t("Hello! How can I help you")}?</Typography>
                       </Box>
                     )}
                     {isLoading && (
@@ -621,7 +623,7 @@ export default function Page({ suggestionInput, setIsOpenChatBot }) {
                       <TextField
                         fullWidth
                         multiline
-                        placeholder="Ask me..."
+                        placeholder={t("Ask me")}
                         value={userTextInput}
                         onChange={(e) => setUserTextInput(e.target.value)}
                         onKeyPress={handleKeyPress}

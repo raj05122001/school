@@ -13,8 +13,11 @@ import {
   IconButton,
 } from "@mui/material";
 import { MdDeleteOutline } from "react-icons/md";
+import { useTranslations } from "next-intl";
+
 
 function Page() {
+  const t=useTranslations();
   const [quiz, setQuiz] = useState({
     title: "",
     subject: "",
@@ -144,7 +147,7 @@ function Page() {
                 }}
               >
                 <Typography variant="h6" gutterBottom>
-                  Question {index + 1}: {question.text}
+                 {t("Question")}  {index + 1}: {question.text}
                 </Typography>
                 {question?.options?.map((option, opIndex) => (
                   <Typography key={opIndex} sx={{ ml: 2 }}>
@@ -191,7 +194,7 @@ function Page() {
                 }}
               >
                 <Typography variant="h6" gutterBottom>
-                  Question {index + 1}: {question.text}
+                 {t("Question")}  {index + 1}: {question.text}
                 </Typography>
                 <Typography sx={{ mt: 1 }}>
                   Points: {question.points}
@@ -233,7 +236,7 @@ function Page() {
                 }}
               >
                 <Typography variant="h6" gutterBottom>
-                  Question {index + 1}: {question.text}
+                  {t("Question")} {index + 1}: {question.text}
                 </Typography>
                 <Typography sx={{ mt: 1 }}>
                   Points: {question.points}
@@ -253,7 +256,7 @@ function Page() {
       {/* New Question Form */}
       <Box mt={3}>
         <Typography variant="h6" gutterBottom>
-          Add New Question
+          {t("Add New Question")}
         </Typography>
         <Paper
           sx={{
@@ -263,7 +266,7 @@ function Page() {
           }}
         >
           <FormControl fullWidth margin="normal">
-            <InputLabel>Question Type</InputLabel>
+            <InputLabel>{t("Question Type")}</InputLabel>
             <Select
               value={newQuestion.type}
               onChange={(e) => handleNewQuestionChange("type", e.target.value)}
@@ -312,7 +315,7 @@ function Page() {
             onClick={saveQuestion}
             sx={{ mt: 2 }}
           >
-            Save Question
+            {t("Save Question")}
           </Button>
         </Paper>
       </Box>

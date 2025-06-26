@@ -62,7 +62,7 @@ const MyAssignmentAnalytics = () => {
           className={`${isDarkMode ? "dark-heading" : "light-heading"}`}
         >
           <FiBarChart2 size={22} style={{ marginRight: "8px" }} />
-          My Assignment Analytics
+         {t("My Assignment Analytics")}
         </Typography>
         {isDarkMode ? (
           <MdDarkMode style={{ fontSize: "24px", color: "#f0f0f0" }} />
@@ -141,7 +141,7 @@ const MyAssignmentAnalytics = () => {
               }}
             >
               <Typography variant="subtitle1">
-              <GrScorecard /> Assignments Below 50%
+              <GrScorecard /> {t("Assignments Below")}50%
               </Typography>
               <Typography variant="h6">{myScores?.my_assignment_in_which_i_got_less_than_50}</Typography>
             </Box>
@@ -159,7 +159,7 @@ const MyAssignmentAnalytics = () => {
               }}
             >
               <Typography variant="subtitle1">
-              <GrScorecard /> Assignments Between 50-80%
+              <GrScorecard /> {t("Assignments Between")}50-80%
               </Typography>
               <Typography variant="h6">{myScores?.my_assignment_in_which_i_got_between_than_50_to_80}</Typography>
             </Box>
@@ -177,7 +177,7 @@ const MyAssignmentAnalytics = () => {
               }}
             >
               <Typography variant="subtitle1">
-              <GrScorecard /> Assignments Between 80-100%
+              <GrScorecard /> {t("Assignments Between")}80-100%
               </Typography>
               <Typography variant="h6">{myScores?.my_assignment_in_which_i_got_between_than_80_to_100}</Typography>
             </Box>

@@ -474,7 +474,7 @@ const Page = () => {
                       position: "sticky",
                     }}
                   >
-                    Type
+                   {t("Type")}
                   </TableCell>
                   <TableCell
                     sx={{
@@ -488,7 +488,7 @@ const Page = () => {
                       position: "sticky",
                     }}
                   >
-                    Date
+                    {t("Date")}
                   </TableCell>
                   <TableCell
                     sx={{
@@ -502,7 +502,7 @@ const Page = () => {
                       position: "sticky",
                     }}
                   >
-                    Time
+                     {t("Time")}
                   </TableCell>
                   <TableCell
                     sx={{
@@ -516,7 +516,7 @@ const Page = () => {
                       position: "sticky",
                     }}
                   >
-                    Class
+                  {t("Class")}
                   </TableCell>
                   <TableCell
                     sx={{
@@ -530,7 +530,7 @@ const Page = () => {
                       position: "sticky",
                     }}
                   >
-                    Subject Name
+                    {t("Subject Name")}
                   </TableCell>
                   <TableCell
                     sx={{
@@ -546,7 +546,7 @@ const Page = () => {
                       position: "sticky",
                     }}
                   >
-                    Chapter
+                   {t("Chapter")}
                   </TableCell>
                   {status === "UPCOMMING" && (
                     <TableCell
@@ -563,7 +563,7 @@ const Page = () => {
                         position: "sticky",
                       }}
                     >
-                      Action
+                     {t("Action")}
                     </TableCell>
                   )}
                 </TableRow>

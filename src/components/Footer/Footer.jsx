@@ -9,8 +9,9 @@ import {
 import { MdArrowForward } from "react-icons/md";
 import { useRouter } from "next/navigation";
 import { NextIntlClientProvider, useTranslations } from "next-intl";
+
 const Footer = () => {
-  const t=useTranslations()
+  const t=useTranslations();
   const router = useRouter();
   const handlePrivacy = () => {
     router.push(`/privacy-policy`);
@@ -105,7 +106,7 @@ const Footer = () => {
               
               sx={{ color: "#C1C1C1", fontFamily: "Inter", fontSize:"12px", fontStyle:"normal", fontWeight:300, lineHeight:"9px" }}
             >
-              © 2023 IndiqAI. {t("All rights reserved.")}
+              © 2023 IndiqAI. {t("All rights reserved")}.
             </Typography>
             <Box
               sx={{

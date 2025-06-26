@@ -22,6 +22,7 @@ import { decodeToken } from "react-jwt";
 import Image from "next/image";
 import { MdVisibility, MdVisibilityOff } from "react-icons/md";
 import Logo from "@/commonComponents/Logo/Logo";
+import { useTranslations } from "next-intl";
 
 // Keyframes for the text animation
 const textAnimation = {
@@ -38,6 +39,7 @@ const textAnimation = {
 };
 
 const LoginPage = () => {
+  const t=useTranslations();
   const router = useRouter();
   const [showPassword, setShowPassword] = useState(false);
   const searchParams = useSearchParams();
@@ -179,7 +181,7 @@ const LoginPage = () => {
               fontFamily: "Space Grotesk, Arial, sans-serif",
             }}
           >
-            VidyaAI
+            {t("VidyaAI")}
           </Typography>
         </Box>
         {/* Login Form */}
@@ -202,7 +204,7 @@ const LoginPage = () => {
               fontFamily: "Inter, sans-serif",
             }}
           >
-            Welcome to
+            {t("Welcome to")}
           </Typography>
           <Typography
             sx={{
@@ -215,7 +217,7 @@ const LoginPage = () => {
               fontFamily: "Space Grotesk, Arial, sans-serif",
             }}
           >
-            VidyaAI
+           {t("VidyaAI")}
           </Typography>
           {/* <Box
             sx={{
@@ -308,7 +310,7 @@ const LoginPage = () => {
                   fontFamily: "Inter, sans-serif",
                 }}
               >
-                E-mail
+                {t("E-mail")}
               </span>
               <TextField
                 margin="normal"
@@ -316,7 +318,7 @@ const LoginPage = () => {
                 fullWidth
                 id="email"
                 // label="E-mail"
-                placeholder="E-mail"
+                placeholder={t("E-mail")}
                 name="email"
                 value={formData.email}
                 onChange={handleChange}
@@ -347,7 +349,7 @@ const LoginPage = () => {
                   fontFamily: "Inter, sans-serif",
                 }}
               >
-                Password
+                {t("Password")}
               </span>
               <TextField
                 margin="normal"
@@ -355,7 +357,7 @@ const LoginPage = () => {
                 fullWidth
                 name="password"
                 // label="Password"
-                placeholder="Password"
+                placeholder={t("Password")}
                 type={showPassword ? "text" : "password"}
                 id="password"
                 value={formData.password}
@@ -433,7 +435,7 @@ const LoginPage = () => {
                     fontFamily: "Inter, sans-serif",
                   }}
                 >
-                  Forgot password
+                  {t("Forgot Password")}
                 </Link>
               </Grid>
             </Grid>
@@ -471,7 +473,7 @@ const LoginPage = () => {
                   fontFamily: "Inter, sans-serif",
                 }}
               >
-                Log in
+                {t("Log in")}
               </Typography>
             </Button>
             <Button
@@ -504,7 +506,7 @@ const LoginPage = () => {
                   fontFamily: "Inter, sans-serif",
                 }}
               >
-                Sign up
+                {t("Sign up")}
               </Typography>
             </Button>
             <Typography
@@ -518,7 +520,7 @@ const LoginPage = () => {
                 fontFamily: "Inter, sans-serif",
               }}
             >
-              By signing in to VidyaAI you agree to our{" "}
+              {t("By signing in to VidyaAI you agree to our")}{" "}
               <Link
                 onClick={() => router.push("/terms-and-conditions")}
                 sx={{
@@ -527,7 +529,7 @@ const LoginPage = () => {
                   fontFamily: "Inter, sans-serif",
                 }}
               >
-                Terms and Privacy Policy
+                {t("Terms and Privacy Policy")}
               </Link>
             </Typography>
           </Box>

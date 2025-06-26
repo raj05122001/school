@@ -307,7 +307,7 @@ confirmPassword: yup
               fontFamily: "Space Grotesk, Arial, sans-serif",
             }}
           >
-            VidyaAI
+           {t("VidyaAI")}
           </Typography>
         </Box>
         
@@ -341,7 +341,7 @@ confirmPassword: yup
                 fontFamily: "Inter, sans-serif",
               }}
             >
-              Create Account
+             {t("Create Account")}
             </Typography>
             <RiAccountCircleLine
               style={{ paddingTop: "4px", fontSize: "28px" }}
@@ -777,7 +777,7 @@ confirmPassword: yup
                         marginBottom: "8px",
                       }}
                     >
-                      Create
+                      {t("Create")}
                     </Button>
                   </Box>
                   <Typography
@@ -789,7 +789,7 @@ confirmPassword: yup
                       mt: 1,
                     }}
                   >
-                    * Please click on Create button if the department is not in the list.
+                    * {t("Please click on Create button if the department is not in the list.")}
                   </Typography>
                 </>
               ) : (
@@ -805,7 +805,7 @@ confirmPassword: yup
                       fontFamily: "Inter, sans-serif",
                     }}
                   >
-                    Class
+                  {t("Class")}
                   </span>
                   <Controller
                     name="subject"
@@ -898,12 +898,12 @@ confirmPassword: yup
             <Grid container justifyContent="center" sx={{ mt: 2 }}>
               <Grid item>
                 <Typography variant="body2">
-                  Already have an account?{" "}
+                  {t("Already have an account")}?{" "}
                   <Link
                     onClick={() => router.push("/login")}
                     sx={{ color: "#1976d2", cursor: "pointer" }}
                   >
-                    Log In
+                    {t("Log In")}
                   </Link>
                 </Typography>
               </Grid>

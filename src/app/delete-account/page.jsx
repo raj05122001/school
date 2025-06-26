@@ -17,12 +17,12 @@ const DeleteAccountInfo = () => {
         }}
       >
         <Typography variant="h5" fontWeight="bold" gutterBottom>
-          How to Delete Your Account
+          {t("How to Delete Your Account")}
         </Typography>
 
         <Typography variant="body1" gutterBottom>
-          You can delete your account directly from within the{" "}
-          <strong>VidyaAI</strong> app by going to:
+          {t("You can delete your account directly from within the")}{" "}
+          <strong>{t("VidyaAI")}</strong> {t("app by going to")}:
         </Typography>
 
         <Paper
@@ -38,7 +38,7 @@ const DeleteAccountInfo = () => {
         </Paper>
 
         <Typography variant="body2" color="text.secondary">
-          If you need help, contact:{" "}
+          {t("If you need help, contact")}:{" "}
           <Link href="https://www.indiqai.ai/" underline="hover">
             https://www.indiqai.ai/
           </Link>

@@ -11,6 +11,7 @@ import { FaEdit } from "react-icons/fa";
 import { FaSave } from "react-icons/fa";
 import { FaInfoCircle } from "react-icons/fa";
 import usePersonalisedRecommendations from "@/components/student/MOL/usePersonalisedRecommendations";
+import { useTranslations } from "next-intl";
 
 const SummaryComponent = ({
   lectureId,
@@ -20,6 +21,7 @@ const SummaryComponent = ({
   isStudent = false,
   setMarksData,
 }) => {
+  const t=useTranslations();
   const [summary, setSummary] = useState({});
   const [summaryId, setSummaryId] = useState("");
   const [isEditData, setIsEditData] = useState(false);
@@ -296,7 +298,7 @@ const SummaryComponent = ({
         >
           <FaInfoCircle style={{ color: "#999" }} size={24} />
           <Typography variant="h5" color="textSecondary">
-            No summary available.
+            {t("No summary available")}.
           </Typography>
         </Box>
       )}

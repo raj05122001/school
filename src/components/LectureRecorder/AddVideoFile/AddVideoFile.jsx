@@ -19,6 +19,7 @@ import {
   Box,
 } from "@mui/material";
 import { AppContextProvider } from "@/app/main";
+import { useTranslations } from "next-intl";
 
 const AddVideoFile = ({
   videoAttachment,
@@ -30,6 +31,7 @@ const AddVideoFile = ({
   selectedOption,
   setSelectedOption,
 }) => {
+  const t=useTranslations();
   const { isTrialAccount } = useContext(AppContextProvider);
   const inputVideoRef = useRef(null);
   const inputZipRef = useRef(null);
@@ -293,10 +295,10 @@ const AddVideoFile = ({
           </CardContent>
           <CardActions sx={{ justifyContent: "flex-end", padding: 2 }}>
             <Button variant="outlined" color="secondary" onClick={handleClose}>
-              Cancel
+              {t("Cancel")}
             </Button>
             <Button variant="contained" color="primary" onClick={handleOpen}>
-              Save
+              {t("Save")}
             </Button>
           </CardActions>
         </Card>

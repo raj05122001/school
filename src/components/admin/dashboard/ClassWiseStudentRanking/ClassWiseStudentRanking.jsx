@@ -351,9 +351,9 @@ export const StudentModal = ({
               <TableHead>
                 <TableRow>
                   <TableCell sx={{ fontWeight: "bold" }}>{t("Name")}</TableCell>
-                  <TableCell sx={{ fontWeight: "bold" }}>Email Id</TableCell>
+                  <TableCell sx={{ fontWeight: "bold" }}>{t("Email Id")}</TableCell>
                   <TableCell sx={{ fontWeight: "bold" }}>
-                    Avg Overall Percentage
+                   {t("Avg Overall Percentage")}
                   </TableCell>
                   <TableCell sx={{ fontWeight: "bold" }}>{t("Grade")}</TableCell>
                 </TableRow>

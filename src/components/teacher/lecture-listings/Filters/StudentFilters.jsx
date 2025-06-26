@@ -325,7 +325,7 @@ const StudentFilters = ({
             },
           }}
         >
-          All
+          {t("All")}
         </Button>
 
         {subjectList.map((cat) => {

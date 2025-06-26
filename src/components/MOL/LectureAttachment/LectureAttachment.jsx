@@ -24,10 +24,12 @@ import {
 import { GrAttachment } from "react-icons/gr";
 import Cookies from "js-cookie";
 import { decodeToken } from "react-jwt";
+import { useTranslations } from "next-intl";
 
 const window = global?.window || {};
 
 const LectureAttachments = ({ lectureId, isDarkMode }) => {
+  const t=useTranslations();
   const [attachments, setAttachments] = useState([]);
   const [deleteId, setDeleteId] = useState(0);
   const [userDetails, setUserDetails] = useState(null);
@@ -124,7 +126,7 @@ const LectureAttachments = ({ lectureId, isDarkMode }) => {
           fontWeight: 600,
           lineHeight: "normal",}}
         >
-        <GrAttachment />  Lecture Attachments
+        <GrAttachment />  {t("Lecture Attachments")}
         </Typography>
         {userDetails?.role!=="STUDENT" &&  <label htmlFor="attachments">
           <IconButton component="span">
@@ -184,18 +186,18 @@ const LectureAttachments = ({ lectureId, isDarkMode }) => {
         <Typography
           sx={{ mt: 2, pt: 2, borderTop: "1px solid", borderColor: "grey.300" }}
         >
-          No attachments found
+          {t("No attachments found")}
         </Typography>
       )}
       <Dialog open={deleteId > 0} onClose={() => setDeleteId(0)}>
         <DialogTitle>
-          Are you sure you want to delete this attachment?
+         {t("Are you sure you want to delete")}
         </DialogTitle>
         <DialogContent>
           <Typography
             sx={{ textAlign: "center", fontWeight: 600, color: "primary.main" }}
           >
-            This action cannot be undone.
+            {t("This action cannot be undone.")}
           </Typography>
         </DialogContent>
         <DialogActions>

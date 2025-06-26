@@ -89,7 +89,7 @@ const StrugglingExcelling = () => {
           variant="h6"
           className={`${isDarkMode ? "dark-heading" : "light-heading"}`}
         >
-          Struggling & Excelling
+          {t("Struggling & Excelling")}
         </Typography>
         {/* <Button variant="text" sx={{ textTransform: "none" }}>
           View Details &gt;
@@ -113,7 +113,7 @@ const StrugglingExcelling = () => {
             sx={{ display: "flex", alignItems: "center" }}
           >
             <FaExclamationCircle style={{ color: "red", marginRight: "8px" }} />
-            Bottom 3 Struggling
+            {t("Bottom 3 Struggling")}
           </Typography>
           <List>
             {students?.struggling?.map((student) => (
@@ -137,7 +137,7 @@ const StrugglingExcelling = () => {
                   />
                 </Box>
                 <Button variant="outlined" sx={{ textTransform: "none" }}>
-                  View
+                  {t("View")}
                 </Button>
               </ListItem>
             ))}
@@ -153,7 +153,7 @@ const StrugglingExcelling = () => {
             sx={{ display: "flex", alignItems: "center" }}
           >
             <FaStar style={{ color: "gold", marginRight: "8px" }} />
-            Top 3 Excelling
+            {t("Top 3 Excelling")}
           </Typography>
           <List>
             {students?.excelling?.map((student) => (
@@ -177,7 +177,7 @@ const StrugglingExcelling = () => {
                   />
                 </Box>
                 <Button variant="outlined" sx={{ textTransform: "none" }}>
-                  View
+                  {t("View")}
                 </Button>
               </ListItem>
             ))}

@@ -25,7 +25,7 @@ import { BASE_URL_MEET } from "@/constants/apiconfig";
 import { useTranslations } from "next-intl";
 
 const Page = () => {
-  const t = useTranslations()
+  const t = useTranslations();
   const [tabValue, setTabValue] = useState(0);
   const [dropdownValue, setDropdownValue] = useState("");
   const [teacherData, setTeacherData] = useState([]);
@@ -559,7 +559,7 @@ const Page = () => {
               fontWeight: "500",
             }}
           >
-            Page {currentPage} of {totalPages}
+            {t("Page")} {currentPage} of {totalPages}
           </Typography>
         </Box>
       </Box>

@@ -25,8 +25,10 @@ import { useThemeContext } from "@/hooks/ThemeContext";
 import { useRouter, usePathname } from "next/navigation";
 import { FaDiamond } from "react-icons/fa6";
 import CalendarIconCustom from "@/commonComponents/CalendarIconCustom/CalendarIconCustom";
+import { useTranslations } from "next-intl";
 
 const StudentAssignments = ({ listData }) => {
+  const t=useTranslations();
   const { isDarkMode, primaryColor, secondaryColor } = useThemeContext();
   const router = useRouter();
   const pathname = usePathname();
@@ -77,7 +79,7 @@ const StudentAssignments = ({ listData }) => {
                   fontSize: "14px",
                 }}
               >
-                Submitted by
+                {t("Submitted by")}
               </TableCell>
               <TableCell
                 sx={{
@@ -90,7 +92,7 @@ const StudentAssignments = ({ listData }) => {
                   fontSize: "14px",
                 }}
               >
-                Checked Status
+               {t("Checked Status")}
               </TableCell>
               <TableCell
                 sx={{
@@ -103,7 +105,7 @@ const StudentAssignments = ({ listData }) => {
                   fontSize: "14px",
                 }}
               >
-                Checked Assignment
+                {t("Checked Assignment")}
               </TableCell>
               <TableCell
                 sx={{
@@ -116,7 +118,7 @@ const StudentAssignments = ({ listData }) => {
                   fontSize: "14px",
                 }}
               >
-                Total Assignment
+                {t("Total Assignment")}
               </TableCell>
               <TableCell
                 sx={{
