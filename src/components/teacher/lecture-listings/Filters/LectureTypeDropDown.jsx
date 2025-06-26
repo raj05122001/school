@@ -153,7 +153,7 @@ const LectureTypeDropDown = ({ handleSelectType,lectureType }) => {
               fontSize: "12px",
             }}
           >
-            Clear
+            {t("Clear")}
           </Button>
           <Button
             onClick={handleFilter}
@@ -166,7 +166,7 @@ const LectureTypeDropDown = ({ handleSelectType,lectureType }) => {
               fontSize: "12px",
             }}
           >
-            Save
+            {t("Save")}
           </Button>
         </div>
       </Popover>

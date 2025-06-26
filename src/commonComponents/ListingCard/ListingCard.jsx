@@ -16,6 +16,7 @@ import UserImage from "../UserImage/UserImage";
 import dayjs from "dayjs";
 import relativeTime from 'dayjs/plugin/relativeTime';
 import usePresignedUrl from "@/hooks/usePresignedUrl";
+import { useTranslations } from "next-intl";
 
 // enable relativeTime throughout your app
 dayjs.extend(relativeTime);
@@ -25,6 +26,7 @@ const ListingCard = ({ data, onClick }) => {
   const { fetchPresignedUrl } = usePresignedUrl()
   const videoRef = useRef(null);
   const [videoUrl,setVideoUrl]=useState("")
+  const t=useTranslations();
 
   useEffect(()=>{
     getSignedUrlForObject()
@@ -137,31 +139,31 @@ const ListingCard = ({ data, onClick }) => {
             gutterBottom
             sx={{ color: isDarkMode ? primaryColor : "#555", fontFamily: "Inter, sans-serif", fontSize:"12px", fontWeight:500,mt:1 }}
           >
-            <strong>Class:</strong> {data?.lecture_class?.name}
+            <strong>{t("Class")}:</strong> {data?.lecture_class?.name}
           </Typography>
           <Typography
             variant="body1"
             gutterBottom
             sx={{ color: isDarkMode ? primaryColor : "#555", fontFamily: "Inter, sans-serif", fontSize:"12px", fontWeight:500 }}
           >
-            <strong>Subject:</strong> {data?.chapter?.subject?.name}
+            <strong>{t("Subject")}:</strong> {data?.chapter?.subject?.name}
           </Typography>
           <Typography
             variant="body1"
             gutterBottom
             sx={{ color: isDarkMode ? primaryColor : "#555", fontFamily: "Inter, sans-serif", fontSize:"12px", fontWeight:500 }}
           >
-            <strong>Chapter:</strong> {data?.chapter?.chapter}
+            <strong>{t("Chapter")}:</strong> {data?.chapter?.chapter}
           </Typography>
           <Typography
             variant="body1"
             gutterBottom
             sx={{ color: isDarkMode ? primaryColor : "#555", fontFamily: "Inter, sans-serif", fontSize:"12px", fontWeight:500 }}
           >
-            <strong>Description:</strong> {data?.description?.length>140? `${data?.description?.slice(0,140)}...`:data?.description || "N/A"}
+            <strong>{t("Description")}:</strong> {data?.description?.length>140? `${data?.description?.slice(0,140)}...`:data?.description || "N/A"}
           </Typography>
           <Grid container mt={"auto"} pt={2}>
-            <Grid item xs={12} sm={8}>
+            <Grid item xs={12} sm={8} md={7}>
               <Box sx={{ display: "flex", gap: 1, alignItems:'center' }}>
                 <Box>
                 <MdOutlineDateRange size={22} />
@@ -169,13 +171,13 @@ const ListingCard = ({ data, onClick }) => {
                 <Typography
                   variant="body1"
                   gutterBottom
-                  sx={{ color: isDarkMode ? primaryColor : "#555", fontFamily: "Inter, sans-serif",fontSize:"13px", fontWeight:500,m:0 }}
+                  sx={{ color: isDarkMode ? primaryColor : "#555", fontFamily: "Inter, sans-serif",fontSize:"13px", fontWeight:500,m: 0 }}
                 >
                   {dayjs(`${data?.schedule_date} ${data?.schedule_time}`).fromNow()}
                 </Typography>
               </Box>
             </Grid>
-            <Grid item xs={12} sm={4}>
+            <Grid item xs={12} sm={4} md={5}>
               <LectureType lectureType={data?.type} />
             </Grid>
           </Grid>
@@ -186,3 +188,4 @@ const ListingCard = ({ data, onClick }) => {
 };
 
 export default ListingCard;
+  

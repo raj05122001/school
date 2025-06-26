@@ -23,6 +23,7 @@ import { FaExclamationCircle } from "react-icons/fa";
 import { AppContextProvider } from "@/app/main";
 import { decodeToken } from "react-jwt";
 import Cookies from "js-cookie";
+import { useTranslations } from "next-intl";
 
 const iconStyle = {
   fontSize: "24px",
@@ -35,7 +36,7 @@ const OverviewSection = () => {
   const { isDarkMode } = useThemeContext();
   const [allLecture, setAllLecture] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
-
+const t=useTranslations();
   const userDetails = decodeToken(Cookies.get("ACCESS_TOKEN"));
 
   useEffect(() => {
@@ -120,8 +121,8 @@ const OverviewSection = () => {
           }}
         >
           {userDetails?.role === "STUDENT"
-            ? `Lectures For You`
-            : `Upcoming Lectures`}
+            ? t(`Lectures For You`)
+            : t(`Upcoming Lectures`)}
         </Typography>
       </Box>
 
@@ -161,12 +162,12 @@ const OverviewSection = () => {
             >
               <TableRow>
                 <TableCell />
-                <TableCell>Topic</TableCell>
-                <TableCell>Class</TableCell>
-                <TableCell>Time</TableCell>
-                <TableCell>Subject</TableCell>
-                <TableCell>Chapter</TableCell>
-                <TableCell>Action</TableCell>
+                <TableCell>{t("Topic")}</TableCell>
+                <TableCell>{t("Class")}</TableCell>
+                <TableCell> {t("Time")}</TableCell>
+                <TableCell>{t("Subject")}</TableCell>
+                <TableCell>{t("Chapter")}</TableCell>
+                <TableCell>{t("Action")}</TableCell>
               </TableRow>
             </TableHead>
             <TableBody>
@@ -268,7 +269,7 @@ const OverviewSection = () => {
                     fontSize: "14px",
                   }}
                 >
-                  Topic
+                  {t("Topic")}
                 </TableCell>
                 <TableCell
                   sx={{
@@ -281,7 +282,7 @@ const OverviewSection = () => {
                     fontSize: "14px",
                   }}
                 >
-                  Class
+                  {t("Class")}
                 </TableCell>
                 <TableCell
                   sx={{
@@ -294,7 +295,7 @@ const OverviewSection = () => {
                     fontSize: "14px",
                   }}
                 >
-                  Time
+                  {t("Time")}
                 </TableCell>
                 <TableCell
                   sx={{
@@ -307,7 +308,7 @@ const OverviewSection = () => {
                     fontSize: "14px",
                   }}
                 >
-                  Subject
+                  {t("Subject")}
                 </TableCell>
                 <TableCell
                   sx={{
@@ -320,7 +321,7 @@ const OverviewSection = () => {
                     fontSize: "14px",
                   }}
                 >
-                  Chapter
+                 {t("Chapter")}
                 </TableCell>
                 <TableCell
                   sx={{
@@ -335,7 +336,7 @@ const OverviewSection = () => {
                     fontSize: "14px",
                   }}
                 >
-                  Action
+                   {t("Action")}
                 </TableCell>
               </TableRow>
             </TableHead>
@@ -423,8 +424,7 @@ const OverviewSection = () => {
                               size={20}
                               style={{ marginRight: 8 }}
                             />
-                            You don&apos;t have any lectures. Please create a
-                            lecture.
+                            {t("No Lectures")}
                           </Typography>
                           <Button
                             variant="contained"
@@ -483,7 +483,7 @@ const OverviewSection = () => {
                                 stroke-linejoin="round"
                               />
                             </svg>
-                            Create Lecture
+                            {t("Create Lecture")}
                           </Button>
                         </Box>
                       </TableCell>

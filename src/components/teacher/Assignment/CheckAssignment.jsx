@@ -44,8 +44,10 @@ import { MdOutlineWatchLater } from "react-icons/md";
 import { IoCalendarClearOutline } from "react-icons/io5";
 import AIFeedback from "@/components/MOL/LectureDetails/StudentMolAssignment/AIFeedback";
 import AIFeedbackTeacher from "@/components/MOL/LectureDetails/StudentMolAssignment/AIFeedbackTeacher";
+import { useTranslations } from "next-intl";
 
 const CheckAssignment = ({ assignment, index, fetchAssignmentAnswer }) => {
+  const t=useTranslations();
   const { isDarkMode, primaryColor, secondaryColor } = useThemeContext();
 
   // === Local state for grading/commenting ===
@@ -310,7 +312,7 @@ const CheckAssignment = ({ assignment, index, fetchAssignmentAnswer }) => {
               fontWeight={"bold"}
               sx={{ color: isDarkMode ? "#F9F6EE" : "#353935" }}
             >
-              Question {index + 1}
+              {t("Question")}{index + 1}
             </Typography>
           </Box>
           <Box sx={{ display: "flex", alignItems: "center", gap: 2 }}>
@@ -367,7 +369,7 @@ const CheckAssignment = ({ assignment, index, fetchAssignmentAnswer }) => {
               <Typography
                 sx={{ color: "white", fontWeight: 400, fontSize: "18px" }}
               >
-                <i>Total Marks:</i>{" "}
+                <i>{t("Total Marks")}:</i>{" "}
                 <span style={{ fontWeight: 600, color: "white" }}>
                   {assignment.assignment_que.assignment_mark}
                 </span>
@@ -535,7 +537,7 @@ const CheckAssignment = ({ assignment, index, fetchAssignmentAnswer }) => {
                       fontSize: "16px",
                     }}
                   >
-                    Marks Obtained
+                   {t("Marks Obtained")}
                   </Typography>
                   <Tooltip
                     title={
@@ -582,7 +584,7 @@ const CheckAssignment = ({ assignment, index, fetchAssignmentAnswer }) => {
                       fontSize: "16px",
                     }}
                   >
-                    Comments
+                   {t("Comments")}
                   </Typography>
                   <TextField
                     hiddenLabel={true}

@@ -7,6 +7,7 @@ import HighlightsComponent from "./HighlightsComponent";
 import { useThemeContext } from "@/hooks/ThemeContext";
 import Cookies from "js-cookie";
 import { decodeToken } from "react-jwt";
+import { useTranslations } from "next-intl";
 
 const window = global?.window || {};
 
@@ -23,6 +24,8 @@ const LectureOverview = ({
   const [summaryId, setSummaryId] = useState("");
   const { isDarkMode } = useThemeContext();
   const [userDetails, setUserDetails] = useState(null);
+  const t=useTranslations();
+
 
   useEffect(() => {
     if (typeof window !== "undefined") {
@@ -82,7 +85,7 @@ const LectureOverview = ({
           padding: "21px 0px 6px 20px",
         }}
       >
-        Lecture Overview
+        {t("Lecture Overview")}
         <br />
         <span
           style={{
@@ -93,10 +96,10 @@ const LectureOverview = ({
           }}
         >
           {userDetails?.role === "STUDENT" ? (
-            <i>(This is an AI generated content.)</i>
+            <i>({t("This is an AI generated content")}.)</i>
           ) : (
             <i>
-              (This is an AI generated content. The teacher should verify it.)
+              ({t("AI Generated Label Teacher")}.)
             </i>
           )}
         </span>
@@ -143,8 +146,8 @@ const LectureOverview = ({
           },
         }}
       >
-        <Tab label="Summary" />
-        <Tab label="Highlights" />
+        <Tab label={t("Summary")} />
+        <Tab label={t("Highlights")} />
       </Tabs>
 
       {/* Render tab content conditionally based on selected tab */}

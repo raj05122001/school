@@ -10,6 +10,7 @@ import Cookies from "js-cookie";
 import { useSearchParams, useRouter, usePathname } from "next/navigation";
 import { useThemeContext } from "@/hooks/ThemeContext";
 import LectureListingCardSkeleton from "@/commonComponents/Skeleton/LectureListingCardSkeleton/LectureListingCardSkeleton";
+import { useTranslations } from "next-intl";
 
 const darkModeStyles = {
   backgroundColor: "#1a1a1a",
@@ -28,6 +29,7 @@ const lightModeStyles = {
 };
 
 const Page = () => {
+  const t=useTranslations();
   const { isDarkMode, primaryColor, secondaryColor } = useThemeContext();
   const userDetails = decodeToken(Cookies.get("ACCESS_TOKEN"));
   const searchParams = useSearchParams();
@@ -184,7 +186,7 @@ const Page = () => {
                 fontWeight: "bold",
               }}
             >
-              No lectures available at the moment
+              {t("No Lectures in Lecture Listing")}
             </Typography>
             <Typography
               variant="body1"
@@ -196,7 +198,7 @@ const Page = () => {
                   : lightModeStyles.paginationItemColor,
               }}
             >
-              Please check back later or modify your search filters.
+              {t("Please check Lecture Listing")}
             </Typography>
           </Grid>
         )}

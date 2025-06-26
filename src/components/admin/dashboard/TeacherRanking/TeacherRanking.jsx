@@ -30,6 +30,7 @@ import { getTeacherLectureCompletion, getTopTeachers, getWatchtimeComparison } f
 import { BASE_URL_MEET } from "@/constants/apiconfig";
 import Image from "next/image";
 import TeacherTableSkeleton from "./TeacherTableSkeleton";
+import { useTranslations } from "next-intl";
 
 /**
  * A small wrapper for the profile image to give it a circular border/ring.
@@ -61,6 +62,7 @@ const TeacherRanking = () => {
   const [topTeachers, setTopTeachers] = useState({});
   const [teacherID, setTeacherID] = useState(null);
   const [loading, setLoading] = useState(true);
+  const t=useTranslations();
 
   // On mount, fetch the list of top teachers.
   useEffect(() => {
@@ -221,7 +223,7 @@ const TeacherRanking = () => {
                           fontFamily: "Inter, sans-serif",
                         }}
                       >
-                        Profile
+                        {t("Profile")}
                       </TableCell>
                       <TableCell
                         sx={{
@@ -231,7 +233,7 @@ const TeacherRanking = () => {
                           fontFamily: "Inter, sans-serif",
                         }}
                       >
-                        Teacher
+                        {t("Teacher")}
                       </TableCell>
                       <TableCell
                         sx={{
@@ -241,7 +243,7 @@ const TeacherRanking = () => {
                           fontFamily: "Inter, sans-serif",
                         }}
                       >
-                        Total Lectures
+                       {t("Total Lectures")}
                       </TableCell>
                       <TableCell
                         sx={{
@@ -251,7 +253,7 @@ const TeacherRanking = () => {
                           fontFamily: "Inter, sans-serif",
                         }}
                       >
-                        Completed Lectures
+                        {t("Completed Lectures")}
                       </TableCell>
                       <TableCell
                         sx={{
@@ -261,7 +263,7 @@ const TeacherRanking = () => {
                           fontFamily: "Inter, sans-serif",
                         }}
                       >
-                        Average Rating
+                        {t("Average Rating")}
                       </TableCell>
                     </TableRow>
                   </TableHead>
@@ -409,7 +411,7 @@ const TeacherRanking = () => {
                       variant="h6"
                       sx={{ fontFamily: "Inter, sans-serif" }}
                     >
-                      Lecture Completion
+                      {t("Lecture Completion")}
                     </Typography>
                   </Stack>
                 </Box>
@@ -494,7 +496,7 @@ const TeacherRanking = () => {
                       variant="h6"
                       sx={{ fontFamily: "Inter, sans-serif" }}
                     >
-                      Lecture Watch‐time
+                     {t("Lecture Watch‐time")}
                     </Typography>
                   </Stack>
                 </Box>
@@ -524,7 +526,7 @@ const TeacherRanking = () => {
                         type="monotone"
                         dataKey="teacher_data"
                         stroke="#8884d8"
-                        name="Watchtime"
+                        name={t("Watchtime")}
                       />
                       <Line
                         type="monotone"

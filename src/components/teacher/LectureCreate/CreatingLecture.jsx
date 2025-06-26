@@ -50,6 +50,7 @@ import getFileIcon from "@/commonComponents/FileIcon/FileIcon";
 import { DemoContainer } from "@mui/x-date-pickers/internals/demo";
 import { MobileTimePicker } from "@mui/x-date-pickers/MobileTimePicker";
 import { AiOutlineClockCircle } from "react-icons/ai";
+import { useTranslations } from "next-intl";
 
 // const userDetails = decodeToken(Cookies.get("ACCESS_TOKEN"));
 
@@ -59,6 +60,7 @@ const CreatingLecture = ({
   lecture,
   isEditMode = false,
 }) => {
+  const t = useTranslations()
   const { isDarkMode } = useThemeContext();
   const [isLoading, setIsLoading] = useState(false);
   const [lectureSubject, setLectureSubject] = useState(null);
@@ -459,7 +461,7 @@ const CreatingLecture = ({
             lineHeight: "normal",
           }}
         >
-          {isEditMode ? "Update Lecture" : "Create Lecture"}
+          {isEditMode ? t("Update Lecture") : t("Create Lecture")}
         </Box>
         {isEditMode && lecture?.id && (
           <Tooltip title="Delete lecture" placement="top" arrow>
@@ -519,7 +521,7 @@ const CreatingLecture = ({
                 options={classOptions}
                 onSelect={setSelectedClass}
                 onChange={setSelectedClassName}
-                label={"Class"}
+                label={t("Class")}
                 value={selectedClass}
                 helperText={errors.messages.class}
                 // disabled={isEditMode} // Disable in edit mode
@@ -532,7 +534,7 @@ const CreatingLecture = ({
                 options={subjectOptions}
                 onSelect={setLectureSubject}
                 onChange={setSubjectName}
-                label={"Subject"}
+                label={t("Subject")}
                 value={lectureSubject}
                 helperText={errors.messages.subject}
                 // disabled={isEditMode} // Disable in edit mode
@@ -545,7 +547,7 @@ const CreatingLecture = ({
                 options={chapterOptions}
                 onSelect={setLectureChapter}
                 onChange={setChapterName}
-                label={"Chapter"}
+                label={t("Chapter")}
                 value={lectureChapter}
                 helperText={errors.messages.chapter}
                 // disabled={isEditMode} // Disable in edit mode
@@ -558,7 +560,7 @@ const CreatingLecture = ({
                 options={topicOptions}
                 onSelect={setLectureTopics}
                 onChange={setTopicsName}
-                label={"Name (Topics)"}
+                label={t("Name (Topics)")}
                 value={lectureTopics}
                 helperText={errors.messages.topic}
               />
@@ -567,7 +569,7 @@ const CreatingLecture = ({
             {/* Lecture Description (Optional) */}
             <Grid item xs={12}>
               <TextField
-                label="Description (Optional)"
+                label={t("Description (Optional)")}
                 value={lectureDescription}
                 onChange={(e) => setLectureDescription(e.target.value)}
                 InputLabelProps={{
@@ -611,7 +613,7 @@ const CreatingLecture = ({
                     },
                   }}
                 >
-                  Lecture Type
+                 {t("Lecture Type")}
                 </InputLabel>
                 <Select
                   labelId="lecture-type-label"
@@ -678,7 +680,7 @@ const CreatingLecture = ({
                   }}
                 />
                 <DatePicker
-                  label="Lecture Date"
+                  label={t("Lecture Date")}
                   value={lectureDate}
                   onChange={(newDate) => setLectureDate(newDate)}
                   slotProps={{
@@ -789,7 +791,7 @@ const CreatingLecture = ({
               <Box sx={{ position: "relative" }}>
                 <LocalizationProvider dateAdapter={AdapterDayjs}>
                   <MobileTimePicker
-                    label={"Lecture Start Time *"}
+                    label={t("Lecture Start Time")}
                     openTo="hours"
                     inputRef={inputRef}
                     value={lectureStartTime}
@@ -932,7 +934,7 @@ const CreatingLecture = ({
                   {/* <IoDocumentAttachOutline 
                 style={{ marginRight: 8, fontSize: '22px' }} 
               /> */}
-                  Upload Material
+                  {t("Upload Material")}
                   <input type="file" hidden onChange={handleFileSelect} />
                 </Button>
               </Grid>
@@ -964,7 +966,7 @@ const CreatingLecture = ({
             },
           }}
         >
-          {isEditMode ? "Update Lecture" : "Create Lecture"}
+          {isEditMode ? t("Update Lecture") : t("Create Lecture")}
         </Button>
       </DialogActions>
     </Dialog>

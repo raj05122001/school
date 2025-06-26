@@ -40,6 +40,7 @@ import { RiArrowDropDownLine } from "react-icons/ri";
 import TextWithMath from "@/commonComponents/TextWithMath/TextWithMath";
 import AssignmentTextFormat from "@/commonComponents/TextWithMath/AssignmentTextFormat";
 import toast from "react-hot-toast";
+import { useTranslations } from "next-intl";
 
 export default function NewChatbot({ suggestionInput, setIsOpenChatBot }) {
   const chatbotRef = useRef();
@@ -52,6 +53,7 @@ export default function NewChatbot({ suggestionInput, setIsOpenChatBot }) {
   const [sessionID, setSessionID] = useState(null);
   const [oldChats, setOldChats] = useState([]);
   const [showOldChat, setShowOldChat] = useState(false);
+  const t=useTranslations();
 
   const userDetails = decodeToken(Cookies.get("ACCESS_TOKEN"));
   const userName = userDetails?.username;
@@ -326,7 +328,7 @@ export default function NewChatbot({ suggestionInput, setIsOpenChatBot }) {
                   },
                 }}
               >
-                Fresh Conversation
+                {t("Fresh Conversation")}
               </Button>
 
               {!showOldChat && (
@@ -361,7 +363,7 @@ export default function NewChatbot({ suggestionInput, setIsOpenChatBot }) {
                   },
                     }}
                   >
-                    Conversation History
+                    {t("Conversation History")}
                   </Button>
                 </>
               )}
@@ -406,7 +408,7 @@ export default function NewChatbot({ suggestionInput, setIsOpenChatBot }) {
                               gutterBottom
                               sx={{ fontSize: "14px" }}
                             >
-                              Session ID - {data?.session?.session_id}
+                              {t("Session ID")} - {data?.session?.session_id}
                               <br />
                               {index + 1}. {data?.user_question}
                             </Typography>
@@ -434,7 +436,7 @@ export default function NewChatbot({ suggestionInput, setIsOpenChatBot }) {
                     </List>
                   </Box>
                 ) : (
-                  <Typography>No conversation history available.</Typography>
+                  <Typography>{t("No conversation history available.")}</Typography>
                 ))}
             </Box>
           </Grid>
@@ -510,7 +512,7 @@ export default function NewChatbot({ suggestionInput, setIsOpenChatBot }) {
                   }}
                 >
                   <FaRobot size={50} style={{ marginBottom: "16px", fontWeight:400, lineHeight:"normal", fontStyle:"normal", color:"#141514" }} />
-                  <Typography sx={{fontFamily:"Inter", fontSize:"20px", fontWeight:400, lineHeight:"normal", fontStyle:"normal", color:"#141514"}}>Hello! How can I help you?</Typography>
+                  <Typography sx={{fontFamily:"Inter", fontSize:"20px", fontWeight:400, lineHeight:"normal", fontStyle:"normal", color:"#141514"}}>{t("Hello! How can I help you")}?</Typography>
                 </Box>
               )}
               {isLoading && (
@@ -545,7 +547,7 @@ export default function NewChatbot({ suggestionInput, setIsOpenChatBot }) {
                 <TextField
                   fullWidth
                   multiline
-                  placeholder="Ask me..."
+                  placeholder={t("Ask me")}
                   value={userTextInput}
                   onChange={(e) => setUserTextInput(e.target.value)}
                   onKeyPress={handleKeyPress}

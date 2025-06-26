@@ -1,8 +1,10 @@
 import React from "react";
 import { Box, Typography, Skeleton, CircularProgress, Card, circularProgressClasses } from "@mui/material";
 import { PiStudentBold } from "react-icons/pi";
+import { useTranslations } from "next-intl";
 
 const AverageLectureDuration = ({ countData, loading }) => {
+  const t = useTranslations()
   // const durationCount = countData?.Average_lecture_duration;
   const perc =
     ((countData?.Average_lecture_duration * 2) * countData?.Average_lecture_duration) / 100;
@@ -122,7 +124,7 @@ const AverageLectureDuration = ({ countData, loading }) => {
                 lineHeight: "24px",
               }}
             >
-              Average Duration
+              {t("Average Duration")}
             </Typography>
 
             {/* Class and Department */}
@@ -137,7 +139,7 @@ const AverageLectureDuration = ({ countData, loading }) => {
                 lineHeight: "24px",
               }}
             >
-              {countData?.Average_lecture_duration || 0} mins
+              {countData?.Average_lecture_duration || 0} {t("mins")}
             </Typography>
           </Box>
         </Card>

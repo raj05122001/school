@@ -11,6 +11,7 @@ import {
 } from "@mui/material";
 import { PieChart, Pie, Cell, ResponsiveContainer, Tooltip } from "recharts";
 import { useThemeContext } from "@/hooks/ThemeContext";
+import { useTranslations } from "next-intl";
 
 const COLORS = [
   "#0088FE",
@@ -24,6 +25,7 @@ const COLORS = [
 ];
 
 const LectureAnalytics = ({ lectureId }) => {
+  const t=useTranslations();
   const { isDarkMode, primaryColor, secondaryColor } = useThemeContext();
   const theme = useTheme();
   const [analytics, setAnalytics] = useState({});
@@ -157,7 +159,7 @@ const LectureAnalytics = ({ lectureId }) => {
           {percentage ? `${percentage.toFixed(0)}%` : "0%"}
         </Typography>
         <Typography variant="caption" color={secondaryColor}>
-          Last updated on {formattedDate}
+         {t("Last updated on")} {formattedDate}
         </Typography>
       </Box>
     </Box>
@@ -185,7 +187,7 @@ const LectureAnalytics = ({ lectureId }) => {
           lineHeight: "normal",
         }}
       >
-        Lecture Analytics
+       {t("Lecture Analytics")}
       </Typography>
       {analytics?.overall_health_score &&
         renderPercentage(
@@ -207,7 +209,7 @@ const LectureAnalytics = ({ lectureId }) => {
                 lineHeight: "24px",
               }}
             >
-              Topics Distribution
+              {t("Topics Distribution")}
             </Typography>
             <Tooltip
               title={
@@ -282,7 +284,7 @@ const LectureAnalytics = ({ lectureId }) => {
                 lineHeight: "24px",
               }}
             >
-              Sentiment Analytics
+              {t("Sentiment Analytics")}
             </Typography>
             <Tooltip
               title={
@@ -345,15 +347,15 @@ const LectureAnalytics = ({ lectureId }) => {
             }[type];
 
             const label = {
-              positive: "Positive",
-              negative: "Negative",
-              neutral: "Neutral",
+              positive: t("Positive"),
+              negative: t("Negative"),
+              neutral: t("Neutral"),
             }[type];
 
             const subLabel = {
-              positive: "High",
-              negative: "Risk",
-              neutral: "Moderate",
+              positive: t("High"),
+              negative: t("Risk"),
+              neutral: t("Moderate"),
             }[type];
 
             return (
@@ -436,7 +438,7 @@ const LectureAnalytics = ({ lectureId }) => {
               lineHeight: "18.712px",
             }}
           >
-            Last updated on {formattedDate}
+            {t("Last updated on")} {formattedDate}
           </Typography>
         </Box>
       )}
@@ -455,7 +457,7 @@ const LectureAnalytics = ({ lectureId }) => {
             lineHeight: "24px",
           }}
         >
-          Main Topics
+          {t("Main Topics")}
         </Typography>
       )}
       {analytics?.main_topics?.length > 0 && (

@@ -14,11 +14,13 @@ import Feedback from "./Feedback";
 import { getFeedback } from "@/api/apiHelper";
 import { decodeToken } from "react-jwt";
 import Cookies from "js-cookie";
+import { useTranslations } from "next-intl";
 
 const RatingSection = ({ id, isShowRating = false }) => {
   const { isDarkMode, primaryColor, secondaryColor } = useThemeContext();
   const [data, setData] = useState({});
   const userDetails = decodeToken(Cookies.get("ACCESS_TOKEN"));
+  const t=useTranslations();
 
   useEffect(() => {
     fetchgetFeedback();
@@ -64,7 +66,7 @@ const RatingSection = ({ id, isShowRating = false }) => {
               lineHeight: "normal",
             }}
           >
-            Ratings
+            {t("Ratings")}
           </Typography>
           {/* <GiStaryu size={24} color={isDarkMode ? "#FFC107" : "#FFEA00"} /> */}
         </Box>

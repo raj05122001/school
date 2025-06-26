@@ -12,9 +12,11 @@ import {
   Tooltip,
   Typography,
 } from "@mui/material";
+import { useTranslations } from "next-intl";
 import { useRouter } from "next/navigation";
 
 const AssignmentTable = ({ data }) => {
+  const t = useTranslations();
   const router = useRouter();
   const { isDarkMode } = useThemeContext();
 
@@ -77,7 +79,7 @@ const AssignmentTable = ({ data }) => {
                   fontSize: "14px",
                 }}
               >
-                Lecture
+                {t("Lecture")}
               </TableCell>
               <TableCell
                 sx={{
@@ -90,7 +92,7 @@ const AssignmentTable = ({ data }) => {
                   fontSize: "14px",
                 }}
               >
-                Chapter
+                {t("Chapter")}
               </TableCell>
               <TableCell
                 sx={{
@@ -103,7 +105,7 @@ const AssignmentTable = ({ data }) => {
                   fontSize: "14px",
                 }}
               >
-                Class
+               {t("Class")}
               </TableCell>
               <TableCell
                 sx={{
@@ -116,7 +118,7 @@ const AssignmentTable = ({ data }) => {
                   fontSize: "14px",
                 }}
               >
-                Subject
+                {t("Subject")}
               </TableCell>
               <TableCell
                 sx={{
@@ -129,7 +131,7 @@ const AssignmentTable = ({ data }) => {
                   fontSize: "14px",
                 }}
               >
-                Checked
+                {t("Checked")}
               </TableCell>
               <TableCell
                 sx={{
@@ -142,7 +144,7 @@ const AssignmentTable = ({ data }) => {
                   fontSize: "14px",
                 }}
               >
-                Total
+                {t("Total")}
               </TableCell>
               <TableCell
                 sx={{
@@ -277,7 +279,7 @@ const AssignmentTable = ({ data }) => {
             ) : (
               <TableRow>
                 <TableCell colSpan={7} sx={{ textAlign: "center" }}>
-                  No Data Available
+                  {t("No Data Available")}
                 </TableCell>
               </TableRow>
             )}

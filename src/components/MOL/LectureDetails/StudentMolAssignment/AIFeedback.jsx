@@ -270,7 +270,7 @@ const AIFeedback = ({ assignment, answered_by, totalMarks, apiResult }) => {
                 >
                 <Typography sx={AIFeedbackTitleStyle}>
                   <VscFeedback style={{ marginRight: 4 }} />
-                  Overall Feedback
+                  {t("Overall Feedback")}
                 </Typography>
                   <AssignmentTextFormat text={data?.overall_feedback} />
                 </Box>
@@ -422,7 +422,7 @@ const AIFeedback = ({ assignment, answered_by, totalMarks, apiResult }) => {
               }}
             >
               <GrScorecard style={{ marginRight: "4px" }} />
-              <strong>Marks Scored:</strong>
+              <strong>{t("Marks Scored")}:</strong>
               <span style={{ fontSize: "20px", marginLeft: "4px" }}>
                 {result?.data?.score}/{assignment.assignment_mark}
               </span>
@@ -452,7 +452,7 @@ const AIFeedback = ({ assignment, answered_by, totalMarks, apiResult }) => {
             >
               <strong>
                 <PiChalkboardTeacher style={{ marginRight: "4px" }} />
-                Comments
+                {t("Comments")}
               </strong>
               <br />
             </Typography> */}

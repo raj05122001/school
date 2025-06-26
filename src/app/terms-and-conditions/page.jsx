@@ -1,6 +1,9 @@
 import React from 'react';
+import { useTranslations } from "next-intl";
+
 
 const TermsAndConditions = () => {
+  const t=useTranslations();
   return (
     <div style={{ padding: '20px', fontFamily: 'Arial, sans-serif', maxWidth: '800px', margin: '0 auto' }}>
       <h1>Terms and Conditions for Vidya AI</h1>
@@ -83,7 +86,7 @@ const TermsAndConditions = () => {
         If you have any questions or concerns about these Terms and Conditions, please contact us at:  
       </p>
       <ul>
-        <li><strong>Email:</strong> <a href="mailto:support@indiqai.com">support@indiqai.com</a></li>
+        <li><strong>{t("Email")}:</strong> <a href="mailto:support@indiqai.com">support@indiqai.com</a></li>
         <li><strong>Website:</strong> <a href="https://www.indiqai.ai/">https://www.indiqai.ai/</a></li>
       </ul>
 

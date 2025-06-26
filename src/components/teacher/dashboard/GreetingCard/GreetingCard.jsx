@@ -16,8 +16,10 @@ import { capitalizeWords } from "@/helper/Helper";
 import { AppContextProvider } from "@/app/main";
 import { useRouter } from "next/navigation";
 import UserImage from "@/commonComponents/UserImage/UserImage";
+import { useTranslations } from "next-intl";
 
 function GreetingCard() {
+  const t = useTranslations()
   const userDetails = decodeToken(Cookies.get("ACCESS_TOKEN"));
   const { handleCreateLecture } = useContext(AppContextProvider);
   const router = useRouter();
@@ -61,7 +63,7 @@ function GreetingCard() {
             variant="subtitle1"
             sx={{ textAlign: "left", color: "white" }}
           >
-            Have a nice day!
+            {t("Have a nice dayx")}!
           </Typography>
         </Box>
         <Box sx={{ display: "flex", gap: 3, alignItems: "flex-start" }}>
@@ -91,7 +93,7 @@ function GreetingCard() {
               }}
               onClick={userDetails?.role !== "STUDENT" ? () => handleCreateLecture("", false) :  () => handleRoute()}
             >
-              Watch Lecture
+               {t("Watch Lecture")}
             </Button>
 
             {/* <Button
@@ -124,7 +126,7 @@ function GreetingCard() {
               }}
               onClick={() => handleCreateLecture("", false)}
             >
-              Create Lecture
+              {t("Create Lecture")}
             </Button>
 
             {/* <Button

@@ -4,10 +4,12 @@ import { GiDuration } from "react-icons/gi";
 import CircularProgress, {
   circularProgressClasses,
 } from "@mui/material/CircularProgress";
+import { useTranslations } from "next-intl";
 
 function LectureDuration({ averageDuration }) {
+  const t = useTranslations()
   const perc =
-    (averageDuration?.total_duration * averageDuration?.avg_duration) / 100;
+    (averageDuration?.total_duration / averageDuration?.avg_duration) * 100;
   return (
     <Box sx={{ position: "relative" }}>
       <FacebookCircularProgress value={perc} />
@@ -38,10 +40,12 @@ function LectureDuration({ averageDuration }) {
           {/* Card Content */}
           <Box
             sx={{
+              width:'100%',
               display: "flex",
               alignItems: "center",
               flexDirection: "column",
               justifyContent: "center",
+              textAlign:'center'
             }}
           >
             {/* Teacher Name */}
@@ -94,7 +98,7 @@ function LectureDuration({ averageDuration }) {
                 lineHeight: "24px",
               }}
             >
-              Average Duration
+              {t("Average Duration")}
             </Typography>
 
             {/* Class and Department */}
@@ -109,7 +113,7 @@ function LectureDuration({ averageDuration }) {
                 lineHeight: "24px",
               }}
             >
-              {averageDuration?.avg_duration || 0} mins
+              {averageDuration?.avg_duration || 0} {t("mins")}
             </Typography>
           </Box>
         </Card>
@@ -120,15 +124,15 @@ function LectureDuration({ averageDuration }) {
 
 export default LectureDuration;
 
-function FacebookCircularProgress({ value = 0 }) {
+function FacebookCircularProgress({value=0}) {
   return (
-    <Box sx={{ position: "relative" }}>
+    <Box sx={{ position: 'relative' }}>
       <CircularProgress
         variant="determinate"
         sx={(theme) => ({
-          color: "#12DD00",
-          ...theme.applyStyles("dark", {
-            color: "#12DD00",
+          color: '#fff',
+          ...theme.applyStyles('dark', {
+            color: '#FFFFFF',
           }),
         })}
         size={170}
@@ -139,15 +143,15 @@ function FacebookCircularProgress({ value = 0 }) {
         variant="determinate"
         disableShrink
         sx={(theme) => ({
-          color: "#fff",
-          animationDuration: "550ms",
-          position: "absolute",
+          color: '#12DD00',
+          animationDuration: '550ms',
+          position: 'absolute',
           left: 0,
           [`& .${circularProgressClasses.circle}`]: {
-            strokeLinecap: "round",
+            strokeLinecap: 'round',
           },
-          ...theme.applyStyles("dark", {
-            color: "#FFFFFF",
+          ...theme.applyStyles('dark', {
+            color: '#12DD00',
           }),
         })}
         size={170}

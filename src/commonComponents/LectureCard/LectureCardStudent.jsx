@@ -40,6 +40,7 @@ import { uploadS3Video } from "@/api/apiHelper";
 import { IoIosCloseCircle } from "react-icons/io";
 import toast from "react-hot-toast";
 import CalendarIconCustom from "../CalendarIconCustom/CalendarIconCustom";
+import { useTranslations } from "next-intl";
 
 const day = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
 
@@ -56,6 +57,7 @@ const LectureCardStudent = ({ lecture, getAllLecture = () => {} }) => {
   } = useContext(AppContextProvider);
 
   const [anchorElUser, setAnchorElUser] = useState(null);
+  const t=useTranslations();
 
   const handleOpenUserMenu = (event) => {
     setAnchorElUser(event?.currentTarget);
@@ -437,7 +439,7 @@ export default LectureCardStudent;
 //             disabled={loading}
 //             sx={{ color: "white", borderColor: "grey" }}
 //           >
-//             Cancel
+//           {t(" Cancel")}
 //           </Button>
 //           <Button
 //             variant="contained"

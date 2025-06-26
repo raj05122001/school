@@ -17,8 +17,10 @@ import UserImage from "@/commonComponents/UserImage/UserImage";
 import { TbSquareRoundedPercentage } from "react-icons/tb";
 import { MdOutlineCreditScore } from "react-icons/md";
 import { SiGoogleclassroom } from "react-icons/si";
+import { useTranslations } from "next-intl";
 
 const Page = ({ params }) => {
+  const t=useTranslations();
   const { id, student_id } = params;
   const [listData, setListData] = useState([]);
   const [listLoading, setListLoading] = useState(true);
@@ -77,7 +79,7 @@ const Page = ({ params }) => {
           {error}
         </Typography>
       ) : listData.length === 0 ? (
-        <Typography variant="h6">No assignments available</Typography>
+        <Typography variant="h6">{t("No assignments available")}</Typography>
       ) : (
         <Grid container spacing={2}>
           {userData && (
@@ -111,7 +113,7 @@ const Page = ({ params }) => {
                           {userData?.user?.full_name}
                         </Typography>
                         <Typography variant="body2" color={secondaryColor}>
-                          Email: {userData?.user?.email}
+                          {t("Email")}: {userData?.user?.email}
                         </Typography>
                       </Box>
                     </Box>
@@ -129,7 +131,7 @@ const Page = ({ params }) => {
                         fontWeight="bold"
                         color={isDarkMode ? primaryColor : "#555"}
                       >
-                        Class: {userData?.user_class?.name}
+                        {t("Class")}: {userData?.user_class?.name}
                       </Typography>
                     </Box>
 
@@ -143,7 +145,7 @@ const Page = ({ params }) => {
                         fontWeight="bold"
                         color={isDarkMode ? primaryColor : "#555"}
                       >
-                        Total Assignments: {listData?.data?.length}
+                        {t("Total Assignments:")} {listData?.data?.length}
                       </Typography>
                     </Box>
                     {/* <Box display="flex" alignItems="center">

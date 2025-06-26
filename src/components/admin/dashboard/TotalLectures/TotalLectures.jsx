@@ -1,9 +1,11 @@
 import React from "react";
 import { Box, Typography, Skeleton, CircularProgress, Card, circularProgressClasses } from "@mui/material";
 import { PiStudentBold } from "react-icons/pi";
+import { useTranslations } from "next-intl";
 
 const TotalLectures = ({ countData, loading }) => {
   // const lectureCount = countData?.total_lectures;
+  const t=useTranslations();
   const perc =
     Math.round(((countData?.total_lectures * 2) * countData?.total_lectures) / 100);
 
@@ -123,7 +125,7 @@ const TotalLectures = ({ countData, loading }) => {
                 lineHeight: "24px",
               }}
             >
-              Total Lectures
+              {t("Total Lectures")}
             </Typography>
 
             {/* Class and Department */}

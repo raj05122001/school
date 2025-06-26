@@ -31,6 +31,7 @@ import TextWithMath from "@/commonComponents/TextWithMath/TextWithMath";
 import { BASE_URL_MEET } from "@/constants/apiconfig";
 import { IoIosArrowDown, IoIosArrowUp } from "react-icons/io";
 import AssignmentTextFormat from "@/commonComponents/TextWithMath/AssignmentTextFormat";
+import { useTranslations } from "next-intl";
 
 const userDetails = decodeToken(Cookies.get("ACCESS_TOKEN"));
 
@@ -41,6 +42,7 @@ const LectureAssignment = ({
   isEdit,
   isAdmin = false,
 }) => {
+  const t=useTranslations();
   const [assignments, setAssignments] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -359,7 +361,7 @@ const LectureAssignment = ({
                     }}
                     onClick={() => setOpenDialog(true)}
                   >
-                    Create
+                    {t("Create")}
                   </Button>
                 )}
               </Box>
@@ -442,7 +444,7 @@ const LectureAssignment = ({
                           fontWeight: 500,
                         }}
                       >
-                        Question {String.fromCharCode(65 + index)}&nbsp;
+                        {t("Question")} {String.fromCharCode(65 + index)}&nbsp;
                       </Typography>
                       {isEdit && (
                         <Box
@@ -469,7 +471,7 @@ const LectureAssignment = ({
                                   fontFamily: "Inter",
                                 }}
                               >
-                                Marks:
+                                {t("Marks")}:
                               </span>
                               <TextField
                                 type="number"
@@ -720,7 +722,7 @@ const LectureAssignment = ({
                   marginRight: "2px",
                 }}
               />{" "}
-              Create Assignment
+              {t("Create Assignment")}
             </DialogTitle>
             <DialogContent>
               <TextField
@@ -814,10 +816,10 @@ const LectureAssignment = ({
               }}
             >
               <Button onClick={() => setOpenDialog(false)} color="warning">
-                Cancel
+               {t("Cancel")}
               </Button>
               <Button onClick={handleCreateAssignment} color="info">
-                Create
+                 {t("Create")}
               </Button>
             </DialogActions>
           </Dialog>

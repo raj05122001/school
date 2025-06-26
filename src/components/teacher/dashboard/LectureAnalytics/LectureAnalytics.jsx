@@ -20,8 +20,10 @@ import {
 import { FaVideo, FaEye, FaCommentDots } from "react-icons/fa"; // Import icons
 import { useThemeContext } from "@/hooks/ThemeContext";
 import { commentWatchtimeGraph } from "@/api/apiHelper";
+import { useTranslations } from "next-intl";
 
 const LectureAnalytics = () => {
+  const t = useTranslations()
   const { isDarkMode } = useThemeContext();
   const [timePeriod, setTimePeriod] = useState("week");
   const [data, setData] = useState([]);
@@ -61,7 +63,7 @@ const LectureAnalytics = () => {
           className={`${isDarkMode ? "dark-heading" : "light-heading"}`}
           sx={{ fontWeight: "bold" }}
         >
-          Video Uploaded, Views, and Comments
+          {t("Video Uploaded, Views, and Comments")}
         </Typography>
       </Box>
 
@@ -104,8 +106,8 @@ const LectureAnalytics = () => {
               fill="#8884d8"
               background={{ fill: "#eee" }}
             />
-            <Bar dataKey="watchtime_count" name="Watchtime (Minutes)" fill="#82ca9d" />
-            <Bar dataKey="upload_count" name="Upload" fill="#ffc658" />
+            <Bar dataKey="watchtime_count" name={t("Watchtime (Minutes)")} fill="#82ca9d" />
+            <Bar dataKey="upload_count" name={t("Upload")} fill="#ffc658" />
           </BarChart>
         </ResponsiveContainer>
       </Box>

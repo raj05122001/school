@@ -6,10 +6,12 @@ import { FiBarChart2 } from "react-icons/fi";
 import { MdDarkMode, MdLightMode } from "react-icons/md";
 import { getMyAssignmentAnalytics } from "@/api/apiHelper";
 import { GrScorecard } from "react-icons/gr";
+import { useTranslations } from "next-intl";
 
 const COLORS = ["#00C49F", "#FFBB28"];
 
 const MyAssignmentAnalytics = () => {
+  const t = useTranslations()
   const { isDarkMode } = useThemeContext();
   const [myScores, setMyScores] = useState({})
 
@@ -60,7 +62,7 @@ const MyAssignmentAnalytics = () => {
           className={`${isDarkMode ? "dark-heading" : "light-heading"}`}
         >
           <FiBarChart2 size={22} style={{ marginRight: "8px" }} />
-          My Assignment Analytics
+         {t("My Assignment Analytics")}
         </Typography>
         {isDarkMode ? (
           <MdDarkMode style={{ fontSize: "24px", color: "#f0f0f0" }} />
@@ -121,7 +123,7 @@ const MyAssignmentAnalytics = () => {
               }}
             >
               <Typography variant="subtitle1">
-                <GrScorecard /> Average Score Percentage
+                <GrScorecard /> {t("Average Score Percentage")}
               </Typography>
               <Typography variant="h6">{myScores?.average_scored_percentage}%</Typography>
             </Box>
@@ -139,7 +141,7 @@ const MyAssignmentAnalytics = () => {
               }}
             >
               <Typography variant="subtitle1">
-              <GrScorecard /> Assignments Below 50%
+              <GrScorecard /> {t("Assignments Below")}50%
               </Typography>
               <Typography variant="h6">{myScores?.my_assignment_in_which_i_got_less_than_50}</Typography>
             </Box>
@@ -157,7 +159,7 @@ const MyAssignmentAnalytics = () => {
               }}
             >
               <Typography variant="subtitle1">
-              <GrScorecard /> Assignments Between 50-80%
+              <GrScorecard /> {t("Assignments Between")}50-80%
               </Typography>
               <Typography variant="h6">{myScores?.my_assignment_in_which_i_got_between_than_50_to_80}</Typography>
             </Box>
@@ -175,7 +177,7 @@ const MyAssignmentAnalytics = () => {
               }}
             >
               <Typography variant="subtitle1">
-              <GrScorecard /> Assignments Between 80-100%
+              <GrScorecard /> {t("Assignments Between")}80-100%
               </Typography>
               <Typography variant="h6">{myScores?.my_assignment_in_which_i_got_between_than_80_to_100}</Typography>
             </Box>

@@ -1,5 +1,6 @@
 import axios from "axios";
 import { BASE_URL, BASE_URL_MEET } from "@/constants/apiconfig";
+import Cookies from "js-cookie";
 
 export const API_STATE = {
   initial: "initial",
@@ -24,21 +25,24 @@ export const API_STATE = {
 
 export const axiosInstance = (
   baseURL = BASE_URL,
-  headers = { "X-Requested-With": "XMLHttpRequest" }
+  headers = {
+    "X-Requested-With": "XMLHttpRequest" ,
+    "Accept-Language": Cookies.get("lang") || "en"
+    }
 ) => {
   return axios.create({ baseURL, headers, withCredentials: false });
 };
 
 export const axiosAuthInstance = (
   baseURL = BASE_URL_MEET,
-  headers = { "X-Requested-With": "XMLHttpRequest", 'Content-Type': 'multipart/form-data' }
+  headers = { "X-Requested-With": "XMLHttpRequest", 'Content-Type': 'multipart/form-data', "Accept-Language": Cookies.get("lang") || "en" }
 ) => {
   return axios.create({ baseURL, headers, withCredentials: false });
 };
 
 export const axiosUserDashBoardInstance = (
   baseURL = BASE_URL_MEET,
-  headers = { "X-Requested-With": "XMLHttpRequest" }
+  headers = { "X-Requested-With": "XMLHttpRequest", "Accept-Language": Cookies.get("lang") || "en" }
 ) => {
   return axios.create({ baseURL, headers, withCredentials: false });
 };

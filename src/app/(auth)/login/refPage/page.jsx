@@ -22,6 +22,7 @@ import { decodeToken } from "react-jwt";
 import Image from "next/image";
 import { MdVisibility, MdVisibilityOff } from "react-icons/md";
 import Logo from "@/commonComponents/Logo/Logo";
+import { useTranslations } from "next-intl";
 
 // Keyframes for the text animation
 const textAnimation = {
@@ -38,6 +39,7 @@ const textAnimation = {
 };
 
 const LoginPage = () => {
+  const t=useTranslations();
   const router = useRouter();
   const [showPassword, setShowPassword] = useState(false);
   const searchParams = useSearchParams();
@@ -141,7 +143,7 @@ const LoginPage = () => {
         >
           <Typography component="h1" variant="h5" fontWeight={"bold"} sx={{ textAlign: "center", color:"#36454F" }}>
           <Logo />
-            Sign in to your account
+            {t('Sign in to your account')}
           </Typography>
           <Box
             component="form"
@@ -226,7 +228,7 @@ const LoginPage = () => {
                 }}
               >
                 <Link href="#" variant="body2" sx={{ color: "#1976d2" }}>
-                  Forgot password?
+                  {t("Forgot Password")}?
                 </Link>
               </Grid>
             </Grid>
@@ -246,7 +248,7 @@ const LoginPage = () => {
                 ":hover": { backgroundColor: "#115293" },
               }}
             >
-              Sign In
+              {t("Sign In")}
             </Button>
             <Grid container justifyContent="center">
               <Grid item>
@@ -256,7 +258,7 @@ const LoginPage = () => {
                     onClick={() => router.push("/registration")}
                     sx={{ color: "#1976d2", cursor: "pointer" }}
                   >
-                    Sign Up
+                    {t("Sign Up")}
                   </Link>
                 </Typography>
               </Grid>
@@ -296,14 +298,14 @@ const LoginPage = () => {
             variant="h3"
             sx={{ fontWeight: "bold", color: "#EDEADE" }}
           >
-            Welcome to
+            {t("Welcome to")}
             <br />
             <Box sx={{p:1}}>
               <Logo />
             </Box>
           </Typography>
           <Typography variant="h5" sx={{ mt: 1, color: "#191970" }}>
-            Your AI-powered Learning Companion
+            {t("Your AI-powered Learning Companion")}
           </Typography>
         </Box>
       </Grid>}

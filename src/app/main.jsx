@@ -14,6 +14,8 @@ import { BsChatSquareText } from "react-icons/bs";
 import Image from "next/image";
 import NewChatbot from "@/components/ChatBot/NewChatbot";
 import GreetingCardNew from "@/components/admin/dashboard/GreetingCard/GreetingCardNew";
+import { LanguageProvider } from "@/Context/LanguageContext";
+import { useTranslations } from "next-intl";
 
 export const AppContextProvider = createContext({});
 
@@ -32,7 +34,8 @@ const Main = ({ children }) => {
   const [isEditLecture, setIsEditLecture] = useState(false);
   const [isOpenChatBot, setIsOpenChatBot] = useState(false);
   const [userInput, setUserInput] = useState("");
-
+  const t=useTranslations();
+  
   const handleResize = () => {
     if (window.innerWidth < 980) {
       setOpen(false);
@@ -98,6 +101,7 @@ const Main = ({ children }) => {
         <>{children}</>
       ) : (
         <ThemeProvider>
+          <LanguageProvider>
           <AppContextProvider.Provider
             value={{
               openRecordingDrawer,
@@ -217,7 +221,7 @@ const Main = ({ children }) => {
                         lineHeight: "28px",
                       }}
                     >
-                      Ai Buddy
+                      {t("Ai Buddy")}
                     </span>
                   </Button>
                 </IconButton>
@@ -230,6 +234,7 @@ const Main = ({ children }) => {
               </Box>
             )}
           </AppContextProvider.Provider>
+          </LanguageProvider>
         </ThemeProvider>
       )}
     </Suspense>

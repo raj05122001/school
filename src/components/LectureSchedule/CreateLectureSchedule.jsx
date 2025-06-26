@@ -15,9 +15,11 @@ import { useForm } from "react-hook-form";
 import { uploadExcelFile } from "@/api/apiHelper";
 import { useThemeContext } from "@/hooks/ThemeContext";
 import { FaRegFileExcel } from "react-icons/fa";
+import { useTranslations } from "next-intl";
 
 
 export default function CreateLectureSchedule({ open, setOpen }) {
+  const t=useTranslations();
   const inputRef = useRef(null);
   const { isDarkMode, primaryColor } = useThemeContext();
   const [loading, setLoading] = useState(false)
@@ -142,10 +144,10 @@ export default function CreateLectureSchedule({ open, setOpen }) {
         </DialogContent>
         <DialogActions>
           <Button onClick={() => setOpen(false)} color="primary">
-            Cancel
+          {t("Cancel")}
           </Button>
           <Button onClick={handleSubmit(onSubmit)} color="primary">
-            Save
+            {t("Save")}
           </Button>
         </DialogActions>
       </Dialog>

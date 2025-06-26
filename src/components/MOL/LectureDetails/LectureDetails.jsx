@@ -11,6 +11,7 @@ import { decodeToken } from "react-jwt";
 import Cookies from "js-cookie";
 import StudentMCQ from "./StudentMCQ";
 import StudentMOLAssignment from "./StudentMOLAssignment";
+import { useTranslations } from "next-intl";
 
 const window = global?.window || {};
 
@@ -22,6 +23,7 @@ const LectureDetails = ({
   setMarksData,
   isAdmin = false,
 }) => {
+  const t=useTranslations();
   const { isDarkMode } = useThemeContext();
   const [value, setValue] = useState(0);
   const [loading, setLoading] = useState(true);
@@ -119,7 +121,7 @@ const LectureDetails = ({
           },
         }}
       >
-        Lecture Details
+      {t("Lecture Details")}
         <br />
         <span
           style={{
@@ -130,10 +132,10 @@ const LectureDetails = ({
           }}
         >
           {userDetails?.role === "STUDENT" ? (
-            <i>(This is an AI generated content.)</i>
+            <i>({t("This is an AI generated content")}.)</i>
           ) : (
             <i>
-              (This is an AI generated content. The teacher should verify it.)
+              ({t("AI Generated Label Teacher")}.)
             </i>
           )}
         </span>
@@ -184,11 +186,11 @@ const LectureDetails = ({
           },
         }}
       >
-        <Tab label="Notes" />
-        <Tab label="MCQ" />
-        <Tab label="Questions" />
-        <Tab label="Assignment" />
-        <Tab label="Reference" />
+        <Tab label={t("Notes")} />
+        <Tab label={t("MCQ")} />
+        <Tab label={t("Questions")} />
+        <Tab label={t("Assignment")} />
+        <Tab label={t("Reference")} />
       </Tabs>
 
       {/* Tab content with responsive padding */}

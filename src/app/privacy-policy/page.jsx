@@ -1,6 +1,8 @@
 import React from 'react';
+import { useTranslations } from "next-intl";
 
 const PrivacyPolicy = () => {
+  const t=useTranslations();
   return (
     <div style={{ padding: '20px', fontFamily: 'Arial, sans-serif', maxWidth: '800px', margin: '0 auto' }}>
       <h1 style={{margin:"14px auto"}}>Privacy Policy for Vidya AI</h1>
@@ -160,7 +162,7 @@ const PrivacyPolicy = () => {
         We may update this Privacy Policy periodically. We will notify you of changes by posting the updated policy on this page and updating the &quot;Last updated&quot; date. You are advised to review this policy regularly.
       </p>
 
-      <h2 style={{margin:"14px auto"}}>Contact Us</h2>
+      <h2 style={{margin:"14px auto"}}>{t("Contact Us")}</h2>
       <p>
         If you have questions about this Privacy Policy, contact us:
       </p>

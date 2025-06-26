@@ -21,6 +21,7 @@ import Cookies from "js-cookie";
 import { GrEdit } from "react-icons/gr";
 import { MdOutlineEmergencyRecording } from "react-icons/md";
 import { AppContextProvider } from "@/app/main";
+import { useTranslations } from "next-intl";
 
 const TABLE_HEAD = [
   "Title",
@@ -35,6 +36,7 @@ const TABLE_HEAD = [
 
 
 const LectureScheduleTable = () => {
+  const t=useTranslations();
   const userDetails = decodeToken(Cookies.get("ACCESS_TOKEN"));
   const searchParams = useSearchParams();
   const router = useRouter();
@@ -259,7 +261,7 @@ const LectureScheduleTable = () => {
             style={{ fontSize: "48px", color: "#b0bec5" }}
           />
           <Typography variant="h6" color="textSecondary">
-            No lecture found
+           {t("No lecture found")}
           </Typography>
         </Box>
       )}

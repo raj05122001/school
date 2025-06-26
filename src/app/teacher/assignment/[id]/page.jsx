@@ -41,6 +41,7 @@ import { usePathname, useSearchParams, useRouter } from "next/navigation";
 import usePresignedUrl from "@/hooks/usePresignedUrl";
 import { FiFilter, FiSearch } from "react-icons/fi";
 import { IoCalendarClearOutline } from "react-icons/io5";
+import { useTranslations } from "next-intl";
 
 const varelaRound = Varela_Round({ weight: "400", subsets: ["latin"] });
 
@@ -61,6 +62,7 @@ const lightModeStyles = {
 };
 
 const CoursePlaylist = ({ params }) => {
+  const t=useTranslations();
   const { fetchPresignedUrl } = usePresignedUrl();
   const { id } = params;
   const searchParams = useSearchParams();
@@ -206,7 +208,7 @@ const CoursePlaylist = ({ params }) => {
               <Typography
                 sx={{ fontWeight: 400, fontSize: "12px", color: "#8C8F90" }}
               >
-                Class
+               {t("Class")}
               </Typography>
               <Typography
                 sx={{ fontWeight: 700, fontSize: "14px", color: "#3B3D3B" }}
@@ -219,7 +221,7 @@ const CoursePlaylist = ({ params }) => {
               <Typography
                 sx={{ fontWeight: 400, fontSize: "12px", color: "#8C8F90" }}
               >
-                Subject
+                {t("Subject")}
               </Typography>
               <Typography
                 sx={{ fontWeight: 700, fontSize: "14px", color: "#3B3D3B" }}
@@ -232,7 +234,7 @@ const CoursePlaylist = ({ params }) => {
               <Typography
                 sx={{ fontWeight: 400, fontSize: "12px", color: "#8C8F90" }}
               >
-                Chapter
+                {t("Chapter")}
               </Typography>
               <Typography
                 sx={{ fontWeight: 700, fontSize: "14px", color: "#3B3D3B" }}
@@ -316,7 +318,7 @@ const CoursePlaylist = ({ params }) => {
       >
         <InputBase
           sx={{ ml: 1, flex: 1 }}
-          placeholder="Search"
+          placeholder={t("Search")}
           onChange={(e) => setGlobalSearch(encodeURIComponent(e.target.value))}
           value={decodeURIComponent(globalSearch)}
         />

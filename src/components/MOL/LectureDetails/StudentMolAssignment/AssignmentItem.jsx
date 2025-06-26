@@ -40,6 +40,7 @@ import AssignmentTextFormat from "@/commonComponents/TextWithMath/AssignmentText
 import usePresignedUrl from "@/hooks/usePresignedUrl";
 import useFileUploader from "@/hooks/usefileUploader";
 import AIFeedback from "./AIFeedback";
+import { useTranslations } from "next-intl";
 
 const ColorLinearProgress = styled(LinearProgress)(({ theme, value }) => {
   let color = "#FF0000"; // Default: Red for low scores
@@ -72,6 +73,7 @@ const AssignmentItem = ({
   teacherComments,
   fetchAssignments,
 }) => {
+  const t=useTranslations();
   const { fetchPresignedUrl } = usePresignedUrl();
   const { uploadVideoToS3, uploadProgress } = useFileUploader();
 
@@ -311,7 +313,7 @@ const AssignmentItem = ({
                 }}
               >
                 <VscFeedback style={{ marginRight: 4 }} />
-                Overall Feedback
+                {t("Overall Feedback")}
               </Typography>
               <Box
                 sx={{
@@ -507,7 +509,7 @@ const AssignmentItem = ({
                 lineHeight: "normal",
               }}
             >
-              Question {String.fromCharCode(65 + index)}.&nbsp;
+              {t("Question")} {String.fromCharCode(65 + index)}.&nbsp;
             </Typography>
             <Box
               sx={{
@@ -563,7 +565,7 @@ const AssignmentItem = ({
                   lineHeight: "normal",
                 }}
               >
-                Total Marks: {assignment.assignment_mark}
+              {t("Total Marks")}: {assignment.assignment_mark}
               </Typography>
             </Box>
 
@@ -583,7 +585,7 @@ const AssignmentItem = ({
                   }}
                   onClick={() => downloadFile(assignment.assignment_attachment)}
                 >
-                  Download
+                  {t("Download")}
                 </Button>
               )}
               <Button
@@ -703,7 +705,7 @@ const AssignmentItem = ({
                     lineHeight: "normal",
                   }}
                 >
-                  Need Guidance
+                  {t("Need Guidance")}
                 </Typography>
                 <Box
                   sx={{
@@ -803,7 +805,7 @@ const AssignmentItem = ({
             <TextField
               fullWidth
               variant="outlined"
-              placeholder="Describe about your assignment here..."
+              placeholder={t("Describe about your assignment here")}
               sx={{
                 mb: 0.5,
                 mt:0.5,
@@ -822,7 +824,7 @@ const AssignmentItem = ({
           )}
           {isSubmit == -false && (
             <Typography sx={{ fontStyle: "italic", fontSize: "14px", p:1 }}>
-              <i>*Please upload file(s) while giving description.</i>
+              <i>*{t("Please upload file(s) while giving description.")}</i>
             </Typography>
           )}
 
@@ -941,14 +943,14 @@ const AssignmentItem = ({
                         color: isDarkMode ? "#f0f1f2" : "#282929",
                       }}
                     >
-                      Teacher Assessed Result
+                      {t("Teacher Assessed Result")}
                     </Typography>
                   </Box>
                 </AccordionSummary>
                 <AccordionDetails>
                   <Typography>
                     <GrScorecard style={{ marginRight: "4px" }} />
-                    <strong>Marks Scored:</strong> {marksObtained}/
+                    <strong>{t("Marks Scored")}:</strong> {marksObtained}/
                     {assignment?.assignment_mark}
                   </Typography>
                   {marksObtained !== undefined &&
@@ -967,7 +969,7 @@ const AssignmentItem = ({
                   >
                     <strong>
                       <PiChalkboardTeacher style={{ marginRight: "4px" }} />
-                      Comments
+                     {t("Comments")}
                     </strong>
                     <br />
                   </Typography>
@@ -1050,7 +1052,7 @@ const AssignmentItem = ({
                 lineHeight: "normal",
               }}
             >
-              Question {String.fromCharCode(65 + index)}.&nbsp;
+              {t("Question")} {String.fromCharCode(65 + index)}.&nbsp;
             </Typography>
             <Box
               sx={{

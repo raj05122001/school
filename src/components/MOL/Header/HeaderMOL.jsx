@@ -9,6 +9,7 @@ import { useRouter } from "next/navigation";
 import { AppContextProvider } from "@/app/main";
 import { RiDeleteBin5Fill } from "react-icons/ri";
 import { MdPublishedWithChanges, MdUnpublished } from "react-icons/md";
+import { useTranslations } from "next-intl";
 
 function HeaderMOL({
   lectureData,
@@ -19,6 +20,7 @@ function HeaderMOL({
 }) {
   const [dialogOpen, setDialogOpen] = useState(false)
   const [userDetails, setUserDetails] = useState(null);
+  const t=useTranslations();
 
   const router = useRouter()
 
@@ -77,7 +79,7 @@ function HeaderMOL({
           flexShrink: 0,
         }}
       >
-        Minutes of Lecture
+        {t("Minutes of Lecture")}
       </Typography>
       <Box
         sx={{

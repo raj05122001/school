@@ -18,6 +18,7 @@ import { toast } from "react-hot-toast";
 import MathJax from "react-mathjax2";
 import TextWithMath from "@/commonComponents/TextWithMath/TextWithMath";
 import usePersonalisedRecommendations from "@/components/student/MOL/usePersonalisedRecommendations";
+import { useTranslations } from "next-intl";
 
 const LectureNotes = ({
   id,
@@ -26,6 +27,7 @@ const LectureNotes = ({
   isStudent = false,
   setMarksData,
 }) => {
+  const t=useTranslations();
   const [notes, setNotes] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -238,7 +240,7 @@ const LectureNotes = ({
                         borderColor: "#16AA54",
                       }}
                     >
-                      More Insights
+                      {t("More Insights")}
                     </Button>
                   ) : (
                     <Box display="flex" alignItems="center">
@@ -252,7 +254,7 @@ const LectureNotes = ({
                             [note?.id]: e.target.value,
                           })
                         }
-                        placeholder="Type your query..."
+                        placeholder={t("Type your query")}
                         sx={{
                           mr: 1,
                           "& .MuiInputBase-input": {
@@ -328,7 +330,7 @@ const LectureNotes = ({
             },
           }}
         >
-          Need More
+          {t("Need More")}
         </Button>
       )}
     </Box>

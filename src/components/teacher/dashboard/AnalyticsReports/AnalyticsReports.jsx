@@ -64,7 +64,7 @@ const AnalyticsReports = () => {
         }}
       >
         <FaBullhorn style={{ marginRight: 8 }} />
-        Announcements
+        {t("Announcements")}
       </Typography>
 
       {/* TextField with Upload Button */}
@@ -72,7 +72,7 @@ const AnalyticsReports = () => {
         <TextField
           variant="outlined"
           fullWidth
-          placeholder="Enter your announcement here..."
+          placeholder={t("Enter your announcement here")}
           multiline
           rows={8}
           sx={{
@@ -109,16 +109,16 @@ const AnalyticsReports = () => {
           sx={{ mt: 1 }}
         >
           <MenuItem onClick={() => handleFileSelect("document")}>
-            Upload Document
+            {t("Upload Document")}
           </MenuItem>
           <MenuItem onClick={() => handleFileSelect("photo")}>
-            Upload Photo
+            {t("Upload Photo")}
           </MenuItem>
           <MenuItem onClick={() => handleFileSelect("video")}>
-            Upload Video
+            {t("Upload Video")}
           </MenuItem>
           <MenuItem onClick={() => handleFileSelect("audio")}>
-            Upload Audio
+            {t("Upload Audio")}
           </MenuItem>
         </Menu>
       </Box>
@@ -134,7 +134,7 @@ const AnalyticsReports = () => {
             backgroundColor: isDarkMode ? "#0A84FF" : "#1976d2",
           }}
         >
-          Post Announcement
+          {t("Post Announcement")}
         </Button>
       </Box>
     </Box>

@@ -32,6 +32,7 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import { useMediaQuery } from "@mui/material";
 import { MdVisibility, MdVisibilityOff } from "react-icons/md";
 import Logo from "@/commonComponents/Logo/Logo";
+import { useTranslations } from "next-intl";
 
 // Define keyframes for animation
 const textAnimation = {
@@ -48,6 +49,7 @@ const textAnimation = {
 };
 
 const SignupPage = () => {
+  const t = useTranslations()
   const router = useRouter();
   const searchParams = useSearchParams();
   const [showPassword, setShowPassword] = useState(false);
@@ -305,7 +307,7 @@ confirmPassword: yup
               fontFamily: "Space Grotesk, Arial, sans-serif",
             }}
           >
-            VidyaAI
+           {t("VidyaAI")}
           </Typography>
         </Box>
         
@@ -339,7 +341,7 @@ confirmPassword: yup
                 fontFamily: "Inter, sans-serif",
               }}
             >
-              Create Account
+             {t("Create Account")}
             </Typography>
             <RiAccountCircleLine
               style={{ paddingTop: "4px", fontSize: "28px" }}
@@ -367,7 +369,7 @@ confirmPassword: yup
                     fontFamily: "Inter, sans-serif",
                   }}
                 >
-                  Name
+                  {t("Name")}
                 </span>
                 <Controller
                   name="name"
@@ -694,7 +696,7 @@ confirmPassword: yup
                           fontFamily: "Inter, sans-serif",
                         }}
                       >
-                        Department
+                        {t("Department")}
                       </span>
                       <Controller
                         name="department"
@@ -775,7 +777,7 @@ confirmPassword: yup
                         marginBottom: "8px",
                       }}
                     >
-                      Create
+                      {t("Create")}
                     </Button>
                   </Box>
                   <Typography
@@ -787,7 +789,7 @@ confirmPassword: yup
                       mt: 1,
                     }}
                   >
-                    * Please click on Create button if the department is not in the list.
+                    * {t("Please click on Create button if the department is not in the list.")}
                   </Typography>
                 </>
               ) : (
@@ -803,7 +805,7 @@ confirmPassword: yup
                       fontFamily: "Inter, sans-serif",
                     }}
                   >
-                    Class
+                  {t("Class")}
                   </span>
                   <Controller
                     name="subject"
@@ -896,12 +898,12 @@ confirmPassword: yup
             <Grid container justifyContent="center" sx={{ mt: 2 }}>
               <Grid item>
                 <Typography variant="body2">
-                  Already have an account?{" "}
+                  {t("Already have an account")}?{" "}
                   <Link
                     onClick={() => router.push("/login")}
                     sx={{ color: "#1976d2", cursor: "pointer" }}
                   >
-                    Log In
+                    {t("Log In")}
                   </Link>
                 </Typography>
               </Grid>

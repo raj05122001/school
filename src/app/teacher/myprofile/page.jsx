@@ -22,8 +22,10 @@ import { getTeacherDetails, updateTeacherDetails } from "@/api/apiHelper";
 import toast from "react-hot-toast";
 import { useThemeContext } from "@/hooks/ThemeContext";
 import { letterSpacing } from "@mui/system";
+import { useTranslations } from "next-intl";
 
 const EditDetailsPage = () => {
+  const t=useTranslations();
   const userDetails = decodeToken(Cookies.get("ACCESS_TOKEN"));
   const [profilePicUrl, setProfilePicUrl] = useState(null);
   const [snackbar, setSnackbar] = useState({
@@ -246,7 +248,7 @@ const EditDetailsPage = () => {
         <form onSubmit={handleSubmit(onSubmit)}>
           <Grid container spacing={2}>
             <Grid item xs={12} sm={6}>
-              <Typography sx={labelCSS}>Full Name*</Typography>
+              <Typography sx={labelCSS}>{t("Full Name")}*</Typography>
               <TextField
                 fullWidth
                 variant="outlined"
@@ -284,7 +286,7 @@ const EditDetailsPage = () => {
             </Grid>
 
             <Grid item xs={12} sm={6}>
-              <Typography sx={labelCSS}>Designation*</Typography>
+              <Typography sx={labelCSS}>{t("Designation")}*</Typography>
               <TextField
                 fullWidth
                 variant="outlined"
@@ -321,7 +323,7 @@ const EditDetailsPage = () => {
             </Grid>
 
             <Grid item xs={12} sm={6}>
-              <Typography sx={labelCSS}>Experience*</Typography>
+              <Typography sx={labelCSS}>{t("Experience")}*</Typography>
               <TextField
                 fullWidth
                 variant="outlined"
@@ -358,7 +360,7 @@ const EditDetailsPage = () => {
             </Grid>
 
             <Grid item xs={12} sm={6}>
-              <Typography sx={labelCSS}>Department*</Typography>
+              <Typography sx={labelCSS}>{t("Department")}*</Typography>
               <TextField
                 fullWidth
                 variant="outlined"
@@ -396,7 +398,7 @@ const EditDetailsPage = () => {
             </Grid>
 
             <Grid item xs={12} sm={12}>
-              <Typography sx={labelCSS}>Email*</Typography>
+              <Typography sx={labelCSS}>{t("Email")}*</Typography>
               <TextField
                 fullWidth
                 variant="outlined"
@@ -439,7 +441,7 @@ const EditDetailsPage = () => {
             </Grid>
 
             <Grid item xs={12} sm={12}>
-              <Typography sx={labelCSS}>Subjects*</Typography>
+              <Typography sx={labelCSS}>{t("Subjects")}*</Typography>
 
               <Box maxHeight={300} sx={{ overflowY: "auto" }}>
                 {subject?.length > 0 &&
@@ -503,7 +505,7 @@ const EditDetailsPage = () => {
                 },
               }}
             >
-              Save
+              {t("Save")}
             </Button>
           </Box>
         </form>

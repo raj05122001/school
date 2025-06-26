@@ -31,8 +31,10 @@ import { MdSelfImprovement, MdRecommend } from "react-icons/md";
 import { IoSend } from "react-icons/io5";
 import { TbMoodEmpty } from "react-icons/tb";
 import TextWithMath from "@/commonComponents/TextWithMath/TextWithMath";
+import { useTranslations } from "next-intl";
 
 const PersonalisedRecommendations = ({ id, marksData }) => {
+  const t=useTranslations();
   const { isDarkMode, primaryColor, secondaryColor } = useThemeContext();
   const [section, setSection] = useState("");
   const [topics, setTopics] = useState([]);
@@ -97,8 +99,7 @@ const PersonalisedRecommendations = ({ id, marksData }) => {
           lineHeight: "normal",
         }}
       >
-        <MdSelfImprovement style={{ fontSize: "24px" }} /> Personalised
-        Recommendations
+        <MdSelfImprovement style={{ fontSize: "24px" }} />{t("Personalised Recommendations")}
       </Typography>
 
       {marksData?.viewed_highlights === false &&
@@ -106,7 +107,7 @@ const PersonalisedRecommendations = ({ id, marksData }) => {
       marksData?.viewed_summary === false &&
       marksData?.viewed_summary === false ? (
         <Typography variant="h6" textAlign={"center"}>
-          We are analysing your activity for Personalised Recommendation.
+          {t("We are analysing your activity for Personalised Recommendation.")}
         </Typography>
       ) : (
         selectedTopic && (
@@ -132,7 +133,7 @@ const PersonalisedRecommendations = ({ id, marksData }) => {
                 }}
               >
                 <VscPreview style={{ marginRight: 2 }} />
-                Previously Selected
+                {t("Previously Selected")}
               </Typography>
               <TopicAccordion
                 topic={selectedTopic}
@@ -152,7 +153,7 @@ const PersonalisedRecommendations = ({ id, marksData }) => {
                   lineHeight: "normal",
                 }}
               >
-                <strong>✦ Approach:</strong>{" "}
+                <strong>✦ {t("Approach")}:</strong>{" "}
                 <span style={{ color: "#51414F", fontWeight: "normal" }}>
                   {selectedApproach || "None"}
                 </span>
@@ -167,7 +168,7 @@ const PersonalisedRecommendations = ({ id, marksData }) => {
                   lineHeight: "normal",
                 }}
               >
-                <strong>✦ Section:</strong>{" "}
+                <strong>✦ {t("Section")}:</strong>{" "}
                 <span style={{ color: "#51414F", fontWeight: "normal" }}>
                   {section || "None"}
                 </span>
@@ -187,7 +188,7 @@ const PersonalisedRecommendations = ({ id, marksData }) => {
                   lineHeight: "normal",
                 }} gutterBottom>
           {" "}
-          Personalized Topics Tailored for You
+          {t("Personalized Topics Tailored for You")}
         </Typography>
       </Box>
 
