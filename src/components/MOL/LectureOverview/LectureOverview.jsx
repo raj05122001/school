@@ -7,6 +7,7 @@ import { useThemeContext } from "@/hooks/ThemeContext";
 import Cookies from "js-cookie";
 import { decodeToken } from "react-jwt";
 import { BASE_URL } from "@/constants/apiconfig";
+import { FaVolumeUp } from "react-icons/fa";
 
 const window = global?.window || {};
 
@@ -95,6 +96,7 @@ const LectureOverview = ({
         borderRadius: "0px 0px 16px 16px",
         background: "#fff",
         borderRadius: "16px",
+        maxHeight: 680,
       }}
     >
       <Typography
@@ -176,6 +178,102 @@ const LectureOverview = ({
       {/* Render tab content conditionally based on selected tab */}
       {value === 0 && summaryComponent}
       {value === 1 && highlightsComponent}
+
+      {audioUrl?.highlight && value === 1 && (
+              <Box
+                sx={{
+                  // mb: 2,
+                  p: 2,
+                  backgroundColor: "#fff",
+                  borderBottomLeftRadius:"16px",
+                  borderBottomRightRadius:"16px",
+                  // border: "1px solid #e9ecef",
+                  borderTop: "1px solid #e9ecef"
+                }}
+              >
+                <Box
+                  sx={{
+                    display: "flex",
+                    alignItems: "center",
+                    gap: 1,
+                    mb: 1,
+                  }}
+                >
+                  <FaVolumeUp size={16} color="#666" />
+                  <Typography
+                    variant="subtitle2"
+                    sx={{
+                      color: "#666",
+                      fontSize: "14px",
+                      fontWeight: 500,
+                    }}
+                  >
+                    Highlight Audio
+                  </Typography>
+                </Box>
+                <audio
+                  controls
+                  style={{
+                    width: "100%",
+                    height: "35px",
+                  }}
+                  preload="metadata"
+                >
+                  <source src={audioUrl?.highlight} type="audio/mpeg" />
+                  <source src={audioUrl?.highlight} type="audio/wav" />
+                  <source src={audioUrl?.highlight} type="audio/ogg" />
+                  Your browser does not support the audio element.
+                </audio>
+              </Box>
+            )}
+
+                  {audioUrl?.summary && value === 0 && (
+              <Box
+                sx={{
+                  // mb: 2,
+                  p: 2,
+                  backgroundColor: "#fff",
+                  borderBottomLeftRadius:"16px",
+                  borderBottomRightRadius:"16px",
+                  // border: "1px solid #e9ecef",
+                  borderTop: "1px solid #e9ecef"
+                }}
+              >
+                <Box
+                  sx={{
+                    display: "flex",
+                    alignItems: "center",
+                    gap: 1,
+                    mb: 1,
+                  }}
+                >
+                  <FaVolumeUp size={16} color="#666" />
+                  <Typography
+                    variant="subtitle2"
+                    sx={{
+                      color: "#666",
+                      fontSize: "14px",
+                      fontWeight: 500,
+                    }}
+                  >
+                    Summary Audio
+                  </Typography>
+                </Box>
+                <audio
+                  controls
+                  style={{
+                    width: "100%",
+                    height: "35px",
+                  }}
+                  preload="metadata"
+                >
+                  <source src={audioUrl?.summary} type="audio/mpeg" />
+                  <source src={audioUrl?.summary} type="audio/wav" />
+                  <source src={audioUrl?.summary} type="audio/ogg" />
+                  Your browser does not support the audio element.
+                </audio>
+              </Box>
+            )}
     </Box>
   );
 };
