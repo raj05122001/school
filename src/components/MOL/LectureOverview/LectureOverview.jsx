@@ -8,6 +8,7 @@ import Cookies from "js-cookie";
 import { decodeToken } from "react-jwt";
 import { BASE_URL } from "@/constants/apiconfig";
 import { FaVolumeUp } from "react-icons/fa";
+import axios from "axios";
 
 const window = global?.window || {};
 
@@ -34,27 +35,36 @@ const LectureOverview = ({
     fetchAudio();
   }, [lectureId]);
 
-  const fetchAudio = async () => {
-    try {
-      const response = await getLectureAudio(lectureId);
-      console.log("audio response : ", response);
-      const { highlight_audio_path, summary_audio_path } = response.data;
-      const summary_audio = summary_audio_path?.replace("/edutech", BASE_URL);
-      const highlight_audio = highlight_audio_path?.replace(
-        "/edutech",
-        BASE_URL
-      );
+const fetchAudio = async () => {
+  try {
+    // 1️⃣ get the paths
+    const response = await getLectureAudio(lectureId);
+    const { highlight_audio_path, summary_audio_path } = response.data;
 
-      setAudioUrl({
-        highlight: highlight_audio,
-        summary: summary_audio,
-      });
-    } catch (error) {
-      console.error(error);
-    }
-  };
+    // replace base path
+    const summaryUrl = summary_audio_path?.replace("/edutech", BASE_URL);
+    const highlightUrl = highlight_audio_path?.replace("/edutech", BASE_URL);
 
-  console.log("audioUrl : ",audioUrl)
+    // 2️⃣ fetch both as blobs in parallel
+    const [summaryRes, highlightRes] = await Promise.all([
+      axios.get(summaryUrl, { responseType: "blob" }),
+      axios.get(highlightUrl, { responseType: "blob" }),
+    ]);
+
+    // 3️⃣ create object URLs
+    const summaryBlobUrl = URL.createObjectURL(summaryRes.data);
+    const highlightBlobUrl = URL.createObjectURL(highlightRes.data);
+
+    // 4️⃣ set state
+    setAudioUrl({
+      summary: summaryBlobUrl,
+      highlight: highlightBlobUrl,
+    });
+  } catch (error) {
+    console.error("Error fetching audio blobs:", error);
+  }
+};
+
 
   const handleChange = (event, newValue) => {
     setValue(newValue);
@@ -69,10 +79,9 @@ const LectureOverview = ({
         marksData={marksData}
         isStudent={isStudent}
         setMarksData={setMarksData}
-        audioUrl={audioUrl?.summary}
       />
     ),
-    [marksData, lectureId, isDarkMode, audioUrl?.summary]
+    [marksData, lectureId, isDarkMode]
   );
 
   const highlightsComponent = useMemo(
@@ -83,10 +92,9 @@ const LectureOverview = ({
         marksData={marksData}
         isStudent={isStudent}
         setMarksData={setMarksData}
-        audioUrl={audioUrl?.highlight}
       />
     ),
-    [marksData, lectureId, isDarkMode, audioUrl?.highlight]
+    [marksData, lectureId, isDarkMode]
   );
 
   return (
@@ -180,102 +188,64 @@ const LectureOverview = ({
       {value === 1 && highlightsComponent}
 
       {audioUrl?.highlight && value === 1 && (
-              <Box
-                sx={{
-                  // mb: 2,
-                  p: 2,
-                  backgroundColor: "#fff",
-                  borderBottomLeftRadius:"16px",
-                  borderBottomRightRadius:"16px",
-                  // border: "1px solid #e9ecef",
-                  borderTop: "1px solid #e9ecef"
-                }}
-              >
-                <Box
-                  sx={{
-                    display: "flex",
-                    alignItems: "center",
-                    gap: 1,
-                    mb: 1,
-                  }}
-                >
-                  <FaVolumeUp size={16} color="#666" />
-                  <Typography
-                    variant="subtitle2"
-                    sx={{
-                      color: "#666",
-                      fontSize: "14px",
-                      fontWeight: 500,
-                    }}
-                  >
-                    Highlight Audio
-                  </Typography>
-                </Box>
-                <audio
-                  controls
-                  style={{
-                    width: "100%",
-                    height: "35px",
-                  }}
-                  preload="metadata"
-                >
-                  <source src={audioUrl?.highlight} type="audio/mpeg" />
-                  <source src={audioUrl?.highlight} type="audio/wav" />
-                  <source src={audioUrl?.highlight} type="audio/ogg" />
-                  Your browser does not support the audio element.
-                </audio>
-              </Box>
-            )}
+        <AudioFunction audioUrl={audioUrl?.highlight} title="Highlight Audio" />
+      )}
 
-                  {audioUrl?.summary && value === 0 && (
-              <Box
-                sx={{
-                  // mb: 2,
-                  p: 2,
-                  backgroundColor: "#fff",
-                  borderBottomLeftRadius:"16px",
-                  borderBottomRightRadius:"16px",
-                  // border: "1px solid #e9ecef",
-                  borderTop: "1px solid #e9ecef"
-                }}
-              >
-                <Box
-                  sx={{
-                    display: "flex",
-                    alignItems: "center",
-                    gap: 1,
-                    mb: 1,
-                  }}
-                >
-                  <FaVolumeUp size={16} color="#666" />
-                  <Typography
-                    variant="subtitle2"
-                    sx={{
-                      color: "#666",
-                      fontSize: "14px",
-                      fontWeight: 500,
-                    }}
-                  >
-                    Summary Audio
-                  </Typography>
-                </Box>
-                <audio
-                  controls
-                  style={{
-                    width: "100%",
-                    height: "35px",
-                  }}
-                  preload="metadata"
-                >
-                  <source src={audioUrl?.summary} type="audio/mpeg" />
-                  <source src={audioUrl?.summary} type="audio/wav" />
-                  <source src={audioUrl?.summary} type="audio/ogg" />
-                  Your browser does not support the audio element.
-                </audio>
-              </Box>
-            )}
+      {audioUrl?.summary && value === 0 && (
+        <AudioFunction audioUrl={audioUrl?.summary} title="Summary Audio" />
+      )}
     </Box>
   );
 };
 
 export default LectureOverview;
+
+export const AudioFunction = ({ audioUrl, title = "Summary Audio" }) => {
+  return (
+    <Box
+      sx={{
+        // mb: 2,
+        p: 2,
+        backgroundColor: "#fff",
+        borderBottomLeftRadius: "16px",
+        borderBottomRightRadius: "16px",
+        // border: "1px solid #e9ecef",
+        borderTop: "1px solid #e9ecef",
+      }}
+    >
+      <Box
+        sx={{
+          display: "flex",
+          alignItems: "center",
+          gap: 1,
+          mb: 1,
+        }}
+      >
+        <FaVolumeUp size={16} color="#666" />
+        <Typography
+          variant="subtitle2"
+          sx={{
+            color: "#666",
+            fontSize: "14px",
+            fontWeight: 500,
+          }}
+        >
+          {title}
+        </Typography>
+      </Box>
+      <audio
+        controls
+        style={{
+          width: "100%",
+          height: "35px",
+        }}
+        preload="metadata"
+      >
+        <source src={audioUrl} type="audio/mpeg" />
+        <source src={audioUrl} type="audio/wav" />
+        <source src={audioUrl} type="audio/ogg" />
+        Your browser does not support the audio element.
+      </audio>
+    </Box>
+  );
+};
