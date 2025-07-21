@@ -1,12 +1,12 @@
 import React, { useState, useEffect, useMemo } from "react";
 import { Box, Tabs, Tab, Typography } from "@mui/material";
-import { getLectureSummary, getLectureHighlights } from "@/api/apiHelper";
-import TextWithMath from "@/commonComponents/TextWithMath/TextWithMath";
+import { getLectureAudio } from "@/api/apiHelper";
 import SummaryComponent from "./SummaryComponent";
 import HighlightsComponent from "./HighlightsComponent";
 import { useThemeContext } from "@/hooks/ThemeContext";
 import Cookies from "js-cookie";
 import { decodeToken } from "react-jwt";
+import { BASE_URL } from "@/constants/apiconfig";
 
 const window = global?.window || {};
 
@@ -18,18 +18,42 @@ const LectureOverview = ({
   setMarksData,
 }) => {
   const [value, setValue] = useState(0);
-  const [loading, setLoading] = useState(true);
-  const [summary, setSummary] = useState({});
-  const [summaryId, setSummaryId] = useState("");
   const { isDarkMode } = useThemeContext();
   const [userDetails, setUserDetails] = useState(null);
+  const [audioUrl, setAudioUrl] = useState({
+    highlight: "",
+    summary: "",
+  });
 
   useEffect(() => {
     if (typeof window !== "undefined") {
       const token = Cookies.get("ACCESS_TOKEN");
       setUserDetails(token ? decodeToken(token) : {});
     }
-  }, []);
+    fetchAudio();
+  }, [lectureId]);
+
+  const fetchAudio = async () => {
+    try {
+      const response = await getLectureAudio(lectureId);
+      console.log("audio response : ", response);
+      const { highlight_audio_path, summary_audio_path } = response.data;
+      const summary_audio = summary_audio_path?.replace("/edutech", BASE_URL);
+      const highlight_audio = highlight_audio_path?.replace(
+        "/edutech",
+        BASE_URL
+      );
+
+      setAudioUrl({
+        highlight: highlight_audio,
+        summary: summary_audio,
+      });
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
+  console.log("audioUrl : ",audioUrl)
 
   const handleChange = (event, newValue) => {
     setValue(newValue);
@@ -44,9 +68,10 @@ const LectureOverview = ({
         marksData={marksData}
         isStudent={isStudent}
         setMarksData={setMarksData}
+        audioUrl={audioUrl?.summary}
       />
     ),
-    [marksData, lectureId, isDarkMode]
+    [marksData, lectureId, isDarkMode, audioUrl?.summary]
   );
 
   const highlightsComponent = useMemo(
@@ -57,9 +82,10 @@ const LectureOverview = ({
         marksData={marksData}
         isStudent={isStudent}
         setMarksData={setMarksData}
+        audioUrl={audioUrl?.highlight}
       />
     ),
-    [marksData, lectureId, isDarkMode]
+    [marksData, lectureId, isDarkMode, audioUrl?.highlight]
   );
 
   return (

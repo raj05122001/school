@@ -1169,4 +1169,11 @@ public resetPassword = async (email,data) => {
       .catch((error) => console.error(error));
   };
 
+  public getLectureAudio = async (lecture_id) => {
+    return await this.axiosInstance
+      .get(`api/v1/content_audio/?lecture_id=${lecture_id}`)
+      .then((Response) => Response.data)
+      .catch((error) => console.error(error));
+  };
+
 }

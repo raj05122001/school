@@ -662,3 +662,8 @@ export const getBucketName = async () => {
   const apiInstance = new apiServices(axiosAPIInstance);
   return await apiInstance.getBucketName();
 };
+
+export const getLectureAudio = async (lecture_id) => {
+  const apiInstance = new apiServices(axiosAPIInstance);
+  return await apiInstance.getLectureAudio(lecture_id);
+};

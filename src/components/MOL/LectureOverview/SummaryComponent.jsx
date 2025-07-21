@@ -10,6 +10,7 @@ import TextEditor from "@/commonComponents/TextEditor/TextEditor";
 import { FaEdit } from "react-icons/fa";
 import { FaSave } from "react-icons/fa";
 import { FaInfoCircle } from "react-icons/fa";
+import { FaVolumeUp } from "react-icons/fa"; // Add this import for audio icon
 import usePersonalisedRecommendations from "@/components/student/MOL/usePersonalisedRecommendations";
 
 const SummaryComponent = ({
@@ -19,6 +20,7 @@ const SummaryComponent = ({
   marksData = {},
   isStudent = false,
   setMarksData,
+  audioUrl = ""
 }) => {
   const [summary, setSummary] = useState({});
   const [summaryId, setSummaryId] = useState("");
@@ -206,6 +208,53 @@ const SummaryComponent = ({
       }}
       ref={summaryBoxRef}
     >
+      {/* Audio Player Section - Add this at the top */}
+      {audioUrl && (
+        <Box
+          sx={{
+            mb: 2,
+            p: 2,
+            backgroundColor: "#f8f9fa",
+            borderRadius: "8px",
+            border: "1px solid #e9ecef",
+          }}
+        >
+          <Box
+            sx={{
+              display: "flex",
+              alignItems: "center",
+              gap: 1,
+              mb: 1,
+            }}
+          >
+            <FaVolumeUp size={16} color="#666" />
+            <Typography
+              variant="subtitle2"
+              sx={{
+                color: "#666",
+                fontSize: "14px",
+                fontWeight: 500,
+              }}
+            >
+              Summary Audio
+            </Typography>
+          </Box>
+          <audio
+            controls
+            style={{
+              width: "100%",
+              height: "35px",
+            }}
+            preload="metadata"
+          >
+            <source src={audioUrl} type="audio/mpeg" />
+            <source src={audioUrl} type="audio/wav" />
+            <source src={audioUrl} type="audio/ogg" />
+            Your browser does not support the audio element.
+          </audio>
+        </Box>
+      )}
+
       {loading ? (
         <Box sx={{ width: "100%", maxWidth: "100%" }}>
           <Skeleton variant="rectangular" height={40} sx={{ mb: 2 }} />
