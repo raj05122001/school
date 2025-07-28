@@ -515,6 +515,7 @@ export default class apiServices {
   };
 
   public createAssignment = (formData) => {
+    const toastInstance = toast.loading("Loading...");
     return this.axiosInstance
       .post(`/api/v1/lecture_assignment/`, formData, {
         headers: {
@@ -522,9 +523,23 @@ export default class apiServices {
         },
       })
       .then((response) => {
+        console.log("tost response : ",response)
+        const message = response?.data?.message || "Assignment Create Successfully";
+        toast.success(message, {
+          id: toastInstance,
+          duration: Constants.toastTimer,
+        });
         return response;
       })
       .catch((error) => {
+        const errorMessage =
+          error?.data?.message || "Failed to create assignment";
+          // Generic error toast for other errors
+          toast.error(errorMessage, {
+            id: toastInstance,
+            duration: Constants.toastTimer,
+          });
+
         console.error(error);
         throw error;
       });
