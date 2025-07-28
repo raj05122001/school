@@ -12,6 +12,9 @@ import {
   IconButton,
   CircularProgress,
   Divider,
+  Checkbox,
+  FormControl,
+  FormControlLabel,
 } from "@mui/material";
 import {
   getLectureAssignment,
@@ -56,6 +59,7 @@ const LectureAssignment = ({
   const hasFetchedData = useRef(false); // Prevent multiple fetch calls
   const [openAccordian, setOpenAccordian] = useState(false);
   const [activeAccordion, setActiveAccordion] = React.useState(null);
+  const [isApproach, setIsApproach] = useState(false)
 
   const lectureID = id;
 
@@ -175,6 +179,7 @@ const LectureAssignment = ({
       assignment_mark: newAssignment?.assignment_mark,
       lecture_class: class_ID,
       is_assigned: 1,
+      approach: isApproach,
     };
 
     if (file) {
@@ -190,6 +195,7 @@ const LectureAssignment = ({
         ]);
         fetchAssignments();
         setOpenDialog(false);
+        setIsApproach(false)
       } else {
         setError("Failed to create assignment.");
       }
@@ -682,14 +688,10 @@ const LectureAssignment = ({
             fullWidth
             sx={{
               "& .MuiDialogContent-root": {
-                // bgcolor: isDarkMode ? "#424242" : "white",
                 color: isDarkMode ? "white" : "black",
                 background: isDarkMode
                   ? "linear-gradient(to top, #09203f 0%, #537895 100%)"
                   : "linear-gradient(109.6deg, rgb(223, 234, 247) 11.2%, rgb(244, 248, 252) 91.1%)",
-                // backgroundImage: "url('/create_lectureBG.jpg')", // Add background image
-                // backgroundSize: "cover", // Ensure the image covers the entire page
-                // backgroundPosition: "center", // Center the image
               },
               "& .MuiDialogTitle-root": {
                 bgcolor: isDarkMode ? "#424242" : "white",
@@ -810,15 +812,34 @@ const LectureAssignment = ({
               sx={{
                 background: isDarkMode
                   ? "linear-gradient(to top, #09203f 0%, #537895 100%);"
-                  : "linear-gradient(to top, #dfe9f3 0%, white 100%)",
+                  : "linear-gradient(to top, #dfe9f3 0%, white 100%)", display:"flex", justifyContent:'space-between'
               }}
             >
+            <Box>
+              <FormControl>
+                <FormControlLabel
+                  control={
+                    <Checkbox
+                      sx={{ color: 'black' }}
+                      checked={isApproach}
+                      onChange={(e) => setIsApproach(e.target.checked)}
+                    />
+                  }
+                  label="Would you like to include the approach?"
+                  sx={{ ml: 1 }}
+                />
+              </FormControl>
+
+            </Box>
+
+            <Box>
               <Button onClick={() => setOpenDialog(false)} color="warning">
                 Cancel
               </Button>
               <Button onClick={handleCreateAssignment} color="info">
                 Create
               </Button>
+              </Box>
             </DialogActions>
           </Dialog>
         </Box>

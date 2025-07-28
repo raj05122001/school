@@ -733,6 +733,7 @@ const AssignmentItem = ({
               {open ? (
                 <NeedMoreGuide
                   assignmentId={assignment.id}
+                  assignment={assignment}
                   open={open}
                   setOpen={setOpen}
                 />

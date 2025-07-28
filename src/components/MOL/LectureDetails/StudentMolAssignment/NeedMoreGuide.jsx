@@ -106,7 +106,7 @@ const CodeSnippetWithTyping = ({ text }) => {
   );
 };
 
-export default function NeedMoreGuide({ assignmentId, open, setOpen }) {
+export default function NeedMoreGuide({ assignmentId, assignment, open, setOpen }) {
   const [data, setData] = useState({});
   const [loading, setLoading] = useState(true);
   const [showStepDetails, setShowStepDetails] = useState(true);
@@ -116,8 +116,17 @@ export default function NeedMoreGuide({ assignmentId, open, setOpen }) {
   const [animationComplete, setAnimationComplete] = useState({
     stepExplanation: false,
     concepts: false,
-    tools: false
+    tools: false,
+    understanding: false,
+    introduction: false,
+    body: false,
+    conclusion: false
   });
+
+
+  const [isApproach, setIsApproach] = useState(false)
+
+  console.log("assignment : ",assignment)
 
   useEffect(() => {
     if (assignmentId && open) {
@@ -139,11 +148,26 @@ export default function NeedMoreGuide({ assignmentId, open, setOpen }) {
   const fetchData = async () => {
     setLoading(true);
     try {
-      const response = await getGuidance(assignmentId);
+      // const response = await getGuidance(assignmentId);
+      // const parsedData =
+      //   typeof response?.data?.data === "string"
+      //     ? JSON?.parse(response?.data?.data)
+      //     : response?.data?.data;
+      // setData(parsedData);
+      // setLoading(false);
+
+      const response = assignment?.assignment_approach ? assignment?.assignment_approach : assignment?.assignment_guide
+
+      if(assignment?.assignment_approach){
+        setIsApproach(true)
+      }
+
       const parsedData =
-        typeof response?.data?.data === "string"
-          ? JSON?.parse(response?.data?.data)
-          : response?.data?.data;
+        typeof response === "string"
+          ? JSON?.parse(response)
+          : response;
+
+      console.log("parsedData : ",parsedData)
       setData(parsedData);
       setLoading(false);
     } catch (error) {
@@ -483,6 +507,207 @@ export default function NeedMoreGuide({ assignmentId, open, setOpen }) {
     );
   };
 
+const renderApproachContent = () => {
+  if (!data) return null;
+
+  return (
+    <Box sx={{ display: "flex", flexDirection: "column", gap: 2 }}>
+      {/* Understanding and Structuring Section */}
+      {data.Understanding_and_structuring_the_answer && (
+        <Box
+          sx={{
+            backgroundColor: "#F3F5F7 !important",
+            borderRadius: "12px",
+            padding: "12px",
+            mt:4
+          }}
+        >
+          <Typography
+            variant="h4"
+            sx={{
+              fontWeight: 600,
+              fontSize: "22px",
+              color: "#141514",
+              mb: 1,
+              pb: 0.5,
+              lineHeight: "118%",
+              letterSpacing: "2%",
+              fontFamily: "Inter",
+            }}
+          >
+            Understanding and Structuring the Answer
+          </Typography>
+          <Box
+            sx={{
+              backgroundColor: "#FFFFFF",
+              padding: "5.68px 9.1px",
+              borderRadius: "6.82px",
+            }}
+          >
+            <Typography variant="body2">
+              <TypingEffect 
+                text={data.Understanding_and_structuring_the_answer}
+                speed={15}
+                onComplete={() => setAnimationComplete(prev => ({...prev, understanding: true}))}
+              />
+            </Typography>
+          </Box>
+        </Box>
+      )}
+
+      {/* Introduction Section */}
+      {data.Introduction && animationComplete.understanding && (
+        <Box
+          sx={{
+            backgroundColor: "#F3F5F7 !important",
+            borderRadius: "12px",
+            padding: "12px",
+            animation: "fadeIn 0.5s ease",
+          }}
+        >
+          <Typography
+            variant="h4"
+            sx={{
+              fontWeight: 600,
+              fontSize: "22px",
+              color: "#141514",
+              mb: 1,
+              pb: 0.5,
+              lineHeight: "118%",
+              letterSpacing: "2%",
+              fontFamily: "Inter",
+            }}
+          >
+            Introduction
+          </Typography>
+          <Box
+            sx={{
+              backgroundColor: "#FFFFFF",
+              padding: "5.68px 9.1px",
+              borderRadius: "6.82px",
+            }}
+          >
+            <ul style={{ margin: 0, paddingLeft: "20px" }}>
+              {data.Introduction.map((item, index) => (
+                <li key={index} style={{ opacity: 0, animation: `fadeIn 0.5s ease forwards ${index * 0.3}s` }}>
+                  <Typography variant="body2">
+                    <TypingEffect 
+                      text={item} 
+                      speed={20}
+                      onComplete={() => {
+                        if (index === data.Introduction.length - 1) {
+                          setAnimationComplete(prev => ({...prev, introduction: true}));
+                        }
+                      }}
+                    />
+                  </Typography>
+                </li>
+              ))}
+            </ul>
+          </Box>
+        </Box>
+      )}
+
+      {/* Body Section */}
+      {data.Body && animationComplete.introduction && (
+        <Box
+          sx={{
+            backgroundColor: "#F3F5F7 !important",
+            borderRadius: "12px",
+            padding: "12px",
+            animation: "fadeIn 0.5s ease",
+          }}
+        >
+          <Typography
+            variant="h4"
+            sx={{
+              fontWeight: 600,
+              fontSize: "22px",
+              color: "#141514",
+              mb: 1,
+              pb: 0.5,
+              lineHeight: "118%",
+              letterSpacing: "2%",
+              fontFamily: "Inter",
+            }}
+          >
+            Body
+          </Typography>
+          <Box
+            sx={{
+              backgroundColor: "#FFFFFF",
+              padding: "5.68px 9.1px",
+              borderRadius: "6.82px",
+            }}
+          >
+            <ul style={{ margin: 0, paddingLeft: "20px" }}>
+              {data.Body.map((item, index) => (
+                <li key={index} style={{ opacity: 0, animation: `fadeIn 0.5s ease forwards ${index * 0.3}s` }}>
+                  <Typography variant="body2">
+                    <TypingEffect 
+                      text={item} 
+                      speed={20}
+                      onComplete={() => {
+                        if (index === data.Body.length - 1) {
+                          setAnimationComplete(prev => ({...prev, body: true}));
+                        }
+                      }}
+                    />
+                  </Typography>
+                </li>
+              ))}
+            </ul>
+          </Box>
+        </Box>
+      )}
+
+      {/* Conclusion Section */}
+      {data.conclusion && animationComplete.body && (
+        <Box
+          sx={{
+            backgroundColor: "#F3F5F7 !important",
+            borderRadius: "12px",
+            padding: "12px",
+            animation: "fadeIn 0.5s ease",
+          }}
+        >
+          <Typography
+            variant="h4"
+            sx={{
+              fontWeight: 600,
+              fontSize: "22px",
+              color: "#141514",
+              mb: 1,
+              pb: 0.5,
+              lineHeight: "118%",
+              letterSpacing: "2%",
+              fontFamily: "Inter",
+            }}
+          >
+            Conclusion
+          </Typography>
+          <Box
+            sx={{
+              backgroundColor: "#FFFFFF",
+              padding: "5.68px 9.1px",
+              borderRadius: "6.82px",
+            }}
+          >
+            <Typography variant="body2">
+              <TypingEffect 
+                text={data.conclusion}
+                speed={15}
+                onComplete={() => setAnimationComplete(prev => ({...prev, conclusion: true}))}
+              />
+            </Typography>
+          </Box>
+        </Box>
+      )}
+    </Box>
+  );
+};
+
+
   return (
     <Dialog
       open={open}
@@ -530,7 +755,7 @@ export default function NeedMoreGuide({ assignmentId, open, setOpen }) {
             <CircularProgress />
           </Box>
         ) : (
-          renderContent()
+        isApproach? renderApproachContent() : renderContent()
         )}
       </DialogContent>
       <DialogActions sx={{ p: 2, backgroundColor: "#fff" }}>
