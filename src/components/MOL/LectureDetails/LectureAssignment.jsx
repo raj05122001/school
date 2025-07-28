@@ -171,6 +171,9 @@ const LectureAssignment = ({
     }
   };
 
+  const [isCreateLoader,setIsCreateLoader]=useState(false)
+  const [numberError, setNumberError]=useState("")
+
   const handleCreateAssignment = async () => {
     const formData = {
       lecture: Number(lectureID),
@@ -181,12 +184,22 @@ const LectureAssignment = ({
       is_assigned: 1,
       approach: isApproach,
     };
+    
+
+    if(!newAssignment?.assignment_mark){
+      setNumberError("Assignment marks is required.")
+      return
+    }else{
+      setNumberError("")
+    }
+
 
     if (file) {
       formData.assignment_attachment = file;
     }
 
     try {
+      setIsCreateLoader(true)
       const response = await createAssignment(formData);
       if (response?.data?.success) {
         setAssignments((prevAssignments) => [
@@ -199,9 +212,13 @@ const LectureAssignment = ({
       } else {
         setError("Failed to create assignment.");
       }
+      setIsCreateLoader(false)
+      setNumberError("")
     } catch (err) {
       console.error(err);
       setError("An error occurred while creating the assignment.");
+      setIsCreateLoader(false)
+      setNumberError("")
     }
   };
 
@@ -495,7 +512,7 @@ const LectureAssignment = ({
                                     "& .MuiOutlinedInput-notchedOutline": {},
                                   },
                                 }}
-                                value={assignment.assignment_mark}
+                                value={assignment.assignment_mark === 0 ? "" : assignment.assignment_mark}
                                 onChange={(e) => {
                                   const value = Number(e.target.value);
                                   if (value >= 0) {
@@ -793,14 +810,21 @@ const LectureAssignment = ({
                     "& .MuiOutlinedInput-notchedOutline": {},
                   },
                 }}
-                value={newAssignment.assignment_mark}
-                onChange={(e) =>
+                value={newAssignment.assignment_mark === 0 ? "" : newAssignment.assignment_mark}
+                onChange={(e) =>{
                   setNewAssignment({
                     ...newAssignment,
-                    assignment_mark: Number(e.target.value),
+                    assignment_mark:
+                      e.target.value === "" ? "" : Number(e.target.value),
                   })
-                }
+                  if(e.target.value !== ""){
+                    setNumberError("")
+                  }
+                }}
               />
+              <Typography sx={{ color: 'error.main', fontSize: '0.8rem', mt: 0.5 }}>
+                {numberError}
+              </Typography>
               <input
                 type="file"
                 accept=".pdf,.doc,.docx,.xls,.xlsx,.ppt,.pptx,.txt"
@@ -836,7 +860,7 @@ const LectureAssignment = ({
               <Button onClick={() => setOpenDialog(false)} color="warning">
                 Cancel
               </Button>
-              <Button onClick={handleCreateAssignment} color="info">
+              <Button onClick={handleCreateAssignment} color="info" disabled={isCreateLoader}>
                 Create
               </Button>
               </Box>
