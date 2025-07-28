@@ -740,7 +740,7 @@ const renderApproachContent = () => {
         <TbArrowGuide
           style={{ marginRight: 4, fontSize: "24px", fontFamily: "monospace" }}
         />
-        Guidance
+        {isApproach? "Approach" : "Guidance"}
       </DialogTitle>
       <DialogContent sx={{ p: 3, backgroundColor: "#fff" }}>
         {loading ? (
