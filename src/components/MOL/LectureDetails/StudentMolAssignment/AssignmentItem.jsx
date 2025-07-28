@@ -703,7 +703,7 @@ const AssignmentItem = ({
                     lineHeight: "normal",
                   }}
                 >
-                  {assignment?.assignment_approach? "Need Approach" : "Need Guidance"}
+                  {assignment?.assignment_approach? "Approach" : "Need Guidance"}
                 </Typography>
                 <Box
                   sx={{
