@@ -1191,4 +1191,11 @@ public resetPassword = async (email,data) => {
       .catch((error) => console.error(error));
   };
 
+  public getWatchTime = async (lecture_id, student_id) => {
+    return await this.axiosInstance
+      .get(`api/v1/dashboard/watchtime_data/?lecture_id=${lecture_id}&student_id=${student_id}`)
+      .then((Response) => Response.data)
+      .catch((error) => console.error(error));
+  };
+
 }

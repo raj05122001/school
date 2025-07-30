@@ -667,3 +667,8 @@ export const getLectureAudio = async (lecture_id) => {
   const apiInstance = new apiServices(axiosAPIInstance);
   return await apiInstance.getLectureAudio(lecture_id);
 };
+
+export const getWatchTime = async (lecture_id, student_id) => {
+  const apiInstance = new apiServices(axiosAPIInstance);
+  return await apiInstance.getWatchTime(lecture_id, student_id);
+};

@@ -24,10 +24,8 @@ const VideoPlayer = ({
   id,
   duration = 1e101,
   setVideoTimeStamp = () => {},
+  timeStamp=0
 }) => {
-  const searchParams = useSearchParams();
-
-  const timeStamp = searchParams.get("timestamp") || 0;
   const { s3FileName } = useContext(AppContextProvider);
   const { fetchPresignedUrl } = usePresignedUrl();
   const userDetails = decodeToken(Cookies.get("ACCESS_TOKEN"));

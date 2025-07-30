@@ -1,7 +1,7 @@
 "use client";
 import React, { useEffect, useMemo, useState } from "react";
 import { Box, Paper, Grid } from "@mui/material";
-import { getLectureById, getMolMarks, updateMolMarks } from "@/api/apiHelper";
+import { getLectureById, getMolMarks, getWatchTime, updateMolMarks } from "@/api/apiHelper";
 import { useThemeContext } from "@/hooks/ThemeContext";
 import HeaderMOL from "@/components/MOL/Header/HeaderMOL";
 import VideoPlayer from "@/components/VideoPlayer/VideoPlayer";
@@ -23,6 +23,7 @@ const LecturePage = ({ params }) => {
   const { isDarkMode } = useThemeContext();
   const [lectureData, setLectureData] = useState({});
   const userDetails = decodeToken(Cookies.get("ACCESS_TOKEN"));
+  const [timeStamp, setTimeStamp] = useState(0)
   const [marksData, setMarksData] = useState({
     student_score: 0,
     viewed_highlights: true,
@@ -64,8 +65,8 @@ const LecturePage = ({ params }) => {
   const classID = lectureData?.lecture_class?.id;
 
   const videoPlayer = useMemo(
-    () => <VideoPlayer id={id} duration={lectureData?.duration} />,
-    [id, lectureData?.duration]
+    () => <VideoPlayer id={id} duration={lectureData?.duration} timeStamp={timeStamp} />,
+    [id, lectureData?.duration, timeStamp]
   );
   const headerMOL = useMemo(
     () => (
@@ -126,6 +127,19 @@ const LecturePage = ({ params }) => {
     [id, isDarkMode]
   );
 
+  useEffect(()=>{
+    fetchWatchTime()
+  },[])
+
+  const fetchWatchTime=async()=>{
+    try{
+      const response = await getWatchTime(id, userDetails?.student_id)
+      setTimeStamp(response?.data?.last_timestamp)
+    }catch(error){
+      console.error(error);
+    }
+  }
+
   return (
     <Box
       sx={{
@@ -149,6 +163,7 @@ const LecturePage = ({ params }) => {
                 audio={`${process.env.NEXT_PUBLIC_URL}${lectureData?.audio}`}
                 duration={lectureData?.duration}
                 id={id}
+                timeStamp={timeStamp}
               />
             ) : (
               <Box sx={{ maxHeight: "500px", width: "100%", height: 500 }}>

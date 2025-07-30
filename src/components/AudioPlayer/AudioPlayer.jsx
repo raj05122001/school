@@ -4,7 +4,7 @@ import WaveSurferPlayer from "./WaveSurferPlayer";
 import stc from "string-to-color";
 import { getBreakpoint } from "@/api/apiHelper";
 
-const AudioPlayer = ({ audio, id=0, duration=0, isShowBrekpoint = true }) => {
+const AudioPlayer = ({ audio, id=0, duration=0, isShowBrekpoint = true, timeStamp=0 }) => {
   const [startTime, setStartTime] = useState(0);
   const [playerTalk, setPlayerTalk] = useState([]);
   const [avtarName, setAvtarName] = useState("");
@@ -74,6 +74,7 @@ const AudioPlayer = ({ audio, id=0, duration=0, isShowBrekpoint = true }) => {
             startTime={startTime}
             setStartTime={setStartTime}
             callId={id}
+            timeStamp={timeStamp}
             sx={{
               background: "linear-gradient(to right, #74b9ff, #0984e3)",
               borderRadius: 4,
