@@ -97,8 +97,8 @@ const Page = () => {
   const classAssignment = useMemo(() => <ClassAssignment />, []);
   const studentAssignment = useMemo(() => <StudentAssignment />, []);
   const classWiseStudentRanking = useMemo(
-    () => <ClassWiseStudentRanking selectedOptions={selectedOptions} />,
-    [selectedOptions]
+    () => <ClassWiseStudentRanking classOptions={classOptions} />,
+    [classOptions]
   );
 
   return (

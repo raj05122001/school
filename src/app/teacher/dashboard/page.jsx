@@ -107,10 +107,10 @@ total_duration:0
   const classWiseStudentRanking = useMemo(
     () => (
       <ClassWiseStudentRanking
-        selectedOptions={selectedOptions}
+        classOptions={classOptions}
       />
     ),
-    [selectedOptions]
+    [classOptions]
   );
 
   return (

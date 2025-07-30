@@ -1,11 +1,9 @@
 import React, { useEffect, useState } from "react";
 import { getCountByCategory, getStudentByGrade } from "@/api/apiHelper";
-import { PieChart, Pie, Cell, ResponsiveContainer, Tooltip } from "recharts";
 import { useThemeContext } from "@/hooks/ThemeContext";
 import {
   Box,
   Typography,
-  Grid,
   Dialog,
   DialogTitle,
   DialogContent,
@@ -23,15 +21,13 @@ import {
   Card,
   ToggleButtonGroup,
   ToggleButton,
-  Rating,
   LinearProgress,
+  Autocomplete,
+  TextField,
 } from "@mui/material";
 import { AiOutlineClose } from "react-icons/ai";
 import { decodeToken } from "react-jwt";
 import Cookies from "js-cookie";
-import { FaRankingStar } from "react-icons/fa6";
-
-const RADIAN = Math.PI / 180;
 
 const mapData = {
   A: { name: "Advanced", color: "#00b894", grade: "A" },
@@ -41,37 +37,10 @@ const mapData = {
   E: { name: "Beginner", color: "#e17055", grade: "E" },
 };
 
-// Custom label for pie chart slices
-const renderCustomizedLabel = ({
-  cx,
-  cy,
-  midAngle,
-  innerRadius,
-  outerRadius,
-  percent,
-}) => {
-  const radius = innerRadius + (outerRadius - innerRadius) * 0.1;
-  const x = cx + radius * Math.cos(-midAngle * RADIAN);
-  const y = cy + radius * Math.sin(-midAngle * RADIAN);
-  const check = percent * 100 > 0;
-  return (
-    <text
-      x={x}
-      y={y}
-      fill="#D3D3D3"
-      textAnchor={x > cx ? "start" : "end"}
-      dominantBaseline="central"
-      fontSize={14}
-      fontWeight={600}
-    >
-      {`${check ? `${(percent * 100).toFixed(0)}%` : ""}`}
-    </text>
-  );
-};
-
-const ClassWiseStudentRanking = ({ selectedOptions }) => {
+const ClassWiseStudentRanking = ({ classOptions }) => {
+  const [selectedOptions, setSelectedOptions] = useState(null);
   const userDetails = decodeToken(Cookies.get("ACCESS_TOKEN"));
-  const { isDarkMode, primaryColor, secondaryColor } = useThemeContext();
+  const { isDarkMode } = useThemeContext();
   const [data, setData] = useState({});
   const [loading, setLoading] = useState(true);
   const [statusTabValue, setStatusTabValue] = useState(0);
@@ -80,6 +49,10 @@ const ClassWiseStudentRanking = ({ selectedOptions }) => {
   const [selectedGrad, setSelectedGrad] = useState("");
 
   const isMyClass = classTabValue === "MyClass";
+
+  useEffect(() => {
+    setSelectedOptions(classOptions?.[0]);
+  }, [classOptions]);
 
   const handleOpenModal = (grade) => {
     setSelectedGrad(grade);
@@ -98,45 +71,45 @@ const ClassWiseStudentRanking = ({ selectedOptions }) => {
   }, [selectedOptions, classTabValue]);
 
   const staticOveralData = {
-    "active_students": 6,
-    "active_students_gradewise": {
-        "A": 3,
-        "B": 2,
-        "C": 1
+    active_students: 6,
+    active_students_gradewise: {
+      A: 3,
+      B: 2,
+      C: 1,
     },
-    "inactive_students": 6,
-    "inactive_students_gradewise": {
-        "D": 5,
-        "E": 1
-    }
-}
+    inactive_students: 6,
+    inactive_students_gradewise: {
+      D: 5,
+      E: 1,
+    },
+  };
 
-const staticClassData = {
-    "active_students": 7,
-    "active_students_gradewise": {
-        "A": 3,
-        "B": 1,
-        "C": 3
+  const staticClassData = {
+    active_students: 7,
+    active_students_gradewise: {
+      A: 3,
+      B: 1,
+      C: 3,
     },
-    "inactive_students": 3,
-    "inactive_students_gradewise": {
-        "D": 2,
-        "E": 1
-    }
-}
+    inactive_students: 3,
+    inactive_students_gradewise: {
+      D: 2,
+      E: 1,
+    },
+  };
 
   const fetchCountByCategory = async () => {
     setLoading(true);
     try {
-       if (Number(userDetails?.user_id) === 35) {
-        setData(isMyClass? staticClassData : staticOveralData)
-       }else{
-      const response = await getCountByCategory(
-        selectedOptions?.class_id,
-        isMyClass ? userDetails?.teacher_id : 0
-      );
-      setData(response?.data?.data || {});
-    }
+      if (Number(userDetails?.user_id) === 35) {
+        setData(isMyClass ? staticClassData : staticOveralData);
+      } else {
+        const response = await getCountByCategory(
+          selectedOptions?.class_id,
+          isMyClass ? userDetails?.teacher_id : 0
+        );
+        setData(response?.data?.data || {});
+      }
     } catch (error) {
       console.error(error);
     } finally {
@@ -173,10 +146,10 @@ const staticClassData = {
         display: "flex",
         flexDirection: "column",
         height: "100%",
-        backgroundColor:"#fff",
-        borderRadius:"20px",
-        border:"none",
-        boxShadow:"none"
+        backgroundColor: "#fff",
+        borderRadius: "20px",
+        border: "none",
+        boxShadow: "none",
       }}
     >
       <Box
@@ -277,6 +250,56 @@ const staticClassData = {
             </ToggleButton>
           </ToggleButtonGroup>
         </Box>
+      </Box>
+
+      <Box
+        sx={{
+          display: "flex",
+          gap: "10px",
+          alignItems: "center",
+          // background: "var(--BG-Color-1, #F3F5F7)",
+          borderRadius: "10px",
+          justifyContent:"flex-end"
+        }}
+      >
+        <Autocomplete
+          freeSolo
+          id="class"
+          disableClearable
+          options={classOptions?.map((option) => option.class_name)}
+          value={selectedOptions?.class_name || ""} // Set value to the class name only
+          onChange={(event, newValue) => {
+            const selected = classOptions.find(
+              (option) => option.class_name === newValue
+            );
+            setSelectedOptions(selected || null); // Set selected option object
+          }}
+          renderInput={(params) => (
+            <TextField
+              {...params}
+              placeholder="Select Class"
+              variant="outlined"
+              InputProps={{
+                ...params.InputProps,
+                type: "search",
+                sx: {
+                  backdropFilter: "blur(10px)",
+                  backgroundColor: "rgba(255, 255, 255, 0.2)",
+                  height: 45,
+                  width: 200,
+                  borderRadius: "10px",
+                  "& .MuiOutlinedInput-notchedOutline": {
+                    border: "1px solid #d3d3d3",
+                  },
+                },
+              }}
+              sx={{
+                //   boxShadow: currentStyles.boxShadow,
+                borderRadius: "10px",
+              }}
+            />
+          )}
+        />
       </Box>
 
       {/* Active/Inactive Tabs */}
