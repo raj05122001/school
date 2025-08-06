@@ -71,8 +71,9 @@ const renderCustomizedLabel = ({
   );
 };
 
-const ClassWiseStudentRanking = ({ selectedOptions }) => {
+const ClassWiseStudentRanking = ({ classOptions }) => {
   const userDetails = decodeToken(Cookies.get("ACCESS_TOKEN"));
+  const [selectedOptions, setSelectedOptions] = useState(classOptions?.[0]?.id);
 
   const { isDarkMode, primaryColor, secondaryColor } = useThemeContext();
   const [data, setData] = useState({});
@@ -89,6 +90,10 @@ const ClassWiseStudentRanking = ({ selectedOptions }) => {
   const handleCloseModal = () => {
     setModalOpen(false);
   };
+
+    useEffect(() => {
+      setSelectedOptions(classOptions?.[0]);
+    }, [classOptions]);
 
   useEffect(() => {
     if (selectedOptions?.id) {
@@ -169,6 +174,7 @@ const ClassWiseStudentRanking = ({ selectedOptions }) => {
         </Typography>
       </Box>
 
+<Box sx={{display:"flex",justifyContent:"space-between", alignItems:"center"}}>
       <Tabs
         value={tabValue}
         onChange={handleTabChange}
@@ -201,6 +207,57 @@ const ClassWiseStudentRanking = ({ selectedOptions }) => {
         <Tab label={`Active`} />
         <Tab label={`Inactive`} />
       </Tabs>
+
+       <Box
+              sx={{
+                display: "flex",
+                gap: "10px",
+                alignItems: "center",
+                // background: "var(--BG-Color-1, #F3F5F7)",
+                borderRadius: "10px",
+                justifyContent:"flex-end"
+              }}
+            >
+              <Autocomplete
+                freeSolo
+                id="class"
+                disableClearable
+                options={classOptions?.map((option) => option.name)}
+                value={selectedOptions?.name || ""} // Set value to the class name only
+                onChange={(event, newValue) => {
+                  const selected = classOptions?.find(
+                    (option) => option.name === newValue
+                  );
+                  setSelectedOptions(selected || null); // Set selected option object
+                }}
+                renderInput={(params) => (
+                  <TextField
+                    {...params}
+                    placeholder="Select Class"
+                    variant="outlined"
+                    InputProps={{
+                      ...params.InputProps,
+                      type: "search",
+                      sx: {
+                        backdropFilter: "blur(10px)",
+                        backgroundColor: "rgba(255, 255, 255, 0.2)",
+                        height: 45,
+                        width: 200,
+                        borderRadius: "10px",
+                        "& .MuiOutlinedInput-notchedOutline": {
+                          border: "1px solid #d3d3d3",
+                        },
+                      },
+                    }}
+                    sx={{
+                      //   boxShadow: currentStyles.boxShadow,
+                      borderRadius: "10px",
+                    }}
+                  />
+                )}
+              />
+            </Box>
+            </Box>
 
       <Box sx={{ display: "flex", flexDirection: "column", gap: 2 }}>
         {getChartData()?.map((entry, index) => (
