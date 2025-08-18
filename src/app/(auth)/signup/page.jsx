@@ -15,6 +15,8 @@ import {
   DialogTitle,
   InputAdornment,
   IconButton,
+  Checkbox,
+  FormControlLabel,
 } from "@mui/material";
 import toast from "react-hot-toast";
 import { useRouter, useSearchParams } from "next/navigation";
@@ -62,6 +64,8 @@ const SignupPage = () => {
   const [newDepartment, setNewDepartment] = useState("");
   const [showDept, setShowDept] = useState(true);
   const isMobile = useMediaQuery("(max-width:600px)");
+  const [isChecked, setIsChecked] = useState(false);
+  const [policyError, setPolicyError] = useState(false);
 
   const isTeacher = roleParam === "TEACHER";
 
@@ -176,6 +180,12 @@ confirmPassword: yup
   };
 
   const onSubmit = async (data) => {
+    if (!isChecked) {
+      setPolicyError(true);
+      toast.error("Please accept the Privacy Policy to continue.");
+      return;
+    }
+    setPolicyError(false);
     setLoading(true);
     setServerError(null);
     
@@ -855,6 +865,47 @@ confirmPassword: yup
               )}
             </Box>
 
+            {/* Privacy Policy consent */}
+            <Box sx={{ mt: 1.5, display: "flex", alignItems: "center" }}>
+              <FormControlLabel
+                control={
+                  <Checkbox
+                    checked={isChecked}
+                    onChange={(e) => {
+                      setIsChecked(e.target.checked);
+                      if (policyError && e.target.checked) setPolicyError(false);
+                    }}
+                    sx={{ mr: 1 }}
+                  />
+                }
+                label={
+                  <span>
+                    We will use your lecture content to Generate valuable insight for you{" "}
+                    <Typography
+                      component="span"
+                      sx={{
+                        textDecoration: "underline",
+                        color: "#1976d2",
+                        cursor: "pointer",
+                        ml: 0.5,
+                      }}
+                      onClick={() => router.push("/privacy-policy")}
+                    >
+                      Privacy Policy
+                    </Typography>
+                  </span>
+                }
+              />
+
+              {policyError && (
+                <Typography variant="caption" color="error" sx={{ ml: 2 }}>
+                  You must accept the Privacy Policy to proceed.
+                </Typography>
+              )}
+            </Box>
+
+
+
             {/* Server Error Message */}
             {serverError && (
               <Typography color="error" sx={{ mt: 1 }}>
@@ -867,7 +918,7 @@ confirmPassword: yup
               type="submit"
               fullWidth
               variant="contained"
-              disabled={loading}
+              disabled={loading || !isChecked}
               sx={{
                 mt: 3,
                 height: "52px",
