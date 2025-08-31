@@ -78,17 +78,17 @@ const SignupPage = () => {
       .matches(/^[0-9]{10}$/, "Phone number must be 10 digits")
       .required("Phone number is required"),
     role: yup.string().required("Role is required"),
-newPassword: yup
-  .string()
-  .matches(
-    /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?])[A-Za-z\d!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]{8,}$/,
-    "Password must be at least 8 characters long and contain at least one uppercase letter, one lowercase letter, one number, and one special character"
-  )
-  .required("Password is required"),
-confirmPassword: yup
-  .string()
-  .oneOf([yup.ref("newPassword")], "Passwords must match")
-  .required("Confirm Password is required"),
+    newPassword: yup
+      .string()
+      .matches(
+        /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?])[A-Za-z\d!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]{8,}$/,
+        "Password must be at least 8 characters long and contain at least one uppercase letter, one lowercase letter, one number, and one special character"
+      )
+      .required("Password is required"),
+    confirmPassword: yup
+      .string()
+      .oneOf([yup.ref("newPassword")], "Passwords must match")
+      .required("Confirm Password is required"),
     // Fixed conditional validation
     subject: !isTeacher
       ? yup
@@ -188,7 +188,7 @@ confirmPassword: yup
     setPolicyError(false);
     setLoading(true);
     setServerError(null);
-    
+
     // Fixed payload construction
     const payload = {
       full_name: data.name,
@@ -200,7 +200,9 @@ confirmPassword: yup
       time_zone: "IND",
       department: data.department || "",
       subjects: 9,
-      student_class: isTeacher ? "" : (data.subject?.id || data.subject?.value || ""),
+      student_class: isTeacher
+        ? ""
+        : data.subject?.id || data.subject?.value || "",
     };
 
     try {
@@ -318,7 +320,7 @@ confirmPassword: yup
             VidyaAI
           </Typography>
         </Box>
-        
+
         <Box
           sx={{
             width: "100%",
@@ -669,7 +671,11 @@ confirmPassword: yup
                       helperText={errors.role?.message}
                       InputProps={{
                         readOnly: !!roleParam,
-                        style: { color: "#000", borderRadius: "12px", margin: 0 },
+                        style: {
+                          color: "#000",
+                          borderRadius: "12px",
+                          margin: 0,
+                        },
                       }}
                       InputLabelProps={{
                         shrink: true,
@@ -768,7 +774,7 @@ confirmPassword: yup
                         )}
                       />
                     </Box>
-                    
+
                     <Button
                       variant="contained"
                       color="primary"
@@ -797,7 +803,8 @@ confirmPassword: yup
                       mt: 1,
                     }}
                   >
-                    * Please click on Create button if the department is not in the list.
+                    * Please click on Create button if the department is not in
+                    the list.
                   </Typography>
                 </>
               ) : (
@@ -825,7 +832,9 @@ confirmPassword: yup
                       <Autocomplete
                         options={classOptions}
                         getOptionLabel={(option) =>
-                          typeof option === "string" ? option : option.name || ""
+                          typeof option === "string"
+                            ? option
+                            : option.name || ""
                         }
                         value={value || null}
                         onChange={(event, newValue) => {
@@ -873,14 +882,16 @@ confirmPassword: yup
                     checked={isChecked}
                     onChange={(e) => {
                       setIsChecked(e.target.checked);
-                      if (policyError && e.target.checked) setPolicyError(false);
+                      if (policyError && e.target.checked)
+                        setPolicyError(false);
                     }}
                     sx={{ mr: 1 }}
                   />
                 }
                 label={
                   <span>
-                    We will use your lecture content to Generate valuable insight for you{" "}
+                    We will use your lecture content to Generate valuable
+                    insight for you{" "}
                     <Typography
                       component="span"
                       sx={{
@@ -903,8 +914,6 @@ confirmPassword: yup
                 </Typography>
               )}
             </Box>
-
-
 
             {/* Server Error Message */}
             {serverError && (
@@ -956,21 +965,25 @@ confirmPassword: yup
                   </Link>
                 </Typography>
               </Grid>
-      
-      {/* Left Side Background */}
-      {!isMobile && (
-        <Grid
-          item
-          xs={false}
-          sm={4}
-          md={6}
-          sx={{
-            display: "inline-flex",
-            flexDirection: "column",
-            alignItems: "center",
-            backgroundColor: "#fff",
-          }}
-        >
+            </Grid>
+          </Box>
+        </Box>
+      </Grid>
+
+      <Grid
+        item
+        xs={false}
+        sm={4}
+        md={6}
+        sx={{
+          display: "inline-flex",
+          flexDirection: "column",
+          alignItems: "center",
+          backgroundColor: "#fff",
+        }}
+      >
+        {/* Left Side Background */}
+        {!isMobile && (
           <Box
             sx={{
               display: "flex",
@@ -1026,12 +1039,8 @@ confirmPassword: yup
               />
             </Box>
           </Box>
-        </Grid>
-      )}
-    </Grid>
-    </Box>
-    </Box>
-    </Grid>
+        )}
+      </Grid>
     </Grid>
   );
 };
