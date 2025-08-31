@@ -889,9 +889,8 @@ const SignupPage = () => {
                   />
                 }
                 label={
-                  <span>
-                    We will use your lecture content to Generate valuable
-                    insight for you{" "}
+                  <span style={{fontSize:"12px"}}>
+                    I agree to the Terms & Conditions and Privacy Policy. We will use your lecture content to Generate valuable insight for you{" "}
                     <Typography
                       component="span"
                       sx={{
