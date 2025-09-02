@@ -15,16 +15,61 @@ import { AppContextProvider } from "@/app/main";
 import { FaVideo } from "react-icons/fa";
 import { decodeToken } from "react-jwt";
 import Cookies from "js-cookie";
-import axios from "axios";
 import { BASE_URL_MEET } from "@/constants/apiconfig";
 import usePresignedUrl from "@/hooks/usePresignedUrl";
-import { useSearchParams } from "next/navigation";
 
+/* =========================================================================
+   Register SEEK components (unique names) once
+   ========================================================================= */
+let SEEK_COMPONENTS_READY = false;
+
+function registerSeekComponents(vjs) {
+  if (SEEK_COMPONENTS_READY) return;
+  const VjsButton = vjs.getComponent("Button");
+
+  class SeekBack10 extends VjsButton {
+    constructor(player, options) {
+      super(player, options);
+      this.addClass("vjs-seek-button");
+      this.addClass("vjs-seek-back");
+      this.controlText("Back 10 seconds");
+    }
+    handleClick() {
+      const p = this.player();
+      const dur = p.duration() || 0;
+      const t = Math.max(0, Math.min((p.currentTime() || 0) - 10, dur));
+      p.currentTime(t);
+    }
+  }
+
+  class SeekForward10 extends VjsButton {
+    constructor(player, options) {
+      super(player, options);
+      this.addClass("vjs-seek-button");
+      this.addClass("vjs-seek-forward");
+      this.controlText("Forward 10 seconds");
+    }
+    handleClick() {
+      const p = this.player();
+      const dur = p.duration() || 0;
+      const t = Math.max(0, Math.min((p.currentTime() || 0) + 10, dur));
+      p.currentTime(t);
+    }
+  }
+
+  vjs.registerComponent("SeekBack10", SeekBack10);
+  vjs.registerComponent("SeekForward10", SeekForward10);
+  SEEK_COMPONENTS_READY = true;
+}
+
+/* =========================================================================
+   Main Player wrapper
+   ========================================================================= */
 const VideoPlayer = ({
   id,
   duration = 1e101,
   setVideoTimeStamp = () => {},
-  timeStamp=0
+  timeStamp = 0,
 }) => {
   const { s3FileName } = useContext(AppContextProvider);
   const { fetchPresignedUrl } = usePresignedUrl();
@@ -46,7 +91,6 @@ const VideoPlayer = ({
       operation: "download",
       folder: "videos/",
     };
-
     try {
       const signedUrl = await fetchPresignedUrl(data);
       setVideoUrl(signedUrl?.presigned_url);
@@ -57,12 +101,10 @@ const VideoPlayer = ({
   };
 
   useEffect(() => {
-    if (id) {
-      fetchBreakPoint();
-    }
+    if (id) fetchBreakPoint();
   }, [id]);
 
-  // updateVideoWatchtime: This function sends the latest watch time to your backend.
+  // send latest watch time (beacon)
   const updateVideoWatchtime = async (time) => {
     if (typeof time === "number" && time > 0 && userDetails?.student_id) {
       try {
@@ -71,11 +113,9 @@ const VideoPlayer = ({
           timestamp: time,
           student_id: userDetails?.student_id,
         };
-        // Create a Blob with "application/json" so your backend (Flask) can parse it correctly
         const blob = new Blob([JSON.stringify(formData)], {
           type: "application/json",
         });
-        // Send the data using navigator.sendBeacon
         navigator.sendBeacon(
           `${BASE_URL_MEET}/api/v1/dashboard/watchtime_data/`,
           blob
@@ -86,32 +126,27 @@ const VideoPlayer = ({
     }
   };
 
-  // Event handlers to update watch time
+  // lifecycle listeners
   const handleBeforeUnload = () => {
     if (playerRef.current) {
       const currentTime = playerRef.current.currentTime();
       updateVideoWatchtime(currentTime);
     }
   };
-
   const handleVisibilityChange = () => {
     if (document.visibilityState === "hidden" && playerRef.current) {
       const currentTime = playerRef.current.currentTime();
       updateVideoWatchtime(currentTime);
     }
   };
-
-  // When the video is paused or ended, update the watch time immediately.
   const handleVideoPause = () => {
     if (playerRef.current) {
       const currentTime = playerRef.current.currentTime();
       updateVideoWatchtime(currentTime);
     }
   };
-
   const handleVideoEnded = () => {
     if (playerRef.current) {
-      // On video end, record the full duration as the last watch time.
       updateVideoWatchtime(playerRef.current.duration());
     }
   };
@@ -120,13 +155,12 @@ const VideoPlayer = ({
     window.addEventListener("beforeunload", handleBeforeUnload);
     window.addEventListener("pagehide", handleBeforeUnload);
     document.addEventListener("visibilitychange", handleVisibilityChange);
-
     return () => {
       window.removeEventListener("beforeunload", handleBeforeUnload);
       window.removeEventListener("pagehide", handleBeforeUnload);
       document.removeEventListener("visibilitychange", handleVisibilityChange);
     };
-  }, [playerRef.current, id]);
+  }, [playerRef.current, id]); // eslint-disable-line react-hooks/exhaustive-deps
 
   const fetchBreakPoint = async () => {
     setIsLoading(true);
@@ -150,7 +184,6 @@ const VideoPlayer = ({
     }
   };
 
-  // Using useMemo to avoid unnecessary re-renders of the video player
   const breakpointPlayer = useMemo(
     () => (
       <BreakpointPlayer
@@ -158,7 +191,6 @@ const VideoPlayer = ({
         id={id}
         onPlayerReady={(player) => {
           playerRef.current = player;
-          // Attach additional event listeners to the Video.js player
           player.on("pause", handleVideoPause);
           player.on("ended", handleVideoEnded);
         }}
@@ -169,19 +201,14 @@ const VideoPlayer = ({
         timeStamp={timeStamp}
       />
     ),
-    [markers, id, s3FileName, duration, videoUrl,timeStamp]
+    [markers, id, s3FileName, duration, videoUrl, timeStamp] // eslint-disable-line
   );
 
   return (
     <Box sx={{ width: "100%", height: "100%" }}>
       {isLoading ? (
         <Box sx={{ position: "relative", width: "100%", height: "100%" }}>
-          <Skeleton
-            variant="rectangular"
-            width="100%"
-            height="100%"
-            sx={{ borderRadius: 8 }}
-          />
+          <Skeleton variant="rectangular" width="100%" height="100%" sx={{ borderRadius: 8 }} />
           <Box
             sx={{
               position: "absolute",
@@ -196,7 +223,7 @@ const VideoPlayer = ({
         </Box>
       ) : (
         <Box sx={{ width: "100%", height: "90%" }}>
-          {videoUrl ? breakpointPlayer : ""}
+          {videoUrl ? breakpointPlayer : null}
         </Box>
       )}
 
@@ -211,6 +238,9 @@ const VideoPlayer = ({
 
 export default VideoPlayer;
 
+/* =========================================================================
+   BreakpointPlayer (video.js)
+   ========================================================================= */
 export const BreakpointPlayer = ({
   markers,
   id,
@@ -219,8 +249,10 @@ export const BreakpointPlayer = ({
   duration,
   videoUrl,
   setVideoTimeStamp,
-  timeStamp=0
+  timeStamp = 0,
 }) => {
+
+  console.log("timeStamp : ",timeStamp)
   const userDetails = decodeToken(Cookies.get("ACCESS_TOKEN"));
   const videoRef = useRef(null);
   const playerRef = useRef(null);
@@ -241,63 +273,88 @@ export const BreakpointPlayer = ({
   };
 
   useEffect(() => {
-    const videoElement = videoRef.current;
-    playerRef.current = videojs(videoElement);
+    // guard: avoid double init (StrictMode or state changes)
+    if (playerRef.current) return;
 
-    // Notify parent that the player is ready
-    if (onPlayerReady) {
-      onPlayerReady(playerRef.current);
-    } 
+    const el = videoRef.current;
+    const player = videojs(el, {
+      html5: { nativeTextTracks: true },
+      playbackRates: [0.25, 0.5, 0.75, 1, 1.25, 1.5, 1.75],
+      controlBar: { remainingTimeDisplay: true },
+    });
+    playerRef.current = player;
 
-    playerRef.current.on("loadedmetadata", function () {
-      const total = playerRef.current.duration();
-      const progressControl = playerRef.current.controlBar.progressControl;
+    onPlayerReady?.(player);
+
+    // register + add our unique seek buttons
+    registerSeekComponents(videojs);
+    const controlBar = player.getChild("controlBar");
+
+    // remove any lingering DOM duplicates (safety)
+    Array.from(controlBar.el().querySelectorAll(".vjs-seek-back,.vjs-seek-forward"))
+      .forEach(n => n.parentElement?.removeChild(n));
+    try { controlBar.removeChild("SeekBack10"); } catch {}
+    try { controlBar.removeChild("SeekForward10"); } catch {}
+
+    const backBtn = controlBar.addChild("SeekBack10", {}, 2); // after PlayToggle
+    const fwdBtn  = controlBar.addChild("SeekForward10", {}, controlBar.children_.length - 1);
+
+    // markers + resume timestamp
+    player.on("loadedmetadata", () => {
+      const total = player.duration();
+      const progressControl = player.controlBar.progressControl;
 
       markers.forEach((marker) => {
-        const left = (marker.start / 1000 / total) * 100 + "%";
+        const left = ((marker.start / 1000) / total) * 100 + "%";
         const el = document.createElement("div");
         el.className = "vjs-marker";
         el.style.left = left;
         el.dataset.time = marker.start / 1000;
-        // Use inline styling for the marker label; adjust as needed.
         el.innerHTML = `<span style="background-color: red;">${marker.gist}</span>`;
-
-        el.onclick = function () {
-          playerRef.current.currentTime(marker.start / 1000);
-        };
-
-        // Append the marker element to the progress control bar
+        el.onclick = () => player.currentTime(marker.start / 1000);
         progressControl.children_[0].el_.appendChild(el);
       });
-      
-      if (timeStamp > 0 && timeStamp < total) {
-             playerRef.current.currentTime(timeStamp);
-           }
+
+      if (timeStamp > 0 && timeStamp < total) player.currentTime(timeStamp);
     });
 
-    // Additional event: update personalised data after 10 minutes
-    playerRef.current.on("timeupdate", () => {
-      const currentTime = playerRef.current.currentTime();
-      +(
-        // live update up the parent
-        (+setVideoTimeStamp(currentTime))
-      );
-      if (
-        currentTime >= 600 &&
-        !updateDataTriggered.current &&
-        userDetails?.role === "STUDENT"
-      ) {
+    player.on("timeupdate", () => {
+      const t = player.currentTime();
+      setVideoTimeStamp?.(t);
+      if (t >= 600 && !updateDataTriggered.current && userDetails?.role === "STUDENT") {
         updateDataTriggered.current = true;
         updateData();
       }
     });
 
-    return () => {
-      // If you dispose here, the video might unmount on re-render
-      // If that's desired, uncomment:
-      // playerRef.current.dispose();
+    // keyboard shortcuts
+    const seekBy = (secs) => {
+      const dur = player.duration() || 0;
+      const t = Math.max(0, Math.min((player.currentTime() || 0) + secs, dur));
+      player.currentTime(t);
     };
-  }, [markers, userDetails, id, onPlayerReady]);
+
+    const keyHandler = (e) => {
+      const tag = (e.target && e.target.tagName) || "";
+      if (/INPUT|TEXTAREA|SELECT/.test(tag)) return;
+
+      const k = (e.key || "").toLowerCase();
+      if (e.code === "ArrowLeft" || k === "j") {
+        seekBy(-10); e.preventDefault();
+      } else if (e.code === "ArrowRight" || k === "l") {
+        seekBy(10); e.preventDefault();
+      } else if (k === "k" || e.code === "Space") {
+        if (player.paused()) player.play(); else player.pause();
+        e.preventDefault();
+      }
+    };
+
+    document.addEventListener("keydown", keyHandler, { passive: false });
+
+    return () => {
+
+    };
+  }, [markers, userDetails, id, onPlayerReady, timeStamp, setVideoTimeStamp]); // eslint-disable-line
 
   return (
     <video
@@ -306,10 +363,6 @@ export const BreakpointPlayer = ({
       controls
       preload="metadata"
       style={{ width: "100%", height: "100%", borderRadius: 10 }}
-      data-setup='{
-        "html5": { "nativeTextTracks": true },
-        "playbackRates" : [0.25, 0.5, 0.75, 1, 1.25, 1.5, 1.75]
-      }'
     >
       {/* <source
         src={`https://d3515ggloh2j4b.cloudfront.net/videos/${s3FileName}${id}.mp4?v=2`}
@@ -320,12 +373,14 @@ export const BreakpointPlayer = ({
   );
 };
 
+/* =========================================================================
+   Suggestion scroller
+   ========================================================================= */
 export const Suggestion = ({ suggestionData }) => {
   const { handelChatBotText } = useContext(AppContextProvider);
   const containerRef = useRef(null);
-  const uniqueTitles = [
-    ...new Set(suggestionData?.map((topic) => topic.lowercaseTitle)),
-  ];
+  const uniqueTitles = [...new Set(suggestionData?.map((t) => t.lowercaseTitle))];
+
   const scrollContainer = (direction) => {
     if (containerRef.current) {
       containerRef.current.scrollBy({
@@ -334,6 +389,7 @@ export const Suggestion = ({ suggestionData }) => {
       });
     }
   };
+
   return (
     <Grid
       container
@@ -348,26 +404,16 @@ export const Suggestion = ({ suggestionData }) => {
             disableRipple
             onClick={() => scrollContainer("left")}
             sx={{
-              p: 1,
-              width: 40,
-              height: 40,
-              minWidth: "unset",
-              borderRadius: "50%",
-              zIndex: 10,
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "center",
-              position: "inherit",
-              backgroundColor: "#fff",
-              marginRight: "4px",
-              padding: "10px 10px",
-              color: "#16AA54",
+              p: 1, width: 40, height: 40, minWidth: "unset", borderRadius: "50%",
+              zIndex: 10, display: "flex", alignItems: "center", justifyContent: "center",
+              position: "inherit", backgroundColor: "#fff", mr: "4px", color: "#16AA54",
             }}
           >
             ←
           </Button>
         )}
       </Grid>
+
       <Grid
         item
         xs={12}
@@ -394,9 +440,9 @@ export const Suggestion = ({ suggestionData }) => {
               sx={{
                 overflow: "hidden",
                 backgroundColor: "#fff",
-                marginRight: "4px",
-                padding: "10px 10px",
-                borderRadius: 6,
+                mr: "4px",
+                p: "10px 10px",
+                borderRadius: 2,
               }}
             >
               <Typography
@@ -405,49 +451,21 @@ export const Suggestion = ({ suggestionData }) => {
                   textAlign: "center",
                   fontFamily: "Inter",
                   fontSize: "14px",
-                  fontStyle: "normal",
-                  fontWeight: "550",
-                  lineHeight: "16px" /* 15.6px */,
+                  fontWeight: 550,
+                  lineHeight: "16px",
                   letterSpacing: "-0.36px",
                 }}
               >
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  width="12"
-                  height="12"
-                  viewBox="0 0 12 12"
-                  fill="none"
-                >
-                  <path
-                    d="M4.40965 0.09375C3.8008 3.40099 3.30722 3.89454 0 4.50339C3.30725 5.11225 3.8008 5.6058 4.40965 8.91304C5.01851 5.6058 5.51206 5.11225 8.81931 4.50339C5.51206 3.89454 5.01848 3.40099 4.40965 0.09375Z"
-                    fill="url(#paint0_linear_441_5884)"
-                  />
-                  <path
-                    d="M9.19597 6.29785C8.80879 8.40112 8.49485 8.71504 6.3916 9.10221C8.49485 9.48941 8.80879 9.80333 9.19597 11.9066C9.58314 9.80333 9.89709 9.48938 12.0003 9.10221C9.89703 8.71504 9.58317 8.40112 9.19597 6.29785Z"
-                    fill="url(#paint1_linear_441_5884)"
-                  />
+                {/* green star icon */}
+                <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 12 12" fill="none">
+                  <path d="M4.40965 0.09375C3.8008 3.40099 3.30722 3.89454 0 4.50339C3.30725 5.11225 3.8008 5.6058 4.40965 8.91304C5.01851 5.6058 5.51206 5.11225 8.81931 4.50339C5.51206 3.89454 5.01848 3.40099 4.40965 0.09375Z" fill="url(#g1)" />
+                  <path d="M9.19597 6.29785C8.80879 8.40112 8.49485 8.71504 6.3916 9.10221C8.49485 9.48941 8.80879 9.80333 9.19597 11.9066C9.58314 9.80333 9.89709 9.48938 12.0003 9.10221C9.89703 8.71504 9.58317 8.40112 9.19597 6.29785Z" fill="url(#g2)" />
                   <defs>
-                    <linearGradient
-                      id="paint0_linear_441_5884"
-                      x1="4.40965"
-                      y1="0.09375"
-                      x2="4.40965"
-                      y2="8.91304"
-                      gradientUnits="userSpaceOnUse"
-                    >
-                      <stop stop-color="#1F8505" />
-                      <stop offset="1" stop-color="#12DD00" />
+                    <linearGradient id="g1" x1="4.41" y1="0.094" x2="4.41" y2="8.913" gradientUnits="userSpaceOnUse">
+                      <stop stopColor="#1F8505" /><stop offset="1" stopColor="#12DD00" />
                     </linearGradient>
-                    <linearGradient
-                      id="paint1_linear_441_5884"
-                      x1="9.19595"
-                      y1="6.29785"
-                      x2="9.19595"
-                      y2="11.9066"
-                      gradientUnits="userSpaceOnUse"
-                    >
-                      <stop stop-color="#1F8505" />
-                      <stop offset="1" stop-color="#12DD00" />
+                    <linearGradient id="g2" x1="9.196" y1="6.298" x2="9.196" y2="11.907" gradientUnits="userSpaceOnUse">
+                      <stop stopColor="#1F8505" /><stop offset="1" stopColor="#12DD00" />
                     </linearGradient>
                   </defs>
                 </svg>{" "}
@@ -458,26 +476,16 @@ export const Suggestion = ({ suggestionData }) => {
           );
         })}
       </Grid>
+
       <Grid item xs={12} sm={0.6} py={2}>
         {uniqueTitles.length > 0 && (
           <Button
             disableRipple
             onClick={() => scrollContainer("right")}
             sx={{
-              p: 1,
-              width: 40,
-              height: 40,
-              minWidth: "unset",
-              borderRadius: "50%",
-              zIndex: 10,
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "center",
-              position: "inherit",
-              backgroundColor: "#fff",
-              marginRight: "4px",
-              padding: "10px 10px",
-              color: "#16AA54",
+              p: 1, width: 40, height: 40, minWidth: "unset", borderRadius: "50%",
+              zIndex: 10, display: "flex", alignItems: "center", justifyContent: "center",
+              position: "inherit", backgroundColor: "#fff", mr: "4px", color: "#16AA54",
             }}
           >
             →

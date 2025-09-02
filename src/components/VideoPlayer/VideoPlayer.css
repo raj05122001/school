@@ -48,3 +48,24 @@
   padding-top: 10px;
   padding-bottom: 10px;
 }
+
+
+
+/* custom seek buttons */
+.vjs-seek-button {
+  display: inline-flex !important;
+  align-items: center;
+  justify-content: center;
+  width: 3rem;
+  height: 2rem;
+  font-size: 12px;
+  border-radius: 6px;
+  margin: 0 4px;
+  background: #0f172a;
+  color: #fff;
+  cursor: pointer;
+}
+.vjs-seek-button:hover { filter: brightness(1.1); }
+.vjs-seek-back::before { content: "« 10s"; }
+.vjs-seek-forward::before { content: "10s »"; }
+

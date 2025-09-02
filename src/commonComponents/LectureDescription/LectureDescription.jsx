@@ -25,6 +25,8 @@ import { decodeToken } from "react-jwt";
 import { deleteCompletedLecture } from "@/api/apiHelper";
 import { useRouter } from "next/navigation";
 
+import { FiCopy, FiCheck } from "react-icons/fi";
+
 const LectureDescription = ({ lectureData, isShowPic = false, loading,videoTimeStamp=0 }) => {
   const formatDuration = (ms) => {
     const hours = Math.floor(ms / (1000 * 60 * 60));
@@ -57,13 +59,26 @@ const LectureDescription = ({ lectureData, isShowPic = false, loading,videoTimeS
     letterSpacing: "-0.42px",
   };
 
-  const handleCopyShareUrl = () => {
-    const shareUrl = `${window.location.href}?timestamp=${videoTimeStamp}`;
-    navigator.clipboard
-      .writeText(shareUrl)
-      .then(() => console.log("URL copied:", shareUrl))
-      .catch((err) => console.error("Could not copy text:", err));
-  };
+  const [copied, setCopied] = useState(false);
+
+const handleCopyShareUrl = async () => {
+  try {
+    // build a clean URL with ?timestamp=...
+    const url = new URL(window.location.href);
+    url.searchParams.set("timestamp", Math.floor(videoTimeStamp || 0));
+
+    await navigator.clipboard.writeText(url.toString());
+    setCopied(true);
+    // (optional) subtle haptic feedback on mobile
+    if (navigator.vibrate) navigator.vibrate(10);
+
+    setTimeout(() => setCopied(false), 1200);
+  } catch (err) {
+    console.error("Could not copy text:", err);
+    // briefly show an error state too, if you want:
+    setCopied(false);
+  }
+};
 
   return (
     <Box
@@ -110,7 +125,9 @@ const LectureDescription = ({ lectureData, isShowPic = false, loading,videoTimeS
         </Typography>
       )}
 
-      <Button onClick={handleCopyShareUrl} variant="outlined" sx={{mr:2}}>Copy Share URL</Button>
+     <Button onClick={handleCopyShareUrl} variant="outlined" sx={{ mr: 2 }} startIcon={copied ? <FiCheck /> : <FiCopy />}>
+  {copied ? "Copied!" : "Copy Share URL"}
+</Button>
     </Box>
       
 
