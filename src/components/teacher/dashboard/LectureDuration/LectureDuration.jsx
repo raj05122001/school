@@ -7,7 +7,7 @@ import CircularProgress, {
 
 function LectureDuration({ averageDuration }) {
   const perc =
-    (averageDuration?.total_duration * averageDuration?.avg_duration) / 100;
+    (averageDuration?.avg_duration*100) / averageDuration?.total_duration;
   return (
     <Box sx={{ position: "relative" }}>
       <FacebookCircularProgress value={perc} />
@@ -126,9 +126,9 @@ function FacebookCircularProgress({ value = 0 }) {
       <CircularProgress
         variant="determinate"
         sx={(theme) => ({
-          color: "#12DD00",
+          color: "#fff",
           ...theme.applyStyles("dark", {
-            color: "#12DD00",
+            color: "#FFFFFF",
           }),
         })}
         size={170}
@@ -139,7 +139,7 @@ function FacebookCircularProgress({ value = 0 }) {
         variant="determinate"
         disableShrink
         sx={(theme) => ({
-          color: "#fff",
+          color: "#12DD00",
           animationDuration: "550ms",
           position: "absolute",
           left: 0,
@@ -147,7 +147,7 @@ function FacebookCircularProgress({ value = 0 }) {
             strokeLinecap: "round",
           },
           ...theme.applyStyles("dark", {
-            color: "#FFFFFF",
+            color: "#12DD00",
           }),
         })}
         size={170}

@@ -148,11 +148,11 @@ const WaveSurferPlayer = forwardRef(
     };
 
     const backward = () => {
-      wavesurfer.setTime(Math.max(0, wavesurfer.getCurrentTime() - 20));
+      wavesurfer.setTime(Math.max(0, wavesurfer.getCurrentTime() - 10));
     };
     const forward = () => {
       wavesurfer.setTime(
-        Math.min(wavesurfer.getDuration(), wavesurfer.getCurrentTime() + 20)
+        Math.min(wavesurfer.getDuration(), wavesurfer.getCurrentTime() + 10)
       );
     };
 
