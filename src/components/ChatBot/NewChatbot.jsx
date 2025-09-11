@@ -123,12 +123,12 @@ export default function NewChatbot({ suggestionInput, setIsOpenChatBot }) {
   }, [sessionID, suggestionInput]);
 
   useEffect(() => {
-    if (suggestionInput) {
+    if (suggestionInput && !sessionID) {
       setShowChat(true);
       setShowList(false);
       handleCreateSession();
     }
-  }, [suggestionInput]);
+  }, [suggestionInput, sessionID]);
 
   const handleKeyPress = (e) => {
     if (e.key === "Enter" && !e.shiftKey) {
