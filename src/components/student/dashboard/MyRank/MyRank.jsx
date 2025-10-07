@@ -9,12 +9,14 @@ import {
 } from "recharts";
 import { useThemeContext } from "@/hooks/ThemeContext";
 import { GiBallPyramid } from "react-icons/gi";
+import { FaCrown } from "react-icons/fa";
 import { getMyRank } from "@/api/apiHelper";
 
 function MyRank() {
   const { isDarkMode } = useThemeContext();
   const [myGrade, setMyGrade] = useState(null);
   const [otherCounts, setOtherCounts] = useState({}); // A/B/C/D/E bucket stats
+  const topStudent = "Meena Joshi"
 
   const fetchMyRank = async () => {
     try {
@@ -22,6 +24,13 @@ function MyRank() {
       if (response?.success) {
         setMyGrade(response?.data?.grade ?? null);
         setOtherCounts(response?.data?.other_grade_count ?? {});
+        const t =
+          response?.data?.top_student?.name ??
+          response?.data?.topper?.name ??
+          response?.data?.top_student_name ??
+          response?.data?.topper_name ??
+          response?.data?.topper ??
+          null;
       }
     } catch (error) {
       console.error("Error fetching Grade", error);
@@ -61,7 +70,15 @@ function MyRank() {
         My Rank
       </Typography>
 
-      <Box sx={{ display: "flex", mb: 2, flexDirection: "row", justifyContent: "space-between" }}>
+      <Box
+        sx={{
+          display: "flex",
+          mb: 2,
+          flexDirection: "row",
+          justifyContent: "space-between",
+        }}
+      >
+        {/* Left: My Grade */}
         <Box display="flex" alignItems="center" ml={4}>
           <Box
             sx={{
@@ -79,9 +96,28 @@ function MyRank() {
             My Grade: {gradeLabel}
           </Typography>
         </Box>
+
+        {/* Right: SINGLE Top Student */}
+        <Box display="flex" alignItems="center" mr={4}>
+          <FaCrown style={{ marginRight: 8, color: "#D4AF37" }} />
+          <Typography
+            variant="body1"
+            sx={{ color: isDarkMode ? "#F0EAD6" : "#36454F", fontWeight: "bold" }}
+          >
+            Top Student: {topStudent ?? "—"}
+          </Typography>
+        </Box>
       </Box>
 
-      <Box sx={{ display: "flex", justifyContent: "center", alignItems: "center", width: "100%", height: 400 }}>
+      <Box
+        sx={{
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
+          width: "100%",
+          height: 400,
+        }}
+      >
         <ResponsiveContainer width="60%" height="80%">
           <FunnelChart width={450} height={300}>
             {/* ⬇️ Custom tooltip shows other_grade_count */}
@@ -145,17 +181,20 @@ function CustomFunnelTooltip({
       </div>
       <div style={{ display: "grid", gap: 4, color: sub, fontSize: 13 }}>
         <div>
-          MCQ avg: <b style={{ color: text }}>
+          MCQ avg:{" "}
+          <b style={{ color: text }}>
             {Number(stats.avg_mcq_success_rate ?? 0).toFixed(1)}%
           </b>
         </div>
         <div>
-          Assignment avg: <b style={{ color: text }}>
+          Assignment avg:{" "}
+          <b style={{ color: text }}>
             {Number(stats.avg_assignment_success_rate ?? 0).toFixed(1)}%
           </b>
         </div>
         <div>
-          Lecture avg: <b style={{ color: text }}>
+          Lecture avg:{" "}
+          <b style={{ color: text }}>
             {Number(stats.avg_lecture_success_rate ?? 0).toFixed(1)}%
           </b>
         </div>

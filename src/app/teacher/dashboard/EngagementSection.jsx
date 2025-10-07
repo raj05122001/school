@@ -44,10 +44,27 @@ import { Collapse, IconButton } from "@mui/material";
 import { FiChevronDown, FiChevronUp } from "react-icons/fi";
 import { TableContainer } from "@mui/material";
 
+const peak_usage = {
+  "type": "monthly_peak_usage",
+  "month": "October 2025",
+  "unit": "daily",
+  "data": [
+    {"date": "2025-10-01", "total_logins": 246},
+    {"date": "2025-10-02", "total_logins": 200},
+    {"date": "2025-10-03", "total_logins": 260},
+    {"date": "2025-10-04", "total_logins": 270},
+    {"date": "2025-10-05", "total_logins": 255},
+    {"date": "2025-10-06", "total_logins": 289},
+    {"date": "2025-10-07", "total_logins": 310}
+  ],
+  "peak_day": "2025-10-06",
+  "average_daily_logins": 279
+}
+
 const login_frequency = [
   {
     "user_id": 1,
-    "name": "Amit Sharma",
+    "name": "Avantika Darshan",
     "total_logins": 134,
     "current_week_logins": 6,
     "previous_week_logins": 8,
@@ -55,7 +72,7 @@ const login_frequency = [
   },
   {
     "user_id": 2,
-    "name": "Priya Mehta",
+    "name": "Hritik Rajput",
     "total_logins": 89,
     "current_week_logins": 3,
     "previous_week_logins": 5,
@@ -63,7 +80,7 @@ const login_frequency = [
   },
   {
     "user_id": 3,
-    "name": "Ravi Kumar",
+    "name": "Uma Pandey",
     "total_logins": 176,
     "current_week_logins": 9,
     "previous_week_logins": 10,
@@ -71,7 +88,7 @@ const login_frequency = [
   },
   {
     "user_id": 4,
-    "name": "Sneha Patel",
+    "name": "VidyaAI Student",
     "total_logins": 45,
     "current_week_logins": 2,
     "previous_week_logins": 3,
@@ -79,7 +96,7 @@ const login_frequency = [
   },
   {
     "user_id": 5,
-    "name": "Rahul Verma",
+    "name": "Vikash Singh",
     "total_logins": 208,
     "current_week_logins": 11,
     "previous_week_logins": 7,
@@ -167,332 +184,217 @@ const login_frequency = [
   }
 ]
 
-const peak_usage = {
-  "type": "monthly_peak_usage",
-  "month": "October 2025",
-  "unit": "daily",
-  "data": [
-    {"date": "2025-10-01", "total_logins": 246},
-    {"date": "2025-10-02", "total_logins": 200},
-    {"date": "2025-10-03", "total_logins": 260},
-    {"date": "2025-10-04", "total_logins": 270},
-    {"date": "2025-10-05", "total_logins": 255},
-    {"date": "2025-10-06", "total_logins": 289},
-    {"date": "2025-10-07", "total_logins": 310}
-  ],
-  "peak_day": "2025-10-06",
-  "average_daily_logins": 279
-}
-
+/* -------------------- progress_predicted_graph (UPDATED) -------------------- */
 const progress_predicted_graph = [
+  /* ---- TOP 5 (exact counts for the screenshot) ---- */
   {
-    "user_id": 1,
-    "name": "Amit Sharma",
-    "weekly_progress": [
-      {"date": "2025-10-01", "grade": "C"},
-      {"date": "2025-10-02", "grade": "C"},
-      {"date": "2025-10-03", "grade": "B"},
-      {"date": "2025-10-04", "grade": "B"},
-      {"date": "2025-10-05", "grade": "B"},
-      {"date": "2025-10-06", "grade": "B"},
-      {"date": "2025-10-07", "predicted_grade": "A"}
+    user_id: 1,
+    name: "Avantika Darshan",
+    weekly_progress: [
+      { date: "2025-10-01", grade: "A" }, // Mastered
+      { date: "2025-10-02", grade: "B" }, // Mastered
+      { date: "2025-10-03", grade: "C" }, // Can be Improved
     ],
-    "monthly_progress": [
-      {"date": "2025-10-01", "grade": "C"},
-      {"date": "2025-10-02", "grade": "C"},
-      {"date": "2025-10-03", "grade": "B"},
-      {"date": "2025-10-04", "grade": "B"},
-      {"date": "2025-10-05", "grade": "B"},
-      {"date": "2025-10-06", "grade": "B"},
-      {"date": "2025-10-07", "predicted_grade": "A"},
-      {"date": "2025-10-08", "predicted_grade": "A"},
-      {"date": "2025-10-09", "predicted_grade": "A"}
-    ]
+    monthly_progress: [
+      { date: "2025-10-01", grade: "B" },
+      { date: "2025-10-08", grade: "A" },
+    ],
   },
   {
-    "user_id": 2,
-    "name": "Priya Mehta",
-    "weekly_progress": [
-      {"date": "2025-10-01", "grade": "B"},
-      {"date": "2025-10-02", "grade": "B"},
-      {"date": "2025-10-03", "grade": "A"},
-      {"date": "2025-10-04", "grade": "A"},
-      {"date": "2025-10-05", "grade": "A"},
-      {"date": "2025-10-06", "grade": "A"},
-      {"date": "2025-10-07", "predicted_grade": "A"}
+    user_id: 2,
+    name: "Hritik Rajput",
+    weekly_progress: [
+      { date: "2025-10-01", grade: "A" }, // Mastered
+      { date: "2025-10-02", grade: "B" }, // Mastered
     ],
-    "monthly_progress": [
-      {"date": "2025-10-01", "grade": "B"},
-      {"date": "2025-10-02", "grade": "A"},
-      {"date": "2025-10-03", "grade": "A"},
-      {"date": "2025-10-04", "grade": "A"},
-      {"date": "2025-10-05", "grade": "A"},
-      {"date": "2025-10-06", "grade": "A"},
-      {"date": "2025-10-07", "predicted_grade": "A"}
-    ]
+    monthly_progress: [
+      { date: "2025-10-01", grade: "A" },
+      { date: "2025-10-08", grade: "A" },
+    ],
   },
   {
-    "user_id": 3,
-    "name": "Ravi Kumar",
-    "weekly_progress": [
-      {"date": "2025-10-01", "grade": "D"},
-      {"date": "2025-10-02", "grade": "D"},
-      {"date": "2025-10-03", "grade": "C"},
-      {"date": "2025-10-04", "grade": "C"},
-      {"date": "2025-10-05", "grade": "B"},
-      {"date": "2025-10-06", "grade": "B"},
-      {"date": "2025-10-07", "predicted_grade": "B"}
+    user_id: 3,
+    name: "Uma Pandey",
+    weekly_progress: [
+      { date: "2025-10-01", grade: "B" }, // Mastered
+      { date: "2025-10-02", grade: "A" }, // Mastered
+      { date: "2025-10-03", grade: "C" }, // Can be Improved
     ],
-    "monthly_progress": [
-      {"date": "2025-10-01", "grade": "D"},
-      {"date": "2025-10-02", "grade": "C"},
-      {"date": "2025-10-03", "grade": "C"},
-      {"date": "2025-10-04", "grade": "B"},
-      {"date": "2025-10-05", "grade": "B"},
-      {"date": "2025-10-06", "grade": "B"},
-      {"date": "2025-10-07", "predicted_grade": "A"}
-    ]
+    monthly_progress: [
+      { date: "2025-10-01", grade: "B" },
+      { date: "2025-10-08", grade: "A" },
+    ],
   },
   {
-    "user_id": 4,
-    "name": "Sneha Patel",
-    "weekly_progress": [
-      {"date": "2025-10-01", "grade": "B"},
-      {"date": "2025-10-02", "grade": "B"},
-      {"date": "2025-10-03", "grade": "B"},
-      {"date": "2025-10-04", "grade": "C"},
-      {"date": "2025-10-05", "grade": "C"},
-      {"date": "2025-10-06", "grade": "C"},
-      {"date": "2025-10-07", "predicted_grade": "B"}
+    user_id: 4,
+    name: "VidyaAI Student",
+    weekly_progress: [
+      { date: "2025-10-01", grade: "A" }, // Mastered
+      { date: "2025-10-02", grade: "B" }, // Mastered
+      { date: "2025-10-03", grade: "A" }, // Mastered
+      { date: "2025-10-04", grade: "B" }, // Mastered  -> total 4
+      { date: "2025-10-05", grade: "C" }, // Improve   -> total 1
+      { date: "2025-10-06", grade: "D" }, // Needing
+      { date: "2025-10-07", grade: "E" }, // Needing   -> total 2
     ],
-    "monthly_progress": [
-      {"date": "2025-10-01", "grade": "B"},
-      {"date": "2025-10-02", "grade": "B"},
-      {"date": "2025-10-03", "grade": "C"},
-      {"date": "2025-10-04", "grade": "C"},
-      {"date": "2025-10-05", "grade": "C"},
-      {"date": "2025-10-06", "grade": "C"},
-      {"date": "2025-10-07", "predicted_grade": "B"}
-    ]
+    monthly_progress: [
+      { date: "2025-10-01", grade: "B" },
+      { date: "2025-10-08", grade: "C" },
+    ],
   },
   {
-    "user_id": 5,
-    "name": "Rahul Verma",
-    "weekly_progress": [
-      {"date": "2025-10-01", "grade": "E"},
-      {"date": "2025-10-02", "grade": "D"},
-      {"date": "2025-10-03", "grade": "D"},
-      {"date": "2025-10-04", "grade": "C"},
-      {"date": "2025-10-05", "grade": "C"},
-      {"date": "2025-10-06", "grade": "B"},
-      {"date": "2025-10-07", "predicted_grade": "B"}
+    user_id: 5,
+    name: "Vikash Singh",
+    weekly_progress: [
+      { date: "2025-10-01", grade: "B" }, // Mastered -> 1
+      { date: "2025-10-02", grade: "C" }, // Improve  -> 1
+      { date: "2025-10-03", grade: "C" }, // Improve  -> 2
     ],
-    "monthly_progress": [
-      {"date": "2025-10-01", "grade": "E"},
-      {"date": "2025-10-02", "grade": "D"},
-      {"date": "2025-10-03", "grade": "C"},
-      {"date": "2025-10-04", "grade": "C"},
-      {"date": "2025-10-05", "grade": "B"},
-      {"date": "2025-10-06", "grade": "B"},
-      {"date": "2025-10-07", "predicted_grade": "A"}
-    ]
+    monthly_progress: [
+      { date: "2025-10-01", grade: "C" },
+      { date: "2025-10-08", grade: "B" },
+    ],
+  },
+
+  /* ---- others (left reasonable defaults) ---- */
+  {
+    user_id: 6,
+    name: "Meena Joshi",
+    weekly_progress: [
+      { date: "2025-10-01", grade: "A" },
+      { date: "2025-10-02", grade: "A" },
+      { date: "2025-10-03", grade: "A" },
+    ],
+    monthly_progress: [{ date: "2025-10-01", grade: "A" }],
   },
   {
-    "user_id": 6,
-    "name": "Meena Joshi",
-    "weekly_progress": [
-      {"date": "2025-10-01", "grade": "A"},
-      {"date": "2025-10-02", "grade": "A"},
-      {"date": "2025-10-03", "grade": "A"},
-      {"date": "2025-10-04", "grade": "A"},
-      {"date": "2025-10-05", "grade": "A"},
-      {"date": "2025-10-06", "grade": "A"},
-      {"date": "2025-10-07", "predicted_grade": "A"}
+    user_id: 7,
+    name: "Vikas Singh",
+    weekly_progress: [
+      { date: "2025-10-01", grade: "B" },
+      { date: "2025-10-02", grade: "B" },
+      { date: "2025-10-03", grade: "C" },
     ],
-    "monthly_progress": [
-      {"date": "2025-10-01", "grade": "A"},
-      {"date": "2025-10-02", "grade": "A"},
-      {"date": "2025-10-03", "grade": "A"},
-      {"date": "2025-10-04", "grade": "A"},
-      {"date": "2025-10-05", "grade": "A"},
-      {"date": "2025-10-06", "grade": "A"},
-      {"date": "2025-10-07", "predicted_grade": "A"}
-    ]
+    monthly_progress: [{ date: "2025-10-01", grade: "B" }],
   },
   {
-    "user_id": 7,
-    "name": "Vikas Singh",
-    "weekly_progress": [
-      {"date": "2025-10-01", "grade": "D"},
-      {"date": "2025-10-02", "grade": "C"},
-      {"date": "2025-10-03", "grade": "C"},
-      {"date": "2025-10-04", "grade": "B"},
-      {"date": "2025-10-05", "grade": "B"},
-      {"date": "2025-10-06", "grade": "B"},
-      {"date": "2025-10-07", "predicted_grade": "A"}
+    user_id: 8,
+    name: "Kiran Das",
+    weekly_progress: [
+      { date: "2025-10-01", grade: "C" },
+      { date: "2025-10-02", grade: "C" },
     ],
-    "monthly_progress": [
-      {"date": "2025-10-01", "grade": "D"},
-      {"date": "2025-10-02", "grade": "C"},
-      {"date": "2025-10-03", "grade": "C"},
-      {"date": "2025-10-04", "grade": "B"},
-      {"date": "2025-10-05", "grade": "B"},
-      {"date": "2025-10-06", "grade": "B"},
-      {"date": "2025-10-07", "predicted_grade": "A"}
-    ]
+    monthly_progress: [{ date: "2025-10-01", grade: "C" }],
   },
   {
-    "user_id": 8,
-    "name": "Kiran Das",
-    "weekly_progress": [
-      {"date": "2025-10-01", "grade": "C"},
-      {"date": "2025-10-02", "grade": "C"},
-      {"date": "2025-10-03", "grade": "C"},
-      {"date": "2025-10-04", "grade": "C"},
-      {"date": "2025-10-05", "grade": "C"},
-      {"date": "2025-10-06", "grade": "C"},
-      {"date": "2025-10-07", "predicted_grade": "C"}
+    user_id: 9,
+    name: "Neha Kapoor",
+    weekly_progress: [
+      { date: "2025-10-01", grade: "A" },
+      { date: "2025-10-02", grade: "B" },
     ],
-    "monthly_progress": [
-      {"date": "2025-10-01", "grade": "C"},
-      {"date": "2025-10-02", "grade": "C"},
-      {"date": "2025-10-03", "grade": "C"},
-      {"date": "2025-10-04", "grade": "C"},
-      {"date": "2025-10-05", "grade": "C"},
-      {"date": "2025-10-06", "grade": "C"},
-      {"date": "2025-10-07", "predicted_grade": "C"}
-    ]
+    monthly_progress: [{ date: "2025-10-01", grade: "A" }],
   },
   {
-    "user_id": 9,
-    "name": "Neha Kapoor",
-    "weekly_progress": [
-      {"date": "2025-10-01", "grade": "B"},
-      {"date": "2025-10-02", "grade": "B"},
-      {"date": "2025-10-03", "grade": "B"},
-      {"date": "2025-10-04", "grade": "A"},
-      {"date": "2025-10-05", "grade": "A"},
-      {"date": "2025-10-06", "grade": "A"},
-      {"date": "2025-10-07", "predicted_grade": "A"}
+    user_id: 10,
+    name: "Rahul Nair",
+    weekly_progress: [
+      { date: "2025-10-01", grade: "D" },
+      { date: "2025-10-02", grade: "C" },
     ],
-    "monthly_progress": [
-      {"date": "2025-10-01", "grade": "B"},
-      {"date": "2025-10-02", "grade": "B"},
-      {"date": "2025-10-03", "grade": "A"},
-      {"date": "2025-10-04", "grade": "A"},
-      {"date": "2025-10-05", "grade": "A"},
-      {"date": "2025-10-06", "grade": "A"},
-      {"date": "2025-10-07", "predicted_grade": "A"}
-    ]
+    monthly_progress: [{ date: "2025-10-01", grade: "C" }],
   },
-  {
-    "user_id": 10,
-    "name": "Rahul Nair",
-    "weekly_progress": [
-      {"date": "2025-10-01", "grade": "E"},
-      {"date": "2025-10-02", "grade": "E"},
-      {"date": "2025-10-03", "grade": "D"},
-      {"date": "2025-10-04", "grade": "D"},
-      {"date": "2025-10-05", "grade": "C"},
-      {"date": "2025-10-06", "grade": "C"},
-      {"date": "2025-10-07", "predicted_grade": "B"}
-    ],
-    "monthly_progress": [
-      {"date": "2025-10-01", "grade": "E"},
-      {"date": "2025-10-02", "grade": "E"},
-      {"date": "2025-10-03", "grade": "D"},
-      {"date": "2025-10-04", "grade": "D"},
-      {"date": "2025-10-05", "grade": "C"},
-      {"date": "2025-10-06", "grade": "C"},
-      {"date": "2025-10-07", "predicted_grade": "B"}
-    ]
-  }
 ];
+
 
 const monthly_report = [
+  /* ---- TOP 5 (Work Completed + exact averages) ---- */
   {
-    "user_id": 1,
-    "name": "Amit Sharma",
-    "month": "2025-09",
-    "assignments": { "submitted_count": 8, "success_rate": 75, "failure_rate": 25 },
-    "mcqs": { "attempted_count": 40, "success_rate": 70, "failure_rate": 30 },
-    "lectures": { "total_score": 80, "average_watch_time": 42 }
+    user_id: 1,
+    name: "Avantika Darshan",
+    month: "2025-09",
+    assignments: { submitted_count: 3, success_rate: 85, failure_rate: 15 },
+    mcqs:       { attempted_count: 12, success_rate: 80, failure_rate: 20 },
+    lectures:   { total_score: 82, average_watch_time: 42 }, // avg = (85+80+82)/3 = 82.33%
   },
   {
-    "user_id": 2,
-    "name": "Priya Mehta",
-    "month": "2025-09",
-    "assignments": { "submitted_count": 6, "success_rate": 83, "failure_rate": 17 },
-    "mcqs": { "attempted_count": 35, "success_rate": 60, "failure_rate": 40 },
-    "lectures": { "total_score": 63, "average_watch_time": 38 }
+    user_id: 2,
+    name: "Hritik Rajput",
+    month: "2025-09",
+    assignments: { submitted_count: 2, success_rate: 90, failure_rate: 10 },
+    mcqs:       { attempted_count: 10, success_rate: 78, failure_rate: 22 },
+    lectures:   { total_score: 85.5, average_watch_time: 38 }, // avg = 84.5%
   },
   {
-    "user_id": 3,
-    "name": "Ravi Kumar",
-    "month": "2025-09",
-    "assignments": { "submitted_count": 10, "success_rate": 90, "failure_rate": 10 },
-    "mcqs": { "attempted_count": 50, "success_rate": 80, "failure_rate": 20 },
-    "lectures": { "total_score": 56, "average_watch_time": 55 }
+    user_id: 3,
+    name: "Uma Pandey",
+    month: "2025-09",
+    assignments: { submitted_count: 3, success_rate: 80, failure_rate: 20 },
+    mcqs:       { attempted_count: 14, success_rate: 76, failure_rate: 24 },
+    lectures:   { total_score: 80, average_watch_time: 55 }, // avg = 78.67%
   },
   {
-    "user_id": 4,
-    "name": "Sneha Patel",
-    "month": "2025-09",
-    "assignments": { "submitted_count": 5, "success_rate": 60, "failure_rate": 40 },
-    "mcqs": { "attempted_count": 30, "success_rate": 50, "failure_rate": 50 },
-    "lectures": { "total_score": 88, "average_watch_time": 35 }
+    user_id: 4,
+    name: "VidyaAI Student",
+    month: "2025-09",
+    assignments: { submitted_count: 7, success_rate: 65, failure_rate: 35 },
+    mcqs:       { attempted_count: 18, success_rate: 70, failure_rate: 30 },
+    lectures:   { total_score: 78, average_watch_time: 35 }, // avg = 71%
   },
   {
-    "user_id": 5,
-    "name": "Rahul Verma",
-    "month": "2025-09",
-    "assignments": { "submitted_count": 9, "success_rate": 78, "failure_rate": 22 },
-    "mcqs": { "attempted_count": 45, "success_rate": 75, "failure_rate": 25 },
-    "lectures": { "total_score": 89, "average_watch_time": 50 }
+    user_id: 5,
+    name: "Vikash Singh",
+    month: "2025-09",
+    assignments: { submitted_count: 3, success_rate: 72, failure_rate: 28 },
+    mcqs:       { attempted_count: 16, success_rate: 74, failure_rate: 26 },
+    lectures:   { total_score: 81, average_watch_time: 50 }, // avg = 75.67%
   },
 
-  /* ---- Added to match progress_predicted_graph ---- */
+  /* ---- others (kept reasonable defaults) ---- */
   {
-    "user_id": 6,
-    "name": "Meena Joshi",
-    "month": "2025-09",
-    "assignments": { "submitted_count": 12, "success_rate": 96, "failure_rate": 4 },
-    "mcqs": { "attempted_count": 60, "success_rate": 92, "failure_rate": 8 },
-    "lectures": { "total_score": 95, "average_watch_time": 60 }
+    user_id: 6,
+    name: "Meena Joshi",
+    month: "2025-09",
+    assignments: { submitted_count: 12, success_rate: 96, failure_rate: 4 },
+    mcqs:       { attempted_count: 60, success_rate: 92, failure_rate: 8 },
+    lectures:   { total_score: 95, average_watch_time: 60 },
   },
   {
-    "user_id": 7,
-    "name": "Vikas Singh",
-    "month": "2025-09",
-    "assignments": { "submitted_count": 7, "success_rate": 82, "failure_rate": 18 },
-    "mcqs": { "attempted_count": 42, "success_rate": 74, "failure_rate": 26 },
-    "lectures": { "total_score": 78, "average_watch_time": 47 }
+    user_id: 7,
+    name: "Vikas Singh",
+    month: "2025-09",
+    assignments: { submitted_count: 7, success_rate: 82, failure_rate: 18 },
+    mcqs:       { attempted_count: 42, success_rate: 74, failure_rate: 26 },
+    lectures:   { total_score: 78, average_watch_time: 47 },
   },
   {
-    "user_id": 8,
-    "name": "Kiran Das",
-    "month": "2025-09",
-    "assignments": { "submitted_count": 6, "success_rate": 60, "failure_rate": 40 },
-    "mcqs": { "attempted_count": 36, "success_rate": 58, "failure_rate": 42 },
-    "lectures": { "total_score": 65, "average_watch_time": 40 }
+    user_id: 8,
+    name: "Kiran Das",
+    month: "2025-09",
+    assignments: { submitted_count: 6, success_rate: 60, failure_rate: 40 },
+    mcqs:       { attempted_count: 36, success_rate: 58, failure_rate: 42 },
+    lectures:   { total_score: 65, average_watch_time: 40 },
   },
   {
-    "user_id": 9,
-    "name": "Neha Kapoor",
-    "month": "2025-09",
-    "assignments": { "submitted_count": 9, "success_rate": 90, "failure_rate": 10 },
-    "mcqs": { "attempted_count": 48, "success_rate": 85, "failure_rate": 15 },
-    "lectures": { "total_score": 92, "average_watch_time": 58 }
+    user_id: 9,
+    name: "Neha Kapoor",
+    month: "2025-09",
+    assignments: { submitted_count: 9, success_rate: 90, failure_rate: 10 },
+    mcqs:       { attempted_count: 48, success_rate: 85, failure_rate: 15 },
+    lectures:   { total_score: 92, average_watch_time: 58 },
   },
   {
-    "user_id": 10,
-    "name": "Rahul Nair",
-    "month": "2025-09",
-    "assignments": { "submitted_count": 8, "success_rate": 72, "failure_rate": 28 },
-    "mcqs": { "attempted_count": 41, "success_rate": 68, "failure_rate": 32 },
-    "lectures": { "total_score": 71, "average_watch_time": 44 }
-  }
+    user_id: 10,
+    name: "Rahul Nair",
+    month: "2025-09",
+    assignments: { submitted_count: 8, success_rate: 72, failure_rate: 28 },
+    mcqs:       { attempted_count: 41, success_rate: 68, failure_rate: 32 },
+    lectures:   { total_score: 71, average_watch_time: 44 },
+  },
 ];
+
+
+
 
 /* --------------------------- helpers --------------------------- */
 const initials = (name = "") =>
@@ -529,6 +431,137 @@ function GradeChip({ grade }) {
     />
   );
 }
+
+function MonthlyBatchTopperPanel({ monthlyData = [] }) {
+  const theme = useTheme();
+
+  const rows = useMemo(() => {
+    const safe = (n) => (typeof n === "number" && !Number.isNaN(n) ? n : 0);
+
+    return [...monthlyData]
+      .map((m) => {
+        const assign = safe(m?.assignments?.success_rate);
+        const mcq = safe(m?.mcqs?.success_rate);
+        const lect = Math.min(100, safe(m?.lectures?.total_score));
+        const score = Math.round((assign + mcq + lect) / 3); // 0–100
+        return {
+          user_id: m.user_id,
+          name: m.name,
+          month: m.month,
+          assignments_success: assign,
+          mcqs_success: mcq,
+          lectures_score: lect,
+          score,
+        };
+      })
+      .sort((a, b) => b.score - a.score)
+      .slice(0, 5);
+  }, [monthlyData]);
+
+  const medal = (i) =>
+    i === 0 ? "🥇" : i === 1 ? "🥈" : i === 2 ? "🥉" : `#${i + 1}`;
+
+  return (
+    <Card
+      sx={{
+        width: "100%",
+        p: 1,
+        display: "flex",
+        flexDirection: "column",
+        backgroundColor: "#fff",
+        borderRadius: "20px",
+        border: "none",
+        boxShadow: "none",
+      }}
+    >
+      <CardHeader
+        title="Monthly Batch Topper"
+        subheader="Ranked by composite score (Assignments ✓% • MCQs ✓% • Lectures Score)"
+        sx={{ "& .MuiCardHeader-title": { fontWeight: 700 } }}
+      />
+      <CardContent sx={{ pt: 1 }}>
+        <TableContainer>
+          <Table size="small" sx={{ "& td, & th": { borderBottomColor: alpha(theme.palette.text.primary, 0.06) } }}>
+            <TableHead>
+              <TableRow>
+                <TableCell width={60}>Rank</TableCell>
+                <TableCell>Student</TableCell>
+                <TableCell align="right">Assign ✓%</TableCell>
+                <TableCell align="right">MCQs ✓%</TableCell>
+                <TableCell align="right">Lecture</TableCell>
+                <TableCell align="right">Score</TableCell>
+              </TableRow>
+            </TableHead>
+            <TableBody>
+              {rows.map((r, idx) => (
+                <TableRow hover key={r.user_id}>
+                  <TableCell>
+                    <Chip
+                      size="small"
+                      label={medal(idx)}
+                      sx={{
+                        fontWeight: 700,
+                        bgcolor:
+                          idx === 0
+                            ? alpha(theme.palette.warning.main, 0.18)
+                            : idx === 1
+                            ? alpha(theme.palette.info.main, 0.18)
+                            : idx === 2
+                            ? alpha(theme.palette.success.main, 0.18)
+                            : alpha(theme.palette.text.primary, 0.06),
+                      }}
+                    />
+                  </TableCell>
+                  <TableCell>
+                    <Stack direction="row" spacing={1.25} alignItems="center">
+                      <Avatar
+                        sx={{
+                          width: 28,
+                          height: 28,
+                          fontSize: 12,
+                          bgcolor: alpha(theme.palette.primary.main, 0.12),
+                          color: theme.palette.primary.main,
+                          fontWeight: 700,
+                        }}
+                      >
+                        {initials(r.name)}
+                      </Avatar>
+                      <Typography variant="body2" fontWeight={600}>
+                        {r.name}
+                      </Typography>
+                      {r.month && <Chip size="small" variant="outlined" label={r.month} />}
+                    </Stack>
+                  </TableCell>
+                  <TableCell align="right">{r.assignments_success}</TableCell>
+                  <TableCell align="right">{r.mcqs_success}</TableCell>
+                  <TableCell align="right">{r.lectures_score}</TableCell>
+                  <TableCell align="right">
+                    <Chip
+                      size="small"
+                      color={r.score >= 85 ? "success" : r.score >= 70 ? "primary" : "default"}
+                      label={r.score}
+                      sx={{ fontWeight: 700 }}
+                    />
+                  </TableCell>
+                </TableRow>
+              ))}
+              {rows.length === 0 && (
+                <TableRow>
+                  <TableCell colSpan={6}>
+                    <Typography variant="body2" color="text.secondary">
+                      No monthly data available.
+                    </Typography>
+                  </TableCell>
+                </TableRow>
+              )}
+            </TableBody>
+          </Table>
+        </TableContainer>
+      </CardContent>
+    </Card>
+  );
+}
+
 
 /* ========================== WIDGETS ========================== */
 
@@ -1019,6 +1052,10 @@ export default function EngagementSection() {
             progressData={progress_predicted_graph}
           />
         </Grid>
+        <Grid item xs={12}>
+  <MonthlyBatchTopperPanel monthlyData={monthly_report} />
+</Grid>
+
       </Grid>
     </Box>
   );
