@@ -53,7 +53,7 @@ const LectureRecorder = ({ open, closeDrawer, recordingData }) => {
   const [audioChunk, setAudioChunk] = useState([]);
   const [uploadedChunk, setUploadedChunk] = useState(0);
   const [audioAttachment, setAudioAttachment] = useState([]);
-  const [selectedOption, setSelectedOption] = useState("vidya");
+  const [selectedOption, setSelectedOption] = useState("other");
   // const [uploadProgress, setUploadProgress] = useState(0);
   // const [uploadSpeed, setUploadSpeed] = useState(0);
   // const [timeRemaining, setTimeRemaining] = useState(0);

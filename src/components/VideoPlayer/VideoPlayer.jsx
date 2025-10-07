@@ -349,7 +349,7 @@ export const BreakpointPlayer = ({
       }
     };
 
-    document.addEventListener("keydown", keyHandler, { passive: false });
+    // document.addEventListener("keydown", keyHandler, { passive: false });
 
     return () => {
 

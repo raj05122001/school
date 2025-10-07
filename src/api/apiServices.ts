@@ -1164,7 +1164,6 @@ export default class apiServices {
 
 public resetPassword = async (email,data) => {
     return await this.authAxiosInstance
-
       .post(`/api/v1/account/users/forgot_password/?email=${email}`, data)
       .then((Response) => Response.data)
       // .catch((error) => console.error(error));
@@ -1196,6 +1195,44 @@ public resetPassword = async (email,data) => {
       .get(`api/v1/dashboard/watchtime_data/?lecture_id=${lecture_id}&student_id=${student_id}`)
       .then((Response) => Response.data)
       .catch((error) => console.error(error));
+  };
+
+  public updateHighlights = async (decisionsId, formData) => {
+    return await this.axiosInstance
+      .patch(`/api/v1/edit/highlight/${decisionsId}/`, formData)
+      .then((Response) => Response?.data)
+  };
+
+  public updateNotes = async (notesId, formData) => {
+    return await this.axiosInstance
+      .patch(`/api/v1/edit/notes/${notesId}/`, formData)
+      .then((Response) => Response?.data)
+  };
+
+  public deleteMCQ = (quizID) => {
+    return this.axiosInstance
+      .delete(`/api/v1/edit/quiz/${quizID}/`)
+      .then((response) => {
+        return response.data;
+      })
+  };
+
+  public updateMCQ = async (quizID, formData) => {
+    return await this.axiosInstance
+      .patch(`/api/v1/edit/quiz/${quizID}/`, formData)
+      .then((Response) => Response?.data)
+  };
+
+  public updateQuestions = async (questionsId, formData) => {
+    return await this.axiosInstance
+      .patch(`/api/v1/edit/question/${questionsId}/`, formData)
+      .then((Response) => Response?.data)
+  };
+
+  public updateResources = async (resourcesId, formData) => {
+    return await this.axiosInstance
+      .patch(`/api/v1/edit/resources/${resourcesId}/`, formData)
+      .then((Response) => Response?.data)
   };
 
 }

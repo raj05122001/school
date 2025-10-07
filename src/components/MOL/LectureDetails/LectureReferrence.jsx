@@ -1,23 +1,61 @@
 import React, { useEffect, useState, useRef } from "react";
-import { Box, Typography, Link, Button, Skeleton } from "@mui/material";
-import { getLectureResources } from "@/api/apiHelper";
+import {
+  Box,
+  Typography,
+  Link,
+  Button,
+  Skeleton,
+  IconButton,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogContentText,
+  DialogTitle,
+} from "@mui/material";
+// import { getLectureResources } from "@/api/apiHelper";
 import { GrResources } from "react-icons/gr";
+import { MdDelete } from "react-icons/md";
+import { getLectureResources, updateResources } from "@/api/apiHelper";
 
-const LectureReferrence = ({ id, isDarkMode }) => {
+const LectureReferrence = ({ id, isEdit }) => {
   const [resources, setResources] = useState([]);
+  const [resourcesId, setResourcesId] = useState("");
   const [visibleCount, setVisibleCount] = useState(10);
   const [loading, setLoading] = useState(true);
   const hasFetchedData = useRef(false); // Prevent multiple fetch calls
+  const [currentLectureId, setCurrentLectureId] = useState(id);
+  const [deleteDialog, setDeleteDialog] = useState({
+    open: false,
+    index: null,
+  });
 
   useEffect(() => {
+    const handleLectureUUIDChange = (e) => {
+      const newLectureUUID = e.detail;
+      setCurrentLectureId(newLectureUUID);
+    };
+
+    window.addEventListener("lectureUUIDChange", handleLectureUUIDChange);
+
+    return () => {
+      window.removeEventListener("lectureUUIDChange", handleLectureUUIDChange);
+    };
+  }, []);
+
+  useEffect(() => {
+    // Reset hasFetchedData when currentLectureId changes
+    hasFetchedData.current = false;
+    setLoading(true);
+
     // Fetch lecture resources
     const fetchResources = async () => {
       try {
-        const response = await getLectureResources(id);
+        const response = await getLectureResources(id)
         if (response?.success) {
           // Parse the resources_text JSON string into a JS array
           const resourcesArray = JSON.parse(response.data.resources_text);
           setResources(resourcesArray);
+          setResourcesId(response.data.id);
         }
       } catch (error) {
         console.error("Error fetching lecture resources:", error);
@@ -26,11 +64,11 @@ const LectureReferrence = ({ id, isDarkMode }) => {
       }
     };
 
-    if (!hasFetchedData.current) {
+    if (!hasFetchedData.current && currentLectureId) {
       hasFetchedData.current = true;
       fetchResources();
     }
-  }, [id]);
+  }, [currentLectureId]);
 
   // Filter unique resources
   const uniqueResources = resources?.filter((resource, index, self) => {
@@ -56,7 +94,49 @@ const LectureReferrence = ({ id, isDarkMode }) => {
   });
 
   const displayedResources = uniqueResources.slice(0, visibleCount);
-  const refTitleCSS = {
+
+  // Open delete confirmation dialog
+  const handleDeleteClick = (originalIndex) => {
+    setDeleteDialog({ open: true, index: originalIndex });
+  };
+
+  // Close delete dialog
+  const handleDeleteCancel = () => {
+    setDeleteDialog({ open: false, index: null });
+  };
+
+  // Confirm delete
+  const handleDeleteConfirm = async () => {
+    try {
+      const indexToDelete = deleteDialog.index;
+      if (indexToDelete !== null) {
+        // Remove the item from uniqueResources and update the original resources
+        const updatedUniqueResources = uniqueResources.filter(
+          (_, index) => index !== indexToDelete
+        );
+
+        // Update the original resources state to reflect the deletion
+        setResources(updatedUniqueResources);
+
+        const updatedText = JSON.stringify(updatedUniqueResources);
+
+        await updateResources(resourcesId, {
+          resources_text: updatedText,
+        })
+
+        // If we deleted an item and now have fewer items than visibleCount, adjust visibleCount
+        if (updatedUniqueResources.length < visibleCount && visibleCount > 10) {
+          setVisibleCount(Math.max(10, updatedUniqueResources.length));
+        }
+      }
+    } catch (error) {
+      console.error("Error deleting reference:", error);
+    } finally {
+      setDeleteDialog({ open: false, index: null });
+    }
+  };
+
+   const refTitleCSS = {
     color: "#3B3D3B",
     fontFamily: "Inter",
     fontSize: "16px",
@@ -74,16 +154,6 @@ const LectureReferrence = ({ id, isDarkMode }) => {
     fontFamily: "Inter",
   };
 
-  // if (loading) {
-  //   return (
-  //     <Box sx={{ p: 3, width: "100%" }}>
-  //       <Skeleton variant="rectangular" height={40} sx={{ mb: 2 }} />
-  //       {[...Array(7)].map((_, index) => (
-  //         <Skeleton key={index} variant="text" height={30} sx={{ mb: 1 }} />
-  //       ))}
-  //     </Box>
-  //   );
-  // }
   return (
     <>
       {loading ? (
@@ -152,7 +222,12 @@ const LectureReferrence = ({ id, isDarkMode }) => {
             <GrResources /> Lecture Resources
           </Typography>
 
-          {displayedResources?.map((resource, index) => {
+          {displayedResources?.map((resource, displayIndex) => {
+            // Find the original index in uniqueResources array
+            const originalIndex = uniqueResources.findIndex(
+              (r) => r === resource
+            );
+
             // Display research papers, YouTube videos, and Google Books separately
             return (
               (resource.research_papers ||
@@ -161,15 +236,31 @@ const LectureReferrence = ({ id, isDarkMode }) => {
                 resource.youtube_videos ||
                 resource.Google_Book_Links) && (
                 <Box
-                  key={index}
+                  key={originalIndex}
                   className="blur_effect_card"
                   sx={{
                     mb: 2,
-                    backgroundColor: !isDarkMode && "#f8fdff",
                     p: 2,
                     borderRadius: 4,
                   }}
                 >
+                  {isEdit && (
+                    <Box
+                      sx={{
+                        display: "flex",
+                        gap: 1,
+                        justifyContent: "flex-end",
+                        mb: 1,
+                      }}
+                    >
+                      <IconButton
+                        onClick={() => handleDeleteClick(originalIndex)}
+                        color="error"
+                      >
+                        <MdDelete />
+                      </IconButton>
+                    </Box>
+                  )}
                   {resource.research_papers &&
                     resource.research_papers.title && (
                       <Box sx={{ mb: 1 }}>
@@ -188,7 +279,9 @@ const LectureReferrence = ({ id, isDarkMode }) => {
                     )}
                   {resource.scopus_data && (
                     <Box sx={{ mb: 1 }}>
-                      <Typography sx={refTitleCSS}>Scopus Link:</Typography>
+                      <Typography sx={refTitleCSS}>
+                        Scopus Link:
+                      </Typography>
                       <Box
                         sx={{ display: "flex", alignItems: "center", gap: 4 }}
                       >
@@ -205,7 +298,7 @@ const LectureReferrence = ({ id, isDarkMode }) => {
                         />
                         <Box display={"flex"} flexDirection={"column"} gap={2}>
                           <Typography
-                            sx={{
+                          sx={{
                               color: "#3B3D3B",
                               fontFamily: "Inter",
                               fontSize: "14px",
@@ -213,8 +306,7 @@ const LectureReferrence = ({ id, isDarkMode }) => {
                               fontWeight: "500",
                               lineHeight: "20px",
                               letterSpacing: "-0.48px",
-                            }}
-                          >
+                            }}>
                             Link:{" "}
                             <Link
                               href={resource.scopus_data.scopus_link}
@@ -227,7 +319,7 @@ const LectureReferrence = ({ id, isDarkMode }) => {
                           </Typography>
                           {resource.scopus_data.doi_link && (
                             <Typography
-                              sx={{
+                            sx={{
                                 color: "#3B3D3B",
                                 fontFamily: "Inter",
                                 fontSize: "14px",
@@ -236,7 +328,7 @@ const LectureReferrence = ({ id, isDarkMode }) => {
                                 lineHeight: "20px",
                                 letterSpacing: "-0.48px",
                               }}
-                            >
+                              >
                               DOI Link:{" "}
                               <Link
                                 href={resource.scopus_data.doi_link}
@@ -272,21 +364,23 @@ const LectureReferrence = ({ id, isDarkMode }) => {
                           }}
                         />
                         <Box display={"flex"} flexDirection={"column"} gap={2}>
-                            <Link
-                              href={resource?.springer_data?.url}
-                              target="_blank"
-                              rel="noopener"
-                              sx={refLinkCSS}
-                            >
-                              {resource?.springer_data?.title}
-                            </Link>
+                          <Link
+                            href={resource?.springer_data?.url}
+                            target="_blank"
+                            rel="noopener"
+                            sx={refLinkCSS}
+                          >
+                            {resource?.springer_data?.title}
+                          </Link>
                         </Box>
                       </Box>
                     </Box>
                   )}
                   {resource.youtube_videos && (
                     <Box sx={{ mb: 1 }}>
-                      <Typography sx={refTitleCSS}>YouTube Video:</Typography>
+                      <Typography sx={refTitleCSS}>
+                        YouTube Video:
+                      </Typography>
                       <Box
                         sx={{ display: "flex", alignItems: "center", gap: 4 }}
                       >
@@ -350,7 +444,7 @@ const LectureReferrence = ({ id, isDarkMode }) => {
               )
             );
           })}
-          {visibleCount < resources.length && (
+          {visibleCount < uniqueResources.length && (
             <Button
               variant="contained"
               onClick={() => setVisibleCount((prevCount) => prevCount + 5)}
@@ -384,6 +478,30 @@ const LectureReferrence = ({ id, isDarkMode }) => {
           )}
         </Box>
       )}
+
+      {/* Delete Confirmation Dialog */}
+      <Dialog
+        open={deleteDialog.open}
+        onClose={handleDeleteCancel}
+        aria-labelledby="delete-dialog-title"
+        aria-describedby="delete-dialog-description"
+      >
+        <DialogTitle id="delete-dialog-title">{"Confirm Delete"}</DialogTitle>
+        <DialogContent>
+          <DialogContentText id="delete-dialog-description">
+            Are you sure you want to delete this reference? This action cannot
+            be undone.
+          </DialogContentText>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={handleDeleteCancel} color="primary">
+            Cancel
+          </Button>
+          <Button onClick={handleDeleteConfirm} color="error" autoFocus>
+            Delete
+          </Button>
+        </DialogActions>
+      </Dialog>
     </>
   );
 };

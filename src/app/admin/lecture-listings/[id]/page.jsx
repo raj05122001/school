@@ -50,7 +50,7 @@ const LecturePage = ({ params }) => {
     [id]
   );
   const lectureDetails = useMemo(
-    () => <LectureDetails id={id} classID={classID} isAdmin={true} />,
+    () => <LectureDetails id={id} classID={classID} isAdmin={true} isEdit={true} />,
     [id, classID]
   );
   // const articles = useMemo(() => <Articles lectureId={id} />, [id]);

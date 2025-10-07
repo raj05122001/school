@@ -1,14 +1,22 @@
 import React, { useEffect, useState, useRef } from "react";
-import { Box, Typography, Button, Skeleton } from "@mui/material";
-import { getLectureQuestion } from "@/api/apiHelper";
+import { Box, Typography, Button, Skeleton, IconButton } from "@mui/material";
+import { getLectureQuestion, updateQuestions } from "@/api/apiHelper";
 import MathJax from "react-mathjax2";
 import TextWithMath from "@/commonComponents/TextWithMath/TextWithMath";
+import { MdEdit, MdSave, MdCancel } from "react-icons/md";
+import TextEditor from "@/commonComponents/TextEditor/TextEditor";
 
-const LectureQuestions = ({ id, isDarkMode }) => {
+const LectureQuestions = ({ id, isDarkMode, isEdit=false }) => {
   const [questionsData, setQuestionsData] = useState([]);
   const [visibleCount, setVisibleCount] = useState(5);
   const [loading, setLoading] = useState(true);
   const hasFetchedData = useRef(false); // Prevent multiple fetch calls
+
+
+  const [questionsId, setQuestionsId] = useState("");
+  const [saving, setSaving] = useState(false);
+  const [editingIndex, setEditingIndex] = useState(-1); // Track which question is being edited
+  const [editedQuestionData, setEditedQuestionData] = useState(null); // Store edited question data
 
   useEffect(() => {
     const fetchQuestions = async () => {
@@ -19,6 +27,8 @@ const LectureQuestions = ({ id, isDarkMode }) => {
         // Parse the question_text field
         const parsedQuestions = JSON.parse(lectureQuestion);
         setQuestionsData(parsedQuestions);
+        setQuestionsId(data?.data?.id);
+   
       } catch (error) {
         console.error("Error fetching lecture questions:", error);
       } finally {
@@ -34,16 +44,68 @@ const LectureQuestions = ({ id, isDarkMode }) => {
 
   const displayedQuestion = questionsData.slice(0, visibleCount);
 
-  // if (loading) {
-  //   return (
-  //     <Box sx={{ p: 3, width: "100%" }}>
-  //       <Skeleton variant="rectangular" height={40} sx={{ mb: 2 }} />
-  //       {[...Array(7)].map((_, index) => (
-  //         <Skeleton key={index} variant="text" height={30} sx={{ mb: 1 }} />
-  //       ))}
-  //     </Box>
-  //   );
-  // }
+    const handleEdit = (index) => {
+    setEditingIndex(index);
+    setEditedQuestionData({ ...questionsData[index] });
+  };
+
+  const handleCancel = () => {
+    setEditingIndex(-1);
+    setEditedQuestionData(null);
+  };
+
+  const parseEditedHtml = (html) => {
+    // Create a temporary DOM element to parse HTML
+    const tempDiv = document.createElement('div');
+    tempDiv.innerHTML = html;
+    
+    // Extract title from h3 tag (preserve HTML formatting)
+    const titleElement = tempDiv.querySelector('#question');
+    const title = titleElement ? titleElement.innerHTML.trim() : '';
+    
+    // Extract questions from li tags (preserve HTML formatting)
+    const listItems = tempDiv.querySelectorAll('#option li');
+    const questions = Array.from(listItems).map(li => li.innerHTML.trim()).filter(text => text);
+    
+    return { title, questions };
+  };
+
+  const handleQueTextChange = (html) => {
+    const parsedData = parseEditedHtml(html);
+    setEditedQuestionData(parsedData);
+  };
+
+  const handleSave = async () => {
+    if (!editedQuestionData) return;
+    
+    setSaving(true);
+    try {
+      // Create a copy of the complete questions data
+      const updatedQuestionsData = [...questionsData];
+      
+      // Update only the specific question being edited
+      updatedQuestionsData[editingIndex] = editedQuestionData;
+      
+      // Send complete data to API
+      const question_text = JSON.stringify(updatedQuestionsData);
+      await updateQuestions(questionsId, {
+        question_text: question_text,
+      })
+      
+      // Update local state with the complete updated data
+      setQuestionsData(updatedQuestionsData);
+      
+      // Reset editing state
+      setEditingIndex(-1);
+      setEditedQuestionData(null);
+      
+    } catch (error) {
+      console.error("Error updating question:", error);
+    } finally {
+      setSaving(false);
+    }
+  };
+
 
   return (
     <Box
@@ -77,77 +139,84 @@ const LectureQuestions = ({ id, isDarkMode }) => {
           <Skeleton variant="text" height={30} sx={{ mb: 1 }} />
         </Box>
       ) : (
-        <MathJax.Context input="tex">
+       <MathJax.Context input="tex">
           <>
-            <Typography
-              sx={{
-                color: "#3B3D3B",
-                fontFamily: "Inter",
-                fontSize: "16px",
-                fontStyle: "normal",
-                fontWeight: "600",
-                lineHeight: "20px",
-                letterSpacing: "-0.48px",
-              }}
-              gutterBottom
-            >
+            <Typography variant="h6" fontWeight="bold" gutterBottom>
               Lecture Questions
             </Typography>
             {displayedQuestion?.map((item, index) => (
               <Box key={index} sx={{ mb: 2 }}>
-                <Typography>
-                  <TextWithMath
-                    text={item.title}
-                    textStyle={{
-                      color: "#3B3D3B",
-                      fontFamily: "Inter",
-                      fontSize: "16px",
-                      fontStyle: "normal",
-                      fontWeight: "600",
-                      lineHeight: "20px",
-                      letterSpacing: "-0.48px",
-                    }}
+                {isEdit && (
+                  <Box
+                    sx={{ display: "flex", gap: 1, justifyContent: "flex-end" }}
+                  >
+                    {editingIndex !== index ? (
+                      <IconButton
+                        onClick={() => handleEdit(index)}
+                        sx={{ color: "#36454F" }}
+                        title="Edit Question"
+                      >
+                        <MdEdit />
+                      </IconButton>
+                    ) : (
+                      <>
+                        <IconButton
+                          onClick={handleSave}
+                          disabled={saving}
+                          sx={{ color: "#4CAF50" }}
+                          title="Save Changes"
+                        >
+                          <MdSave />
+                        </IconButton>
+                        <IconButton
+                          onClick={handleCancel}
+                          sx={{ color: "#f44336" }}
+                          title="Cancel Edit"
+                        >
+                          <MdCancel />
+                        </IconButton>
+                      </>
+                    )}
+                  </Box>
+                )}
+                {editingIndex === index ? (
+                  <TextEditor
+                    text={`<h3 id="question">${
+                      item.title || ""
+                    }</h3>
+                    <br>
+                    <ul style="padding-left: 1.2em;" id="option">
+                      ${
+                        item?.questions
+                          ?.map((point) => `<li>${point}</li><br>`)
+                          .join("") || ""
+                      }
+                    </ul>`}
+                    onChange={(html) => handleQueTextChange(html)}
                   />
-                </Typography>
-                <ul>
-                  {item?.questions?.map((question, qIndex) => (
-                    <li key={qIndex}>
-                      <Typography>
-                        <TextWithMath text={question} />
-                      </Typography>
-                    </li>
-                  ))}
-                </ul>
+                ) : (
+                  <>
+                    <Typography variant="subtitle1" fontWeight="bold">
+                      <TextWithMath text={item.title} textStyle={{"fontSize":"16px", fontWeight:600}}/>
+                    </Typography>
+                    <ul>
+                      {item?.questions?.map((question, qIndex) => (
+                        <li key={qIndex}>
+                          <Typography variant="body2">
+                            <TextWithMath text={question} />
+                          </Typography>
+                        </li>
+                      ))}
+                    </ul>
+                  </>
+                )}
               </Box>
             ))}
             {visibleCount < questionsData.length && (
               <Button
                 variant="contained"
                 onClick={() => setVisibleCount((prevCount) => prevCount + 5)}
-                sx={{
-                  mt: 2,
-                  display: "inline-flex",
-                  padding: "12px 32px",
-                  justifyContent: "center",
-                  alignItems: "center",
-                  gap: "8px",
-                  textTransform: "none",
-                  borderRadius: "8px",
-                  background: "#141514",
-                  color: "#FFF",
-                  textAlign: "center",
-                  fontFeatureSettings: "'liga' off, 'clig' off",
-                  fontFamily: "Aptos",
-                  fontSize: "16px",
-                  fontStyle: "normal",
-                  fontWeight: "700",
-                  lineHeight: "24px",
-                  "&:hover": {
-                    border: "1px solid #141514",
-                    background: "#E5E5E5",
-                    color: "#141514",
-                  },
-                }}
+                sx={{ mt: 2 }}
               >
                 Need More
               </Button>

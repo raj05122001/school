@@ -21,6 +21,7 @@ const LectureDetails = ({
   isStudent = false,
   setMarksData,
   isAdmin = false,
+  isEdit=false
 }) => {
   const { isDarkMode } = useThemeContext();
   const [value, setValue] = useState(0);
@@ -49,13 +50,14 @@ const LectureDetails = ({
         marksData={marksData}
         isStudent={isStudent}
         setMarksData={setMarksData}
+        isEdit={isEdit}
       />
     ),
     [id, isDarkMode, marksData]
   );
 
   const memoizedLectureMCQ = useMemo(
-    () => <LectureMCQ id={id} isDarkMode={isDarkMode} />,
+    () => <LectureMCQ id={id} isDarkMode={isDarkMode} isEdit={isEdit} />,
     [id, isDarkMode]
   );
 
@@ -76,7 +78,7 @@ const LectureDetails = ({
   );
 
   const memoizedLectureQuestions = useMemo(
-    () => <LectureQuestions id={id} isDarkMode={isDarkMode} />,
+    () => <LectureQuestions id={id} isDarkMode={isDarkMode} isEdit={isEdit} />,
     [id, isDarkMode]
   );
   const memoizedLectureAssignment = useMemo(
@@ -92,7 +94,7 @@ const LectureDetails = ({
     [id, isDarkMode, class_ID]
   );
   const memoizedLectureReferrence = useMemo(
-    () => <LectureReferrence id={id} isDarkMode={isDarkMode} />,
+    () => <LectureReferrence id={id} isDarkMode={isDarkMode} isEdit={isEdit} />,
     [id, isDarkMode]
   );
 

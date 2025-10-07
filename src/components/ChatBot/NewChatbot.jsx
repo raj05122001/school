@@ -174,6 +174,7 @@ export default function NewChatbot({ suggestionInput, setIsOpenChatBot }) {
     try {
       const formData = new FormData();
       formData.append("user_message", input);
+      formData.append("lectureid", lectureID);
       setUserTextInput("");
       const response = await getNewLectureAns(sessionID, formData);
       const data = response.data.response;

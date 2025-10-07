@@ -17,7 +17,7 @@ const LectureOverview = ({
   isEdit = false,
   marksData = {},
   isStudent = false,
-  setMarksData,
+  setMarksData
 }) => {
   const [value, setValue] = useState(0);
   const { isDarkMode } = useThemeContext();
@@ -92,6 +92,7 @@ const fetchAudio = async () => {
         marksData={marksData}
         isStudent={isStudent}
         setMarksData={setMarksData}
+        isEdit={isEdit}
       />
     ),
     [marksData, lectureId, isDarkMode]

@@ -106,7 +106,7 @@ const LecturePage = ({ params }) => {
     [id]
   );
   const lectureDetails = useMemo(
-    () => <LectureDetails id={id} classID={classID} />,
+    () => <LectureDetails id={id} classID={classID} isEdit={true} />,
     [id, classID]
   );
   // const articles = useMemo(() => <Articles lectureId={id} />, [id]);
