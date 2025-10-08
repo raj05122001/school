@@ -66,8 +66,6 @@ const Page = () => {
     }
   };
 
-  console.log("Count Data", countData)
-
   const darkModeStyles = {
     backgroundColor: "#1a1a1a",
     color: "#ffffff",

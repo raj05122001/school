@@ -22,7 +22,6 @@ const Main = ({ children }) => {
     process.env.NEXT_PUBLIC_iSTRIALACCOUNT === "true" ? true : false;
   const s3FileName = process.env.NEXT_PUBLIC_FILE_NAME === "edu/" ? "edu/" : "";
 
-  console.log("s3FileName : ", s3FileName);
 
   const pathname = usePathname();
   const [open, setOpen] = useState(true);
@@ -62,7 +61,6 @@ const Main = ({ children }) => {
 
   const handleCreateLecture = (value = "", isEditMode = false) => {
     if (isEditMode) {
-      console.log("value : ",value)
       setRecordingData(value);
       setIsEditLecture(true);
       setOpenCreateLecture(true);

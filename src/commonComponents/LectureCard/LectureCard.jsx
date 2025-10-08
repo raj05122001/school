@@ -407,7 +407,6 @@ export function BasicModal({ open, setOpen, id, getAllLecture = () => {} }) {
         formData.append("pdf", file);
       });
       const response = await uploadS3Video(id, formData);
-      console.log("response : ",response)
       toast.success("Lecture has been uploaded");
       resetStates();
       getAllLecture();

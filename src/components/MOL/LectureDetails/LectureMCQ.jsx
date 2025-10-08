@@ -348,20 +348,8 @@ const LectureMCQ = ({ id, isDarkMode, isEdit=false }) => {
                         </ListItem>
                       ))}
                     </List>
-                    
-                    {!showAnswers[item.id] && (
-                      <Button
-                        variant="contained"
-                        onClick={() => handleSubmit(item.id)}
-                        disabled={selectedOptions[item.id] === undefined}
-                        sx={{ mt: 1 }}
-                      >
-                        Submit
-                      </Button>
-                    )}
-                    
-                    {showAnswers[item.id] && (
-                      <Box mt={2} sx={{ 
+
+                    <Box mt={2} sx={{ 
                         p: 2, 
                         backgroundColor: 'rgba(76, 175, 80, 0.1)', 
                         borderRadius: 1,
@@ -373,8 +361,7 @@ const LectureMCQ = ({ id, isDarkMode, isEdit=false }) => {
                         <Typography component="span" sx={{ mt: 1 }}>
                           <TextWithMath text={item.answer || 'Answer not available'} />
                         </Typography>
-                      </Box>
-                    )}
+                    </Box>
                   </>
                 )}
               </ListItem>

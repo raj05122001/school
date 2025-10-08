@@ -287,7 +287,6 @@ const TeacherFilters = ({ classValue = "All" }) => {
   }, []);
 
   const handleRoute = async (val) => {
-    console.log("pathname : ", pathname);
     router.push(`${pathname}?class=${val === "All" ? "" : val}`);
     setSelected(val);
   };

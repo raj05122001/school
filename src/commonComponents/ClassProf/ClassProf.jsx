@@ -22,7 +22,6 @@ const ClassProf = () => {
     try {
       const response = await getteacherClass();
       setClassOptions(response?.data?.data?.class_subject_list);
-      console.log("response", response)
       const findMCA=response?.data?.data?.class_subject_list?.find((val)=>val?.class_id===2 || val?.class_id===27)
       setSelectedOptions(findMCA);
     } catch (error) {

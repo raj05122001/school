@@ -110,7 +110,6 @@ const CheckAssignment = ({ assignment, index, fetchAssignmentAnswer }) => {
 
       try {
         const fileLink = assignment.answer_link;
-        console.log("fileLink : ",fileLink)
         const keyPath = new URL(fileLink).pathname.slice(1);
         const decodeKey = decodeURIComponent(keyPath);
         const idx = decodeKey.lastIndexOf("/");
@@ -126,7 +125,6 @@ const CheckAssignment = ({ assignment, index, fetchAssignmentAnswer }) => {
 
         const signed = await fetchPresignedUrl(data);
         setAnswerSignedUrl(signed?.presigned_url || "");
-        console.log("signed?.presigned_url: ",signed?.presigned_url)
       } catch (err) {
         console.error("Error fetching answer URL:", err);
         setAnswerSignedUrl("");

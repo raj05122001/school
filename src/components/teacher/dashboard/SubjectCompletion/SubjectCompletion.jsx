@@ -13,8 +13,6 @@ function SubjectCompletion() {
   const [isClient, setIsClient] = useState(false);
   const [completionData, setCompletionData] = useState({});
 
-  console.log("completionData : ",completionData)
-
   const fetchSubjectCompletion = async () => {
     try {
       const response = await getSubjectCompletion();

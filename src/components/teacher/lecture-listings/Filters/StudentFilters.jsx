@@ -272,7 +272,6 @@ const StudentFilters = ({
   }, []);
 
   const handleRoute = async (val) => {
-    console.log("pathname : ", pathname);
     router.push(`${pathname}?subject=${val === "All" ? "" : val}`);
     setSelected(val);
   };

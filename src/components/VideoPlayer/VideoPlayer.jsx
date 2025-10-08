@@ -251,8 +251,6 @@ export const BreakpointPlayer = ({
   setVideoTimeStamp,
   timeStamp = 0,
 }) => {
-
-  console.log("timeStamp : ",timeStamp)
   const userDetails = decodeToken(Cookies.get("ACCESS_TOKEN"));
   const videoRef = useRef(null);
   const playerRef = useRef(null);

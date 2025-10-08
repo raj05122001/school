@@ -174,7 +174,6 @@ const LectureRecorder = ({ open, closeDrawer, recordingData }) => {
   const mergeChunks = async () => {
     try{
        const bucketName = await getBucketName()
-       console.log("bucketName : ",bucketName?.data?.bucket_name)
 
         const response = await axios.post(
             'https://vidya-s3.ultimeet.io/merge-process-video',

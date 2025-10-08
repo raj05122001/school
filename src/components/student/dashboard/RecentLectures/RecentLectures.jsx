@@ -27,7 +27,6 @@ const RecentLectures = () => {
     setIsLoading(true);
     try {
       const response = await getStudentLectures("COMPLETED");
-      console.log("Response for student", response);
       if (response?.data?.success) {
         setAllLecture(response?.data?.data);
         setIsLoading(false);

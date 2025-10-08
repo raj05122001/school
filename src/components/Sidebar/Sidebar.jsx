@@ -199,7 +199,6 @@ const Sidebar = ({ open, setOpen }) => {
     }
   }, []);
 
-  console.log("userDetails : ", userDetails);
 
   return (
     <Drawer
@@ -558,11 +557,9 @@ const Sidebar = ({ open, setOpen }) => {
                         color="primary"
                         onClick={() => {
                           if (userDetails?.role === "TEACHER") {
-                            console.log("Role:", userDetails?.role); // debug log
                             handleClose(); // close menu if needed
                             router.push("/teacher/myprofile");
                           } else if (userDetails?.role === "STUDENT") {
-                            console.log("Role:", userDetails?.role); // debug log
                             handleClose(); // close menu if needed
                             router.push("/student/myprofile");
                           }

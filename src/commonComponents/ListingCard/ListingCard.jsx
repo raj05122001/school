@@ -38,11 +38,9 @@ const ListingCard = ({ data, onClick }) => {
       folder: "videos/",
     };
 
-    console.log("urlData : ",urlData)
   
     try {
       const signedUrl = await fetchPresignedUrl(urlData)
-      console.log("signedUrl?.presigned_url : ",signedUrl?.presigned_url)
       setVideoUrl(signedUrl?.presigned_url)
     } catch (error) {
       console.error(error);

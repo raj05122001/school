@@ -45,8 +45,6 @@ const handlePasswordChange = (e) => {
 };
 
 
-console.log("Password Data", passwordData)
-
 
   const { isDarkMode } = useThemeContext();
 
@@ -70,7 +68,6 @@ console.log("Password Data", passwordData)
     try {
       const response = await getStudentDetails(userDetails?.student_id);
       const fetchedData = response?.data?.data;
-      console.log("Fetched Data", fetchedData)
       reset();
       // setValue("full_name", fetchedData?.full_name);
       // setValue("designation", fetchedData?.designation);
@@ -105,7 +102,6 @@ console.log("Password Data", passwordData)
     }
   };
 
-  console.log("Intial Data", initialData)
 
   const handleEditPicClick = () => {
     if (fileInputRef.current) {

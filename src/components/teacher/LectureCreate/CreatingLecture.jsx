@@ -113,7 +113,6 @@ const CreatingLecture = ({
     try {
       const apiResponse = await getLecAttachment(lecture?.id);
       const response = apiResponse?.data?.data;
-      console.log("Response attachment", response);
       setFileName(response[0]);
       fileRef.current = response[0];
     } catch (error) {
@@ -130,7 +129,6 @@ const CreatingLecture = ({
     }
   };
 
-  console.log("New File Name", fileName);
 
   useEffect(() => {
     if (isEditMode && lecture) {
@@ -273,12 +271,9 @@ const CreatingLecture = ({
   }, [lectureChapter]);
 
   const handleFileSelect = (e) => {
-    console.log("handleFileSelect triggered");
     const selectedFile = e?.target?.files?.[0];
-    console.log("Selected file is:", selectedFile);
     fileRef.current = selectedFile;
     setFileName(selectedFile);
-    console.log("FileRef is", fileRef);
   };
 
   const handleSubmit = async (e) => {
@@ -358,12 +353,10 @@ const CreatingLecture = ({
         if (response.data.success) {
           const lectureId = response?.data?.data?.id;
           if (file) {
-            console.log("Uploading file with FormData");
             var fd = new FormData();
             fd.append("files", file);
             fd.append("lecture", lectureId);
             const attachRes = await updateLectureAttachment(lectureId, fd);
-            console.log("Attachment response:", attachRes);
           }
           handleClose(); // Close the dialog after a successful update
         } else {
@@ -372,16 +365,13 @@ const CreatingLecture = ({
       } else {
         // Call the createLecture API when not in edit mode
         const response = await createLecture(data);
-        console.log("Response is", response);
         if (response.data.success) {
           const lectureId = response?.data?.data?.id;
           if (file) {
-            console.log("Uploading file with FormData");
             var fd = new FormData();
             fd.append("files", file);
             fd.append("lecture", lectureId);
             const attachRes = await updateLectureAttachment(lectureId, fd);
-            console.log("Attachment response:", attachRes);
           }
 
           handleClose(); // Close the dialog after a successful creation

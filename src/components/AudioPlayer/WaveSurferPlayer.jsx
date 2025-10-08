@@ -140,8 +140,6 @@ const WaveSurferPlayer = forwardRef(
       return () => unsubs.forEach((u) => u());
     }, [wavesurfer, timeStamp]);
 
-    console.log("timeStamp : ",timeStamp)
-
     const onJumpTime = (ms) => {
       if (!isPlaying) onPlayClick();
       wavesurfer.setTime(ms / 1000);

@@ -303,14 +303,12 @@ const AdminFilters = ({ classValue = "All" }) => {
   useEffect(() => {
     const fetchData = async () => {
       const classResponse = await getClassByCourse("", "");
-      console.log("Class Response", classResponse)
       setClassList(classResponse?.data?.data || []);
     };
     fetchData();
   }, []);
 
   const handleRoute = async (val) => {
-    console.log("pathname : ", pathname);
     router.push(`${pathname}?class=${val === "All" ? "" : val}`);
     setSelected(val);
   };

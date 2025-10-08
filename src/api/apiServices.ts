@@ -523,7 +523,6 @@ export default class apiServices {
         },
       })
       .then((response) => {
-        console.log("tost response : ",response)
         const message = response?.data?.message || "Assignment Create Successfully";
         toast.success(message, {
           id: toastInstance,

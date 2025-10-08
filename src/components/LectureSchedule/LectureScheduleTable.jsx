@@ -55,7 +55,6 @@ const LectureScheduleTable = () => {
       setLoading(true); // Start loading
       if (userDetails?.role === "TEACHER") {
         const response = await getMyLectures("UPCOMMING", "", "", page);
-        console.log("Response for table", response);
         setLectureData(response?.data?.data?.lecture_data);
       } else {
         const response = await getLectureTracking("UPCOMMING", "", "", page);
@@ -80,7 +79,6 @@ const LectureScheduleTable = () => {
   };
 
   const handleChange = (event, value) => {
-    console.log("Value", value);
     router.push(`/teacher/lecture-schedule?activePage=${value}`);
   };
 

@@ -166,15 +166,9 @@ const StudentAssignment = () => {
     }
   };
 
-  console.log("rangeData : ", rangeData);
-
   const fetchClassAssignment = async () => {
     setLoading(true);
     try {
-      console.log(
-        "Number(userDetails?.user_id) !== 35 : ",
-        Number(userDetails?.user_id) !== 35
-      );
       if (Number(userDetails?.user_id) !== 35) {
         const response = await getClassAssignment(
           selectedOptions?.class_id,
@@ -202,8 +196,6 @@ const StudentAssignment = () => {
       setLoading(false);
     }
   };
-
-  console.log("Range Data", rangeData);
 
   const getRowColor = (score) => {
     if (score >= 80) return "#E6F4EA"; // Light green
