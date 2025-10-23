@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useContext } from "react";
+import React, { useState, useEffect, useContext, useCallback } from "react";
 import {
   Table,
   TableBody,
@@ -44,15 +44,24 @@ const LectureScheduleTable = () => {
   const activePage = parseInt(searchParams.get("activePage")) || 1;
 
   const {
-      openRecordingDrawer,
-      openCreateLecture,
-      handleCreateLecture,
-      handleLectureRecord,
-    } = useContext(AppContextProvider);
+    openRecordingDrawer,
+    openCreateLecture,
+    handleCreateLecture,
+    handleLectureRecord,
+  } = useContext(AppContextProvider);
 
-  const fetchLectureData = async (page = 1) => {
+
+  useEffect(() => {
+    if (!openCreateLecture && !openRecordingDrawer) {
+      fetchLectureData(activePage);
+    }
+  }, [activePage, openCreateLecture, openRecordingDrawer]);
+
+
+
+  const fetchLectureData = useCallback(async (page = 1) => {
     try {
-      setLoading(true); // Start loading
+      setLoading(true);
       if (userDetails?.role === "TEACHER") {
         const response = await getMyLectures("UPCOMMING", "", "", page);
         setLectureData(response?.data?.data?.lecture_data);
@@ -63,13 +72,10 @@ const LectureScheduleTable = () => {
     } catch (error) {
       console.error(error);
     } finally {
-      setLoading(false); // End loading
+      setLoading(false);
     }
-  };
+  }, [userDetails?.role]);
 
-  useEffect(() => {
-    fetchLectureData(activePage);
-  }, [activePage]);
 
   const formatTime = (time) => {
     const [hours, minutes] = time?.split(":");

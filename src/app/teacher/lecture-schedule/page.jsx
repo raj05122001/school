@@ -1,5 +1,5 @@
 "use client";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Grid, Button, Typography, Box, Tabs, Tab } from "@mui/material";
 import CalendarComponent from "@/components/teacher/dashboard/CalendarComponent/CalendarComponent";
 import CreatingLecture from "@/components/teacher/LectureCreate/CreatingLecture";
@@ -10,12 +10,18 @@ import { MdAdd, MdDownloadForOffline, MdUpload } from "react-icons/md";
 import CreateLectureSchedule from "@/components/LectureSchedule/CreateLectureSchedule";
 import LectureScheduleTable from "@/components/LectureSchedule/LectureScheduleTable";
 import DarkMode from "@/components/DarkMode/DarkMode";
+import { useSearchParams, usePathname, useRouter } from "next/navigation";
 
 const LectureManager = () => {
   const [openDialog, setOpenDialog] = useState(false);
   const { isDarkMode, primaryColor } = useThemeContext();
   const [open, setOpen] = useState(false);
-  const [tabValue, setTabValue] = useState(0); // State for controlling tabs
+  const searchParams = useSearchParams();
+  const pathname = usePathname();
+  const router = useRouter();
+  const initialView = (searchParams.get("view") || "calendar").toLowerCase();
+  const [tabValue, setTabValue] = useState(initialView === "table" ? 1 : 0);
+
 
   const handleOpenDialog = () => {
     setOpenDialog(true);
@@ -43,9 +49,22 @@ const LectureManager = () => {
     }
   };
 
-  const handleTabChange = (event, newValue) => {
+  const handleTabChange = (_event, newValue) => {
     setTabValue(newValue);
+    const view = newValue === 1 ? "table" : "calendar";
+    const params = new URLSearchParams(searchParams.toString());
+    params.set("view", view);
+    router.replace(`${pathname}?${params.toString()}`);
   };
+
+
+  useEffect(() => {
+    const v = (searchParams.get("view") || "calendar").toLowerCase();
+    const next = v === "table" ? 1 : 0;
+    setTabValue(prev => (prev === next ? prev : next));
+  }, [searchParams]);
+
+
 
   return (
     <Grid

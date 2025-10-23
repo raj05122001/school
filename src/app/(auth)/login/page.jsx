@@ -50,8 +50,12 @@ const LoginPage = () => {
   const roles = ["Student", "Teacher", "Admin"];
 
   const [error, setError] = useState(null);
+  const [swapHover, setSwapHover] = useState(false);
 
-  // Determine screen size
+  const DARK = "var(--Secondary_Black, #141514)";
+  const LIGHT = "#FFF";
+  const DARK_TXT = "#000";
+  const LIGHT_TXT = "#FFF";
   const isMobile = useMediaQuery("(max-width:600px)");
 
   const handleChange = (e) => {
@@ -421,7 +425,7 @@ const LoginPage = () => {
                   }}
                   variant="body2"
                   sx={{
-                    cursor:"pointer",
+                    cursor: "pointer",
                     color: "var(--Primary_Green, #16AA54)",
                     textAlign: "right",
                     fontSize: "14px",
@@ -446,67 +450,67 @@ const LoginPage = () => {
               type="submit"
               fullWidth
               variant="contained"
+              onMouseEnter={() => setSwapHover(true)}
+              onMouseLeave={() => setSwapHover(false)}
               sx={{
                 display: "flex",
                 justifyContent: "center",
                 alignItems: "center",
                 height: "52px",
-                padding: "24px",
+                p: "24px",
                 gap: "12px",
                 flexShrink: 0,
                 alignSelf: "stretch",
                 borderRadius: "12px",
-                background: "var(--Secondary_Black, #141514)",
                 textTransform: "none",
-                color: "#fff",
-                ":hover": { backgroundColor: "#fff", color: "black" },
+                transition: "all .2s ease",
+                // Login base/invert
+                background: swapHover ? LIGHT : DARK,
+                color: swapHover ? DARK_TXT : LIGHT_TXT,
+                ":hover": {
+                  background: LIGHT,
+                  color: DARK_TXT,
+                },
               }}
             >
-              <Typography
-                sx={{
-                  fontSize: "16px",
-                  fontStyle: "normal",
-                  fontWeight: 600,
-                  lineHeight: "normal",
-                  fontFamily: "Inter, sans-serif",
-                }}
-              >
+              <Typography sx={{ fontSize: 16, fontWeight: 600, fontFamily: "Inter, sans-serif" }}>
                 Log in
               </Typography>
             </Button>
+
             <Button
               fullWidth
               variant="contained"
               onClick={() => router.push("/registration")}
+              onMouseEnter={() => setSwapHover(true)}
+              onMouseLeave={() => setSwapHover(false)}
               sx={{
                 display: "flex",
                 justifyContent: "center",
                 alignItems: "center",
                 height: "52px",
-                padding: "24px",
+                p: "24px",
                 gap: "12px",
                 flexShrink: 0,
                 alignSelf: "stretch",
                 borderRadius: "12px",
-                border: "1px solid var(--Secondary_Black, #141514)",
-                background: "var(--White-Color, #FFF)",
                 textTransform: "none",
-                color: "#000000",
-                ":hover": { backgroundColor: "#000000", color: "#fff" },
+                transition: "all .2s ease",
+                border: `1px solid ${DARK}`,
+                // Sign up base/invert (Login के उल्टा)
+                background: swapHover ? DARK : LIGHT,
+                color: swapHover ? LIGHT_TXT : DARK_TXT,
+                ":hover": {
+                  background: DARK,
+                  color: LIGHT_TXT,
+                },
               }}
             >
-              <Typography
-                sx={{
-                  fontSize: "16px",
-                  fontStyle: "normal",
-                  fontWeight: 600,
-                  lineHeight: "normal",
-                  fontFamily: "Inter, sans-serif",
-                }}
-              >
+              <Typography sx={{ fontSize: 16, fontWeight: 600, fontFamily: "Inter, sans-serif" }}>
                 Sign up
               </Typography>
             </Button>
+
             <Typography
               sx={{
                 color: "var(--Text-color-2, #8C8F90)",

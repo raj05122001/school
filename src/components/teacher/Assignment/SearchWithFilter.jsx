@@ -77,6 +77,14 @@ export default function SearchWithFilter() {
     loadSubjects();
   }, [filterClass]);
 
+
+
+  useEffect(() => {
+    if (!filterClass) setFilterSubject("");
+  }, [filterClass]);
+
+
+
   // Sync state with URL params
   useEffect(() => {
     setSearchInput(searchParams.get("globalSearch") || "");
@@ -125,6 +133,25 @@ export default function SearchWithFilter() {
     setFilterOpen(false);
   };
 
+
+
+  // Handlers (component ke andar hi)
+
+  const handleCancelFilters = () => {
+    const params = new URLSearchParams(searchParams.toString());
+    params.delete("class");
+    params.delete("subject");
+    params.delete("month");
+    router.push(`${pathname}?${params.toString()}`);
+
+    setFilterClass("");
+    setFilterSubject("");
+    setFilterDate(null);
+    setSubjectList([]);
+    setFilterOpen(false);
+  };
+
+
   return (
     <>
       {/* Search bar with filter toggle */}
@@ -147,9 +174,10 @@ export default function SearchWithFilter() {
             value={searchInput}
             onChange={(e) => setSearchInput(e.target.value)}
           />
-          <IconButton type="submit">
-            <FiSearch />
+          <IconButton onClick={() => setSearchInput("")} edge="end">
+            <FaTimes />
           </IconButton>
+
         </Paper>
         <IconButton
           onClick={() => setFilterOpen(true)}
@@ -169,8 +197,10 @@ export default function SearchWithFilter() {
                 <Autocomplete
                   freeSolo
                   options={classList.map((c) => c.name)}
-                  value={filterClass}
-                  onChange={(_e, val) => setFilterClass(val || "")}
+                  value={filterClass || null}                   
+                  inputValue={filterClass}                       
+                  onInputChange={(_e, val) => setFilterClass(val || "")} 
+                  onChange={(_e, val) => setFilterClass(val || "")}     
                   renderInput={(params) => (
                     <TextField
                       {...params}
@@ -179,9 +209,7 @@ export default function SearchWithFilter() {
                         ...params.InputProps,
                         endAdornment: filterClass ? (
                           <InputAdornment position="end">
-                            <IconButton onClick={() => setFilterClass("")}
-                              edge="end"
-                            >
+                            <IconButton onClick={() => setFilterClass("")} edge="end">
                               <FaTimes />
                             </IconButton>
                           </InputAdornment>
@@ -190,13 +218,17 @@ export default function SearchWithFilter() {
                     />
                   )}
                 />
+
               </Grid>
               <Grid item xs={12} sm={4}>
                 <Autocomplete
                   freeSolo
                   options={subjectList.map((s) => s.name)}
-                  value={filterSubject}
-                  onChange={(_e, val) => setFilterSubject(val || "")}
+                  value={filterSubject || null}                     
+                  inputValue={filterSubject}                           
+                  onInputChange={(_e, val) => setFilterSubject(val || "")} 
+                  onChange={(_e, val) => setFilterSubject(val || "")}       
+                  disabled={!filterClass}
                   renderInput={(params) => (
                     <TextField
                       {...params}
@@ -205,9 +237,7 @@ export default function SearchWithFilter() {
                         ...params.InputProps,
                         endAdornment: filterSubject ? (
                           <InputAdornment position="end">
-                            <IconButton onClick={() => setFilterSubject("")}
-                              edge="end"
-                            >
+                            <IconButton onClick={() => setFilterSubject("")} edge="end">
                               <FaTimes />
                             </IconButton>
                           </InputAdornment>
@@ -215,7 +245,6 @@ export default function SearchWithFilter() {
                       }}
                     />
                   )}
-                  disabled={!filterClass}
                 />
               </Grid>
               <Grid item xs={12} sm={4}>
@@ -231,7 +260,7 @@ export default function SearchWithFilter() {
           </LocalizationProvider>
         </DialogContent>
         <DialogActions>
-          <Button onClick={() => setFilterOpen(false)}>Cancel</Button>
+          <Button onClick={handleCancelFilters} >Cancel</Button>
           <Button variant="contained" onClick={handleApplyFilters}>
             Apply
           </Button>

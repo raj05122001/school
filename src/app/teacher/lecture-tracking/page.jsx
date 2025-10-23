@@ -316,13 +316,7 @@ const LectureTabs = () => {
           {["COMPLETED", "UPCOMMING", "MISSED", "CANCELLED"]?.map((value) =>
             tabLoader ? (
               <Grid item xs={12} sm={6} md={3} key={value}>
-                <Skeleton
-                  variant="rectangular"
-                  sx={{
-                    borderRadius: 2,
-                    height: 80,
-                  }}
-                />
+                <Skeleton variant="rectangular" sx={{ borderRadius: 2, height: 80 }} />
               </Grid>
             ) : (
               <Grid item xs={12} sm={6} md={3} key={value}>
@@ -332,27 +326,38 @@ const LectureTabs = () => {
                     display: "flex",
                     width: "100%",
                     height: "50px",
-                    padding: "5.5px 9px",
+                    p: "5.5px 9px",
                     justifyContent: "space-between",
                     alignItems: "center",
-                    borderRadius: "7px",
+                    borderRadius: "10px",
                     border: "0.5px solid #C1C1C1",
                     cursor: "pointer",
                     gap: "10px",
+
+                    borderLeft: `6px solid ${status === value ? (statusColorMap[value] || "#3498db") : "transparent"
+                      }`,
+
+                    transition: "border-color 120ms ease, box-shadow 120ms ease, transform 120ms ease",
+                    ...(status === value && {
+                      boxShadow: "0 6px 20px rgba(0,0,0,0.08)",
+                      transform: "translateY(-1px)",
+                    }),
+                    "&:hover": {
+                      borderLeftColor: statusColorMap[value] || "#3498db",
+                    },
                   }}
+                  role="button"
+                  aria-pressed={status === value}
                 >
                   <Box sx={{ flex: 1 }}>
                     <Typography
-                      // variant="subtitle2"
                       sx={{
                         color: "#3B3D3B",
-                        fontFeatureSettings: "'liga' off, 'clig' off",
                         fontFamily: "Inter",
                         fontSize: "14px",
-                        fontStyle: "normal",
-                        fontWeight: "600",
+                        fontWeight: 600,
                         lineHeight: "19px",
-                        marginBottom: "4px",
+                        mb: "4px",
                       }}
                     >
                       {value.charAt(0) + value.slice(1).toLowerCase()}
@@ -371,16 +376,11 @@ const LectureTabs = () => {
                     />
                   </Box>
                   <Typography
-                    // variant="body2"
                     sx={{
                       color: "#3B3D3B",
-                      leadingTrim: "both",
-                      textEdge: "cap",
-                      fontFeatureSettings: "'liga' off, 'clig' off",
                       fontFamily: "Inter",
                       fontSize: "18.192px",
-                      fontStyle: "normal",
-                      fontWeight: "600",
+                      fontWeight: 600,
                       lineHeight: "18.712px",
                     }}
                   >
@@ -390,6 +390,7 @@ const LectureTabs = () => {
               </Grid>
             )
           )}
+
         </Grid>
       </Box>
 
