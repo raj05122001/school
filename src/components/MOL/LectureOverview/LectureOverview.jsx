@@ -57,6 +57,7 @@ const LectureOverview = ({
         marksData={marksData}
         isStudent={isStudent}
         setMarksData={setMarksData}
+        isEdit={isEdit}
       />
     ),
     [marksData, lectureId, isDarkMode]

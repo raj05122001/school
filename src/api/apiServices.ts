@@ -1133,4 +1133,41 @@ export default class apiServices {
       })
   };
 
+  public updateHighlights = async (decisionsId, formData) => {
+    return await this.axiosInstance
+      .patch(`/api/v1/edit/highlight/${decisionsId}/`, formData)
+      .then((Response) => Response?.data)
+  };
+
+  public updateNotes = async (notesId, formData) => {
+    return await this.axiosInstance
+      .patch(`/api/v1/edit/notes/${notesId}/`, formData)
+      .then((Response) => Response?.data)
+  };
+
+  public deleteMCQ = (quizID) => {
+    return this.axiosInstance
+      .delete(`/api/v1/edit/quiz/${quizID}/`)
+      .then((response) => {
+        return response.data;
+      })
+  };
+
+  public updateMCQ = async (quizID, formData) => {
+    return await this.axiosInstance
+      .patch(`/api/v1/edit/quiz/${quizID}/`, formData)
+      .then((Response) => Response?.data)
+  };
+
+  public updateQuestions = async (questionsId, formData) => {
+    return await this.axiosInstance
+      .patch(`/api/v1/edit/question/${questionsId}/`, formData)
+      .then((Response) => Response?.data)
+  };
+
+  public updateResources = async (resourcesId, formData) => {
+    return await this.axiosInstance
+      .patch(`/api/v1/edit/resources/${resourcesId}/`, formData)
+      .then((Response) => Response?.data)
+  };
 }

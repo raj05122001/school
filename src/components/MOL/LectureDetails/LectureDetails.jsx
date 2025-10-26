@@ -20,6 +20,7 @@ const LectureDetails = ({
   marksData = {},
   isStudent = false,
   setMarksData,
+  isEdit=false
 }) => {
   const { isDarkMode } = useThemeContext();
   const [value, setValue] = useState(0);
@@ -48,14 +49,17 @@ const LectureDetails = ({
         marksData={marksData}
         isStudent={isStudent}
         setMarksData={setMarksData}
+        isEdit={isEdit}
       />
     ),
     [id, isDarkMode, marksData]
   );
 
+  console.log("over isEdit : ",isEdit)
+
   const memoizedLectureMCQ = useMemo(
-    () => <LectureMCQ id={id} isDarkMode={isDarkMode} />,
-    [id, isDarkMode]
+    () => <LectureMCQ id={id} isDarkMode={isDarkMode} isEdit={isEdit} />,
+    [id, isDarkMode, isEdit]
   );
 
   const memoizedStudentMCQ = useMemo(
@@ -75,8 +79,8 @@ const LectureDetails = ({
   // );
 
   const memoizedLectureQuestions = useMemo(
-    () => <LectureQuestions id={id} isDarkMode={isDarkMode} />,
-    [id, isDarkMode]
+    () => <LectureQuestions id={id} isDarkMode={isDarkMode} isEdit={isEdit} />,
+    [id, isDarkMode, isEdit]
   );
   // const memoizedLectureAssignment = useMemo(
   //   () => (
@@ -90,8 +94,8 @@ const LectureDetails = ({
   //   [id, isDarkMode, class_ID]
   // );
   const memoizedLectureReferrence = useMemo(
-    () => <LectureReferrence id={id} isDarkMode={isDarkMode} />,
-    [id, isDarkMode]
+    () => <LectureReferrence id={id} isDarkMode={isDarkMode} isEdit={isEdit} />,
+    [id, isDarkMode, isEdit]
   );
 
   return (
@@ -183,17 +187,17 @@ const LectureDetails = ({
       </Tabs>
 
       {/* Render tab content conditionally based on selected tab */}
-      {value === 0 && memoizedLectureNotes}
-      {value === 1 &&
-        (userDetails?.role === "STUDENT"
-          ? memoizedStudentMCQ
-          : memoizedLectureMCQ)}
-      {value === 2 && memoizedLectureQuestions}
-      {/* {value === 3 &&
-        (userDetails?.role === "STUDENT"
-          ? memoizedStudentMOLAssignment
-          : memoizedLectureAssignment)} */}
-      {value === 3 && memoizedLectureReferrence}
+        {value === 0 && memoizedLectureNotes}
+        {value === 1 &&
+          (userDetails?.role === "STUDENT"
+            ? memoizedStudentMCQ
+            : memoizedLectureMCQ)}
+        {value === 2 && memoizedLectureQuestions}
+        {/* {value === 3 &&
+          (userDetails?.role === "STUDENT"
+            ? memoizedStudentMOLAssignment
+            : memoizedLectureAssignment)} */}
+        {value === 3 && memoizedLectureReferrence}
     </Box>
   );
 };

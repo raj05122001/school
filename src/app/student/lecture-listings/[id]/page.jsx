@@ -92,6 +92,7 @@ const LecturePage = ({ params }) => {
         marksData={marksData}
         isStudent={true}
         setMarksData={setMarksData}
+        isEdit={true}
       />
     ),
     [id, classID, marksData]

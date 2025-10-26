@@ -13,11 +13,14 @@ import {
   getLectureNotes,
   regenrateNotes,
   updateMolMarks,
+  updateNotes,
 } from "@/api/apiHelper";
 import { toast } from "react-hot-toast";
 import MathJax from "react-mathjax2";
 import TextWithMath from "@/commonComponents/TextWithMath/TextWithMath";
 import usePersonalisedRecommendations from "@/components/student/MOL/usePersonalisedRecommendations";
+import { MdEdit, MdSave, MdCancel } from "react-icons/md";
+import TextEditor from "@/commonComponents/TextEditor/TextEditor";
 
 const LectureNotes = ({
   id,
@@ -25,6 +28,7 @@ const LectureNotes = ({
   marksData = {},
   isStudent = false,
   setMarksData,
+  isEdit=false
 }) => {
   const [notes, setNotes] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -35,6 +39,10 @@ const LectureNotes = ({
   const notesBoxRef = useRef(null);
   const updateCalled = useRef(false);
   const hasFetchedData = useRef(false); // Prevent multiple fetch calls
+  const [editingNotes, setEditingNotes] = useState({}); // Track which notes are being edited
+  const [editedData, setEditedData] = useState({}); // Store edited data for each note
+  const [saving, setSaving] = useState(false);
+  const [notesId, setNotesId] = useState("");
 
   usePersonalisedRecommendations(id, "NOTES", notesBoxRef, "");
 
@@ -42,7 +50,20 @@ const LectureNotes = ({
     const fetchLectureNotes = async () => {
       try {
         const response = await getLectureNotes(id);
-        setNotes(JSON.parse(response?.data.lecture_note));
+        setNotesId(response?.data?.id);
+
+        const lectureNotes = response?.data?.lecture_note;
+        if (lectureNotes) {
+          try {
+            const parsedNotes = JSON.parse(lectureNotes);
+            setNotes(Array.isArray(parsedNotes) ? parsedNotes : []);
+          } catch (parseError) {
+            console.error("Error parsing lecture notes:", parseError);
+            setNotes([]);
+          }
+        } else {
+          setNotes([]);
+        }
       } catch (err) {
         setError(err);
       } finally {
@@ -96,18 +117,7 @@ const LectureNotes = ({
     }
   };
 
-  const displayedNotes = notes?.slice(0, visibleCount);
-
-  // if (loading) {
-  //   return (
-  //     <Box sx={{ p: 3, width: "100%" }}>
-  //       <Skeleton variant="rectangular" height={40} sx={{ mb: 2 }} />
-  //       {[...Array(7)].map((_, index) => (
-  //         <Skeleton key={index} variant="text" height={30} sx={{ mb: 1 }} />
-  //       ))}
-  //     </Box>
-  //   );
-  // }
+  const displayedNotes = notes?.slice(0, visibleCount) || [];
 
   useEffect(() => {
     const handleScrollAndUpdate = async () => {
@@ -169,6 +179,107 @@ const LectureNotes = ({
     }
   };
 
+  const handleEdit = (noteId) => {
+    const noteToEdit = notes.find((note) => note.id === noteId);
+    if (!noteToEdit) return;
+
+    setEditingNotes((prev) => ({ ...prev, [noteId]: true }));
+    setEditedData((prev) => ({
+      ...prev,
+      [noteId]: {
+        title: noteToEdit.title || "",
+        notes: noteToEdit.notes?.replace(/^\*\*\s*/, "")?.replace(/\\n/g, "\n") || "",
+      },
+    }));
+  };
+
+  const handleCancel = (noteId) => {
+    setEditingNotes((prev) => ({ ...prev, [noteId]: false }));
+    setEditedData((prev) => {
+      const newData = { ...prev };
+      delete newData[noteId];
+      return newData;
+    });
+  };
+
+  const handleSave = async (noteId) => {
+    setSaving(true);
+    try {
+      // Update the notes array with edited data
+      const updatedNotes = notes.map((note) => {
+        if (note.id === noteId) {
+          return {
+            ...note,
+            title: editedData[noteId]?.title || note.title,
+            notes: editedData[noteId]?.notes || note.notes,
+          };
+        }
+        return note;
+      });
+
+      await onUpdateNotes(updatedNotes);
+
+      // Update local state
+      setNotes(updatedNotes);
+      setEditingNotes((prev) => ({ ...prev, [noteId]: false }));
+
+      // Clean up edited data for this note
+      setEditedData((prev) => {
+        const newData = { ...prev };
+        delete newData[noteId];
+        return newData;
+      });
+
+      toast.success("Note updated successfully!");
+    } catch (error) {
+      toast.error("Failed to update note");
+      console.error("Error updating note:", error);
+    } finally {
+      setSaving(false);
+    }
+  };
+
+  const handleEditText = (noteId, htmlContent) => {
+  try {
+    const parser = new DOMParser();
+    const doc = parser.parseFromString(htmlContent, 'text/html');
+
+    // grab innerHTML instead of textContent to keep tags
+    const titleEl = doc.querySelector('#title');
+    const notesEl = doc.querySelector('#notes');
+
+    const title = titleEl ? titleEl.innerHTML : '';
+    const notes = notesEl ? notesEl.innerHTML : '';
+
+    setEditedData(prev => ({
+      ...prev,
+      [noteId]: { title, notes }
+    }));
+  } catch (error) {
+    console.error('Error parsing HTML content:', error);
+    // fallback: send raw htmlContent
+    setEditedData(prev => ({
+      ...prev,
+      [noteId]: { ...prev[noteId], notes: htmlContent }
+    }));
+  }
+};
+
+  const onUpdateNotes = async (updatedNotesArray) => {
+    try {
+      const updatedText = JSON.stringify(updatedNotesArray);
+
+      const response = await updateNotes(notesId, {
+          lecture_note: updatedText,
+        })
+
+      return response;
+    } catch (e) {
+      console.error("Error in onUpdateNotes:", e);
+      throw e;
+    }
+  };
+
   return (
     <Box
       sx={{
@@ -204,8 +315,67 @@ const LectureNotes = ({
       ) : (
         <MathJax.Context input="tex">
           <>
-            {displayedNotes?.map((note) => (
+            {displayedNotes.length === 0 ? (
+              <Typography sx={{ textAlign: 'center', py: 4 }}>
+                No lecture notes available.
+              </Typography>
+            ) : (
+              displayedNotes?.map((note) => (
               <Box key={note?.id} sx={{ mb: 2 }}>
+                {isEdit && (
+                    <Box
+                      sx={{
+                        display: "flex",
+                        gap: 1,
+                        justifyContent: "flex-end",
+                        mb: 1,
+                      }}
+                    >
+                      {editingNotes[note?.id] && (
+                        <>
+                          <IconButton
+                            onClick={() => handleSave(note?.id)}
+                            disabled={saving}
+                            sx={{ color: "#4CAF50" }}
+                            title="Save Changes"
+                          >
+                            <MdSave />
+                          </IconButton>
+                          <IconButton
+                            onClick={() => handleCancel(note?.id)}
+                            sx={{ color: "#f44336" }}
+                            title="Cancel Edit"
+                          >
+                            <MdCancel />
+                          </IconButton>
+                        </>
+                      )}
+                    </Box>
+                  )}
+                  {editingNotes[note?.id] ? (
+                      <TextEditor
+                        text={
+                          `<h2 id="title">${editedData[note?.id]?.title || ''}</h2><br>
+                           <p id="notes">${editedData[note?.id]?.notes?.replace(/\*\*(.*?)\*\*/g, "<strong>$1</strong>")
+                              ?.replace(/#/g, "")
+                              ?.replace(/`/g, "")
+                              ?.replace(/(?<!\d)\. /g, ".<br>")
+                              ?.replace(/\\\\n\\\\n/g, "<br><br>")
+                              ?.replace(/\\\n\\\n/g, "<br><br>")
+                              ?.replace(/\\n\\n/g, "<br><br>")
+                              ?.replace(/\n\n/g, "<br><br>")
+                              ?.replace(/\\\\n/g, "<br>")
+                              ?.replace(/\\\n/g, "<br>")
+                              ?.replace(/\\n/g, "<br>")
+                              ?.replace(/\n/g, "<br>")
+                              ?.replace(/\\(.?)\\*/g, "<strong>$1</strong>")
+                              ?.replace(/\\/g, "")
+                              ?.replace(/\\\\/g, "") || ''}</p>`
+                        }
+                        onChange={(htmlContent) => handleEditText(note?.id, htmlContent)}
+                      />
+                    ) : (
+                      <>
                 <Box
                   display="flex"
                   alignItems="center"
@@ -226,6 +396,7 @@ const LectureNotes = ({
                     />
                   </Typography>
                   {!showTextFields[note?.id] ? (
+                    <Box>
                     <Button
                       variant="outlined"
                       onClick={() => handleMoreInsightClick(note?.id)}
@@ -240,6 +411,16 @@ const LectureNotes = ({
                     >
                       More Insights
                     </Button>
+                    {isEdit && 
+                    <IconButton
+                          onClick={() => handleEdit(note?.id)}
+                          sx={{ color: "#36454F" }}
+                          title="Edit Note"
+                        >
+                          <MdEdit />
+                        </IconButton>
+}
+                    </Box>
                   ) : (
                     <Box display="flex" alignItems="center">
                       <TextField
@@ -293,8 +474,11 @@ const LectureNotes = ({
                       ?.replace(/\\n/g, "\n")}
                   />
                 </Typography>
+                </>
+                    )}
               </Box>
-            ))}
+            ))
+            )}
           </>
         </MathJax.Context>
       )}
@@ -304,29 +488,29 @@ const LectureNotes = ({
           variant="contained"
           onClick={() => setVisibleCount((prevCount) => prevCount + 5)}
           sx={{
-                  mt: 2,
-                  display: "inline-flex",
-                  padding: "12px 32px",
-                  justifyContent: "center",
-                  alignItems: "center",
-                  gap: "8px",
-                  textTransform: "none",
-                  borderRadius: "8px",
-                  background: "#141514",
-                  color: "#FFF",
-                  textAlign: "center",
-                  fontFeatureSettings: "'liga' off, 'clig' off",
-                  fontFamily: "Aptos",
-                  fontSize: "16px",
-                  fontStyle: "normal",
-                  fontWeight: "700",
-                  lineHeight: "24px",
-                  "&:hover": {
-                    border: "1px solid #141514",
-                    background: "#E5E5E5",
-                    color: "#141514",
-                  },
-                }}
+            mt: 2,
+            display: "inline-flex",
+            padding: "12px 32px",
+            justifyContent: "center",
+            alignItems: "center",
+            gap: "8px",
+            textTransform: "none",
+            borderRadius: "8px",
+            background: "#141514",
+            color: "#FFF",
+            textAlign: "center",
+            fontFeatureSettings: "'liga' off, 'clig' off",
+            fontFamily: "Aptos",
+            fontSize: "16px",
+            fontStyle: "normal",
+            fontWeight: "700",
+            lineHeight: "24px",
+            "&:hover": {
+              border: "1px solid #141514",
+              background: "#E5E5E5",
+              color: "#141514"
+            },
+          }}
         >
           Need More
         </Button>

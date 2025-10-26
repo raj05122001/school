@@ -637,3 +637,33 @@ export const deleteS3Folder = async (key) => {
   const apiInstance = new apiServices(axiosAPIInstance);
   return await apiInstance.deleteS3Folder(key);
 };
+
+export const updateHighlights = async (decisionsId, formData) => {
+  const apiInstance = new apiServices(axiosAPIInstance);
+  return await apiInstance.updateHighlights(decisionsId, formData);
+};
+
+export const updateNotes = async (notesId, formData) => {
+  const apiInstance = new apiServices(axiosAPIInstance);
+  return await apiInstance.updateNotes(notesId, formData);
+};
+
+export const deleteMCQ = async (quizID) => {
+  const apiInstance = new apiServices(axiosAPIInstance);
+  return await apiInstance.deleteMCQ(quizID);
+};
+
+export const updateMCQ = async (quizID, formData) => {
+  const apiInstance = new apiServices(axiosAPIInstance);
+  return await apiInstance.updateMCQ(quizID, formData);
+};
+
+export const updateQuestions = async (questionsId, formData) => {
+  const apiInstance = new apiServices(axiosAPIInstance);
+  return await apiInstance.updateQuestions(questionsId, formData);
+};
+
+export const updateResources = async (resourcesId, formData) => {
+  const apiInstance = new apiServices(axiosAPIInstance);
+  return await apiInstance.updateResources(resourcesId, formData);
+};
