@@ -169,7 +169,7 @@ const LoginPage = () => {
           >
             Welcome to
           </Typography>
-          {/* <Typography
+          <Typography
             sx={{
               color: "var(--Primary_Green, #16AA54)",
               fontSize: "64px",
@@ -181,10 +181,10 @@ const LoginPage = () => {
             }}
           >
             VidyaAI
-          </Typography> */}
-          <Box sx={{display:'flex',justifyContent:'center',mt:2}}>
+          </Typography>
+          {/* <Box sx={{display:'flex',justifyContent:'center',mt:2}}>
           <Image src={"/MediaGuru.png"} width={181} height={30} />
-          </Box>
+          </Box> */}
           <Box
             sx={{
               color: "var(--Secondary_Black, #141514)",
