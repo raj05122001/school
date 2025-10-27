@@ -291,8 +291,8 @@ const ClassProf = () => {
                 marginTop: "7px",
               }}
             >
-              {/* {data?.over_all_class_score || 0} */}
-              83.33
+              {data?.over_all_class_score || 0}
+              {/* 83.33 */}
             </Typography>
             {/* <Box
             sx={{
@@ -468,8 +468,8 @@ const ClassProf = () => {
               }}
             >
               {/* {data?.total_assignments || 0} */}
-              {/* {data?.average_grade || 0}% */}
-              18.08%
+              {data?.average_grade || 0}%
+              {/* 18.08% */}
             </Typography>
             <Box
               sx={{

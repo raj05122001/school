@@ -123,22 +123,22 @@ const ClassWiseStudentRanking = ({ selectedOptions }) => {
   };
 
   const getChartData = () => {
-    // const gradewiseData =
-    //   statusTabValue === 0
-    //     ? data.active_students_gradewise
-    //     : data.inactive_students_gradewise;
-
     const gradewiseData =
       statusTabValue === 0
-        ? {
-            A: 2,
-            B: 3,
-            C: 4,
-          }
-        : {
-            D: 2,
-            E: 2,
-          };
+        ? data.active_students_gradewise
+        : data.inactive_students_gradewise;
+
+    // const gradewiseData =
+    //   statusTabValue === 0
+    //     ? {
+    //         A: 2,
+    //         B: 3,
+    //         C: 4,
+    //       }
+    //     : {
+    //         D: 2,
+    //         E: 2,
+    //       };
 
     return Object.entries(gradewiseData).map(([key, value]) => ({
       name: key,
@@ -526,9 +526,10 @@ export const StudentModal = ({
         selectedGrad,
         isMyClass ? userDetails?.teacher_id : 0
       );
-      // setStudentData(response?.data?.data);
-      const students = getStudentsByGrade(selectedGrad)
-      setStudentData(students);
+      console.log("response :: ",response)
+      setStudentData(response?.data?.data);
+      // const students = getStudentsByGrade(selectedGrad)
+      // setStudentData(students);
     } catch (error) {
       console.error(error);
     } finally {
