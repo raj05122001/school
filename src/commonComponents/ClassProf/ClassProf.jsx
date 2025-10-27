@@ -506,8 +506,8 @@ const ClassProf = () => {
                   textAlign: "center",
                 }}
               >
-                {/* {data?.average_percentage || 0}% */}
-                80.69%
+                {data?.average_percentage || 0}%
+                {/* 80.69% */}
               </Typography>
             </Box>
           </Box>

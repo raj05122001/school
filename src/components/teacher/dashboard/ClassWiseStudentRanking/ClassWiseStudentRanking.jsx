@@ -72,7 +72,10 @@ const renderCustomizedLabel = ({
 const ClassWiseStudentRanking = ({ selectedOptions }) => {
   const userDetails = decodeToken(Cookies.get("ACCESS_TOKEN"));
   const { isDarkMode, primaryColor, secondaryColor } = useThemeContext();
-  const [data, setData] = useState({});
+  const [data, setData] = useState({
+    active_students_gradewise: {},
+    inactive_students_gradewise: {}
+  });
   const [loading, setLoading] = useState(true);
   const [statusTabValue, setStatusTabValue] = useState(0);
   const [classTabValue, setClassTabValue] = useState("Overall");
@@ -125,8 +128,8 @@ const ClassWiseStudentRanking = ({ selectedOptions }) => {
   const getChartData = () => {
     const gradewiseData =
       statusTabValue === 0
-        ? data.active_students_gradewise
-        : data.inactive_students_gradewise;
+        ? data?.active_students_gradewise
+        : data?.inactive_students_gradewise;
 
     // const gradewiseData =
     //   statusTabValue === 0
@@ -140,7 +143,7 @@ const ClassWiseStudentRanking = ({ selectedOptions }) => {
     //         E: 2,
     //       };
 
-    return Object.entries(gradewiseData).map(([key, value]) => ({
+    return Object.entries(gradewiseData)?.map(([key, value]) => ({
       name: key,
       value,
     }));
