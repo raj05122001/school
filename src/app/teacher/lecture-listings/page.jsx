@@ -193,7 +193,7 @@ const Page = () => {
     <Box sx={{ width: "100%", height: "100%" }}>
       {filters}
 
-      <Box
+      {/* <Box
         sx={{
           px: 2,
           pb: 2,
@@ -253,7 +253,7 @@ const Page = () => {
             }}
           />
         </Box>
-      </Box>
+      </Box> */}
       <Grid container spacing={2}>
         {isLoading ? (
           Array.from({ length: 16 }, (_, ind) => (

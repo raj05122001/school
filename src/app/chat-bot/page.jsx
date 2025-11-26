@@ -14,7 +14,6 @@ import {
   CircularProgress,
   Paper,
   Divider,
-  InputAdornment,
   Grid,
   Skeleton,
   Tooltip,
@@ -27,7 +26,7 @@ import {
   useMediaQuery,
   useTheme,
 } from "@mui/material";
-import { FaArrowUp, FaRobot, FaHistory } from "react-icons/fa";
+import { FaArrowUp, FaRobot } from "react-icons/fa";
 import { BsChatLeftText } from "react-icons/bs";
 import Logo from "@/commonComponents/Logo/Logo";
 import { FaMicrophone, FaStopCircle } from "react-icons/fa";
@@ -38,7 +37,7 @@ import { RiArrowDropDownLine } from "react-icons/ri";
 import TextWithMath from "@/commonComponents/TextWithMath/TextWithMath";
 import { TbMenu3 } from "react-icons/tb";
 
-// VoiceToText component को अलग से define करें
+/** ================= VoiceToText ================== */
 const VoiceToText = ({ setUserTextInput }) => {
   const [isRecording, setIsRecording] = useState(false);
   const [error, setError] = useState(null);
@@ -63,7 +62,7 @@ const VoiceToText = ({ setUserTextInput }) => {
           setIsRecording(false);
         };
 
-        recognition.onerror = (event) => {
+        recognition.onerror = () => {
           setError("Error recognizing speech. Please try again.");
           setIsRecording(false);
         };
@@ -110,11 +109,7 @@ const VoiceToText = ({ setUserTextInput }) => {
             },
           }}
         >
-          {isRecording ? (
-            <FaStopCircle size={16} />
-          ) : (
-            <FaMicrophone size={16} />
-          )}
+          {isRecording ? <FaStopCircle size={16} /> : <FaMicrophone size={16} />}
         </IconButton>
       </Tooltip>
       {error && (
@@ -126,6 +121,7 @@ const VoiceToText = ({ setUserTextInput }) => {
   );
 };
 
+/** ================= Main Page ================== */
 export default function Page({ suggestionInput, setIsOpenChatBot }) {
   const chatbotRef = useRef();
   const graphRef = useRef(null);
@@ -140,7 +136,7 @@ export default function Page({ suggestionInput, setIsOpenChatBot }) {
   const [mobileSidebarOpen, setMobileSidebarOpen] = useState(false);
 
   const theme = useTheme();
-  const isMobile = useMediaQuery(theme.breakpoints.down('md'));
+  const isMobile = useMediaQuery(theme.breakpoints.down("md"));
 
   const userDetails = decodeToken(Cookies.get("ACCESS_TOKEN"));
   const userName = userDetails?.username;
@@ -189,6 +185,7 @@ export default function Page({ suggestionInput, setIsOpenChatBot }) {
     };
   }, [isResizing]);
 
+  /** ========= createSession returns session_id ========= */
   const handleCreateSession = async () => {
     try {
       const formData = new FormData();
@@ -198,8 +195,10 @@ export default function Page({ suggestionInput, setIsOpenChatBot }) {
       const response = await createSession(formData);
       const { session_id } = response?.data?.data;
       setSessionID(session_id);
+      return session_id;
     } catch (error) {
       console.error("Error creating Session", error);
+      return null;
     }
   };
 
@@ -238,6 +237,7 @@ export default function Page({ suggestionInput, setIsOpenChatBot }) {
 
   const handleNewChatFromSidebar = () => {
     setChatHistory([]);
+    setSessionID(null);          // ✅ new chat => new session
     handleCreateSession();
     setShowChat(true);
     setShowList(false);
@@ -246,8 +246,12 @@ export default function Page({ suggestionInput, setIsOpenChatBot }) {
     }
   };
 
+  /** ========= IMPORTANT CHANGE HERE ========= */
   const loadSessionToChat = (sessionId) => {
     if (!sessionId) return;
+
+    // ✅ old session ko active bana do
+    setSessionID(sessionId);
 
     const sessionChats = oldChats
       ?.filter((item) => item?.session?.session_id === sessionId)
@@ -282,20 +286,37 @@ export default function Page({ suggestionInput, setIsOpenChatBot }) {
     }, 100);
   };
 
+  /** ========= handleUserInput: continue same session ========= */
   const handleUserInput = async (input) => {
-    if (!input || !sessionID) return;
+    if (!input) return;
+
     setIsLoading(true);
+
+    // ensure session exists (only new if no sessionID)
+    let activeSessionId = sessionID;
+    if (!activeSessionId) {
+      activeSessionId = await handleCreateSession();
+    }
+    if (!activeSessionId) {
+      setIsLoading(false);
+      return;
+    }
+
+    // user ka message pehle dikhado
     setChatHistory((prevChat) => [
       ...prevChat,
       { role: "user", content: input },
     ]);
+
     try {
       const formData = new FormData();
       formData.append("user_message", input);
       setUserTextInput("");
-      const response = await getNewLectureAns(sessionID, formData);
+
+      const response = await getNewLectureAns(activeSessionId, formData);
       const data = response.data.response;
       const linkArry = response.data?.reference_link || [];
+
       setChatHistory((prevChat) => [
         ...prevChat,
         { role: "assistant", content: data, links: linkArry },
@@ -324,9 +345,16 @@ export default function Page({ suggestionInput, setIsOpenChatBot }) {
     setIsLoading(false);
   };
 
-  // Sidebar content component
+  /** ========= Sidebar ========= */
   const SidebarContent = () => (
-    <Box sx={{ width: "100%", height: "100%", display: "flex", flexDirection: "column" }}>
+    <Box
+      sx={{
+        width: "100%",
+        height: "100%",
+        display: "flex",
+        flexDirection: "column",
+      }}
+    >
       {/* New Chat Button in Sidebar */}
       <Box sx={{ p: 2, borderBottom: 1, borderColor: "grey.300" }}>
         <Button
@@ -386,45 +414,49 @@ export default function Page({ suggestionInput, setIsOpenChatBot }) {
               gap: 1.2,
             }}
           >
-            {oldChats?.reverse()?.map((data, index) => (
-              <Box
-                key={data?.id}
-                onClick={() => loadSessionToChat(data?.session?.session_id)}
-                sx={{
-                  width: "100%",
-                  borderRadius: 2,
-                  px: 2,
-                  py: 1.5,
-                  bgcolor: "#FAFAFA",
-                  border: "1px solid #E5E7EB",
-                  cursor: "pointer",
-                  transition: "all 0.2s ease",
-                  boxShadow: "0 0 0 rgba(0,0,0,0)",
-                  "&:hover": {
-                    bgcolor: "#F3F4F6",
-                    borderColor: "#D1D5DB",
-                    boxShadow: "0 4px 10px rgba(0,0,0,0.06)",
-                    transform: "translateY(-1px)",
-                  },
-                }}
-              >
-                <Typography
-                  variant="subtitle2"
+            {oldChats
+              ?.slice()
+              .reverse()
+              .map((data, index) => (
+                <Box
+                  key={data?.id}
+                  onClick={() => loadSessionToChat(data?.session?.session_id)}
                   sx={{
-                    fontSize: "14px",
-                    fontWeight: 500,
-                    color: "#111827",
-                    display: "-webkit-box",
-                    WebkitLineClamp: 2,
-                    WebkitBoxOrient: "vertical",
-                    overflow: "hidden",
-                    wordBreak: "break-word",
+                    width: "100%",
+                    borderRadius: 2,
+                    px: 2,
+                    py: 1.5,
+                    bgcolor: "#FAFAFA",
+                    border: "1px solid #E5E7EB",
+                    cursor: "pointer",
+                    transition: "all 0.2s ease",
+                    boxShadow: "0 0 0 rgba(0,0,0,0)",
+                    "&:hover": {
+                      bgcolor: "#F3F4F6",
+                      borderColor: "#D1D5DB",
+                      boxShadow: "0 4px 10px rgba(0,0,0,0.06)",
+                      transform: "translateY(-1px)",
+                    },
                   }}
                 >
-                  {index + 1}:-  {data?.user_question || "Untitled conversation"}
-                </Typography>
-              </Box>
-            ))}
+                  <Typography
+                    variant="subtitle2"
+                    sx={{
+                      fontSize: "14px",
+                      fontWeight: 500,
+                      color: "#111827",
+                      display: "-webkit-box",
+                      WebkitLineClamp: 2,
+                      WebkitBoxOrient: "vertical",
+                      overflow: "hidden",
+                      wordBreak: "break-word",
+                    }}
+                  >
+                    {index + 1}:-{" "}
+                    {data?.user_question || "Untitled conversation"}
+                  </Typography>
+                </Box>
+              ))}
           </List>
         </Box>
       ) : (
@@ -496,7 +528,7 @@ export default function Page({ suggestionInput, setIsOpenChatBot }) {
           </Box>
         </Grid>
 
-        {/* New Chat and History Section */}
+        {/* Chat + Sidebar */}
         {showChat && (
           <Box sx={{ display: "flex", width: "100%", height: "80vh" }}>
             {/* Desktop Sidebar */}
@@ -712,172 +744,12 @@ export default function Page({ suggestionInput, setIsOpenChatBot }) {
             </Box>
           </Box>
         )}
-
-        {/* New Chat and History Section - Commented out
-{showList && (
-  <Grid item xs>
-    <Box
-      sx={{
-        p: 2,
-        borderColor: "grey.300",
-        display: "flex",
-        flexDirection: "column",
-        justifyContent: "center",
-        alignItems: "center",
-        width: "100%",
-        height: "100%",
-      }}
-    >
-      <Button
-        variant="outlined"
-        color="primary"
-        onClick={() => {
-          handleCreateSession();
-          setShowChat(true);
-          setShowList(false);
-        }}
-        sx={{
-          mt: 2,
-          display: "inline-flex",
-          padding: "12px 32px",
-          justifyContent: "center",
-          alignItems: "center",
-          gap: "8px",
-          textTransform: "none",
-          borderRadius: "8px",
-          background: "#141514",
-          color: "#FFF",
-          textAlign: "center",
-          fontFamily: "Aptos",
-          fontSize: "16px",
-          fontStyle: "normal",
-          fontWeight: "700",
-          lineHeight: "24px",
-          "&:hover": {
-            border: "1px solid #141514",
-            background: "#E5E5E5",
-            color: "#141514",
-          },
-        }}
-      >
-        Fresh Conversation
-      </Button>
-
-      {!showOldChat && !isMobile && (
-        <Button
-          variant="outlined"
-          color="primary"
-          onClick={handleOldChatsClick}
-          sx={{
-            mt: 2,
-            display: "inline-flex",
-            padding: "12px 28px",
-            justifyContent: "center",
-            alignItems: "center",
-            gap: "8px",
-            textTransform: "none",
-            borderRadius: "8px",
-            border: "1px solid #141514",
-            background: "#fff",
-            color: "#141514",
-            textAlign: "center",
-            fontFamily: "Aptos",
-            fontSize: "16px",
-            fontStyle: "normal",
-            fontWeight: "700",
-            lineHeight: "24px",
-            "&:hover": {
-              border: "1px solid #141514",
-              background: "#E5E5E5",
-              color: "#141514",
-            },
-          }}
-        >
-          Conversation History
-        </Button>
-      )}
-      {showOldChat &&
-        (oldChats.length > 0 ? (
-          <Box
-            sx={{
-              width: "100%",
-              height: "400px",
-              overflowY: "auto",
-              bgcolor: "grey.100",
-              borderRadius: 2,
-              p: 2,
-              boxShadow: "0px 4px 6px rgba(0, 0, 0, 0.1)",
-              display: "flex",
-              flexDirection: "column",
-              alignItems: "center",
-            }}
-          >
-            <List sx={{ width: "100%" }}>
-              {oldChats?.map((data, index) => (
-                <Accordion
-                  key={data?.id}
-                  sx={{
-                    mb: 1,
-                    borderRadius: 4,
-                    backdropFilter: "blur(10px)",
-                    backgroundColor: "rgba(255, 255, 255, 0.8)",
-                  }}
-                >
-                  <AccordionSummary
-                    expandIcon={<RiArrowDropDownLine />}
-                    sx={{
-                      color: "text.primary",
-                      p: 2,
-                      width: "100%",
-                      height: "100%",
-                    }}
-                    onClick={() =>
-                      loadSessionToChat(data?.session?.session_id)
-                    }
-                  >
-                    <Typography
-                      variant="subtitle1"
-                      gutterBottom
-                      sx={{ fontSize: "14px" }}
-                    >
-                      Session ID - {data?.session?.session_id}
-                      <br />
-                      {index + 1}. {data?.user_question}
-                    </Typography>
-                  </AccordionSummary>
-                  <AccordionDetails
-                    sx={{
-                      bgcolor: "grey.200",
-                      borderRadius: 1,
-                      p: 1,
-                      boxShadow: "0px 2px 4px rgba(0, 0, 0, 0.1)",
-                    }}
-                  >
-                    <Box
-                      sx={{
-                        minWidth: "100%",
-                        width: 1.5 * (dimensions.width / 2),
-                        fontSize: "0.85rem",
-                      }}
-                    >
-                      <TextWithMath text={data?.bot_response} />
-                    </Box>
-                  </AccordionDetails>
-                </Accordion>
-              ))}
-            </List>
-          </Box>
-        ) : (
-          <Typography>No conversation history available.</Typography>
-        ))}
-    </Box>
-  </Grid>
-)}
-*/}
       </Grid>
     </Box>
   );
 }
+
+
 
 
 
