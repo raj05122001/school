@@ -1,40 +1,42 @@
 "use client";
 
-import { Box, Grid, Paper, Typography } from "@mui/material";
+import { Box, Grid, Paper, Typography, useMediaQuery, useTheme } from "@mui/material";
 import { MdOutlineLibraryBooks } from "react-icons/md";
 import { AiOutlineCheckCircle, AiOutlineCloseCircle } from "react-icons/ai";
 
+export default function ChapterStatus({ totalChapters = 0, checked = 0, notChecked = 0 }) {
+  const theme = useTheme();
+  const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
 
+  const stats = [
+    {
+      icon: <MdOutlineLibraryBooks size={isMobile ? 20 : 24} />,
+      label: "Total Lectures",
+      value: totalChapters,
+    },
+    {
+      icon: <AiOutlineCheckCircle size={isMobile ? 20 : 24} color="#00c853" />,
+      label: "Checked",
+      value: checked,
+    },
+    {
+      icon: <AiOutlineCloseCircle size={isMobile ? 20 : 24} color="#f44336" />,
+      label: "Not Checked",
+      value: notChecked,
+    },
+  ];
 
-export default function ChapterStatus({totalChapters=0,checked=0,notChecked=0}) {
-    const stats = [
-        {
-          icon: <MdOutlineLibraryBooks size={24} />,
-          label: "Total Lectures",
-          value: totalChapters,
-        },
-        {
-          icon: <AiOutlineCheckCircle size={24} color="#00c853" />,
-          label: "Checked",
-          value: checked,
-        },
-        {
-          icon: <AiOutlineCloseCircle size={24} color="#f44336" />,
-          label: "Not Checked",
-          value: notChecked,
-        },
-      ];
   return (
     <Box
       sx={{
         backgroundColor: "#FFFFFF",
         borderRadius: "20px",
-        padding:"24px 32px 32px 32px",
+        padding: isMobile ? "12px 12px 16px 12px" : "24px 32px 32px 32px",
         maxWidth: "100%",
         mt: 2,
       }}
     >
-      <Grid container spacing={2} justifyContent="center">
+      <Grid container spacing={isMobile ? 1.5 : 2} justifyContent="center">
         {stats.map((stat, index) => (
           <Grid item xs={12} sm={6} md={4} key={index}>
             <Paper
@@ -43,22 +45,31 @@ export default function ChapterStatus({totalChapters=0,checked=0,notChecked=0}) 
                 display: "flex",
                 alignItems: "center",
                 justifyContent: "space-between",
-                padding:"18px 16px",
+                padding: isMobile ? "10px 12px" : "18px 16px", // 👈 mobile me height kam
                 borderRadius: "6.82px",
                 border: "0.5px solid #C1C1C1",
               }}
             >
               <Box>
                 <Typography
-                  variant="subtitle1"
+                  variant={isMobile ? "body2" : "subtitle1"}
                   fontWeight={600}
-                  sx={{ display: "flex", alignItems: "center", gap: 1, color:"#3B3D3B" }}
+                  sx={{
+                    display: "flex",
+                    alignItems: "center",
+                    gap: 0.75,
+                    color: "#3B3D3B",
+                  }}
                 >
                   {stat.icon}
                   {stat.label}
                 </Typography>
               </Box>
-              <Typography variant="h6" fontWeight={600} color={"#3B3D3B"}>
+              <Typography
+                variant={isMobile ? "body2" : "h6"}
+                fontWeight={600}
+                color={"#3B3D3B"}
+              >
                 {stat.value}
               </Typography>
             </Paper>
@@ -68,3 +79,4 @@ export default function ChapterStatus({totalChapters=0,checked=0,notChecked=0}) 
     </Box>
   );
 }
+  

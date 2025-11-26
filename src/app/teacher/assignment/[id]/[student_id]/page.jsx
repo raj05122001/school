@@ -58,7 +58,7 @@ const Page = ({ params }) => {
       sx={{
         color: isDarkMode ? "#fff" : "#000",
         minHeight: "100vh",
-        p: 2,
+        p: { xs: 1.5, sm: 2, md: 3 },
       }}
     >
       {listLoading ? (
@@ -85,68 +85,118 @@ const Page = ({ params }) => {
               <Card
                 sx={{
                   backgroundColor: isDarkMode
-                    ? "rgba(255, 255, 255, 0.1)"
-                    : "white",
+                    ? "rgba(255, 255, 255, 0.06)"
+                    : "#ffffff",
                   color: isDarkMode ? "#f1f1f1" : "#000",
                   borderRadius: "16px",
                   boxShadow: isDarkMode
                     ? "0px 6px 15px rgba(0, 0, 0, 0.4)"
-                    : "0px 4px 10px #ADD8E6",
-                  // padding: "10px",
-                  paddingX: 4,
-                  paddingY: 1,
+                    : "0px 4px 10px rgba(173, 216, 230, 0.7)", // light blue glow
+                  px: { xs: 2, sm: 4 },
+                  py: { xs: 1.5, sm: 1.5 },
                 }}
               >
-                <CardContent>
-                  <Box display="flex" justifyContent="space-between">
-                    <Box display="flex" alignItems="center" gap={2}>
-                      <UserImage
-                        profilePic={userData?.user?.profile_pic}
-                        name={userData?.user?.full_name}
-                        width={40}
-                        height={40}
-                      />
-                      <Box flex="1">
-                        <Typography variant="h6" fontWeight="bold">
-                          {userData?.user?.full_name}
-                        </Typography>
-                        <Typography variant="body2" color={secondaryColor}>
-                          Email: {userData?.user?.email}
-                        </Typography>
-                      </Box>
-                    </Box>
-                    {/* <DarkMode /> */}
-                  </Box>
-                  <Divider sx={{ my: 2 }} />
-                  <Box sx={{ display: "flex", gap: 4 }}>
-                    <Box display="flex" alignItems="center">
-                      <SiGoogleclassroom
-                        style={{ marginRight: "8px" }}
-                        size={20}
-                      />
+                <CardContent sx={{ p: 0 }}>
+                  {/* TOP: Avatar + Name + Email */}
+                  <Box
+                    display="flex"
+                    alignItems="center"
+                    gap={2}
+                    flexWrap="wrap"
+                  >
+                    <UserImage
+                      profilePic={userData?.user?.profile_pic}
+                      name={userData?.user?.full_name}
+                      width={40}
+                      height={40}
+                    />
+                    <Box flex="1" minWidth={0}>
                       <Typography
-                        variant="subtitle2"
+                        variant="subtitle1"
                         fontWeight="bold"
-                        color={isDarkMode ? primaryColor : "#555"}
+                        sx={{ fontSize: { xs: "15px", sm: "16px" } }}
+                        noWrap
                       >
-                        Class: {userData?.user_class?.name}
+                        {userData?.user?.full_name}
+                      </Typography>
+                      <Typography
+                        variant="body2"
+                        sx={{
+                          fontSize: { xs: "12px", sm: "13px" },
+                          color: "#555",
+                          whiteSpace: "nowrap",
+                          overflow: "hidden",
+                          textOverflow: "ellipsis",
+                        }}
+                      >
+                        Email: {userData?.user?.email}
+                      </Typography>
+                    </Box>
+                  </Box>
+
+                  {/* Middle divider line (full width) */}
+                  <Divider sx={{ my: { xs: 1.5, sm: 2 } }} />
+
+                  {/* BOTTOM: Class + Total Assignments in one row */}
+                  <Box
+                    sx={{
+                      display: "flex",
+                      flexDirection: { xs: "column", sm: "row" },
+                      gap: { xs: 1, sm: 4 },
+                    }}
+                  >
+                    {/* Class */}
+                    <Box
+                      display="flex"
+                      alignItems="center"
+                      gap={1}
+                      sx={{ minWidth: 0 }}
+                    >
+                      <SiGoogleclassroom size={18} />
+                      <Typography
+                        variant="body2"
+                        sx={{
+                          fontSize: { xs: "13px", sm: "14px" },
+                          color: isDarkMode ? primaryColor : "#333",
+                          whiteSpace: "nowrap",
+                        }}
+                      >
+                        <Box component="span" sx={{ fontWeight: 500 }}>
+                          Class:&nbsp;
+                        </Box>
+                        <Box component="span" sx={{ fontWeight: 700 }}>
+                          {userData?.user_class?.name || "N/A"}
+                        </Box>
                       </Typography>
                     </Box>
 
-                    <Box display="flex" alignItems="center">
-                      <MdOutlineCreditScore
-                        style={{ marginRight: "8px" }}
-                        size={20}
-                      />
+                    {/* Total Assignments */}
+                    <Box
+                      display="flex"
+                      alignItems="center"
+                      gap={1}
+                      sx={{ minWidth: 0 }}
+                    >
+                      <MdOutlineCreditScore size={18} />
                       <Typography
-                        variant="subtitle2"
-                        fontWeight="bold"
-                        color={isDarkMode ? primaryColor : "#555"}
+                        variant="body2"
+                        sx={{
+                          fontSize: { xs: "13px", sm: "14px" },
+                          color: isDarkMode ? primaryColor : "#333",
+                          whiteSpace: "nowrap",
+                        }}
                       >
-                        Total Assignments: {listData?.data?.length}
+                        <Box component="span" sx={{ fontWeight: 500 }}>
+                          Total Assignments:&nbsp;
+                        </Box>
+                        <Box component="span" sx={{ fontWeight: 700 }}>
+                          {listData?.data?.length}
+                        </Box>
                       </Typography>
                     </Box>
-                    {/* <Box display="flex" alignItems="center">
+
+                    {/* 
+                    <Box display="flex" alignItems="center">
                       <TbSquareRoundedPercentage
                         style={{ marginRight: "8px" }}
                         size={20}
@@ -158,19 +208,26 @@ const Page = ({ params }) => {
                       >
                         Checked Assignments: {listData?.data?.length}
                       </Typography>
-                    </Box> */}
+                    </Box> 
+                    */}
                   </Box>
                 </CardContent>
               </Card>
             </Grid>
           )}
 
+
           {listData?.data?.length > 0 &&
             listData?.data?.map((assignment, index) => (
               <Grid item xs={12} key={assignment.id}>
-                <CheckAssignment  assignment={assignment} index={index} fetchAssignmentAnswer={fetchAssignmentAnswer} />
+                <CheckAssignment
+                  assignment={assignment}
+                  index={index}
+                  fetchAssignmentAnswer={fetchAssignmentAnswer}
+                />
               </Grid>
             ))}
+
         </Grid>
       )}
     </Box>

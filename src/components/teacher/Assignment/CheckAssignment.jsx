@@ -58,7 +58,6 @@ const CheckAssignment = ({ assignment, index, fetchAssignmentAnswer }) => {
   const [open, setOpen] = useState(false);
 
   // === Local state for previewing the student’s submitted file ===
-  // When the teacher clicks on “download” or the preview, we set selectedFile to a presigned URL
   const [selectedFile, setSelectedFile] = useState(null);
 
   // === New state: presigned URL of the student’s answer for inline rendering ===
@@ -289,16 +288,19 @@ const CheckAssignment = ({ assignment, index, fetchAssignmentAnswer }) => {
             : "0px 2px 10px #ff9b85",
           backgroundColor: isDarkMode ? "rgba(255, 255, 255, 0.1)" : "#fff",
           mb: 3,
+          width: "100%",
         }}
       >
         {/* === Header: Question number + icons + expand/collapse === */}
         <Box
           sx={{
             display: "flex",
+            flexDirection: { xs: "column", md: "row" }, // mobile column
             justifyContent: "space-between",
-            alignItems: "center",
+            alignItems: { xs: "flex-start", md: "center" },
             cursor: "pointer",
-            p: 2,
+            p: { xs: 1.5, sm: 2 },
+            gap: { xs: 1.5, md: 0 },
           }}
           onClick={() => setOpen((prev) => !prev)}
         >
@@ -306,17 +308,29 @@ const CheckAssignment = ({ assignment, index, fetchAssignmentAnswer }) => {
             <Typography
               variant="h6"
               fontWeight={"bold"}
-              sx={{ color: isDarkMode ? "#F9F6EE" : "#353935" }}
+              sx={{
+                color: isDarkMode ? "#F9F6EE" : "#353935",
+                fontSize: { xs: "15px", sm: "16px" },
+              }}
             >
               Question {index + 1}
             </Typography>
           </Box>
-          <Box sx={{ display: "flex", alignItems: "center", gap: 2 }}>
+          <Box
+            sx={{
+              display: "flex",
+              flexWrap: "wrap",
+              alignItems: "center",
+              justifyContent: { xs: "flex-start", md: "flex-end" },
+              gap: { xs: 1, sm: 1.5, md: 2 },
+              width: { xs: "100%", md: "auto" },
+            }}
+          >
             <Box
               sx={{
                 backgroundColor: "#DCF9E8",
                 borderRadius: "4px",
-                padding: "4px",
+                padding: "4px 6px",
                 display: "flex",
                 gap: 1,
                 alignItems: "center",
@@ -324,7 +338,11 @@ const CheckAssignment = ({ assignment, index, fetchAssignmentAnswer }) => {
             >
               <MdOutlineWatchLater color="#1F6F2C" />
               <Typography
-                sx={{ fontWeight: 400, fontSize: "18px", color: "#1F6F2C" }}
+                sx={{
+                  fontWeight: 400,
+                  fontSize: { xs: "12px", sm: "14px", md: "18px" },
+                  color: "#1F6F2C",
+                }}
               >
                 {dayjs(assignment?.updated_at).format("DD-MM-YYYY")}
               </Typography>
@@ -334,7 +352,7 @@ const CheckAssignment = ({ assignment, index, fetchAssignmentAnswer }) => {
               sx={{
                 backgroundColor: "#DCF9E8",
                 borderRadius: "4px",
-                padding: "4px",
+                padding: "4px 6px",
                 display: "flex",
                 gap: 1,
                 alignItems: "center",
@@ -342,7 +360,11 @@ const CheckAssignment = ({ assignment, index, fetchAssignmentAnswer }) => {
             >
               <IoCalendarClearOutline color="#1F6F2C" />
               <Typography
-                sx={{ fontWeight: 400, fontSize: "18px", color: "#1F6F2C" }}
+                sx={{
+                  fontWeight: 400,
+                  fontSize: { xs: "12px", sm: "14px", md: "18px" },
+                  color: "#1F6F2C",
+                }}
               >
                 {dayjs(assignment?.updated_at).format("hh:mm A")}
               </Typography>
@@ -354,8 +376,9 @@ const CheckAssignment = ({ assignment, index, fetchAssignmentAnswer }) => {
                 borderRadius: "6px",
                 display: "flex",
                 alignItems: "center",
-                padding: "6px",
+                padding: "4px 6px",
                 gap: "6px",
+                maxWidth: { xs: "100%", md: "none" },
               }}
             >
               <img
@@ -363,21 +386,34 @@ const CheckAssignment = ({ assignment, index, fetchAssignmentAnswer }) => {
                 style={{ width: "18px", height: "18px" }}
               />
               <Typography
-                sx={{ color: "white", fontWeight: 400, fontSize: "18px" }}
+                sx={{
+                  color: "white",
+                  fontWeight: 400,
+                  fontSize: { xs: "12px", sm: "14px", md: "18px" },
+                  display: "flex",
+                  alignItems: "center",
+                  flexWrap: "wrap",
+                }}
               >
                 <i>Total Marks:</i>{" "}
-                <span style={{ fontWeight: 600, color: "white" }}>
+                <span
+                  style={{
+                    fontWeight: 600,
+                    color: "white",
+                    marginLeft: 4,
+                  }}
+                >
                   {assignment.assignment_que.assignment_mark}
                 </span>
               </Typography>
             </Box>
 
             {open ? (
-              <IconButton>
+              <IconButton size="small">
                 <IoIosArrowUp />
               </IconButton>
             ) : (
-              <IconButton>
+              <IconButton size="small">
                 <IoIosArrowDown />
               </IconButton>
             )}
@@ -389,12 +425,18 @@ const CheckAssignment = ({ assignment, index, fetchAssignmentAnswer }) => {
             <Divider sx={{ mb: 2 }} />
 
             {/* === Full question text === */}
-            <Box sx={{ display: "flex", justifyContent: "space-between" }}>
+            <Box
+              sx={{
+                display: "flex",
+                justifyContent: "space-between",
+                flexDirection: "column",
+              }}
+            >
               <Typography
                 variant="body1"
                 gutterBottom
                 color={primaryColor}
-                sx={{ fontWeight: 600 }}
+                sx={{ fontWeight: 600, fontSize: { xs: "14px", sm: "15px" } }}
               >
                 <AssignmentTextFormat
                   text={assignment.assignment_que.assignment_text}
@@ -407,14 +449,18 @@ const CheckAssignment = ({ assignment, index, fetchAssignmentAnswer }) => {
               sx={{
                 backgroundColor: "#DCF9E8",
                 borderRadius: "12px",
-                padding: "12px",
-                mt: 2,
+                padding: { xs: "10px", sm: "12px" }, // mobile pe thoda kam padding
+                mt: { xs: 1.5, sm: 2 },
+                width: "100%",
               }}
             >
               <Typography
                 variant="h6"
                 fontWeight={"bold"}
-                sx={{ color: isDarkMode ? "#F9F6EE" : "#353935" }}
+                sx={{
+                  color: isDarkMode ? "#F9F6EE" : "#353935",
+                  fontSize: { xs: "15px", sm: "16px" },
+                }}
               >
                 Submission
               </Typography>
@@ -423,7 +469,11 @@ const CheckAssignment = ({ assignment, index, fetchAssignmentAnswer }) => {
                 <Typography
                   variant="body1"
                   color={secondaryColor}
-                  sx={{ mt: 2, lineHeight: 1.6 }}
+                  sx={{
+                    mt: 1.5,
+                    lineHeight: 1.6,
+                    fontSize: { xs: "13px", sm: "14px" },
+                  }}
                 >
                   <strong style={{ color: primaryColor }}>Answer: </strong>
                   {assignment?.answer_description}
@@ -436,13 +486,28 @@ const CheckAssignment = ({ assignment, index, fetchAssignmentAnswer }) => {
                   component="img"
                   image={answerSignedUrl}
                   alt="Answer Image"
-                  sx={{ height: 300, objectFit: "contain", mt: 2, borderRadius: 2 }}
+                  sx={{
+                    mt: 2,
+                    borderRadius: 2,
+                    height: { xs: 220, sm: 300 },
+                    width: "100%",              // always full width
+                    objectFit: "contain",
+                  }}
                   onClick={() => handleSelectFile(assignment.answer_link)}
                 />
               )}
 
               {assignment.answer_type === "VIDEO" && answerSignedUrl && (
-                <CardMedia component="video" controls sx={{ height: 300, mt: 2 }}>
+                <CardMedia
+                  component="video"
+                  controls
+                  sx={{
+                    mt: 2,
+                    height: { xs: 220, sm: 300 },
+                    width: "100%",             // full width video
+                    borderRadius: 2,
+                  }}
+                >
                   <source src={answerSignedUrl} type="video/mp4" />
                   Your browser does not support the video tag.
                 </CardMedia>
@@ -454,49 +519,54 @@ const CheckAssignment = ({ assignment, index, fetchAssignmentAnswer }) => {
                 </Box>
               )}
 
-              {["IMAGE", "VIDEO", "AUDIO"].indexOf(assignment.answer_type) < 0 && assignment.answer_link && answerSignedUrl && (
-                // Generic fallback for other files (PDF, DOCX, etc.)
-                <Box
-                  mt={2}
-                  sx={{
-                    display: "flex",
-                    gap: 2,
-                    alignItems: "center",
-                    border: "1px solid",
-                    borderColor: isDarkMode ? "grey.700" : "divider",
-                    borderRadius: "8px",
-                    padding: "8px",
-                    backgroundColor: isDarkMode
-                      ? "rgba(255,255,255,0.1)"
-                      : "background.paper",
-                    boxShadow: 2,
-                    width: "287px",
-                    cursor: "pointer",
-                  }}
-                  onClick={() => handleSelectFile(assignment.answer_link)}
-                >
-                  <Box>
-                    {getFileIcon(assignment.answer_link, {
-                      style: {
-                        fontSize: "24px",
-                        marginRight: "8px",
-                        color: getFileColor(assignment.answer_link),
-                      },
-                    })}
-                  </Box>
-                  <Typography
-                    variant="body2"
+              {["IMAGE", "VIDEO", "AUDIO"].indexOf(assignment.answer_type) < 0 &&
+                assignment.answer_link &&
+                answerSignedUrl && (
+                  // Generic fallback for other files (PDF, DOCX, etc.)
+                  <Box
+                    mt={2}
                     sx={{
-                      color: isDarkMode ? "#F9F6EE" : "text.primary",
-                      fontWeight: 500,
-                      wordBreak: "break-word",
+                      display: "flex",
+                      flexDirection: { xs: "row", sm: "row" },
+                      gap: 2,
+                      alignItems: "center",
+                      border: "1px solid",
+                      borderColor: isDarkMode ? "grey.700" : "divider",
+                      borderRadius: "8px",
+                      padding: "8px",
+                      backgroundColor: isDarkMode
+                        ? "rgba(255,255,255,0.1)"
+                        : "background.paper",
+                      boxShadow: 2,
+                      width: { xs: "100%", sm: "287px" }, // mobile full width
+                      cursor: "pointer",
                     }}
+                    onClick={() => handleSelectFile(assignment.answer_link)}
                   >
-                    {replaceString(assignment.answer_link)}
-                  </Typography>
-                </Box>
-              )}
+                    <Box sx={{ flexShrink: 0 }}>
+                      {getFileIcon(assignment.answer_link, {
+                        style: {
+                          fontSize: "24px",
+                          marginRight: "8px",
+                          color: getFileColor(assignment.answer_link),
+                        },
+                      })}
+                    </Box>
+                    <Typography
+                      variant="body2"
+                      sx={{
+                        color: isDarkMode ? "#F9F6EE" : "text.primary",
+                        fontWeight: 500,
+                        wordBreak: "break-word",
+                        fontSize: { xs: "12px", sm: "13px" },
+                      }}
+                    >
+                      {replaceString(assignment.answer_link)}
+                    </Typography>
+                  </Box>
+                )}
             </Box>
+
 
             {/* === AI Feedback (Teacher version) === */}
             <Box sx={{ marginTop: 1 }}>
@@ -659,9 +729,9 @@ const CheckAssignment = ({ assignment, index, fetchAssignmentAnswer }) => {
                   text={
                     assignment.assignment_que.assignment_text?.length > 200
                       ? `${assignment.assignment_que.assignment_text.slice(
-                          0,
-                          200
-                        )}...`
+                        0,
+                        200
+                      )}...`
                       : assignment.assignment_que.assignment_text
                   }
                 />

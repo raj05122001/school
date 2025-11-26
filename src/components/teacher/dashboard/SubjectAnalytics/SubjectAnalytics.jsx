@@ -147,7 +147,7 @@ const SubjectAnalytics = () => {
       sx={{
         width: "100%",
         p: 4,
-        maxHeight: "420px",
+        maxHeight: "430px",
         height: "100%",
         backgroundColor:"#fff",
         boxShadow:"none",

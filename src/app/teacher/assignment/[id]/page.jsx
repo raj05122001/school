@@ -142,10 +142,11 @@ const CoursePlaylist = ({ params }) => {
   };
 
   const currentStyles = isDarkMode ? darkModeStyles : lightModeStyles;
+
   return (
     <Box
       sx={{
-        padding: 4,
+        padding: { xs: 2, md: 4 }, // mobile pe kam, desktop pe zyada
         color: "#fff",
         minHeight: "100vh",
         background: isDarkMode
@@ -153,7 +154,7 @@ const CoursePlaylist = ({ params }) => {
           : "linear-gradient(to top, #dfe9f3 0%, white 100%)",
         display: "flex",
         flexDirection: "column",
-        gap: 2,
+        gap: { xs: 1.5, md: 2 },
       }}
     >
       {/* Main Course Card */}
@@ -161,10 +162,12 @@ const CoursePlaylist = ({ params }) => {
         sx={{
           width: "100%",
           display: "flex",
-          color: isDarkMode ? "#f1f1f1" : "#000", // Text color based on theme
+          flexDirection: { xs: "column", sm: "row" }, // mobile: column, desktop: row
+          color: isDarkMode ? "#f1f1f1" : "#000",
           borderRadius: "16px",
           fontFamily: varelaRound,
-          height: "140px",
+          height: { xs: "auto", sm: "140px" },
+          overflow: "hidden",
         }}
       >
         <CardMedia
@@ -174,34 +177,48 @@ const CoursePlaylist = ({ params }) => {
           src={videoUrl}
           //   controls={isHovered}
           sx={{
-            width: "20%",
-            height: "100%",
-
+            width: { xs: "100%", sm: "20%" },
+            height: { xs: 180, sm: "100%" },
             backdropFilter: "blur(10px)",
             backgroundColor: "black",
+            objectFit: "cover",
           }}
         />
-        <CardContent sx={{ width: "100%" }}>
+        <CardContent
+          sx={{
+            width: "100%",
+            p: { xs: 1.5, sm: 2 },
+          }}
+        >
           <Box
             sx={{
               display: "flex",
-              alignItems: "center",
-              gap: 3,
+              alignItems: { xs: "flex-start", sm: "center" },
+              flexDirection: { xs: "column", sm: "row" },
+              gap: { xs: 1, sm: 3 },
               justifyContent: "space-between",
               width: "100%",
+              mb: { xs: 1, sm: 1.5 },
             }}
           >
             <Typography
               variant="h5"
               fontWeight="bold"
-              fontSize={"24px"}
+              fontSize={{ xs: "18px", sm: "24px" }}
               fontFamily={varelaRound}
             >
               {listData?.lecture?.title}
             </Typography>
           </Box>
 
-          <Box sx={{ display: "flex", gap: "56px" }}>
+          <Box
+            sx={{
+              display: "flex",
+              flexWrap: "wrap",
+              gap: { xs: 2, sm: 7 },
+              mb: { xs: 1, sm: 1.5 },
+            }}
+          >
             <Box>
               <Typography
                 sx={{ fontWeight: 400, fontSize: "12px", color: "#8C8F90" }}
@@ -241,12 +258,19 @@ const CoursePlaylist = ({ params }) => {
               </Typography>
             </Box>
           </Box>
-          <Box sx={{ display: "flex", gap: "10px" }}>
+
+          <Box
+            sx={{
+              display: "flex",
+              flexWrap: "wrap",
+              gap: 1,
+            }}
+          >
             <Box
               sx={{
                 backgroundColor: "#DCF9E8",
                 borderRadius: "4px",
-                padding: "4px",
+                padding: "4px 8px",
                 display: "flex",
                 gap: 1,
                 alignItems: "center",
@@ -264,7 +288,7 @@ const CoursePlaylist = ({ params }) => {
               sx={{
                 backgroundColor: "#DCF9E8",
                 borderRadius: "4px",
-                padding: "4px",
+                padding: "4px 8px",
                 display: "flex",
                 gap: 1,
                 alignItems: "center",
@@ -278,27 +302,30 @@ const CoursePlaylist = ({ params }) => {
               </Typography>
             </Box>
           </Box>
-          {/* <Typography variant="subtitle1" marginTop={4}>
-              <BsXDiamond /> <strong>Class:</strong>{" "}
-              {listData?.lecture?.lecture_class?.name || "N/A"}
-            </Typography>
-            <Typography variant="subtitle1">
-              <BsXDiamond /> <strong>Subject:</strong>{" "}
-              {listData?.lecture?.chapter?.subject?.name || "N/A"}
-            </Typography>
-            <Typography variant="subtitle1">
-              <BsXDiamond /> <strong>Chapter:</strong>{" "}
-              {listData?.lecture?.chapter?.chapter || "N/A"}
-            </Typography>
 
-            <Typography variant="subtitle1">
-              <BsXDiamond /> <strong>Scheduled Date:</strong>{" "}
-              {listData?.lecture?.schedule_date || "N/A"}
-            </Typography>
-            <Typography variant="subtitle1">
-              <BsXDiamond /> <strong>Scheduled Time:</strong>{" "}
-              {listData?.lecture?.schedule_time || "N/A"}
-            </Typography> */}
+          {/* 
+          <Typography variant="subtitle1" marginTop={4}>
+            <BsXDiamond /> <strong>Class:</strong>{" "}
+            {listData?.lecture?.lecture_class?.name || "N/A"}
+          </Typography>
+          <Typography variant="subtitle1">
+            <BsXDiamond /> <strong>Subject:</strong>{" "}
+            {listData?.lecture?.chapter?.subject?.name || "N/A"}
+          </Typography>
+          <Typography variant="subtitle1">
+            <BsXDiamond /> <strong>Chapter:</strong>{" "}
+            {listData?.lecture?.chapter?.chapter || "N/A"}
+          </Typography>
+
+          <Typography variant="subtitle1">
+            <BsXDiamond /> <strong>Scheduled Date:</strong>{" "}
+            {listData?.lecture?.schedule_date || "N/A"}
+          </Typography>
+          <Typography variant="subtitle1">
+            <BsXDiamond /> <strong>Scheduled Time:</strong>{" "}
+            {listData?.lecture?.schedule_time || "N/A"}
+          </Typography>
+          */}
         </CardContent>
       </Card>
 
@@ -315,7 +342,7 @@ const CoursePlaylist = ({ params }) => {
         }}
       >
         <InputBase
-          sx={{ ml: 1, flex: 1 }}
+          sx={{ ml: 1, flex: 1, fontSize: { xs: "14px", sm: "16px" } }}
           placeholder="Search"
           onChange={(e) => setGlobalSearch(encodeURIComponent(e.target.value))}
           value={decodeURIComponent(globalSearch)}

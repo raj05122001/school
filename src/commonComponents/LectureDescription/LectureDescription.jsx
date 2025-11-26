@@ -27,7 +27,7 @@ import { useRouter } from "next/navigation";
 
 import { FiCopy, FiCheck } from "react-icons/fi";
 
-const LectureDescription = ({ lectureData, isShowPic = false, loading,videoTimeStamp=0 }) => {
+const LectureDescription = ({ lectureData, isShowPic = false, loading, videoTimeStamp = 0 }) => {
   const formatDuration = (ms) => {
     const hours = Math.floor(ms / (1000 * 60 * 60));
     const minutes = Math.floor((ms % (1000 * 60 * 60)) / (1000 * 60));
@@ -61,24 +61,24 @@ const LectureDescription = ({ lectureData, isShowPic = false, loading,videoTimeS
 
   const [copied, setCopied] = useState(false);
 
-const handleCopyShareUrl = async () => {
-  try {
-    // build a clean URL with ?timestamp=...
-    const url = new URL(window.location.href);
-    url.searchParams.set("timestamp", Math.floor(videoTimeStamp || 0));
+  const handleCopyShareUrl = async () => {
+    try {
+      // build a clean URL with ?timestamp=...
+      const url = new URL(window.location.href);
+      url.searchParams.set("timestamp", Math.floor(videoTimeStamp || 0));
 
-    await navigator.clipboard.writeText(url.toString());
-    setCopied(true);
-    // (optional) subtle haptic feedback on mobile
-    if (navigator.vibrate) navigator.vibrate(10);
+      await navigator.clipboard.writeText(url.toString());
+      setCopied(true);
+      // (optional) subtle haptic feedback on mobile
+      if (navigator.vibrate) navigator.vibrate(10);
 
-    setTimeout(() => setCopied(false), 1200);
-  } catch (err) {
-    console.error("Could not copy text:", err);
-    // briefly show an error state too, if you want:
-    setCopied(false);
-  }
-};
+      setTimeout(() => setCopied(false), 1200);
+    } catch (err) {
+      console.error("Could not copy text:", err);
+      // briefly show an error state too, if you want:
+      setCopied(false);
+    }
+  };
 
   return (
     <Box
@@ -95,43 +95,70 @@ const handleCopyShareUrl = async () => {
         background: "#fff",
       }}
     >
-    <Box sx={{width:"100%" ,display:'flex',justifyContent:'space-between'}}>
-      {/* Lecture Topic and Details Layout */}
-      {loading ? (
-        <Skeleton width="100%" height={50} />
-      ) : (
-        <Typography
-          sx={{
-            color: "#3B3D3B",
-            fontFamily: "Inter",
-            fontSize: "20px",
-            fontStyle: "normal",
-            fontWeight: "700",
-            lineHeight: "normal",
-          }}
-        >
-          {lectureData?.title || "Lecture Topic"}
-          <span
-            style={{
-              fontSize: "12px",
-              fontFamily: "Inter, sans-serif",
-              fontStyle: "italic",
-              fontWeight: "400",
-              marginLeft: "4px",
+      <Box
+        sx={{
+          width: "100%",
+          display: "flex",
+          flexDirection: { xs: "column", sm: "row" }, // mobile = column
+          justifyContent: "space-between",
+          alignItems: { xs: "center", sm: "center" }, // mobile me center
+          gap: { xs: 1.5, sm: 0 },
+        }}
+      >
+
+        {loading ? (
+          <Skeleton width="100%" height={50} />
+        ) : (
+          <Typography
+            sx={{
+              color: "#3B3D3B",
+              fontFamily: "Inter",
+              fontSize: "20px",
+              fontStyle: "normal",
+              fontWeight: "700",
+              lineHeight: "normal",
+              flex: 1, // title jitni jagah chahiye le sakta hai
             }}
           >
-            (facilitated by VidyaAI)
-          </span>
-        </Typography>
-      )}
+            {lectureData?.title || "Lecture Topic"}
+            <span
+              style={{
+                fontSize: "12px",
+                fontFamily: "Inter, sans-serif",
+                fontStyle: "italic",
+                fontWeight: "400",
+                marginLeft: "4px",
+              }}
+            >
+              (facilitated by VidyaAI)
+            </span>
+          </Typography>
+        )}
 
-     <Button onClick={handleCopyShareUrl} variant="outlined" sx={{ mr: 2 }} startIcon={copied ? <FiCheck /> : <FiCopy />}>
-  {copied ? "Copied!" : "Copy Share URL"}
-</Button>
-    </Box>
-      
+        <Button
+          onClick={handleCopyShareUrl}
+          variant="outlined"
+          startIcon={copied ? <FiCheck /> : <FiCopy />}
+          sx={{
+            mr: { xs: 0, sm: 2 },
+            mt: { xs: 1, sm: 0 },                 // mobile: title ke niche thoda gap
+            alignSelf: { xs: "center", sm: "auto" }, // mobile: center, full width nahi
+            px: { xs: 2, sm: 2.5 },               // width control
+            py: { xs: 0.6, sm: 0.5 },             // height control
+            minWidth: { xs: 170, sm: 190 },       // button ka fixed-ish width
+            fontSize: { xs: "0.75rem", sm: "0.875rem" },
+            borderRadius: 999,                    // thoda pill look
+            whiteSpace: "nowrap",
+          }}
+        >
+          {copied ? "Copied!" : "Copy Share URL"}
+        </Button>
 
-      <Box sx={{ flex: 2, width:"95%" }}>
+      </Box>
+
+
+
+      <Box sx={{ flex: 2, width: "95%" }}>
         <Box sx={{ mb: 1 }}>
           {loading ? (
             <Skeleton width="80%" height={30} />
@@ -217,9 +244,11 @@ const handleCopyShareUrl = async () => {
           )}
         </Box>
 
-        <Box sx={{ display: "flex",
-            justifyContent: "space-between",
-            mb: 1,}}>
+        <Box sx={{
+          display: "flex",
+          justifyContent: "space-between",
+          mb: 1,
+        }}>
           {loading ? (
             <>
               <Skeleton width="20%" height={30} />
@@ -268,13 +297,13 @@ const handleCopyShareUrl = async () => {
                   height={40}
                 />
                 <Typography sx={{
-            color: "#3B3D3B",
-            fontFamily: "Inter",
-            fontSize: "16px",
-            fontStyle: "normal",
-            fontWeight: "700",
-            lineHeight: "normal",
-          }}>{lectureData?.organizer?.full_name}</Typography>
+                  color: "#3B3D3B",
+                  fontFamily: "Inter",
+                  fontSize: "16px",
+                  fontStyle: "normal",
+                  fontWeight: "700",
+                  lineHeight: "normal",
+                }}>{lectureData?.organizer?.full_name}</Typography>
               </>
             )}
           </Box>

@@ -9,6 +9,7 @@ import {
   Paper,
   Grid,
   useTheme,
+  useMediaQuery,
 } from "@mui/material";
 import { getLectureById, releasedLecture } from "@/api/apiHelper";
 import { useThemeContext } from "@/hooks/ThemeContext";
@@ -32,6 +33,7 @@ const LecturePage = ({ params }) => {
   const theme = useTheme(); // Access theme to apply dynamic styling
   const [loading, setLoading] = useState(true);
   const [videoTimeStamp, setVideoTimeStamp] = useState(0);
+  const isMobile = useMediaQuery(theme.breakpoints.down("sm")); // 👉 mobile detect
 
   useEffect(() => {
     if (id) {
@@ -146,7 +148,7 @@ const LecturePage = ({ params }) => {
               display: "flex",
               flexDirection: "column",
               gap: 2,
-              height: "100%",
+              // height: "100%",
             }}
           >
             {lectureData?.video_src === "PDF" ? (
@@ -156,16 +158,20 @@ const LecturePage = ({ params }) => {
                 duration={lectureData?.duration}
               />
             ) : (
-              <Box sx={{ maxHeight: "500px", width: "100%", height: 500 }}>
+              <Box
+              >
                 {videoPlayer}
               </Box>
             )}
+
             {descriptionMOL}
             {lectureOverview}
             {lectureDetails}
             {/* {articles} */}
           </Box>
         </Grid>
+
+
 
         {/* Sidebar */}
         <Grid item xs={12} sm={12} md={12} lg={3} xl={3}>
@@ -177,16 +183,16 @@ const LecturePage = ({ params }) => {
               key={index}
               sx={{
                 display: "flex",
-                flexDirection: { xs: "row", lg: "column" },
+                flexDirection: "column",        // ✅ har breakpoint pe column
                 gap: 2,
                 width: "100%",
-                mb: index === 0 ? 2 : 0, 
+                mb: index === 0 ? 2 : 0,
                 mt: { xs: index === 1 ? 2 : 0, md: 0 },
-                overflowX: { xs: "auto", lg: "visible" },
+                overflowX: "visible",           // ✅ ab scroll ki zarurat nahi
                 "& > *": {
-                  flex: { xs: "1 1 0", lg: "none" },
-                  width: { xs: "calc(50% - 1rem)", lg: "100%" },
-                  minWidth: { xs: "150px", lg: "auto" },
+                  flex: "0 0 auto",
+                  width: "100%",                // ✅ har card full width
+                  minWidth: "auto",
                 },
               }}
             >
@@ -194,6 +200,7 @@ const LecturePage = ({ params }) => {
             </Box>
           ))}
         </Grid>
+
       </Grid>
     </Box>
   );

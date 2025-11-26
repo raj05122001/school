@@ -93,7 +93,14 @@ const Assignment = () => {
   };
 
   return (
-    <Box sx={{ width: "100%", height: "100%", p: 4 }}>
+    <Box
+      sx={{
+        width: "100%",
+        height: "100%",
+        p: { xs: 1, sm: 4 }
+      }}
+    >
+
       <ChapterStatus
         totalChapters={lectureList.total_lectures}
         checked={lectureList?.total_checked}

@@ -24,11 +24,11 @@ const ListingCard = ({ data, onClick }) => {
   const { isDarkMode, primaryColor, secondaryColor } = useThemeContext();
   const { fetchPresignedUrl } = usePresignedUrl()
   const videoRef = useRef(null);
-  const [videoUrl,setVideoUrl]=useState("")
+  const [videoUrl, setVideoUrl] = useState("")
 
-  useEffect(()=>{
+  useEffect(() => {
     getSignedUrlForObject()
-  },[data?.id])
+  }, [data?.id])
 
   const getSignedUrlForObject = async () => {
     const urlData = {
@@ -38,7 +38,7 @@ const ListingCard = ({ data, onClick }) => {
       folder: "videos/",
     };
 
-  
+
     try {
       const signedUrl = await fetchPresignedUrl(urlData)
       setVideoUrl(signedUrl?.presigned_url)
@@ -63,7 +63,10 @@ const ListingCard = ({ data, onClick }) => {
   return (
     <Box
       p={2}
-      sx={{ width: "100%", height: "100%" }}
+      sx={{
+        width: { xs: "90%", sm: "100%" }, // ✅ mobile 90%, system (sm+) 100%
+        height: "100%",
+      }}
       onClick={() => onClick(data?.id)}
     >
       <Card
@@ -103,7 +106,7 @@ const ListingCard = ({ data, onClick }) => {
             }}
           />
         ) : (
-          <Image src={"/Your Lecture is.png"} width={200} height={230} style={{width:"100%",height: "auto", maxHeight: 230,}}/>
+          <Image src={"/Your Lecture is.png"} width={200} height={230} style={{ width: "100%", height: "auto", maxHeight: 230, }} />
         )}
 
         <CardContent
@@ -120,54 +123,54 @@ const ListingCard = ({ data, onClick }) => {
             backgroundColor: "rgba(255, 255, 255, 0.2)",
           }}
         >
-          <Box sx={{display:"flex" , alignItems:'center', gap:1}}>
-            <UserImage name={data?.organizer?.full_name} profilePic={data?.organizer?.profilePic}/>
-          <Typography
-            // variant="h6"
-            gutterBottom
-            sx={{ fontWeight: "bold", fontSize:"14px", lineHeight:"100%", color: "#3B3D3B", fontFamily: "Inter, sans-serif" }}
-          >
-            {data?.title}
-          </Typography>
+          <Box sx={{ display: "flex", alignItems: 'center', gap: 1 }}>
+            <UserImage name={data?.organizer?.full_name} profilePic={data?.organizer?.profilePic} />
+            <Typography
+              // variant="h6"
+              gutterBottom
+              sx={{ fontWeight: "bold", fontSize: "14px", lineHeight: "100%", color: "#3B3D3B", fontFamily: "Inter, sans-serif" }}
+            >
+              {data?.title}
+            </Typography>
           </Box>
           <Typography
             variant="body1"
             gutterBottom
-            sx={{ color: isDarkMode ? primaryColor : "#555", fontFamily: "Inter, sans-serif", fontSize:"12px", fontWeight:500,mt:1 }}
+            sx={{ color: isDarkMode ? primaryColor : "#555", fontFamily: "Inter, sans-serif", fontSize: "12px", fontWeight: 500, mt: 1 }}
           >
             <strong>Class:</strong> {data?.lecture_class?.name}
           </Typography>
           <Typography
             variant="body1"
             gutterBottom
-            sx={{ color: isDarkMode ? primaryColor : "#555", fontFamily: "Inter, sans-serif", fontSize:"12px", fontWeight:500 }}
+            sx={{ color: isDarkMode ? primaryColor : "#555", fontFamily: "Inter, sans-serif", fontSize: "12px", fontWeight: 500 }}
           >
             <strong>Subject:</strong> {data?.chapter?.subject?.name}
           </Typography>
           <Typography
             variant="body1"
             gutterBottom
-            sx={{ color: isDarkMode ? primaryColor : "#555", fontFamily: "Inter, sans-serif", fontSize:"12px", fontWeight:500 }}
+            sx={{ color: isDarkMode ? primaryColor : "#555", fontFamily: "Inter, sans-serif", fontSize: "12px", fontWeight: 500 }}
           >
             <strong>Chapter:</strong> {data?.chapter?.chapter}
           </Typography>
           <Typography
             variant="body1"
             gutterBottom
-            sx={{ color: isDarkMode ? primaryColor : "#555", fontFamily: "Inter, sans-serif", fontSize:"12px", fontWeight:500 }}
+            sx={{ color: isDarkMode ? primaryColor : "#555", fontFamily: "Inter, sans-serif", fontSize: "12px", fontWeight: 500 }}
           >
-            <strong>Description:</strong> {data?.description?.length>140? `${data?.description?.slice(0,140)}...`:data?.description || "N/A"}
+            <strong>Description:</strong> {data?.description?.length > 140 ? `${data?.description?.slice(0, 140)}...` : data?.description || "N/A"}
           </Typography>
           <Grid container mt={"auto"} pt={2}>
             <Grid item xs={12} sm={8}>
-              <Box sx={{ display: "flex", gap: 1, alignItems:'center' }}>
+              <Box sx={{ display: "flex", gap: 1, alignItems: 'center' }}>
                 <Box>
-                <MdOutlineDateRange size={22} />
+                  <MdOutlineDateRange size={22} />
                 </Box>
                 <Typography
                   variant="body1"
                   gutterBottom
-                  sx={{ color: isDarkMode ? primaryColor : "#555", fontFamily: "Inter, sans-serif",fontSize:"13px", fontWeight:500,m:0 }}
+                  sx={{ color: isDarkMode ? primaryColor : "#555", fontFamily: "Inter, sans-serif", fontSize: "13px", fontWeight: 500, m: 0 }}
                 >
                   {dayjs(`${data?.schedule_date} ${data?.schedule_time}`).fromNow()}
                 </Typography>

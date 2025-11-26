@@ -32,8 +32,10 @@ import { FaSave } from "react-icons/fa";
 import { BsDownload } from "react-icons/bs";
 import TextWithMath from "@/commonComponents/TextWithMath/TextWithMath";
 import { BASE_URL_MEET } from "@/constants/apiconfig";
-import { IoIosArrowDown, IoIosArrowUp } from "react-icons/io";
+import { IoIosArrowDown, IoIosArrowUp, IoIosClose, IoIosDocument } from "react-icons/io";
 import AssignmentTextFormat from "@/commonComponents/TextWithMath/AssignmentTextFormat";
+import Chip from "@mui/material/Chip";
+
 
 const userDetails = decodeToken(Cookies.get("ACCESS_TOKEN"));
 
@@ -66,6 +68,12 @@ const LectureAssignment = ({
   const checker = Number(userDetails?.teacher_id);
   const classID = class_ID;
   const [editedAssignmentId, setEditedAssignmentId] = useState(null);
+  const fileInputRef = useRef(null);
+
+  const handleClearFile = () => {
+    setFile(null);
+    if (fileInputRef.current) fileInputRef.current.value = "";
+  };
 
   const onChange = (e) => {
     setEditedText(e);
@@ -171,8 +179,8 @@ const LectureAssignment = ({
     }
   };
 
-  const [isCreateLoader,setIsCreateLoader]=useState(false)
-  const [numberError, setNumberError]=useState("")
+  const [isCreateLoader, setIsCreateLoader] = useState(false)
+  const [numberError, setNumberError] = useState("")
 
   const handleCreateAssignment = async () => {
     const formData = {
@@ -184,12 +192,12 @@ const LectureAssignment = ({
       is_assigned: 1,
       approach: isApproach,
     };
-    
 
-    if(!newAssignment?.assignment_mark){
+
+    if (!newAssignment?.assignment_mark) {
       setNumberError("Assignment marks is required.")
       return
-    }else{
+    } else {
       setNumberError("")
     }
 
@@ -552,33 +560,33 @@ const LectureAssignment = ({
                             )}
 
                             {!isAdmin && (
-                                <Button
-                                  variant="contained"
-                                  onClick={() =>
-                                    handleAssignAssignment(assignment)
-                                  }
-                                  disabled={!assignment?.assignment_mark}
-                                  sx={{
-                                    // backgroundColor: assignment.is_assigned
-                                    //   ? "green"
-                                    //   : "#89CFF0",
+                              <Button
+                                variant="contained"
+                                onClick={() =>
+                                  handleAssignAssignment(assignment)
+                                }
+                                disabled={!assignment?.assignment_mark}
+                                sx={{
+                                  // backgroundColor: assignment.is_assigned
+                                  //   ? "green"
+                                  //   : "#89CFF0",
+                                  backgroundColor: assignment?.is_assigned
+                                    ? "#92d689"
+                                    : "#93f089",
+                                  color: "#fff",
+                                  textTransform: "none",
+                                  "&:hover": {
                                     backgroundColor: assignment?.is_assigned
-                                      ? "#92d689"
-                                      : "#93f089",
-                                    color: "#fff",
-                                    textTransform: "none",
-                                    "&:hover": {
-                                      backgroundColor: assignment?.is_assigned
-                                        ? "#7ecf73"
-                                        : "#7be676", // customize these shades as needed
-                                    },
-                                  }}
-                                >
-                                  {assignment.is_assigned
-                                    ? "Assigned"
-                                    : "Assign"}
-                                </Button>
-                              )}
+                                      ? "#7ecf73"
+                                      : "#7be676", // customize these shades as needed
+                                  },
+                                }}
+                              >
+                                {assignment.is_assigned
+                                  ? "Assigned"
+                                  : "Assign"}
+                              </Button>
+                            )}
                           </Box>
                           <Box sx={{ display: "flex", alignItems: "center" }}>
                             <FaEdit
@@ -677,9 +685,9 @@ const LectureAssignment = ({
                           text={
                             assignment.assignment_text?.length > 200
                               ? `${assignment.assignment_text?.slice(
-                                  0,
-                                  200
-                                )}...`
+                                0,
+                                200
+                              )}...`
                               : assignment.assignment_text
                           }
                         />
@@ -811,13 +819,13 @@ const LectureAssignment = ({
                   },
                 }}
                 value={newAssignment.assignment_mark === 0 ? "" : newAssignment.assignment_mark}
-                onChange={(e) =>{
+                onChange={(e) => {
                   setNewAssignment({
                     ...newAssignment,
                     assignment_mark:
                       e.target.value === "" ? "" : Number(e.target.value),
                   })
-                  if(e.target.value !== ""){
+                  if (e.target.value !== "") {
                     setNumberError("")
                   }
                 }}
@@ -825,44 +833,78 @@ const LectureAssignment = ({
               <Typography sx={{ color: 'error.main', fontSize: '0.8rem', mt: 0.5 }}>
                 {numberError}
               </Typography>
-              <input
-                type="file"
-                accept=".pdf,.doc,.docx,.xls,.xlsx,.ppt,.pptx,.txt"
-                onChange={(e) => setFile(e.target.files[0])}
-                style={{ marginTop: "16px" }}
-              />
+              <Box sx={{ mt: 2 }}>
+                {/* Hidden native input (no filename shown) */}
+                <input
+                  ref={fileInputRef}
+                  id="assignment-file"
+                  type="file"
+                  accept=".pdf,.doc,.docx,.xls,.xlsx,.ppt,.pptx,.txt"
+                  onChange={(e) => setFile(e.target.files?.[0] || null)}
+                  style={{ display: "none" }}
+                />
+
+                {/* Your custom trigger button */}
+                <Button
+                  variant="outlined"
+                  onClick={() => fileInputRef.current?.click()}
+                  sx={{ mt: 1 }}
+                  startIcon={<IoIosDocument />}
+                >
+                  {file ? "Change file" : "Choose file"}
+                </Button>
+
+                {/* Optional: show selected file as a chip (with remove) */}
+                {file && (
+                  <Box sx={{ mt: 1.5 }}>
+                    <Chip
+                      icon={<IoIosDocument size={18} />}
+                      label={file.name}
+                      onDelete={handleClearFile}
+                      deleteIcon={<IoIosClose size={16} />}
+                      sx={{
+                        bgcolor: isDarkMode ? "rgba(255,255,255,0.08)" : "rgba(0,0,0,0.04)",
+                        color: isDarkMode ? "#fff" : "#000",
+                        "& .MuiChip-icon": { color: isDarkMode ? "#fff" : "#000" },
+                      }}
+                    />
+                  </Box>
+                )}
+
+              </Box>
+
             </DialogContent>
             <DialogActions
               sx={{
                 background: isDarkMode
                   ? "linear-gradient(to top, #09203f 0%, #537895 100%);"
-                  : "linear-gradient(to top, #dfe9f3 0%, white 100%)", display:"flex", justifyContent:'space-between'
+                  : "linear-gradient(to top, #dfe9f3 0%, white 100%)", display: "flex", justifyContent: 'space-between'
               }}
             >
-            <Box>
-              <FormControl>
-                <FormControlLabel
-                  control={
-                    <Checkbox
-                      sx={{ color: 'black' }}
-                      checked={isApproach}
-                      onChange={(e) => setIsApproach(e.target.checked)}
-                    />
-                  }
-                  label="Would you like to include the approach?"
-                  sx={{ ml: 1 }}
-                />
-              </FormControl>
+              <Box>
+                <FormControl>
+                  <FormControlLabel
+                    control={
+                      <Checkbox
+                        sx={{ color: 'black' }}
+                        checked={isApproach}
+                        onChange={(e) => setIsApproach(e.target.checked)}
+                      />
+                    }
+                    label="Would you like to include the approach?"
+                    sx={{ ml: 1 }}
+                  />
+                </FormControl>
 
-            </Box>
+              </Box>
 
-            <Box>
-              <Button onClick={() => setOpenDialog(false)} color="warning">
-                Cancel
-              </Button>
-              <Button onClick={handleCreateAssignment} color="info" disabled={isCreateLoader}>
-                Create
-              </Button>
+              <Box>
+                <Button onClick={() => setOpenDialog(false)} color="warning">
+                  Cancel
+                </Button>
+                <Button onClick={handleCreateAssignment} color="info" disabled={isCreateLoader}>
+                  Create
+                </Button>
               </Box>
             </DialogActions>
           </Dialog>

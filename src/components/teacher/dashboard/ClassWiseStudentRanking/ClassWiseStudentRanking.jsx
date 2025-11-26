@@ -142,10 +142,10 @@ const ClassWiseStudentRanking = ({ classOptions }) => {
     <Card
       sx={{
         width: "100%",
-        p: 3,
+        p: { xs: 2, md: 3 },             // ✅ mobile padding thoda kam
         display: "flex",
         flexDirection: "column",
-        height: "100%",
+        height: { xs: "auto", md: "100%" }, // ✅ mobile pe auto height, desktop same 100%
         backgroundColor: "#fff",
         borderRadius: "20px",
         border: "none",
@@ -155,9 +155,20 @@ const ClassWiseStudentRanking = ({ classOptions }) => {
       <Box
         sx={{
           display: "flex",
-          justifyContent: "space-between",
+          justifyContent: {
+            xs: "flex-start",
+            md: "space-between",
+          }, // desktop same
           mb: 2,
-          alignItems: "center",
+          alignItems: {
+            xs: "flex-start",
+            md: "center",
+          },
+          flexDirection: {
+            xs: "column",
+            md: "row",
+          }, // ✅ mobile pe heading + toggle stack
+          gap: { xs: 2, md: 0 },
         }}
       >
         <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
@@ -214,8 +225,12 @@ const ClassWiseStudentRanking = ({ classOptions }) => {
         <Box
           sx={{
             display: "flex",
-            justifyContent: "center",
+            justifyContent: {
+              xs: "flex-start",
+              md: "center",
+            },
             alignItems: "center",
+            width: { xs: "100%", md: "auto" },
           }}
         >
           <ToggleButtonGroup
@@ -259,7 +274,8 @@ const ClassWiseStudentRanking = ({ classOptions }) => {
           alignItems: "center",
           // background: "var(--BG-Color-1, #F3F5F7)",
           borderRadius: "10px",
-          justifyContent:"flex-end"
+          justifyContent: { xs: "flex-start", md: "flex-end" }, // ✅ mobile left, desktop right (same as before visually)
+          mt: { xs: 2, md: 0 },
         }}
       >
         <Autocomplete
@@ -274,6 +290,10 @@ const ClassWiseStudentRanking = ({ classOptions }) => {
             );
             setSelectedOptions(selected || null); // Set selected option object
           }}
+          fullWidth
+          sx={{
+            width: { xs: "100%", md: 200 }, // ✅ mobile full width, desktop fixed 200
+          }}
           renderInput={(params) => (
             <TextField
               {...params}
@@ -286,7 +306,7 @@ const ClassWiseStudentRanking = ({ classOptions }) => {
                   backdropFilter: "blur(10px)",
                   backgroundColor: "rgba(255, 255, 255, 0.2)",
                   height: 45,
-                  width: 200,
+                  width: "100%", // ✅ input full width
                   borderRadius: "10px",
                   "& .MuiOutlinedInput-notchedOutline": {
                     border: "1px solid #d3d3d3",
@@ -296,6 +316,7 @@ const ClassWiseStudentRanking = ({ classOptions }) => {
               sx={{
                 //   boxShadow: currentStyles.boxShadow,
                 borderRadius: "10px",
+                width: "100%",
               }}
             />
           )}
@@ -350,6 +371,7 @@ const ClassWiseStudentRanking = ({ classOptions }) => {
               // alignItems: "center",
               gap: 8,
               cursor: "pointer",
+              flexDirection: { xs: "row", md: "row" },
             }}
           >
             <Box
@@ -397,6 +419,7 @@ const ClassWiseStudentRanking = ({ classOptions }) => {
                 display: "flex",
                 alignItems: "flex-end",
                 justifyContent: "flex-end",
+                pl: { xs: 1, md: 0 },
               }}
             >
               <Typography
@@ -487,7 +510,11 @@ export const StudentModal = ({
           <TableContainer
             component={Paper}
             elevation={0}
-            sx={{ borderRadius: "10px", border: "none" }}
+            sx={{
+              borderRadius: "10px",
+              border: "none",
+              overflowX: "auto", // ✅ mobile horizontal scroll if needed
+            }}
           >
             <Table aria-label="student details" sx={{ border: "none" }}>
               <TableHead

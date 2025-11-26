@@ -358,7 +358,7 @@ const CreatingLecture = ({
             fd.append("lecture", lectureId);
             const attachRes = await updateLectureAttachment(lectureId, fd);
           }
-          handleClose(); // Close the dialog after a successful update
+          handleClose(); 
         } else {
           console.error("Failed to update lecture:", response.data.message);
         }

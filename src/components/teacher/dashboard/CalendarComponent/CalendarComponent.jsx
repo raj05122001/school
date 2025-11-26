@@ -8,7 +8,7 @@ import { useThemeContext } from "@/hooks/ThemeContext";
 import {
   getUpcommingMeetingByDate,
   getStudentUpcommingMeetingByDate,
-  getAllUpcommingByDate
+  getAllUpcommingByDate,
 } from "@/api/apiHelper";
 import LecturePopover from "./LecturePopover";
 import { formatTime } from "@/helper/Helper";
@@ -27,12 +27,12 @@ const getCurrentMonthYear = () => {
 
 const CalendarComponent = ({ maxHeight = "585px" }) => {
   const userDetails = decodeToken(Cookies.get("ACCESS_TOKEN"));
-    const {
-      openRecordingDrawer,
-      openCreateLecture,
-      handleCreateLecture,
-      handleLectureRecord,
-    } = useContext(AppContextProvider);
+  const {
+    openRecordingDrawer,
+    openCreateLecture,
+    handleCreateLecture,
+    handleLectureRecord,
+  } = useContext(AppContextProvider);
   const { isDarkMode, primaryColor } = useThemeContext();
 
   const [currentMonth, setCurrentMonth] = useState(getCurrentMonthYear());
@@ -41,15 +41,17 @@ const CalendarComponent = ({ maxHeight = "585px" }) => {
   const calendarRef = useRef(null);
 
   // Today's date string for header
-  const todayDate = new Date().toLocaleDateString('en-GB', {
-    day: 'numeric', month: 'long', year: 'numeric'
+  const todayDate = new Date().toLocaleDateString("en-GB", {
+    day: "numeric",
+    month: "long",
+    year: "numeric",
   });
 
   useEffect(() => {
-    if(!openCreateLecture){
+    if (!openCreateLecture) {
       fetchData();
     }
-  }, [currentMonth,openCreateLecture]);
+  }, [currentMonth, openCreateLecture]);
 
   const fetchData = async () => {
     setIsLoading(true);
@@ -97,8 +99,18 @@ const CalendarComponent = ({ maxHeight = "585px" }) => {
 
   const monthStringToNumber = (monthString) => {
     const months = [
-      "January","February","March","April","May","June",
-      "July","August","September","October","November","December",
+      "January",
+      "February",
+      "March",
+      "April",
+      "May",
+      "June",
+      "July",
+      "August",
+      "September",
+      "October",
+      "November",
+      "December",
     ];
     return months.indexOf(monthString) + 1;
   };
@@ -108,15 +120,15 @@ const CalendarComponent = ({ maxHeight = "585px" }) => {
     const formattedStartTime = formatTime(schedule_time);
     return <LecturePopover data={info} isOrganizer={true} />;
   };
-  
+
   return (
     <div
-      className="blur_effect_card"
+      className="blur_effect_card calendar-wrapper"
       style={{
         color: isDarkMode ? primaryColor : "#333",
-        padding: "20px",
         maxHeight: maxHeight,
         overflowY: "auto",
+        overflowX: "hidden",
       }}
     >
       {isLoading && <CalendarSkeleton />}
@@ -125,19 +137,18 @@ const CalendarComponent = ({ maxHeight = "585px" }) => {
         initialView="dayGridMonth"
         ref={calendarRef}
         headerToolbar={{
-          left:   "todayDate",
+          left: "todayDate",
           center: "title",
-          right:  "dayGridMonth,prev,next",
+          right: "dayGridMonth,prev,next",  
         }}
-        // right:  "dayGridMonth,timeGridWeek,timeGridDay,prev,todayGridDay,next",
         customButtons={{
           todayGridDay: {
-                       text: "Today",
-                        click: () => {
-                          const api = calendarRef.current.getApi();
-                          api.changeView("timeGridDay", new Date());
-                        }
-                      },
+            text: "Today",
+            click: () => {
+              const api = calendarRef.current.getApi();
+              api.changeView("timeGridDay", new Date());
+            },
+          },
           todayDate: { text: todayDate, click: () => {} },
         }}
         events={calendarData}
@@ -159,9 +170,11 @@ export const CalendarSkeleton = () => (
   <div>
     <Skeleton width={100} height={30} className="mb-4" />
     <div className="grid grid-cols-7 gap-2">
-      {Array(5).fill().map((_, i) => (
-        <Skeleton key={i} height={100} className="rounded" />
-      ))}
+      {Array(5)
+        .fill()
+        .map((_, i) => (
+          <Skeleton key={i} height={100} className="rounded" />
+        ))}
     </div>
   </div>
 );

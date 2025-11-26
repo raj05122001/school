@@ -13,6 +13,9 @@ import {
   TextField,
   Skeleton,
   Pagination,
+  Accordion,
+  AccordionSummary,
+  AccordionDetails,
 } from "@mui/material";
 import UserImage from "@/commonComponents/UserImage/UserImage";
 import { useThemeContext } from "@/hooks/ThemeContext";
@@ -22,6 +25,7 @@ import {
   getteacherClass,
 } from "@/api/apiHelper";
 import { FiAlertTriangle } from "react-icons/fi";
+import { FaChevronDown } from "react-icons/fa";
 import { useSearchParams, useRouter, usePathname } from "next/navigation";
 import Cookies from "js-cookie";
 import { decodeToken } from "react-jwt";
@@ -197,18 +201,6 @@ const StudentAssignment = () => {
     }
   };
 
-  const getRowColor = (score) => {
-    if (score >= 80) return "#E6F4EA"; // Light green
-    if (score >= 50) return "#FFF3CC"; // Light yellow
-    return "#FDECEC"; // Light red
-  };
-
-  const getScoreColor = (score) => {
-    if (score >= 80) return "#28A745"; // Green
-    if (score >= 50) return "#FFC107"; // Yellow
-    return "#DC3545"; // Red
-  };
-
   const getCircleStyle = (count, value) => ({
     display: "flex",
     justifyContent: "center",
@@ -220,8 +212,8 @@ const StudentAssignment = () => {
       value === "masterd"
         ? "#28A745"
         : value === "working"
-        ? "#FFC107"
-        : "#DC3545",
+          ? "#FFC107"
+          : "#DC3545",
     color: "#fff",
     fontWeight: "700",
     fontFamily: "Inter, sans-serif",
@@ -235,21 +227,23 @@ const StudentAssignment = () => {
         gap: "17px",
         backgroundColor: "#fff",
         width: "100%",
-        // maxWidth: "714px",
-        // maxHeight: "344px",
-        // width: "100%",
-        // height: "100%",
         flexShrink: 0,
         borderRadius: "20px",
+        boxSizing: "border-box",
+        paddingBottom: { xs: 2, md: 0 },
       }}
     >
+      {/* HEADER */}
       <Box
         sx={{
           display: "flex",
-          alignItems: "center",
-          marginTop: "35px",
-          marginLeft: "32px",
-          gap: "12px",
+          flexDirection: { xs: "column", md: "row" },
+          alignItems: { xs: "flex-start", md: "center" },
+          marginTop: { xs: "20px", md: "35px" },
+          marginLeft: { xs: "16px", md: "32px" },
+          marginRight: { xs: "16px", md: 0 },
+          gap: { xs: "12px", md: "12px" },
+          justifyContent: "space-between",
         }}
       >
         <Box
@@ -271,33 +265,31 @@ const StudentAssignment = () => {
               <path
                 d="M18.1401 21.62C17.2601 21.88 16.2201 22 15.0001 22H9.00011C7.78011 22 6.74011 21.88 5.86011 21.62C6.08011 19.02 8.75011 16.97 12.0001 16.97C15.2501 16.97 17.9201 19.02 18.1401 21.62Z"
                 stroke="#3B3D3B"
-                stroke-width="2"
-                stroke-linecap="round"
-                stroke-linejoin="round"
+                strokeWidth="2"
+                strokeLinecap="round"
+                strokeLinejoin="round"
               />
               <path
                 d="M15 2H9C4 2 2 4 2 9V15C2 18.78 3.14 20.85 5.86 21.62C6.08 19.02 8.75 16.97 12 16.97C15.25 16.97 17.92 19.02 18.14 21.62C20.86 20.85 22 18.78 22 15V9C22 4 20 2 15 2ZM12 14.17C10.02 14.17 8.42 12.56 8.42 10.58C8.42 8.60002 10.02 7 12 7C13.98 7 15.58 8.60002 15.58 10.58C15.58 12.56 13.98 14.17 12 14.17Z"
                 stroke="#3B3D3B"
-                stroke-width="2"
-                stroke-linecap="round"
-                stroke-linejoin="round"
+                strokeWidth="2"
+                strokeLinecap="round"
+                strokeLinejoin="round"
               />
               <path
                 d="M15.5799 10.58C15.5799 12.56 13.9799 14.17 11.9999 14.17C10.0199 14.17 8.41992 12.56 8.41992 10.58C8.41992 8.60002 10.0199 7 11.9999 7C13.9799 7 15.5799 8.60002 15.5799 10.58Z"
                 stroke="#3B3D3B"
-                stroke-width="2"
-                stroke-linecap="round"
-                stroke-linejoin="round"
+                strokeWidth="2"
+                strokeLinecap="round"
+                strokeLinejoin="round"
               />
             </svg>
           </Box>
           <Typography
-            // variant="h5"
-            // className={`${isDarkMode ? "dark-heading" : "light-heading"}`}
             sx={{
               color: "var(--Text-Color-1, #3B3D3B)",
               fontFamily: "Inter, sans-serif",
-              fontSize: "22px",
+              fontSize: { xs: "18px", md: "22px" },
               fontStyle: "normal",
               fontWeight: 600,
               lineHeight: "normal",
@@ -313,50 +305,76 @@ const StudentAssignment = () => {
             alignItems: "center",
             background: "var(--BG-Color-1, #F3F5F7)",
             borderRadius: "10px",
-            margin: 2,
+            margin: { xs: 0, md: 2 },
+            width: { xs: "100%", md: "auto" },
           }}
         >
-          <Autocomplete
-            freeSolo
-            id="class"
-            disableClearable
-            options={classOptions?.map((option) => option.class_name)}
-            value={selectedOptions?.class_name || ""} // Set value to the class name only
-            onChange={(event, newValue) => {
-              const selected = classOptions.find(
-                (option) => option.class_name === newValue
-              );
-              setSelectedOptions(selected || null); // Set selected option object
+          <Box
+            sx={{
+              display: "flex",
+              gap: "10px",
+              alignItems: "center",
+              background: "var(--BG-Color-1, #F3F5F7)",
+              borderRadius: "10px",
+              width: { xs: "100%", md: "auto" },
             }}
-            renderInput={(params) => (
-              <TextField
-                {...params}
-                placeholder="Select Class"
-                variant="outlined"
-                InputProps={{
-                  ...params.InputProps,
-                  type: "search",
-                  sx: {
-                    backdropFilter: "blur(10px)",
-                    backgroundColor: "rgba(255, 255, 255, 0.2)",
-                    height: 45,
-                    width: 200,
-                    borderRadius: "10px",
-                    "& .MuiOutlinedInput-notchedOutline": {
-                      border: "1px solid #d3d3d3",
+          >
+            <Autocomplete
+              freeSolo
+              id="class"
+              disableClearable
+              options={classOptions?.map((option) => option.class_name)}
+              value={selectedOptions?.class_name || ""} // Set value to the class name only
+              onChange={(event, newValue) => {
+                const selected = classOptions.find(
+                  (option) => option.class_name === newValue
+                );
+                setSelectedOptions(selected || null); // Set selected option object
+              }}
+              fullWidth
+              sx={{
+                width: { xs: "100%", md: 200 },   // ✅ mobile full width, desktop 200px
+              }}
+              renderInput={(params) => (
+                <TextField
+                  {...params}
+                  placeholder="Select Class"
+                  variant="outlined"
+                  InputProps={{
+                    ...params.InputProps,
+                    type: "search",
+                    sx: {
+                      backdropFilter: "blur(10px)",
+                      backgroundColor: "rgba(255, 255, 255, 0.2)",
+                      height: 45,
+                      width: "100%",              // ✅ input bhi full width
+                      borderRadius: "10px",
+                      "& .MuiOutlinedInput-notchedOutline": {
+                        border: "1px solid #d3d3d3",
+                      },
                     },
-                  },
-                }}
-                sx={{
-                  //   boxShadow: currentStyles.boxShadow,
-                  borderRadius: "10px",
-                }}
-              />
-            )}
-          />
+                  }}
+                  sx={{
+                    borderRadius: "10px",
+                    width: "100%",                // TextField container full width
+                  }}
+                />
+              )}
+            />
+          </Box>
+
         </Box>
       </Box>
-      <Box sx={{ display: "flex" }}>
+
+      {/* TABLE + SIDE CARDS WRAPPER */}
+      <Box
+        sx={{
+          display: "flex",
+          flexDirection: { xs: "column", lg: "row" },
+          alignItems: { xs: "stretch", lg: "flex-start" },
+        }}
+      >
+        {/* DESKTOP TABLE VIEW */}
         <TableContainer
           component={Paper}
           elevation={0}
@@ -369,9 +387,10 @@ const StudentAssignment = () => {
             overflow: "hidden",
             backdropFilter: "blur(10px)",
             backgroundColor: "rgba(255, 255, 255, 0.2)",
-            marginX: "32px",
+            marginX: { xs: 2, md: "32px" },
+            display: { xs: "none", md: "block" },
           }}
-          // className="blur_effect_card"
+        // className="blur_effect_card"
         >
           <Table sx={{ border: "none" }}>
             <TableHead
@@ -475,84 +494,84 @@ const StudentAssignment = () => {
             <TableBody sx={{ borderBottom: "none" }}>
               {loading && Number(userDetails?.user_id) !== 35
                 ? Array.from(new Array(5))?.map((_, index) => (
-                    <TableRow key={index}>
-                      <TableCell>
-                        <Skeleton
-                          variant="rectangular"
-                          width={120}
-                          height={30}
-                        />
-                      </TableCell>
-                      <TableCell align="center">
-                        <Skeleton
-                          variant="rectangular"
-                          width={60}
-                          height={30}
-                        />
-                      </TableCell>
-                      <TableCell align="center">
-                        <Skeleton
-                          variant="rectangular"
-                          width="80%"
-                          height={30}
-                        />
-                      </TableCell>
-                      <TableCell align="center">
-                        <Skeleton variant="circular" width={30} height={30} />
-                      </TableCell>
-                      <TableCell align="center">
-                        <Skeleton variant="circular" width={30} height={30} />
-                      </TableCell>
-                      <TableCell align="center">
-                        <Skeleton variant="circular" width={30} height={30} />
-                      </TableCell>
-                    </TableRow>
-                  ))
+                  <TableRow key={index}>
+                    <TableCell>
+                      <Skeleton
+                        variant="rectangular"
+                        width={120}
+                        height={30}
+                      />
+                    </TableCell>
+                    <TableCell align="center">
+                      <Skeleton
+                        variant="rectangular"
+                        width={60}
+                        height={30}
+                      />
+                    </TableCell>
+                    <TableCell align="center">
+                      <Skeleton
+                        variant="rectangular"
+                        width="80%"
+                        height={30}
+                      />
+                    </TableCell>
+                    <TableCell align="center">
+                      <Skeleton variant="circular" width={30} height={30} />
+                    </TableCell>
+                    <TableCell align="center">
+                      <Skeleton variant="circular" width={30} height={30} />
+                    </TableCell>
+                    <TableCell align="center">
+                      <Skeleton variant="circular" width={30} height={30} />
+                    </TableCell>
+                  </TableRow>
+                ))
                 : data?.map((student, index) => (
-                    <TableRow
-                      hover
-                      key={index}
+                  <TableRow
+                    hover
+                    key={index}
+                    sx={{
+                      backgroundColor: "#fff",
+                    }}
+                  >
+                    <TableCell>
+                      <Box display="flex" alignItems="center">
+                        <UserImage
+                          name={student?.student_name}
+                          width={24}
+                          height={24}
+                        />
+                        <Typography
+                          sx={{
+                            color: "var(--Text-Color-1, #3B3D3B)",
+                            fontFamily: "Inter, sans-serif",
+                            fontSize: "14px",
+                            fontStyle: "normal",
+                            fontWeight: 700,
+                            lineHeight: "normal",
+                            marginLeft: "12px",
+                          }}
+                        >
+                          {student?.student_name}
+                        </Typography>
+                      </Box>
+                    </TableCell>
+                    <TableCell
+                      align="center"
                       sx={{
-                        backgroundColor: "#fff",
+                        color: "var(--Text-Color-1, #3B3D3B)",
+                        fontFamily: "Inter, sans-serif",
+                        fontSize: "14px",
+                        fontStyle: "normal",
+                        fontWeight: 700,
+                        lineHeight: "normal",
                       }}
                     >
-                      <TableCell>
-                        <Box display="flex" alignItems="center">
-                          <UserImage
-                            name={student?.student_name}
-                            width={24}
-                            height={24}
-                          />
-                          <Typography
-                            sx={{
-                              color: "var(--Text-Color-1, #3B3D3B)",
-                              fontFamily: "Inter, sans-serif",
-                              fontSize: "14px",
-                              fontStyle: "normal",
-                              fontWeight: 700,
-                              lineHeight: "normal",
-                              marginLeft: "12px",
-                            }}
-                          >
-                            {student?.student_name}
-                          </Typography>
-                        </Box>
-                      </TableCell>
-                      <TableCell
-                        align="center"
-                        sx={{
-                          color: "var(--Text-Color-1, #3B3D3B)",
-                          fontFamily: "Inter, sans-serif",
-                          fontSize: "14px",
-                          fontStyle: "normal",
-                          fontWeight: 700,
-                          lineHeight: "normal",
-                        }}
-                      >
-                        {student?.completed_assignment}/
-                        {student?.total_assignment}
-                      </TableCell>
-                      {/* <TableCell align="center">
+                      {student?.completed_assignment}/
+                      {student?.total_assignment}
+                    </TableCell>
+                    {/* <TableCell align="center">
                         <Box
                           sx={{
                             width: "100%",
@@ -620,87 +639,89 @@ const StudentAssignment = () => {
                           </Box>
                         </Box>
                       </TableCell> */}
-                      <TableCell align="center">
-                        <Typography
-                          sx={{
-                            color: "var(--Text-Color-1, #3B3D3B)",
-                            fontFamily: "Inter, sans-serif",
-                            fontSize: "14px",
-                            fontStyle: "normal",
-                            fontWeight: 700,
-                            lineHeight: "normal",
-                            marginLeft: "12px",
-                          }}
-                        >
-                          {student?.average_scored_percentage}%
-                        </Typography>
-                      </TableCell>
-                      <TableCell align="center">
+                    <TableCell align="center">
+                      <Typography
+                        sx={{
+                          color: "var(--Text-Color-1, #3B3D3B)",
+                          fontFamily: "Inter, sans-serif",
+                          fontSize: "14px",
+                          fontStyle: "normal",
+                          fontWeight: 700,
+                          lineHeight: "normal",
+                          marginLeft: "12px",
+                        }}
+                      >
+                        {student?.average_scored_percentage}%
+                      </Typography>
+                    </TableCell>
+                    <TableCell align="center">
+                      <Box
+                        sx={{
+                          width: "100%",
+                          height: "100%",
+                          display: "flex",
+                          justifyContent: "center",
+                          alignItems: "center",
+                        }}
+                      >
                         <Box
-                          sx={{
-                            width: "100%",
-                            height: "100%",
-                            display: "flex",
-                            justifyContent: "center",
-                            alignItems: "center",
-                          }}
+                          sx={getCircleStyle(
+                            student?.my_assignment_in_which_i_got_less_than_50,
+                            "need"
+                          )}
                         >
-                          <Box
-                            sx={getCircleStyle(
-                              student?.my_assignment_in_which_i_got_less_than_50,
-                              "need"
-                            )}
-                          >
-                            {student?.my_assignment_in_which_i_got_less_than_50}
-                          </Box>
+                          {
+                            student?.my_assignment_in_which_i_got_less_than_50
+                          }
                         </Box>
-                      </TableCell>
-                      <TableCell align="center">
+                      </Box>
+                    </TableCell>
+                    <TableCell align="center">
+                      <Box
+                        sx={{
+                          width: "100%",
+                          height: "100%",
+                          display: "flex",
+                          justifyContent: "center",
+                          alignItems: "center",
+                        }}
+                      >
                         <Box
-                          sx={{
-                            width: "100%",
-                            height: "100%",
-                            display: "flex",
-                            justifyContent: "center",
-                            alignItems: "center",
-                          }}
+                          sx={getCircleStyle(
+                            student?.my_assignment_in_which_i_got_between_than_50_to_80,
+                            "working"
+                          )}
                         >
-                          <Box
-                            sx={getCircleStyle(
-                              student?.my_assignment_in_which_i_got_between_than_50_to_80,
-                              "working"
-                            )}
-                          >
-                            {
-                              student?.my_assignment_in_which_i_got_between_than_50_to_80
-                            }
-                          </Box>
+                          {
+                            student?.my_assignment_in_which_i_got_between_than_50_to_80
+                          }
                         </Box>
-                      </TableCell>
-                      <TableCell align="center">
+                      </Box>
+                    </TableCell>
+                    <TableCell align="center">
+                      <Box
+                        sx={{
+                          width: "100%",
+                          height: "100%",
+                          display: "flex",
+                          justifyContent: "center",
+                          alignItems: "center",
+                        }}
+                      >
                         <Box
-                          sx={{
-                            width: "100%",
-                            height: "100%",
-                            display: "flex",
-                            justifyContent: "center",
-                            alignItems: "center",
-                          }}
+                          sx={getCircleStyle(
+                            student?.my_assignment_in_which_i_got_between_than_80_to_100,
+                            "masterd"
+                          )}
                         >
-                          <Box
-                            sx={getCircleStyle(
-                              student?.my_assignment_in_which_i_got_between_than_80_to_100,
-                              "masterd"
-                            )}
-                          >
-                            {
-                              student?.my_assignment_in_which_i_got_between_than_80_to_100
-                            }
-                          </Box>
+                          {
+                            student?.my_assignment_in_which_i_got_between_than_80_to_100
+                          }
                         </Box>
-                      </TableCell>
-                    </TableRow>
-                  ))}
+                      </Box>
+                    </TableCell>
+                  </TableRow>
+                ))}
             </TableBody>
           </Table>
           {!data?.length > 0 && !loading && (
@@ -721,13 +742,227 @@ const StudentAssignment = () => {
             </Box>
           )}
         </TableContainer>
+
+        {/* MOBILE ACCORDION VIEW */}
+        <Box
+          sx={{
+            display: { xs: "block", md: "none" },
+            px: 2,
+            pt: 1,
+          }}
+        >
+          {loading && Number(userDetails?.user_id) !== 35
+            ? Array.from(new Array(3))?.map((_, index) => (
+              <Box
+                key={index}
+                sx={{
+                  borderRadius: "12px",
+                  border: "1px solid #eee",
+                  p: 2,
+                  mb: 1.5,
+                  backgroundColor: "#fff",
+                }}
+              >
+                <Skeleton variant="text" width="50%" height={24} />
+                <Skeleton
+                  variant="rectangular"
+                  width="100%"
+                  height={40}
+                  sx={{ mt: 1 }}
+                />
+              </Box>
+            ))
+            : data?.map((student, index) => (
+              <Accordion
+                key={index}
+                disableGutters
+                elevation={0}
+                sx={{
+                  mb: 1.5,
+                  borderRadius: "12px !important",
+                  border: "1px solid #E0E0E0",
+                  "&:before": { display: "none" },
+                }}
+              >
+                <AccordionSummary
+                  expandIcon={<FaChevronDown size={16} />}
+                  sx={{
+                    px: 2,
+                    py: 1.5,
+                  }}
+                >
+                  <Box
+                    sx={{
+                      display: "flex",
+                      alignItems: "center",
+                      justifyContent: "space-between",
+                      width: "100%",
+                      gap: 1.5,
+                    }}
+                  >
+                    <Box sx={{ display: "flex", alignItems: "center" }}>
+                      <UserImage
+                        name={student?.student_name}
+                        width={28}
+                        height={28}
+                      />
+                      <Box sx={{ ml: 1.5 }}>
+                        <Typography
+                          sx={{
+                            fontFamily: "Inter, sans-serif",
+                            fontSize: "14px",
+                            fontWeight: 700,
+                            color: "#3B3D3B",
+                          }}
+                        >
+                          {student?.student_name}
+                        </Typography>
+                        <Typography
+                          sx={{
+                            fontFamily: "Inter, sans-serif",
+                            fontSize: "12px",
+                            color: "#6B6B6B",
+                          }}
+                        >
+                          Work: {student?.completed_assignment}/
+                          {student?.total_assignment}
+                        </Typography>
+                      </Box>
+                    </Box>
+                    <Typography
+                      sx={{
+                        fontFamily: "Inter, sans-serif",
+                        fontSize: "14px",
+                        fontWeight: 700,
+                        color: "#3B3D3B",
+                      }}
+                    >
+                      {student?.average_scored_percentage}%
+                    </Typography>
+                  </Box>
+                </AccordionSummary>
+                <AccordionDetails sx={{ px: 2, pb: 2 }}>
+                  <Box
+                    sx={{
+                      display: "flex",
+                      flexDirection: "column",
+                      gap: 1.25,
+                    }}
+                  >
+                    <Box
+                      sx={{
+                        display: "flex",
+                        justifyContent: "space-between",
+                        alignItems: "center",
+                      }}
+                    >
+                      <Typography
+                        sx={{
+                          fontSize: "13px",
+                          fontFamily: "Inter, sans-serif",
+                          color: "#3B3D3B",
+                        }}
+                      >
+                        Needing Attention
+                      </Typography>
+                      <Box
+                        sx={getCircleStyle(
+                          student?.my_assignment_in_which_i_got_less_than_50,
+                          "need"
+                        )}
+                      >
+                        {
+                          student?.my_assignment_in_which_i_got_less_than_50
+                        }
+                      </Box>
+                    </Box>
+                    <Box
+                      sx={{
+                        display: "flex",
+                        justifyContent: "space-between",
+                        alignItems: "center",
+                      }}
+                    >
+                      <Typography
+                        sx={{
+                          fontSize: "13px",
+                          fontFamily: "Inter, sans-serif",
+                          color: "#3B3D3B",
+                        }}
+                      >
+                        Can be Improved
+                      </Typography>
+                      <Box
+                        sx={getCircleStyle(
+                          student?.my_assignment_in_which_i_got_between_than_50_to_80,
+                          "working"
+                        )}
+                      >
+                        {
+                          student?.my_assignment_in_which_i_got_between_than_50_to_80
+                        }
+                      </Box>
+                    </Box>
+                    <Box
+                      sx={{
+                        display: "flex",
+                        justifyContent: "space-between",
+                        alignItems: "center",
+                      }}
+                    >
+                      <Typography
+                        sx={{
+                          fontSize: "13px",
+                          fontFamily: "Inter, sans-serif",
+                          color: "#3B3D3B",
+                        }}
+                      >
+                        Mastered
+                      </Typography>
+                      <Box
+                        sx={getCircleStyle(
+                          student?.my_assignment_in_which_i_got_between_than_80_to_100,
+                          "masterd"
+                        )}
+                      >
+                        {
+                          student?.my_assignment_in_which_i_got_between_than_80_to_100
+                        }
+                      </Box>
+                    </Box>
+                  </Box>
+                </AccordionDetails>
+              </Accordion>
+            ))}
+
+          {!data?.length > 0 && !loading && (
+            <Box
+              display="flex"
+              alignItems="center"
+              justifyContent="center"
+              textAlign="center"
+              my={6}
+              width={"100%"}
+            >
+              <FiAlertTriangle
+                style={{ marginRight: 8 }}
+                size={24}
+                color="gray"
+              />
+              <Typography color="textSecondary">No Data Found</Typography>
+            </Box>
+          )}
+        </Box>
+
+        {/* SIDE RANGE CARDS */}
         <Box
           sx={{
             display: "flex",
-            flexDirection: "column",
-            // margin: 2,
+            flexDirection: { xs: "row", md: "column" },
+            flexWrap: { xs: "wrap", md: "nowrap" },
             padding: 2,
             gap: "25px",
+            justifyContent: { xs: "space-between", md: "flex-start" },
           }}
         >
           <Box
@@ -739,6 +974,8 @@ const StudentAssignment = () => {
               gap: "10px",
               borderRadius: "12px",
               backgroundColor: "#FBEDEE",
+              minWidth: { xs: "48%", md: "auto" },
+              flex: { xs: 1, md: "none" },
             }}
           >
             <Box
@@ -746,6 +983,7 @@ const StudentAssignment = () => {
                 display: "flex",
                 justifyContent: "space-between",
                 gap: "20px",
+                width: "100%",
               }}
             >
               <Typography
@@ -795,7 +1033,8 @@ const StudentAssignment = () => {
               gap: "10px",
               borderRadius: "12px",
               backgroundColor: "#FFF3E0",
-              // marginY: "15px",
+              minWidth: { xs: "48%", md: "auto" },
+              flex: { xs: 1, md: "none" },
             }}
           >
             <Box
@@ -803,6 +1042,7 @@ const StudentAssignment = () => {
                 display: "flex",
                 justifyContent: "space-between",
                 gap: "20px",
+                width: "100%",
               }}
             >
               <Typography
@@ -852,6 +1092,8 @@ const StudentAssignment = () => {
               gap: "10px",
               borderRadius: "12px",
               backgroundColor: "#DBFFDC",
+              minWidth: { xs: "48%", md: "auto" },
+              flex: { xs: 1, md: "none" },
             }}
           >
             <Box
@@ -859,6 +1101,7 @@ const StudentAssignment = () => {
                 display: "flex",
                 justifyContent: "space-between",
                 gap: "20px",
+                width: "100%",
               }}
             >
               <Typography

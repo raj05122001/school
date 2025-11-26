@@ -25,6 +25,10 @@ import {
   Avatar,
   Stack,
   useTheme,
+  useMediaQuery,
+  Accordion,
+  AccordionSummary,
+  AccordionDetails,
 } from "@mui/material";
 import {
   LineChart,
@@ -49,13 +53,13 @@ const peak_usage = {
   "month": "October 2025",
   "unit": "daily",
   "data": [
-    {"date": "2025-10-01", "total_logins": 246},
-    {"date": "2025-10-02", "total_logins": 200},
-    {"date": "2025-10-03", "total_logins": 260},
-    {"date": "2025-10-04", "total_logins": 270},
-    {"date": "2025-10-05", "total_logins": 255},
-    {"date": "2025-10-06", "total_logins": 289},
-    {"date": "2025-10-07", "total_logins": 310}
+    { "date": "2025-10-01", "total_logins": 246 },
+    { "date": "2025-10-02", "total_logins": 200 },
+    { "date": "2025-10-03", "total_logins": 260 },
+    { "date": "2025-10-04", "total_logins": 270 },
+    { "date": "2025-10-05", "total_logins": 255 },
+    { "date": "2025-10-06", "total_logins": 289 },
+    { "date": "2025-10-07", "total_logins": 310 }
   ],
   "peak_day": "2025-10-06",
   "average_daily_logins": 279
@@ -314,40 +318,40 @@ const monthly_report = [
     name: "Avantika Darshan",
     month: "2025-09",
     assignments: { submitted_count: 3, success_rate: 85, failure_rate: 15 },
-    mcqs:       { attempted_count: 12, success_rate: 80, failure_rate: 20 },
-    lectures:   { total_score: 82, average_watch_time: 42 }, // avg = (85+80+82)/3 = 82.33%
+    mcqs: { attempted_count: 12, success_rate: 80, failure_rate: 20 },
+    lectures: { total_score: 82, average_watch_time: 42 }, // avg = (85+80+82)/3 = 82.33%
   },
   {
     user_id: 2,
     name: "Hritik Rajput",
     month: "2025-09",
     assignments: { submitted_count: 2, success_rate: 90, failure_rate: 10 },
-    mcqs:       { attempted_count: 10, success_rate: 78, failure_rate: 22 },
-    lectures:   { total_score: 85.5, average_watch_time: 38 }, // avg = 84.5%
+    mcqs: { attempted_count: 10, success_rate: 78, failure_rate: 22 },
+    lectures: { total_score: 85.5, average_watch_time: 38 }, // avg = 84.5%
   },
   {
     user_id: 3,
     name: "Uma Pandey",
     month: "2025-09",
     assignments: { submitted_count: 3, success_rate: 80, failure_rate: 20 },
-    mcqs:       { attempted_count: 14, success_rate: 76, failure_rate: 24 },
-    lectures:   { total_score: 80, average_watch_time: 55 }, // avg = 78.67%
+    mcqs: { attempted_count: 14, success_rate: 76, failure_rate: 24 },
+    lectures: { total_score: 80, average_watch_time: 55 }, // avg = 78.67%
   },
   {
     user_id: 4,
     name: "VidyaAI Student",
     month: "2025-09",
     assignments: { submitted_count: 7, success_rate: 65, failure_rate: 35 },
-    mcqs:       { attempted_count: 18, success_rate: 70, failure_rate: 30 },
-    lectures:   { total_score: 78, average_watch_time: 35 }, // avg = 71%
+    mcqs: { attempted_count: 18, success_rate: 70, failure_rate: 30 },
+    lectures: { total_score: 78, average_watch_time: 35 }, // avg = 71%
   },
   {
     user_id: 5,
     name: "Vikash Singh",
     month: "2025-09",
     assignments: { submitted_count: 3, success_rate: 72, failure_rate: 28 },
-    mcqs:       { attempted_count: 16, success_rate: 74, failure_rate: 26 },
-    lectures:   { total_score: 81, average_watch_time: 50 }, // avg = 75.67%
+    mcqs: { attempted_count: 16, success_rate: 74, failure_rate: 26 },
+    lectures: { total_score: 81, average_watch_time: 50 }, // avg = 75.67%
   },
 
   /* ---- others (kept reasonable defaults) ---- */
@@ -356,40 +360,40 @@ const monthly_report = [
     name: "Meena Joshi",
     month: "2025-09",
     assignments: { submitted_count: 12, success_rate: 96, failure_rate: 4 },
-    mcqs:       { attempted_count: 60, success_rate: 92, failure_rate: 8 },
-    lectures:   { total_score: 95, average_watch_time: 60 },
+    mcqs: { attempted_count: 60, success_rate: 92, failure_rate: 8 },
+    lectures: { total_score: 95, average_watch_time: 60 },
   },
   {
     user_id: 7,
     name: "Vikas Singh",
     month: "2025-09",
     assignments: { submitted_count: 7, success_rate: 82, failure_rate: 18 },
-    mcqs:       { attempted_count: 42, success_rate: 74, failure_rate: 26 },
-    lectures:   { total_score: 78, average_watch_time: 47 },
+    mcqs: { attempted_count: 42, success_rate: 74, failure_rate: 26 },
+    lectures: { total_score: 78, average_watch_time: 47 },
   },
   {
     user_id: 8,
     name: "Kiran Das",
     month: "2025-09",
     assignments: { submitted_count: 6, success_rate: 60, failure_rate: 40 },
-    mcqs:       { attempted_count: 36, success_rate: 58, failure_rate: 42 },
-    lectures:   { total_score: 65, average_watch_time: 40 },
+    mcqs: { attempted_count: 36, success_rate: 58, failure_rate: 42 },
+    lectures: { total_score: 65, average_watch_time: 40 },
   },
   {
     user_id: 9,
     name: "Neha Kapoor",
     month: "2025-09",
     assignments: { submitted_count: 9, success_rate: 90, failure_rate: 10 },
-    mcqs:       { attempted_count: 48, success_rate: 85, failure_rate: 15 },
-    lectures:   { total_score: 92, average_watch_time: 58 },
+    mcqs: { attempted_count: 48, success_rate: 85, failure_rate: 15 },
+    lectures: { total_score: 92, average_watch_time: 58 },
   },
   {
     user_id: 10,
     name: "Rahul Nair",
     month: "2025-09",
     assignments: { submitted_count: 8, success_rate: 72, failure_rate: 28 },
-    mcqs:       { attempted_count: 41, success_rate: 68, failure_rate: 32 },
-    lectures:   { total_score: 71, average_watch_time: 44 },
+    mcqs: { attempted_count: 41, success_rate: 68, failure_rate: 32 },
+    lectures: { total_score: 71, average_watch_time: 44 },
   },
 ];
 
@@ -434,6 +438,8 @@ function GradeChip({ grade }) {
 
 function MonthlyBatchTopperPanel({ monthlyData = [] }) {
   const theme = useTheme();
+  const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
+  const [openIds, setOpenIds] = useState({});
 
   const rows = useMemo(() => {
     const safe = (n) => (typeof n === "number" && !Number.isNaN(n) ? n : 0);
@@ -461,6 +467,222 @@ function MonthlyBatchTopperPanel({ monthlyData = [] }) {
   const medal = (i) =>
     i === 0 ? "🥇" : i === 1 ? "🥈" : i === 2 ? "🥉" : `#${i + 1}`;
 
+  const toggleOpen = (id) =>
+    setOpenIds((prev) => ({ ...prev, [id]: !prev[id] }));
+
+  /* ================= MOBILE VIEW – accordion ================= */
+  if (isMobile) {
+    return (
+      <Card
+        sx={{
+          width: "100%",
+          p: 1,
+          display: "flex",
+          flexDirection: "column",
+          backgroundColor: "#fff",
+          borderRadius: "20px",
+          border: "none",
+          boxShadow: "none",
+        }}
+      >
+        <CardHeader
+          title="Monthly Batch Topper"
+          subheader="Ranked by composite score (Assignments ✓% • MCQs ✓% • Lectures Score)"
+          sx={{ "& .MuiCardHeader-title": { fontWeight: 700 } }}
+        />
+        <CardContent sx={{ pt: 1, maxHeight: 400, overflowY: "auto" }}>
+          {rows.length === 0 ? (
+            <Typography variant="body2" color="text.secondary">
+              No monthly data available.
+            </Typography>
+          ) : (
+            <Stack spacing={1}>
+              {rows.map((r, idx) => {
+                const key = r.user_id ?? `row-${idx}`;
+                const isOpen = !!openIds[key];
+
+                return (
+                  <Accordion
+                    key={key}
+                    disableGutters
+                    elevation={0}
+                    expanded={isOpen}
+                    onChange={() => toggleOpen(key)}
+                    sx={{
+                      borderRadius: 2,
+                      border: `1px solid ${alpha(
+                        theme.palette.text.primary,
+                        0.08
+                      )}`,
+                      "&::before": { display: "none" },
+                      overflow: "hidden",
+                      backgroundColor: "#fff",
+                    }}
+                  >
+                    <AccordionSummary
+                      expandIcon={
+                        <Box
+                          sx={{
+                            display: "flex",
+                            alignItems: "center",
+                            justifyContent: "center",
+                            transform: isOpen ? "rotate(180deg)" : "none",
+                            transition: "transform 0.2s",
+                          }}
+                        >
+                          <FiChevronDown size={18} />
+                        </Box>
+                      }
+                      sx={{
+                        px: 1.25,
+                        py: 0.75,
+                        "& .MuiAccordionSummary-content": {
+                          margin: 0,
+                        },
+                      }}
+                    >
+                      <Stack
+                        direction="row"
+                        spacing={1}
+                        alignItems="center"
+                        justifyContent="space-between"
+                        sx={{ width: "100%" }}
+                      >
+                        {/* left: rank + avatar + name */}
+                        <Stack
+                          direction="row"
+                          spacing={1}
+                          alignItems="center"
+                          sx={{ minWidth: 0 }}
+                        >
+                          <Chip
+                            size="small"
+                            label={medal(idx)}
+                            sx={{
+                              fontWeight: 700,
+                              bgcolor:
+                                idx === 0
+                                  ? alpha(
+                                      theme.palette.warning.main,
+                                      0.18
+                                    )
+                                  : idx === 1
+                                  ? alpha(
+                                      theme.palette.info.main,
+                                      0.18
+                                    )
+                                  : idx === 2
+                                  ? alpha(
+                                      theme.palette.success.main,
+                                      0.18
+                                    )
+                                  : alpha(
+                                      theme.palette.text.primary,
+                                      0.06
+                                    ),
+                            }}
+                          />
+                          <Avatar
+                            sx={{
+                              width: 28,
+                              height: 28,
+                              fontSize: 12,
+                              bgcolor: alpha(
+                                theme.palette.primary.main,
+                                0.12
+                              ),
+                              color: theme.palette.primary.main,
+                              fontWeight: 700,
+                            }}
+                          >
+                            {initials(r.name)}
+                          </Avatar>
+                          <Box sx={{ minWidth: 0 }}>
+                            <Typography
+                              variant="body2"
+                              fontWeight={600}
+                              noWrap
+                            >
+                              {r.name}
+                            </Typography>
+                            <Typography
+                              variant="caption"
+                              color="text.secondary"
+                              noWrap
+                            >
+                              Assign {r.assignments_success}% · MCQs{" "}
+                              {r.mcqs_success}% · Lec {r.lectures_score}
+                            </Typography>
+                          </Box>
+                        </Stack>
+
+                        {/* right: score chip */}
+                        <Chip
+                          size="small"
+                          color={
+                            r.score >= 85
+                              ? "success"
+                              : r.score >= 70
+                              ? "primary"
+                              : "default"
+                          }
+                          label={r.score}
+                          sx={{ fontWeight: 700 }}
+                        />
+                      </Stack>
+                    </AccordionSummary>
+
+                    <AccordionDetails sx={{ px: 1.25, pb: 1.25, pt: 0.5 }}>
+                      <Stack spacing={0.6}>
+                        {r.month && (
+                          <Typography
+                            variant="caption"
+                            color="text.secondary"
+                          >
+                            Month: <strong>{r.month}</strong>
+                          </Typography>
+                        )}
+                        <Typography
+                          variant="caption"
+                          color="text.secondary"
+                        >
+                          Assignments success:{" "}
+                          <strong>{r.assignments_success}%</strong>
+                        </Typography>
+                        <Typography
+                          variant="caption"
+                          color="text.secondary"
+                        >
+                          MCQs success:{" "}
+                          <strong>{r.mcqs_success}%</strong>
+                        </Typography>
+                        <Typography
+                          variant="caption"
+                          color="text.secondary"
+                        >
+                          Lectures score:{" "}
+                          <strong>{r.lectures_score}</strong>
+                        </Typography>
+                        <Typography
+                          variant="caption"
+                          color="text.secondary"
+                        >
+                          Composite score:{" "}
+                          <strong>{r.score}</strong>
+                        </Typography>
+                      </Stack>
+                    </AccordionDetails>
+                  </Accordion>
+                );
+              })}
+            </Stack>
+          )}
+        </CardContent>
+      </Card>
+    );
+  }
+
+  /* ================= DESKTOP/TABLET VIEW – आपका पुराना table जस का तस ================= */
   return (
     <Card
       sx={{
@@ -481,7 +703,17 @@ function MonthlyBatchTopperPanel({ monthlyData = [] }) {
       />
       <CardContent sx={{ pt: 1 }}>
         <TableContainer>
-          <Table size="small" sx={{ "& td, & th": { borderBottomColor: alpha(theme.palette.text.primary, 0.06) } }}>
+          <Table
+            size="small"
+            sx={{
+              "& td, & th": {
+                borderBottomColor: alpha(
+                  theme.palette.text.primary,
+                  0.06
+                ),
+              },
+            }}
+          >
             <TableHead>
               <TableRow>
                 <TableCell width={60}>Rank</TableCell>
@@ -507,38 +739,72 @@ function MonthlyBatchTopperPanel({ monthlyData = [] }) {
                             : idx === 1
                             ? alpha(theme.palette.info.main, 0.18)
                             : idx === 2
-                            ? alpha(theme.palette.success.main, 0.18)
-                            : alpha(theme.palette.text.primary, 0.06),
+                            ? alpha(
+                                theme.palette.success.main,
+                                0.18
+                              )
+                            : alpha(
+                                theme.palette.text.primary,
+                                0.06
+                              ),
                       }}
                     />
                   </TableCell>
                   <TableCell>
-                    <Stack direction="row" spacing={1.25} alignItems="center">
+                    <Stack
+                      direction="row"
+                      spacing={1.25}
+                      alignItems="center"
+                    >
                       <Avatar
                         sx={{
                           width: 28,
                           height: 28,
                           fontSize: 12,
-                          bgcolor: alpha(theme.palette.primary.main, 0.12),
+                          bgcolor: alpha(
+                            theme.palette.primary.main,
+                            0.12
+                          ),
                           color: theme.palette.primary.main,
                           fontWeight: 700,
                         }}
                       >
                         {initials(r.name)}
                       </Avatar>
-                      <Typography variant="body2" fontWeight={600}>
+                      <Typography
+                        variant="body2"
+                        fontWeight={600}
+                      >
                         {r.name}
                       </Typography>
-                      {r.month && <Chip size="small" variant="outlined" label={r.month} />}
+                      {r.month && (
+                        <Chip
+                          size="small"
+                          variant="outlined"
+                          label={r.month}
+                        />
+                      )}
                     </Stack>
                   </TableCell>
-                  <TableCell align="right">{r.assignments_success}</TableCell>
-                  <TableCell align="right">{r.mcqs_success}</TableCell>
-                  <TableCell align="right">{r.lectures_score}</TableCell>
+                  <TableCell align="right">
+                    {r.assignments_success}
+                  </TableCell>
+                  <TableCell align="right">
+                    {r.mcqs_success}
+                  </TableCell>
+                  <TableCell align="right">
+                    {r.lectures_score}
+                  </TableCell>
                   <TableCell align="right">
                     <Chip
                       size="small"
-                      color={r.score >= 85 ? "success" : r.score >= 70 ? "primary" : "default"}
+                      color={
+                        r.score >= 85
+                          ? "success"
+                          : r.score >= 70
+                          ? "primary"
+                          : "default"
+                      }
                       label={r.score}
                       sx={{ fontWeight: 700 }}
                     />
@@ -548,7 +814,10 @@ function MonthlyBatchTopperPanel({ monthlyData = [] }) {
               {rows.length === 0 && (
                 <TableRow>
                   <TableCell colSpan={6}>
-                    <Typography variant="body2" color="text.secondary">
+                    <Typography
+                      variant="body2"
+                      color="text.secondary"
+                    >
                       No monthly data available.
                     </Typography>
                   </TableCell>
@@ -563,124 +832,217 @@ function MonthlyBatchTopperPanel({ monthlyData = [] }) {
 }
 
 
+
 /* ========================== WIDGETS ========================== */
 
 function LoginFrequencyPanel({ data = [] }) {
   const theme = useTheme();
+  const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
+
   const rows = useMemo(
     () => [...data].sort((a, b) => b.current_week_logins - a.current_week_logins).slice(0, 10),
     [data]
   );
 
-  return (
-    <Card
-       sx={{
-        width: "100%",
-        p:1,
-        display: "flex",
-        flexDirection: "column",
-        height: "100%",
-        backgroundColor: "#fff",
-        borderRadius: "20px",
-        border: "none",
-        boxShadow: "none"
-      }}
-    >
-      <CardHeader
-        title="Login Frequency"
-        subheader="This week vs last week"
-        sx={{ pb: 0, "& .MuiCardHeader-title": { fontWeight: 700 } , backgroundColor: "#fff"}}
-      />
-      <CardContent sx={{ pt: 1, backgroundColor: "#fff" }}>
-  <TableContainer sx={{ maxHeight: 400 }}>
-    <Table stickyHeader size="small"
-      sx={{ "& td, & th": { borderBottomColor: alpha(theme.palette.text.primary, 0.06) }, backgroundColor: "#fff" }}
-    >
-          <TableHead sx={{position:'sticky', top:0, backgroundColor: "#fff", zIndex:50}}>
-            <TableRow>
-              <TableCell>Name</TableCell>
-              <TableCell align="right">Total</TableCell>
-              <TableCell align="right">This week</TableCell>
-              <TableCell align="right">Last week</TableCell>
-              <TableCell align="center">Δ</TableCell>
-              <TableCell>Last login</TableCell>
-            </TableRow>
-          </TableHead>
-          <TableBody>
+  // ✅ MOBILE VIEW – अब accordion में
+  if (isMobile) {
+    return (
+      <Card
+        sx={{
+          width: "100%",
+          p: 1,
+          display: "flex",
+          flexDirection: "column",
+          height: "100%",
+          backgroundColor: "#fff",
+          borderRadius: "20px",
+          border: "none",
+          boxShadow: "none",
+        }}
+      >
+        <CardHeader
+          title="Login Frequency"
+          subheader="This week vs last week"
+          sx={{
+            pb: 0,
+            "& .MuiCardHeader-title": { fontWeight: 700 },
+            backgroundColor: "#fff",
+          }}
+        />
+        <CardContent sx={{ pt: 1, backgroundColor: "#fff" }}>
+          <Stack spacing={1}>
             {rows.map((u) => {
               const delta = u.current_week_logins - u.previous_week_logins;
               const positive = delta > 0;
               const neutral = delta === 0;
+
               return (
-                <TableRow hover key={u.user_id}>
-                  <TableCell>
-                    <Stack direction="row" spacing={1.25} alignItems="center">
-                      <Avatar
+                <Accordion
+                  key={u.user_id}
+                  disableGutters
+                  elevation={0}
+                  sx={{
+                    borderRadius: 2,
+                    border: `1px solid ${alpha(theme.palette.text.primary, 0.06)}`,
+                    "&::before": { display: "none" },
+                    overflow: "hidden",
+                    backgroundColor: "#fff",
+                  }}
+                >
+                  <AccordionSummary
+                    expandIcon={<FiChevronDown sx={{ fontSize: 20 }} />}
+                    sx={{
+                      px: 1.25,
+                      py: 0.75,
+                      "& .MuiAccordionSummary-content": {
+                        margin: 0,
+                      },
+                    }}
+                  >
+                    <Stack
+                      direction="row"
+                      alignItems="center"
+                      justifyContent="space-between"
+                      spacing={1.5}
+                      sx={{ width: "100%" }}
+                    >
+                      {/* Left: Avatar + Name */}
+                      <Stack direction="row" spacing={1} alignItems="center" sx={{ minWidth: 0 }}>
+                        <Avatar
+                          sx={{
+                            width: 32,
+                            height: 32,
+                            fontSize: 12,
+                            bgcolor: alpha(theme.palette.primary.main, 0.12),
+                            color: theme.palette.primary.main,
+                            fontWeight: 700,
+                          }}
+                        >
+                          {initials(u.name)}
+                        </Avatar>
+                        <Box sx={{ minWidth: 0 }}>
+                          <Typography
+                            variant="body2"
+                            fontWeight={600}
+                            noWrap
+                          >
+                            {u.name}
+                          </Typography>
+                          {/* छोटा सा subline: This week logins */}
+                          <Typography
+                            variant="caption"
+                            color="text.secondary"
+                            noWrap
+                          >
+                            This week: {u.current_week_logins} · Last: {u.previous_week_logins}
+                          </Typography>
+                        </Box>
+                      </Stack>
+
+                      {/* Right: Δ chip */}
+                      <Chip
+                        size="small"
+                        variant={neutral ? "outlined" : "filled"}
+                        label={delta > 0 ? `+${delta}` : delta}
                         sx={{
-                          width: 28,
-                          height: 28,
-                          fontSize: 12,
-                          bgcolor: alpha(theme.palette.primary.main, 0.12),
-                          color: theme.palette.primary.main,
+                          minWidth: 54,
+                          justifyContent: "center",
+                          bgcolor: neutral
+                            ? "transparent"
+                            : positive
+                              ? alpha(theme.palette.success.main, 0.12)
+                              : alpha(theme.palette.error.main, 0.12),
+                          color: neutral
+                            ? theme.palette.text.secondary
+                            : positive
+                              ? theme.palette.success.main
+                              : theme.palette.error.main,
+                          borderColor: alpha(theme.palette.text.primary, 0.2),
                           fontWeight: 700,
                         }}
-                      >
-                        {initials(u.name)}
-                      </Avatar>
-                      <Typography variant="body2" fontWeight={600}>
-                        {u.name}
-                      </Typography>
+                      />
                     </Stack>
-                  </TableCell>
-                  <TableCell align="right">{u.total_logins}</TableCell>
-                  <TableCell align="right">{u.current_week_logins}</TableCell>
-                  <TableCell align="right">{u.previous_week_logins}</TableCell>
-                  <TableCell align="right">
-                    <Chip
-                      size="small"
-                      variant={neutral ? "outlined" : "filled"}
-                      label={delta > 0 ? `+${delta}` : delta}
+                  </AccordionSummary>
+
+                  <AccordionDetails sx={{ px: 1.25, pt: 0, pb: 1 }}>
+                    {/* Stats grid – same info जो table में है */}
+                    <Box
                       sx={{
-                        minWidth: 54,
-                        justifyContent: "center",
-                        bgcolor: neutral
-                          ? "transparent"
-                          : positive
-                          ? alpha(theme.palette.success.main, 0.12)
-                          : alpha(theme.palette.error.main, 0.12),
-                        color: neutral
-                          ? theme.palette.text.secondary
-                          : positive
-                          ? theme.palette.success.main
-                          : theme.palette.error.main,
-                        borderColor: alpha(theme.palette.text.primary, 0.2),
-                        fontWeight: 700,
+                        display: "grid",
+                        gridTemplateColumns: "repeat(2, minmax(0, 1fr))",
+                        rowGap: 0.5,
+                        columnGap: 1.5,
+                        mb: 0.75,
                       }}
-                    />
-                  </TableCell>
-                  <TableCell sx={{ whiteSpace: "nowrap" }}>
-                    {new Date(u.last_login_date).toLocaleString()}
-                  </TableCell>
-                </TableRow>
+                    >
+                      <Box>
+                        <Typography variant="caption" color="text.secondary">
+                          Total logins
+                        </Typography>
+                        <Typography variant="body2" fontWeight={600}>
+                          {u.total_logins}
+                        </Typography>
+                      </Box>
+
+                      <Box>
+                        <Typography variant="caption" color="text.secondary">
+                          Δ (change)
+                        </Typography>
+                        <Typography
+                          variant="body2"
+                          fontWeight={600}
+                          sx={{
+                            color: neutral
+                              ? theme.palette.text.secondary
+                              : positive
+                                ? theme.palette.success.main
+                                : theme.palette.error.main,
+                          }}
+                        >
+                          {delta > 0 ? `+${delta}` : delta}
+                        </Typography>
+                      </Box>
+
+                      <Box>
+                        <Typography variant="caption" color="text.secondary">
+                          This week
+                        </Typography>
+                        <Typography variant="body2" fontWeight={600}>
+                          {u.current_week_logins}
+                        </Typography>
+                      </Box>
+
+                      <Box>
+                        <Typography variant="caption" color="text.secondary">
+                          Last week
+                        </Typography>
+                        <Typography variant="body2" fontWeight={600}>
+                          {u.previous_week_logins}
+                        </Typography>
+                      </Box>
+                    </Box>
+
+                    <Typography
+                      variant="caption"
+                      color="text.secondary"
+                      sx={{ display: "block" }}
+                    >
+                      Last login: {new Date(u.last_login_date).toLocaleString()}
+                    </Typography>
+                  </AccordionDetails>
+                </Accordion>
               );
             })}
-          </TableBody>
-        </Table>
-        </TableContainer>
-      </CardContent>
-    </Card>
-  );
-}
+          </Stack>
+        </CardContent>
+      </Card>
+    );
+  }
 
-function PeakUsagePanel({ peak }) {
-  const theme = useTheme();
-  if (!peak) return null;
-  const data = peak.data || [];
-
-  const fillId = "peakGradient";
-
+  // ✅ DESKTOP / TABLET VIEW – आपका पुराना design as-it-is
   return (
-    <Card  sx={{
+    <Card
+      sx={{
         width: "100%",
         p: 1,
         display: "flex",
@@ -690,7 +1052,137 @@ function PeakUsagePanel({ peak }) {
         borderRadius: "20px",
         border: "none",
         boxShadow: "none",
-      }}>
+      }}
+    >
+      <CardHeader
+        title="Login Frequency"
+        subheader="This week vs last week"
+        sx={{
+          pb: 0,
+          "& .MuiCardHeader-title": { fontWeight: 700 },
+          backgroundColor: "#fff",
+        }}
+      />
+      <CardContent sx={{ pt: 1, backgroundColor: "#fff" }}>
+        <TableContainer sx={{ maxHeight: 400 }}>
+          <Table
+            stickyHeader
+            size="small"
+            sx={{
+              "& td, & th": {
+                borderBottomColor: alpha(theme.palette.text.primary, 0.06),
+              },
+              backgroundColor: "#fff",
+            }}
+          >
+            <TableHead
+              sx={{
+                position: "sticky",
+                top: 0,
+                backgroundColor: "#fff",
+                zIndex: 50,
+              }}
+            >
+              <TableRow>
+                <TableCell>Name</TableCell>
+                <TableCell align="right">Total</TableCell>
+                <TableCell align="right">This week</TableCell>
+                <TableCell align="right">Last week</TableCell>
+                <TableCell align="center">Δ</TableCell>
+                <TableCell>Last login</TableCell>
+              </TableRow>
+            </TableHead>
+            <TableBody>
+              {rows.map((u) => {
+                const delta = u.current_week_logins - u.previous_week_logins;
+                const positive = delta > 0;
+                const neutral = delta === 0;
+                return (
+                  <TableRow hover key={u.user_id}>
+                    <TableCell>
+                      <Stack direction="row" spacing={1.25} alignItems="center">
+                        <Avatar
+                          sx={{
+                            width: 28,
+                            height: 28,
+                            fontSize: 12,
+                            bgcolor: alpha(theme.palette.primary.main, 0.12),
+                            color: theme.palette.primary.main,
+                            fontWeight: 700,
+                          }}
+                        >
+                          {initials(u.name)}
+                        </Avatar>
+                        <Typography variant="body2" fontWeight={600}>
+                          {u.name}
+                        </Typography>
+                      </Stack>
+                    </TableCell>
+                    <TableCell align="right">{u.total_logins}</TableCell>
+                    <TableCell align="right">
+                      {u.current_week_logins}
+                    </TableCell>
+                    <TableCell align="right">
+                      {u.previous_week_logins}
+                    </TableCell>
+                    <TableCell align="right">
+                      <Chip
+                        size="small"
+                        variant={neutral ? "outlined" : "filled"}
+                        label={delta > 0 ? `+${delta}` : delta}
+                        sx={{
+                          minWidth: 54,
+                          justifyContent: "center",
+                          bgcolor: neutral
+                            ? "transparent"
+                            : positive
+                              ? alpha(theme.palette.success.main, 0.12)
+                              : alpha(theme.palette.error.main, 0.12),
+                          color: neutral
+                            ? theme.palette.text.secondary
+                            : positive
+                              ? theme.palette.success.main
+                              : theme.palette.error.main,
+                          borderColor: alpha(theme.palette.text.primary, 0.2),
+                          fontWeight: 700,
+                        }}
+                      />
+                    </TableCell>
+                    <TableCell sx={{ whiteSpace: "nowrap" }}>
+                      {new Date(u.last_login_date).toLocaleString()}
+                    </TableCell>
+                  </TableRow>
+                );
+              })}
+            </TableBody>
+          </Table>
+        </TableContainer>
+      </CardContent>
+    </Card>
+  );
+}
+
+
+
+function PeakUsagePanel({ peak }) {
+  const theme = useTheme();
+  if (!peak) return null;
+  const data = peak.data || [];
+
+  const fillId = "peakGradient";
+
+  return (
+    <Card sx={{
+      width: "100%",
+      p: 1,
+      display: "flex",
+      flexDirection: "column",
+      height: "100%",
+      backgroundColor: "#fff",
+      borderRadius: "20px",
+      border: "none",
+      boxShadow: "none",
+    }}>
       <CardHeader
         title="Peak Usage"
         subheader={`${peak.month} • Daily logins`}
@@ -797,7 +1289,19 @@ function CombinedStudentPanel({
         subheader="Student-wise summary with expandable charts"
         sx={{ "& .MuiCardHeader-title": { fontWeight: 700 } }}
       />
-      <CardContent sx={{ pt: 0 , overflowY:'auto', maxHeight:500}}>
+      <CardContent
+        sx={{
+          pt: 0,
+          overflowY: "auto",
+          maxHeight: 500,
+          "&::-webkit-scrollbar": {
+            display: "none",
+          },
+          scrollbarWidth: "none",
+          msOverflowStyle: "none",
+        }}
+      >
+
         <Table
           size="small"
           sx={{ "& td, & th": { borderBottomColor: alpha(theme.palette.text.primary, 0.06) } }}
@@ -833,13 +1337,13 @@ function CombinedStudentPanel({
                       <Stack direction="row" spacing={1.25} alignItems="center">
                         <Avatar
                           sx={{
-                          width: 28,
-                          height: 28,
-                          fontSize: 12,
-                          bgcolor: alpha(theme.palette.primary.main, 0.12),
-                          color: theme.palette.primary.main,
-                          fontWeight: 700,
-                        }}
+                            width: 28,
+                            height: 28,
+                            fontSize: 12,
+                            bgcolor: alpha(theme.palette.primary.main, 0.12),
+                            color: theme.palette.primary.main,
+                            fontWeight: 700,
+                          }}
                         >
                           {initials(row.name)}
                         </Avatar>
@@ -1053,8 +1557,8 @@ export default function EngagementSection() {
           />
         </Grid>
         <Grid item xs={12}>
-  <MonthlyBatchTopperPanel monthlyData={monthly_report} />
-</Grid>
+          <MonthlyBatchTopperPanel monthlyData={monthly_report} />
+        </Grid>
 
       </Grid>
     </Box>
