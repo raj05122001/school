@@ -8,21 +8,22 @@ function HeroCard({ averageDuration }) {
   return (
     <Box
       sx={{
-        width: { xs: "100%", md: "100%" },
-        maxWidth: { xs: 420, md: "100%" },
+        width: "100%",
+        maxWidth: "100%",
         mx: "auto",
-        height: { xs: "auto", md: "316px" }, // md पर fixed, mobile पर auto
+        height: { xs: "auto", md: "316px" },
         display: "flex",
         flexDirection: { xs: "column", md: "row" },
         flexShrink: 0,
         borderRadius: "20px",
-        p: { xs: 1.5, md: "15px 0px 0px 16px" }, // 🔹 mobile padding भी थोड़ा कम
+        p: { xs: 1.5, md: "15px 0px 0px 16px" },
         background: "var(--Green-dark-2, #174321)",
         boxSizing: "border-box",
         gap: { xs: 1.5, md: 0 },
+        overflow: "hidden", // ✅ image bahar nahi jayegi
       }}
     >
-      {/* LEFT SIDE: PROFILE + CIRCLES */}
+      {/* LEFT SIDE */}
       <Box
         sx={{
           display: "flex",
@@ -45,10 +46,10 @@ function HeroCard({ averageDuration }) {
             justifyContent: "center",
             alignItems: "center",
             height: "100%",
-            mt: { xs: 1.5, md: 0 }, // 🔹 yaha se भी height घटेगी
+            mt: { xs: 1.5, md: 0 },
+            flexWrap: { xs: "wrap", md: "nowrap" },
           }}
         >
-          {/* Lecture Duration */}
           <Box
             sx={{
               flex: "0 0 auto",
@@ -56,8 +57,8 @@ function HeroCard({ averageDuration }) {
               display: "flex",
               justifyContent: "center",
               transform: {
-                xs: "scale(0.5)",
-                sm: "scale(0.8)",
+                xs: "scale(0.75)",
+                sm: "scale(0.85)",
                 md: "scale(1)",
               },
               transformOrigin: "center",
@@ -66,7 +67,6 @@ function HeroCard({ averageDuration }) {
             <LectureDuration averageDuration={averageDuration} />
           </Box>
 
-          {/* Subject Completion */}
           <Box
             sx={{
               flex: "0 0 auto",
@@ -74,8 +74,8 @@ function HeroCard({ averageDuration }) {
               display: "flex",
               justifyContent: "center",
               transform: {
-                xs: "scale(0.5)",
-                sm: "scale(0.8)",
+                xs: "scale(0.75)",
+                sm: "scale(0.85)",
                 md: "scale(1)",
               },
               transformOrigin: "center",
@@ -89,33 +89,27 @@ function HeroCard({ averageDuration }) {
       {/* RIGHT SIDE: ILLUSTRATION */}
       <Box
         sx={{
-          display: "flex",
-          justifyContent: { xs: "center", md: "flex-start" },
-          alignItems: "center",           // 🔹 flex-end → center
-          width: { xs: "100%", md: "275px" },
-          mt: { xs: 1, md: 0 },           // 🔹 top margin कम
-          pb: { xs: 0.5, md: 0 },
+          display: { xs: "none", sm: "none", md: "flex" },
+          justifyContent: "flex-end",
+          alignItems: "center",
+          width: { md: "40%", lg: "45%" },
+          pr: { md: 2, lg: 3 },
         }}
       >
         <Box
-  sx={{
-    width: { xs: "78%", sm: "70%", md: "297px" },
-    maxWidth: "297px",
-    position: "relative",
-    pt: { xs: 0, sm: 0, md: "65%" },
-    borderRadius: "20px",
-    overflow: "hidden",
-    backgroundImage: {
-      xs: "none",
-      sm: "none",
-      md: 'url("/banner 1_illustration 1.png")',
-    },
-    backgroundRepeat: "no-repeat",
-    backgroundSize: "contain",
-    backgroundPosition: { xs: "center bottom", md: "right bottom" },
-  }}
-/>
-
+          sx={{
+            width: "100%",
+            maxWidth: "280px",
+            position: "relative",
+            pt: "70%", // aspect-ratio type
+            borderRadius: "20px",
+            overflow: "hidden",
+            backgroundImage: 'url("/banner 1_illustration 1.png")',
+            backgroundRepeat: "no-repeat",
+            backgroundSize: "contain",
+            backgroundPosition: "right bottom",
+          }}
+        />
       </Box>
     </Box>
   );
