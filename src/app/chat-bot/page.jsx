@@ -1,5 +1,5 @@
 "use client";
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect, useRef, useMemo } from "react";
 import {
   getLectureAns,
   createSession,
@@ -19,9 +19,6 @@ import {
   Tooltip,
   Button,
   List,
-  Accordion,
-  AccordionSummary,
-  AccordionDetails,
   Drawer,
   useMediaQuery,
   useTheme,
@@ -33,7 +30,6 @@ import { FaMicrophone, FaStopCircle } from "react-icons/fa";
 import { decodeToken } from "react-jwt";
 import Cookies from "js-cookie";
 import { usePathname } from "next/navigation";
-import { RiArrowDropDownLine } from "react-icons/ri";
 import TextWithMath from "@/commonComponents/TextWithMath/TextWithMath";
 import { TbMenu3 } from "react-icons/tb";
 
@@ -237,7 +233,7 @@ export default function Page({ suggestionInput, setIsOpenChatBot }) {
 
   const handleNewChatFromSidebar = () => {
     setChatHistory([]);
-    setSessionID(null);          // ✅ new chat => new session
+    setSessionID(null); // new chat => new session
     handleCreateSession();
     setShowChat(true);
     setShowList(false);
@@ -246,12 +242,40 @@ export default function Page({ suggestionInput, setIsOpenChatBot }) {
     }
   };
 
-  /** ========= IMPORTANT CHANGE HERE ========= */
+  /** ========= group history by session_id for sidebar ========= */
+  const sessionList = useMemo(() => {
+    const map = new Map();
+
+    oldChats.forEach((item, idx) => {
+      const sid = item?.session?.session_id;
+      if (!sid) return;
+
+      if (!map.has(sid)) {
+        map.set(sid, {
+          sessionId: sid,
+          title: item?.user_question || "Untitled conversation",
+          latestIndex: idx,
+        });
+      } else {
+        // agar latest ordering chahiye to index update kar sakte ho
+        const existing = map.get(sid);
+        if (idx > existing.latestIndex) {
+          existing.latestIndex = idx;
+        }
+      }
+    });
+
+    // latestIndex ke basis pe sort (latest top pe)
+    return Array.from(map.values()).sort(
+      (a, b) => b.latestIndex - a.latestIndex
+    );
+  }, [oldChats]);
+
+  /** ========= load session conversation ========= */
   const loadSessionToChat = (sessionId) => {
     if (!sessionId) return;
 
-    // ✅ old session ko active bana do
-    setSessionID(sessionId);
+    setSessionID(sessionId); // old session ko active bana do
 
     const sessionChats = oldChats
       ?.filter((item) => item?.session?.session_id === sessionId)
@@ -302,7 +326,6 @@ export default function Page({ suggestionInput, setIsOpenChatBot }) {
       return;
     }
 
-    // user ka message pehle dikhado
     setChatHistory((prevChat) => [
       ...prevChat,
       { role: "user", content: input },
@@ -391,7 +414,7 @@ export default function Page({ suggestionInput, setIsOpenChatBot }) {
       </Box>
 
       {/* Previous Queries List */}
-      {oldChats.length > 0 ? (
+      {sessionList.length > 0 ? (
         <Box
           sx={{
             width: "100%",
@@ -414,49 +437,45 @@ export default function Page({ suggestionInput, setIsOpenChatBot }) {
               gap: 1.2,
             }}
           >
-            {oldChats
-              ?.slice()
-              .reverse()
-              .map((data, index) => (
-                <Box
-                  key={data?.id}
-                  onClick={() => loadSessionToChat(data?.session?.session_id)}
+            {sessionList.map((session, index) => (
+              <Box
+                key={session.sessionId}
+                onClick={() => loadSessionToChat(session.sessionId)}
+                sx={{
+                  width: "100%",
+                  borderRadius: 2,
+                  px: 2,
+                  py: 1.5,
+                  bgcolor: "#FAFAFA",
+                  border: "1px solid #E5E7EB",
+                  cursor: "pointer",
+                  transition: "all 0.2s ease",
+                  boxShadow: "0 0 0 rgba(0,0,0,0)",
+                  "&:hover": {
+                    bgcolor: "#F3F4F6",
+                    borderColor: "#D1D5DB",
+                    boxShadow: "0 4px 10px rgba(0,0,0,0.06)",
+                    transform: "translateY(-1px)",
+                  },
+                }}
+              >
+                <Typography
+                  variant="subtitle2"
                   sx={{
-                    width: "100%",
-                    borderRadius: 2,
-                    px: 2,
-                    py: 1.5,
-                    bgcolor: "#FAFAFA",
-                    border: "1px solid #E5E7EB",
-                    cursor: "pointer",
-                    transition: "all 0.2s ease",
-                    boxShadow: "0 0 0 rgba(0,0,0,0)",
-                    "&:hover": {
-                      bgcolor: "#F3F4F6",
-                      borderColor: "#D1D5DB",
-                      boxShadow: "0 4px 10px rgba(0,0,0,0.06)",
-                      transform: "translateY(-1px)",
-                    },
+                    fontSize: "14px",
+                    fontWeight: 500,
+                    color: "#111827",
+                    display: "-webkit-box",
+                    WebkitLineClamp: 2,
+                    WebkitBoxOrient: "vertical",
+                    overflow: "hidden",
+                    wordBreak: "break-word",
                   }}
                 >
-                  <Typography
-                    variant="subtitle2"
-                    sx={{
-                      fontSize: "14px",
-                      fontWeight: 500,
-                      color: "#111827",
-                      display: "-webkit-box",
-                      WebkitLineClamp: 2,
-                      WebkitBoxOrient: "vertical",
-                      overflow: "hidden",
-                      wordBreak: "break-word",
-                    }}
-                  >
-                    {index + 1}:-{" "}
-                    {data?.user_question || "Untitled conversation"}
-                  </Typography>
-                </Box>
-              ))}
+                  {index + 1}:- {session.title}
+                </Typography>
+              </Box>
+            ))}
           </List>
         </Box>
       ) : (
@@ -495,7 +514,7 @@ export default function Page({ suggestionInput, setIsOpenChatBot }) {
           zIndex: 10000,
         }}
         onMouseDown={startResizing}
-      ></div>
+      />
 
       <Grid container direction="column" sx={{ height: "100%" }}>
         {/* Header */}

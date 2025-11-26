@@ -366,19 +366,21 @@ const StudentAssignment = () => {
         </Box>
       </Box>
 
-      {/* TABLE + SIDE CARDS WRAPPER */}
       <Box
         sx={{
           display: "flex",
-          flexDirection: { xs: "column", lg: "row" },
-          alignItems: { xs: "stretch", lg: "flex-start" },
+          flexDirection: { xs: "column", md: "row" },   // ⬅️ lg ki jagah md
+          alignItems: { xs: "stretch", md: "flex-start" },
+          gap: { xs: 2, md: 3 },
         }}
       >
+
         {/* DESKTOP TABLE VIEW */}
         <TableContainer
           component={Paper}
           elevation={0}
           sx={{
+            flex: 1,
             maxHeight: 500,
             minHeight: 380,
             height: "100%",
@@ -957,6 +959,8 @@ const StudentAssignment = () => {
         {/* SIDE RANGE CARDS */}
         <Box
           sx={{
+            width: { xs: "100%", md: 320, lg: 360 },      // ⬅️ fixed width on md+
+            flexShrink: 0,                                // ⬅️ prevent squeezing
             display: "flex",
             flexDirection: { xs: "row", md: "column" },
             flexWrap: { xs: "wrap", md: "nowrap" },

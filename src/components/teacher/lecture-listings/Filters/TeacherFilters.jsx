@@ -266,13 +266,26 @@
 //     </LocalizationProvider>
 //   );
 // };
-
+// import React, { useEffect, useState } from "react";
 import React, { useEffect, useState } from "react";
-import { Box, Button, Typography } from "@mui/material";
-import { getClassByCourse, getteacherClass } from "@/api/apiHelper";
+import {
+  Box,
+  Button,
+  Typography,
+  TextField,
+  InputAdornment,
+} from "@mui/material";
+import { FaSearch } from "react-icons/fa";
+import { getteacherClass } from "@/api/apiHelper";
 import { useRouter, usePathname } from "next/navigation";
 
-const TeacherFilters = ({ classValue = "All" }) => {
+const TeacherFilters = ({
+  classValue = "All",
+  localSearchInput = "",
+  onSearchChange,
+  isDarkMode,
+  primaryColor,
+}) => {
   const router = useRouter();
   const pathname = usePathname();
   const [selected, setSelected] = useState(classValue);
@@ -291,11 +304,9 @@ const TeacherFilters = ({ classValue = "All" }) => {
     setSelected(val);
   };
 
-  // class
-  // router.push()
-
   return (
     <Box sx={{ width: "100%", overflow: "hidden" }}>
+      {/* 🔹 Horizontal class buttons */}
       <Box
         sx={{
           display: "flex",
@@ -304,7 +315,6 @@ const TeacherFilters = ({ classValue = "All" }) => {
           px: 2,
           gap: 1,
           width: "100%",
-          maxWidth: "80vw",
           flexWrap: "nowrap",
           "&::-webkit-scrollbar": { display: "none" },
           scrollbarWidth: "none",
@@ -322,7 +332,7 @@ const TeacherFilters = ({ classValue = "All" }) => {
             py: "8px",
             fontWeight: 700,
             fontSize: "16px",
-            flexShrink: 0, // Prevent button from shrinking
+            flexShrink: 0,
             bgcolor: selected === "All" ? "black" : "white",
             color: selected === "All" ? "common.white" : "text.primary",
             border: selected === "All" ? "none" : "1px solid",
@@ -336,7 +346,7 @@ const TeacherFilters = ({ classValue = "All" }) => {
         </Button>
 
         {classList.map((cat) => {
-          const isActive = cat.name === selected;
+          const isActive = cat.class_name === selected;
           return (
             <Button
               key={cat.class_name}
@@ -350,7 +360,7 @@ const TeacherFilters = ({ classValue = "All" }) => {
                 py: "8px",
                 fontWeight: 700,
                 fontSize: "16px",
-                flexShrink: 0, // prevent overflow when scrolling
+                flexShrink: 0,
                 bgcolor: isActive ? "black" : "white",
                 color: isActive ? "common.white" : "text.primary",
                 border: isActive ? "none" : "1px solid",
@@ -366,9 +376,68 @@ const TeacherFilters = ({ classValue = "All" }) => {
         })}
       </Box>
 
-      <Typography variant="h6" sx={{ mt: 2, px: 2 }}>
-        Recent Uploads
-      </Typography>
+      {/* 🔹 Recent Uploads + Search ek hi row me */}
+      <Box
+        sx={{
+          mt: 2,
+          px: 2,
+          pb: 2,
+          display: "flex",
+          flexDirection: { xs: "column", sm: "row" },
+          alignItems: { xs: "flex-start", sm: "center" },
+          justifyContent: "space-between",
+          gap: 2,
+        }}
+      >
+        <Typography variant="h6">Recent Uploads</Typography>
+
+        <Box
+          sx={{
+            width: { xs: "100%", sm: "320px", md: "420px" },
+          }}
+        >
+          <TextField
+            value={localSearchInput}
+            onChange={onSearchChange}
+            placeholder="Search lectures..."
+            size="small"
+            fullWidth
+            InputProps={{
+              startAdornment: (
+                <InputAdornment position="start">
+                  <FaSearch
+                    size={14}
+                    style={{
+                      opacity: 0.7,
+                    }}
+                  />
+                </InputAdornment>
+              ),
+            }}
+            sx={{
+              "& .MuiOutlinedInput-root": {
+                borderRadius: "999px",
+                paddingRight: "8px",
+                backgroundColor: isDarkMode ? "#020617" : "#f9fafb",
+             
+                "& fieldset": {
+                  borderColor: isDarkMode ? "#334155" : "#e5e7eb",
+                },
+                "&:hover fieldset": {
+                  borderColor: primaryColor || "#2563eb",
+                },
+                "&.Mui-focused fieldset": {
+                  borderColor: primaryColor || "#2563eb",
+                  boxShadow: `0 0 0 1px ${primaryColor || "#2563eb"}`,
+                },
+              },
+              "& .MuiInputBase-input": {
+                fontSize: 14,
+              },
+            }}
+          />
+        </Box>
+      </Box>
     </Box>
   );
 };
