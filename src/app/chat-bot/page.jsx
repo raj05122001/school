@@ -11,7 +11,6 @@ import {
   IconButton,
   TextField,
   Typography,
-  Avatar,
   CircularProgress,
   Paper,
   Divider,
@@ -21,678 +20,26 @@ import {
   Tooltip,
   Button,
   List,
-  ListItem,
-  ListItemText,
   Accordion,
   AccordionSummary,
   AccordionDetails,
+  Drawer,
+  useMediaQuery,
+  useTheme,
 } from "@mui/material";
-import { FaArrowUp, FaRobot } from "react-icons/fa6";
-import { BsChevronDown } from "react-icons/bs";
+import { FaArrowUp, FaRobot, FaHistory } from "react-icons/fa";
+import { BsChatLeftText } from "react-icons/bs";
 import Logo from "@/commonComponents/Logo/Logo";
-import { useThemeContext } from "@/hooks/ThemeContext";
-import UserImage from "@/commonComponents/UserImage/UserImage";
-import MathJax from "react-mathjax2";
 import { FaMicrophone, FaStopCircle } from "react-icons/fa";
 import { decodeToken } from "react-jwt";
 import Cookies from "js-cookie";
 import { usePathname } from "next/navigation";
 import { RiArrowDropDownLine } from "react-icons/ri";
 import TextWithMath from "@/commonComponents/TextWithMath/TextWithMath";
-import AssignmentTextFormat from "@/commonComponents/TextWithMath/AssignmentTextFormat";
+import { TbMenu3 } from "react-icons/tb";
 
-export default function Page({ suggestionInput, setIsOpenChatBot }) {
-  const chatbotRef = useRef();
-  const graphRef = useRef(null);
-  const [userTextInput, setUserTextInput] = useState("");
-  const [isLoading, setIsLoading] = useState(false);
-  const [chatHistory, setChatHistory] = useState([]);
-  const [showChat, setShowChat] = useState(false);
-  const [showList, setShowList] = useState(true);
-  const [sessionID, setSessionID] = useState(null);
-  const [oldChats, setOldChats] = useState([]);
-  const [showOldChat, setShowOldChat] = useState(false);
-
-  const userDetails = decodeToken(Cookies.get("ACCESS_TOKEN"));
-  const userName = userDetails?.username;
-  const userID = userDetails?.user_id;
-  const currentDate = new Date().toISOString();
-  const pathname = usePathname(); // Retrieves the full pathname (e.g., "/teacher/lecture-listings/43")
-  const lectureID = pathname?.split("/").pop(); // Extracts the last segment
-  const sessionTitle = `${userName}${currentDate}`;
-
-  const resizeRef = useRef(null);
-  const [isResizing, setIsResizing] = useState(false);
-  const [dimensions, setDimensions] = useState({ width: 380, height: 520 });
-
-  const startResizing = (mouseDownEvent) => {
-    setIsResizing(true);
-    mouseDownEvent.preventDefault();
-  };
-
-  const stopResizing = () => {
-    setIsResizing(false);
-    window.removeEventListener("mousemove", onResize);
-    window.removeEventListener("mouseup", stopResizing);
-  };
-
-  const onResize = (mouseMoveEvent) => {
-    if (isResizing && chatbotRef.current) {
-      const rect = chatbotRef.current.getBoundingClientRect();
-      // Calculate new width and height based on mouse position relative to top-left
-      const newWidth = rect.width + (rect.left - mouseMoveEvent.clientX);
-      const newHeight = rect.height + (rect.top - mouseMoveEvent.clientY);
-
-      setDimensions({
-        width: Math.max(300, Math.min(newWidth, 1200)), // Set maxWidth as needed
-        height: Math.max(300, Math.min(newHeight, 800)), // Set maxHeight as needed
-      });
-    }
-  };
-
-  useEffect(() => {
-    if (isResizing) {
-      window.addEventListener("mousemove", onResize);
-      window.addEventListener("mouseup", stopResizing);
-    }
-    return () => {
-      window.removeEventListener("mousemove", onResize);
-      window.removeEventListener("mouseup", stopResizing);
-    };
-  }, [isResizing]);
-
-  const handleCreateSession = async () => {
-    try {
-      const formData = new FormData();
-      formData.append("session_title", sessionTitle);
-      formData.append("user", userID);
-      // formData.append("lecture", lectureID);
-
-      const response = await createSession(formData);
-      const { session_id } = response?.data?.data;
-      setSessionID(session_id);
-    } catch (error) {
-      console.error("Error creating Session", error);
-    }
-  };
-
-  // useEffect(() => {
-  //   if (sessionID && suggestionInput) {
-  //     handleUserInput(suggestionInput);
-  //   }
-  // }, [sessionID, suggestionInput]);
-
-  // useEffect(() => {
-  //   if (suggestionInput) {
-  //     setShowChat(true);
-  //     setShowList(false);
-  //     handleCreateSession();
-  //   }
-  // }, [suggestionInput]);
-
-  const handleKeyPress = (e) => {
-    if (e.key === "Enter" && !e.shiftKey) {
-      e.preventDefault();
-      handleUserInput(userTextInput.trim());
-    }
-  };
-
-  useEffect(() => {
-    if (graphRef.current && isLoading) {
-      document.body.style.overflowY = "scroll";
-      document.body.style.position = "";
-
-      // Scroll to the bottom of the element
-      graphRef.current.scrollTo({
-        top: graphRef.current.scrollHeight, // Scroll to the bottom
-        behavior: "smooth",
-      });
-    }
-  }, [isLoading]);
-
-  const fetchOldChats = async () => {
-    const response = await getChatbotHistory();
-    const data = response?.data?.data || [];
-    setOldChats(data);
-  };
-
-  useEffect(() => {
-    fetchOldChats();
-  }, []);
-
-  const handleOldChatsClick = () => {
-    setShowOldChat(true);
-  };
-
-  const handleUserInput = async (input) => {
-    if (!input || !sessionID) return;
-    setIsLoading(true);
-    setChatHistory((prevChat) => [
-      ...prevChat,
-      { role: "user", content: input },
-    ]);
-    try {
-      const formData = new FormData();
-      formData.append("user_message", input);
-      setUserTextInput("");
-      const response = await getNewLectureAns(sessionID, formData);
-      const data = response.data.response;
-      const linkArry = response.data?.reference_link || [];
-      setChatHistory((prevChat) => [
-        ...prevChat,
-        { role: "assistant", content: data, links: linkArry },
-      ]);
-    } catch (error) {
-      console.error(error);
-      const errorCode = error?.response?.data?.error_code;
-      const errorMessage =
-        error?.response?.data?.message ||
-        "Sorry, something went wrong. Please try again.";
-
-      let assistantMessage;
-
-      if (errorCode === "UEDU_CUST_ERR_4033") {
-        assistantMessage =
-          "⚠️ You’ve reached the daily limit of 10 requests. Please try again after 24 hours.";
-      } else {
-        assistantMessage = `⚠️ ${errorMessage}`;
-      }
-
-      setChatHistory((prevChat) => [
-        ...prevChat,
-        { role: "assistant", content: assistantMessage },
-      ]);
-    }
-    setIsLoading(false);
-  };
-
-  return (
-    <Box
-      sx={{
-        bgcolor: "#fff",
-        // minWidth: 300,
-        // minHeight: 300,
-        // position: "fixed", // Set position to fixed
-        // bottom: 16,
-        // right: 16,
-        zIndex: 99990,
-        // borderRadius: 2,
-        width: "100%",
-        height: "100vh",
-        // boxShadow:
-        //   "rgba(50, 50, 93, 0.25) 0px 50px 100px -20px, rgba(0, 0, 0, 0.3) 0px 30px 60px -30px, rgba(10, 37, 64, 0.35) 0px -2px 6px 0px inset",
-        display: "flex",
-        flexDirection: "column",
-        overflow: "hidden", // Ensure content doesn't overflow
-      }}
-      ref={chatbotRef}
-      component={Paper}
-      elevation={3}
-    >
-      {/* Resize Handle at Top-Left */}
-      <div
-        ref={resizeRef}
-        style={{
-          position: "absolute",
-          width: "20px",
-          height: "20px",
-          top: 0, // Positioned at top-left
-          left: 0,
-          cursor: "nwse-resize",
-          backgroundColor: "transparent",
-          zIndex: 10000, // Ensure it's on top
-        }}
-        onMouseDown={startResizing}
-      >
-        {/* Visual Indicator for Resizing */}
-        {/* <Box
-          sx={{
-            width: "100%",
-            height: "100%",
-            backgroundColor: "grey.500",
-            opacity: 0.5,
-            borderBottomRightRadius: "4px",
-          }}
-        /> */}
-      </div>
-
-      <Grid container direction="column" sx={{ height: "100%" }}>
-        {/* Header */}
-        <Grid item>
-          <Box
-            sx={{
-              display: "flex",
-              justifyContent: "space-between",
-              alignItems: "center",
-              borderBottom: 1,
-              borderColor: "#000",
-              backgroundColor:"#000",
-              p: 2,
-              flexShrink: 0, // Prevent shrinking during resize
-            }}
-          >
-            <Logo color="black" />
-            {/* <IconButton onClick={() => setIsOpenChatBot(false)}>
-              <BsChevronDown fontSize="large" />
-            </IconButton> */}
-          </Box>
-        </Grid>
-
-        {/* New Chat and History Section */}
-        {showList && (
-          <Grid item xs>
-            <Box
-              sx={{
-                p: 2,
-                borderColor: "grey.300",
-                display: "flex",
-                flexDirection: "column",
-                justifyContent: "center",
-                alignItems: "center",
-                width: "100%",
-                height: "100%",
-              }}
-            >
-              <Button
-                variant="outlined"
-                color="primary"
-                onClick={() => {
-                  handleCreateSession();
-                  setShowChat(true);
-                  setShowList(false);
-                }}
-                sx={{
-                  mt: 2,
-                  display: "inline-flex",
-                  padding: "12px 32px",
-                  justifyContent: "center",
-                  alignItems: "center",
-                  gap: "8px",
-                  textTransform: "none",
-                  borderRadius: "8px",
-                  background: "#141514",
-                  color: "#FFF",
-                  textAlign: "center",
-                  fontFeatureSettings: "'liga' off, 'clig' off",
-                  fontFamily: "Aptos",
-                  fontSize: "16px",
-                  fontStyle: "normal",
-                  fontWeight: "700",
-                  lineHeight: "24px",
-                  "&:hover": {
-                    border: "1px solid #141514",
-                    background: "#E5E5E5",
-                    color: "#141514",
-                  },
-                }}
-              >
-                Fresh Conversation
-              </Button>
-
-              {!showOldChat && (
-                <>
-                  {/* <Typography marginBottom={2}>Or</Typography> */}
-                  <Button
-                    variant="outlined"
-                    color="primary"
-                    onClick={handleOldChatsClick}
-                    sx={{
-                      mt: 2,
-                  display: "inline-flex",
-                  padding: "12px 28px",
-                  justifyContent: "center",
-                  alignItems: "center",
-                  gap: "8px",
-                  textTransform: "none",
-                  borderRadius: "8px",
-                  border:"1px solid #141514",
-                  background: "#fff",
-                  color: "#141514",
-                  textAlign: "center",
-                  fontFeatureSettings: "'liga' off, 'clig' off",
-                  fontFamily: "Aptos",
-                  fontSize: "16px",
-                  fontStyle: "normal",
-                  fontWeight: "700",
-                  lineHeight: "24px",
-                  "&:hover": {
-                    border: "1px solid #141514",
-                    background: "#E5E5E5",
-                    color: "#141514",
-                  },
-                    }}
-                  >
-                    Conversation History
-                  </Button>
-                </>
-              )}
-              {showOldChat &&
-                (oldChats.length > 0 ? (
-                  <Box
-                    sx={{
-                      width: "100%",
-                      height: "400px",
-                      overflowY: "auto", // Enable scrolling
-                      bgcolor: "grey.100",
-                      borderRadius: 2,
-                      p: 2,
-                      boxShadow: "0px 4px 6px rgba(0, 0, 0, 0.1)",
-                      display: "flex",
-                      flexDirection: "column",
-                      alignItems: "center",
-                    }}
-                  >
-                    <List sx={{ width: "100%" }}>
-                      {oldChats?.map((data, index) => (
-                        <Accordion
-                          key={data?.id}
-                          sx={{
-                            mb: 1,
-                            borderRadius: 4,
-                            backdropFilter: "blur(10px)",
-                            backgroundColor: "rgba(255, 255, 255, 0.8)",
-                          }}
-                        >
-                          <AccordionSummary
-                            expandIcon={<RiArrowDropDownLine />}
-                            sx={{
-                              color: "text.primary",
-                              p: 2,
-                              width: "100%",
-                              height: "100%",
-                            }}
-                          >
-                            <Typography
-                              variant="subtitle1"
-                              gutterBottom
-                              sx={{ fontSize: "14px" }}
-                            >
-                              Session ID - {data?.session?.session_id}
-                              <br />
-                              {index + 1}. {data?.user_question}
-                            </Typography>
-                          </AccordionSummary>
-                          <AccordionDetails
-                            sx={{
-                              bgcolor: "grey.200",
-                              borderRadius: 1,
-                              p: 1,
-                              boxShadow: "0px 2px 4px rgba(0, 0, 0, 0.1)",
-                            }}
-                          >
-                            <Box
-                              sx={{
-                                minWidth: "100%",
-                                width: 1.5 * (dimensions.width / 2),
-                                fontSize: "0.85rem",
-                              }}
-                            >
-                              <TextWithMath text={data?.bot_response} />
-                            </Box>
-                          </AccordionDetails>
-                        </Accordion>
-                      ))}
-                    </List>
-                  </Box>
-                ) : (
-                  <Typography>No conversation history available.</Typography>
-                ))}
-            </Box>
-          </Grid>
-        )}
-        {showChat && (
-          <Box sx={{ display: "flex", width: "100%", height: "80vh" }}>
-            {/* SideBar ChatHistory */}
-            <Box sx={{ width: "30%", height: "100%" }}>
-              {oldChats.length > 0 ? (
-                <Box
-                  sx={{
-                    width: "100%",
-                    height: "92%",
-                    overflowY: "auto", // Enable scrolling
-                    bgcolor: "grey.100",
-                    p: 2,
-                    boxShadow: "0px 4px 6px rgba(0, 0, 0, 0.1)",
-                    display: "flex",
-                    flexDirection: "column",
-                    alignItems: "center",
-                  }}
-                >
-                  <Typography>Previous Queries</Typography>
-                  <List sx={{ width: "100%" }}>
-                    {oldChats?.map((data, index) => (
-                      <Accordion
-                        key={data?.id}
-                        sx={{
-                          mb: 1,
-                          borderRadius: 4,
-                          backdropFilter: "blur(10px)",
-                          backgroundColor: "rgba(255, 255, 255, 0.8)",
-                        }}
-                      >
-                        <AccordionSummary
-                          expandIcon={<RiArrowDropDownLine />}
-                          sx={{
-                            color: "text.primary",
-                            p: 2,
-                            width: "100%",
-                            height: "100%",
-                          }}
-                        >
-                          <Typography
-                            variant="subtitle1"
-                            gutterBottom
-                            sx={{ fontSize: "14px" }}
-                          >
-                            Session ID - {data?.session?.session_id}
-                            <br />
-                            {index + 1}. {data?.user_question}
-                          </Typography>
-                        </AccordionSummary>
-                        <AccordionDetails
-                          sx={{
-                            bgcolor: "grey.200",
-                            borderRadius: 1,
-                            p: 1,
-                            boxShadow: "0px 2px 4px rgba(0, 0, 0, 0.1)",
-                          }}
-                        >
-                          <Box
-                            sx={{
-                              minWidth: 300,
-                              width: 1.5 * (dimensions.width / 2),
-                              fontSize: "0.85rem",
-                            }}
-                          >
-                            <TextWithMath text={data?.bot_response} />
-                          </Box>
-                        </AccordionDetails>
-                      </Accordion>
-                    ))}
-                  </List>
-                </Box>
-              ) : (
-                <Typography>No conversation history available.</Typography>
-              )}
-            </Box>
-            {/* Chatbot view */}
-            <Box sx={{ width: "100%" }}>
-              {showChat && (
-                <>
-                  {/* Chat Area */}
-                  <Grid
-                    item
-                    xs
-                    style={{
-                      overflowY: "auto",
-                      padding: "16px",
-                      width: chatHistory.length > 0 ? "99%" : "100%",
-                      height: "80%",
-                    }}
-                    ref={graphRef}
-                  >
-                    {chatHistory.length > 0 ? (
-                      chatHistory?.map((message, index) => (
-                        <Box
-                          key={index}
-                          sx={{
-                            display: "flex",
-                            flexDirection:
-                              message.role === "user" ? "row-reverse" : "row",
-                            mb: 2,
-                          }}
-                        >
-                          <Box
-                            sx={{
-                              maxWidth: "85%",
-                              bgcolor:
-                                message.role === "user"
-                                  ? "#fff"
-                                  : "#fff",
-                              color: "#141514",
-                              borderRadius: 2,
-                              border:"1px solid #141514",
-                              p: 1,
-                              mx: 1,
-                              overflowX: "auto",
-                            }}
-                          >
-                            <TextWithMath text={message.content} />
-
-                            {message?.links &&
-                              message?.links?.map((link, idx) => (
-                                <Typography variant="caption" key={idx}>
-                                  <a
-                                    href={link}
-                                    target="_blank"
-                                    rel="noopener noreferrer"
-                                  >
-                                    {link}
-                                  </a>
-                                </Typography>
-                              ))}
-                          </Box>
-                        </Box>
-                      ))
-                    ) : (
-                      <Box
-                        sx={{
-                          display: "flex",
-                          flexDirection: "column",
-                          alignItems: "center",
-                          justifyContent: "center",
-                          height: "100%",
-                          color: "text.secondary",
-                        }}
-                      >
-                        <FaRobot size={50} style={{ marginBottom: "16px", fontWeight:400, lineHeight:"normal", fontStyle:"normal", color:"#141514" }} />
-                        <Typography sx={{fontFamily:"Inter", fontSize:"20px", fontWeight:400, lineHeight:"normal", fontStyle:"normal", color:"#141514"}}>Hello! How can I help you?</Typography>
-                      </Box>
-                    )}
-                    {isLoading && (
-                      <Box
-                        sx={{
-                          display: "flex",
-                          mt: 2,
-                          flexDirection: "column",
-                          pb: 8,
-                        }}
-                      >
-                        <Skeleton
-                          variant="text"
-                          sx={{ fontSize: "1.5rem", width: "80%" }}
-                        />
-                        <Skeleton
-                          variant="text"
-                          sx={{ fontSize: "1.5rem", width: "60%" }}
-                        />
-                        <Skeleton
-                          variant="text"
-                          sx={{ fontSize: "1.5rem", width: "80%" }}
-                        />
-                      </Box>
-                    )}
-                  </Grid>
-
-                  {/* Input Field */}
-                  <Grid item>
-                    <Divider />
-                    <Box sx={{ display: "flex", gap: 2, p: 1, px: 2 }}>
-                      <TextField
-                        fullWidth
-                        multiline
-                        placeholder="Ask me..."
-                        value={userTextInput}
-                        onChange={(e) => setUserTextInput(e.target.value)}
-                        onKeyPress={handleKeyPress}
-                        variant="outlined"
-                        InputProps={{
-                          sx: {
-                            // Targeting the root container of TextField
-                            backdropFilter: "blur(10px)",
-                            backgroundColor: "rgba(255, 255, 255, 0.8)",
-                            borderRadius: "12px",
-                            padding: "10px 14px",
-                            transition: "all 0.3s ease",
-                            "&:hover": {
-                              backgroundColor: "rgba(255, 255, 255, 0.9)",
-                            },
-                            "& .MuiOutlinedInput-notchedOutline": {
-                              borderColor: "#ccc",
-                            },
-                            "&.Mui-focused .MuiOutlinedInput-notchedOutline": {
-                              borderColor: "#141514",
-                              borderWidth: "1px",
-                            },
-                            // Ensure the textarea inside TextField is scrollable
-                            "& .MuiInputBase-inputMultiline": {
-                              maxHeight: "100px", // Restrict height
-                              overflowY: "auto", // Enable vertical scrolling
-                            },
-                            "& textarea": {
-                              maxHeight: "100px", // Ensure the textarea respects height
-                              overflowY: "auto !important", // Enable scroll
-                            },
-                          },
-                          endAdornment: (
-                            <Box sx={{ display: "flex", alignItems: "center" }}>
-                              <IconButton
-                                color="primary"
-                                onClick={() =>
-                                  handleUserInput(userTextInput.trim())
-                                }
-                                disabled={isLoading}
-                              >
-                                {isLoading ? (
-                                  <CircularProgress size={24} />
-                                ) : (
-                                  <FaArrowUp style={{color:"#141514"}}/>
-                                )}
-                              </IconButton>
-                              {userTextInput && isLoading ? (
-                                ""
-                              ) : (
-                                <VoiceToText
-                                  setUserTextInput={setUserTextInput}
-                                />
-                              )}
-                            </Box>
-                          ),
-                        }}
-                      />
-                    </Box>
-                  </Grid>
-                </>
-              )}
-            </Box>
-          </Box>
-        )}
-      </Grid>
-    </Box>
-  );
-}
-
-export const VoiceToText = ({ setUserTextInput }) => {
+// VoiceToText component को अलग से define करें
+const VoiceToText = ({ setUserTextInput }) => {
   const [isRecording, setIsRecording] = useState(false);
   const [error, setError] = useState(null);
   const recognitionRef = useRef(null);
@@ -778,3 +125,1566 @@ export const VoiceToText = ({ setUserTextInput }) => {
     </Box>
   );
 };
+
+export default function Page({ suggestionInput, setIsOpenChatBot }) {
+  const chatbotRef = useRef();
+  const graphRef = useRef(null);
+  const [userTextInput, setUserTextInput] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
+  const [chatHistory, setChatHistory] = useState([]);
+  const [showChat, setShowChat] = useState(true);
+  const [showList, setShowList] = useState(false);
+  const [sessionID, setSessionID] = useState(null);
+  const [oldChats, setOldChats] = useState([]);
+  const [showOldChat, setShowOldChat] = useState(false);
+  const [mobileSidebarOpen, setMobileSidebarOpen] = useState(false);
+
+  const theme = useTheme();
+  const isMobile = useMediaQuery(theme.breakpoints.down('md'));
+
+  const userDetails = decodeToken(Cookies.get("ACCESS_TOKEN"));
+  const userName = userDetails?.username;
+  const userID = userDetails?.user_id;
+  const currentDate = new Date().toISOString();
+  const pathname = usePathname();
+  const lectureID = pathname?.split("/").pop();
+  const sessionTitle = `${userName}${currentDate}`;
+
+  const resizeRef = useRef(null);
+  const [isResizing, setIsResizing] = useState(false);
+  const [dimensions, setDimensions] = useState({ width: 380, height: 520 });
+
+  const startResizing = (mouseDownEvent) => {
+    setIsResizing(true);
+    mouseDownEvent.preventDefault();
+  };
+
+  const stopResizing = () => {
+    setIsResizing(false);
+    window.removeEventListener("mousemove", onResize);
+    window.removeEventListener("mouseup", stopResizing);
+  };
+
+  const onResize = (mouseMoveEvent) => {
+    if (isResizing && chatbotRef.current) {
+      const rect = chatbotRef.current.getBoundingClientRect();
+      const newWidth = rect.width + (rect.left - mouseMoveEvent.clientX);
+      const newHeight = rect.height + (rect.top - mouseMoveEvent.clientY);
+
+      setDimensions({
+        width: Math.max(300, Math.min(newWidth, 1200)),
+        height: Math.max(300, Math.min(newHeight, 800)),
+      });
+    }
+  };
+
+  useEffect(() => {
+    if (isResizing) {
+      window.addEventListener("mousemove", onResize);
+      window.addEventListener("mouseup", stopResizing);
+    }
+    return () => {
+      window.removeEventListener("mousemove", onResize);
+      window.removeEventListener("mouseup", stopResizing);
+    };
+  }, [isResizing]);
+
+  const handleCreateSession = async () => {
+    try {
+      const formData = new FormData();
+      formData.append("session_title", sessionTitle);
+      formData.append("user", userID);
+
+      const response = await createSession(formData);
+      const { session_id } = response?.data?.data;
+      setSessionID(session_id);
+    } catch (error) {
+      console.error("Error creating Session", error);
+    }
+  };
+
+  const handleKeyPress = (e) => {
+    if (e.key === "Enter" && !e.shiftKey) {
+      e.preventDefault();
+      handleUserInput(userTextInput.trim());
+    }
+  };
+
+  useEffect(() => {
+    if (graphRef.current && isLoading) {
+      document.body.style.overflowY = "scroll";
+      document.body.style.position = "";
+
+      graphRef.current.scrollTo({
+        top: graphRef.current.scrollHeight,
+        behavior: "smooth",
+      });
+    }
+  }, [isLoading]);
+
+  const fetchOldChats = async () => {
+    const response = await getChatbotHistory();
+    const data = response?.data?.data || [];
+    setOldChats(data);
+  };
+
+  useEffect(() => {
+    fetchOldChats();
+  }, []);
+
+  const handleOldChatsClick = () => {
+    setShowOldChat(true);
+  };
+
+  const handleNewChatFromSidebar = () => {
+    setChatHistory([]);
+    handleCreateSession();
+    setShowChat(true);
+    setShowList(false);
+    if (isMobile) {
+      setMobileSidebarOpen(false);
+    }
+  };
+
+  const loadSessionToChat = (sessionId) => {
+    if (!sessionId) return;
+
+    const sessionChats = oldChats
+      ?.filter((item) => item?.session?.session_id === sessionId)
+      .flatMap((item) => [
+        {
+          role: "user",
+          content: item?.user_question || "",
+        },
+        {
+          role: "assistant",
+          content: item?.bot_response || "",
+        },
+      ]);
+
+    if (!sessionChats || sessionChats.length === 0) return;
+
+    setChatHistory(sessionChats);
+    setShowChat(true);
+    setShowList(false);
+
+    if (isMobile) {
+      setMobileSidebarOpen(false);
+    }
+
+    setTimeout(() => {
+      if (graphRef.current) {
+        graphRef.current.scrollTo({
+          top: graphRef.current.scrollHeight,
+          behavior: "smooth",
+        });
+      }
+    }, 100);
+  };
+
+  const handleUserInput = async (input) => {
+    if (!input || !sessionID) return;
+    setIsLoading(true);
+    setChatHistory((prevChat) => [
+      ...prevChat,
+      { role: "user", content: input },
+    ]);
+    try {
+      const formData = new FormData();
+      formData.append("user_message", input);
+      setUserTextInput("");
+      const response = await getNewLectureAns(sessionID, formData);
+      const data = response.data.response;
+      const linkArry = response.data?.reference_link || [];
+      setChatHistory((prevChat) => [
+        ...prevChat,
+        { role: "assistant", content: data, links: linkArry },
+      ]);
+    } catch (error) {
+      console.error(error);
+      const errorCode = error?.response?.data?.error_code;
+      const errorMessage =
+        error?.response?.data?.message ||
+        "Sorry, something went wrong. Please try again.";
+
+      let assistantMessage;
+
+      if (errorCode === "UEDU_CUST_ERR_4033") {
+        assistantMessage =
+          "⚠️ You've reached the daily limit of 10 requests. Please try again after 24 hours.";
+      } else {
+        assistantMessage = `⚠️ ${errorMessage}`;
+      }
+
+      setChatHistory((prevChat) => [
+        ...prevChat,
+        { role: "assistant", content: assistantMessage },
+      ]);
+    }
+    setIsLoading(false);
+  };
+
+  // Sidebar content component
+  const SidebarContent = () => (
+    <Box sx={{ width: "100%", height: "100%", display: "flex", flexDirection: "column" }}>
+      {/* New Chat Button in Sidebar */}
+      <Box sx={{ p: 2, borderBottom: 1, borderColor: "grey.300" }}>
+        <Button
+          variant="outlined"
+          color="primary"
+          onClick={handleNewChatFromSidebar}
+          startIcon={<BsChatLeftText />}
+          sx={{
+            width: "100%",
+            display: "inline-flex",
+            padding: "12px 16px",
+            justifyContent: "center",
+            alignItems: "center",
+            gap: "8px",
+            textTransform: "none",
+            borderRadius: "8px",
+            background: "#141514",
+            color: "#FFF",
+            textAlign: "center",
+            fontFamily: "Aptos",
+            fontSize: "14px",
+            fontStyle: "normal",
+            fontWeight: "700",
+            lineHeight: "20px",
+            "&:hover": {
+              border: "1px solid #141514",
+              background: "#E5E5E5",
+              color: "#141514",
+            },
+          }}
+        >
+          New Chat
+        </Button>
+      </Box>
+
+      {/* Previous Queries List */}
+      {oldChats.length > 0 ? (
+        <Box
+          sx={{
+            width: "100%",
+            height: "100%",
+            overflowY: "auto",
+            bgcolor: "grey.100",
+            p: 2,
+            display: "flex",
+            flexDirection: "column",
+          }}
+        >
+          <Typography variant="h6" sx={{ mb: 2, textAlign: "center" }}>
+            Previous Queries
+          </Typography>
+          <List
+            sx={{
+              width: "100%",
+              display: "flex",
+              flexDirection: "column",
+              gap: 1.2,
+            }}
+          >
+            {oldChats?.reverse()?.map((data, index) => (
+              <Box
+                key={data?.id}
+                onClick={() => loadSessionToChat(data?.session?.session_id)}
+                sx={{
+                  width: "100%",
+                  borderRadius: 2,
+                  px: 2,
+                  py: 1.5,
+                  bgcolor: "#FAFAFA",
+                  border: "1px solid #E5E7EB",
+                  cursor: "pointer",
+                  transition: "all 0.2s ease",
+                  boxShadow: "0 0 0 rgba(0,0,0,0)",
+                  "&:hover": {
+                    bgcolor: "#F3F4F6",
+                    borderColor: "#D1D5DB",
+                    boxShadow: "0 4px 10px rgba(0,0,0,0.06)",
+                    transform: "translateY(-1px)",
+                  },
+                }}
+              >
+                <Typography
+                  variant="subtitle2"
+                  sx={{
+                    fontSize: "14px",
+                    fontWeight: 500,
+                    color: "#111827",
+                    display: "-webkit-box",
+                    WebkitLineClamp: 2,
+                    WebkitBoxOrient: "vertical",
+                    overflow: "hidden",
+                    wordBreak: "break-word",
+                  }}
+                >
+                  {index + 1}:-  {data?.user_question || "Untitled conversation"}
+                </Typography>
+              </Box>
+            ))}
+          </List>
+        </Box>
+      ) : (
+        <Box sx={{ p: 2, textAlign: "center" }}>
+          <Typography>No conversation history available.</Typography>
+        </Box>
+      )}
+    </Box>
+  );
+
+  return (
+    <Box
+      sx={{
+        bgcolor: "#fff",
+        width: "100%",
+        height: "100vh",
+        display: "flex",
+        flexDirection: "column",
+        overflow: "hidden",
+      }}
+      ref={chatbotRef}
+      component={Paper}
+      elevation={3}
+    >
+      {/* Resize Handle at Top-Left */}
+      <div
+        ref={resizeRef}
+        style={{
+          position: "absolute",
+          width: "20px",
+          height: "20px",
+          top: 0,
+          left: 0,
+          cursor: "nwse-resize",
+          backgroundColor: "transparent",
+          zIndex: 10000,
+        }}
+        onMouseDown={startResizing}
+      ></div>
+
+      <Grid container direction="column" sx={{ height: "100%" }}>
+        {/* Header */}
+        <Grid item>
+          <Box
+            sx={{
+              display: "flex",
+              justifyContent: "space-between",
+              alignItems: "center",
+              borderBottom: 1,
+              borderColor: "#000",
+              backgroundColor: "#000",
+              p: 2,
+              flexShrink: 0,
+            }}
+          >
+            <Box sx={{ display: "flex", alignItems: "center", gap: 2 }}>
+              {isMobile && showChat && (
+                <Tooltip title="Chat History" arrow placement="bottom">
+                  <IconButton
+                    onClick={() => setMobileSidebarOpen(true)}
+                    sx={{ color: "white" }}
+                  >
+                    <TbMenu3 size={20} />
+                  </IconButton>
+                </Tooltip>
+              )}
+              <Logo color="black" />
+            </Box>
+          </Box>
+        </Grid>
+
+        {/* New Chat and History Section */}
+        {showChat && (
+          <Box sx={{ display: "flex", width: "100%", height: "80vh" }}>
+            {/* Desktop Sidebar */}
+            {!isMobile && (
+              <Box sx={{ width: "30%", height: "100%" }}>
+                <SidebarContent />
+              </Box>
+            )}
+
+            {/* Mobile Drawer */}
+            {isMobile && (
+              <Drawer
+                anchor="left"
+                open={mobileSidebarOpen}
+                onClose={() => setMobileSidebarOpen(false)}
+                sx={{
+                  "& .MuiDrawer-paper": {
+                    width: "70%",
+                    maxWidth: "400px",
+                  },
+                }}
+              >
+                <SidebarContent />
+              </Drawer>
+            )}
+
+            {/* Chatbot view */}
+            <Box sx={{ width: isMobile ? "100%" : "70%", height: "100%" }}>
+              {showChat && (
+                <>
+                  {/* Chat Area */}
+                  <Grid
+                    item
+                    xs
+                    style={{
+                      overflowY: "auto",
+                      padding: "16px",
+                      width: chatHistory.length > 0 ? "99%" : "100%",
+                      height: "80%",
+                    }}
+                    ref={graphRef}
+                  >
+                    {chatHistory.length > 0 ? (
+                      chatHistory?.map((message, index) => (
+                        <Box
+                          key={index}
+                          sx={{
+                            display: "flex",
+                            flexDirection:
+                              message.role === "user" ? "row-reverse" : "row",
+                            mb: 2,
+                          }}
+                        >
+                          <Box
+                            sx={{
+                              maxWidth: isMobile ? "90%" : "85%",
+                              bgcolor: "#fff",
+                              color: "#141514",
+                              borderRadius: 2,
+                              border: "1px solid #141514",
+                              p: 1,
+                              mx: 1,
+                              overflowX: "auto",
+                            }}
+                          >
+                            <TextWithMath text={message.content} />
+
+                            {message?.links &&
+                              message?.links?.map((link, idx) => (
+                                <Typography variant="caption" key={idx}>
+                                  <a
+                                    href={link}
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                  >
+                                    {link}
+                                  </a>
+                                </Typography>
+                              ))}
+                          </Box>
+                        </Box>
+                      ))
+                    ) : (
+                      <Box
+                        sx={{
+                          display: "flex",
+                          flexDirection: "column",
+                          alignItems: "center",
+                          justifyContent: "center",
+                          height: "100%",
+                          color: "text.secondary",
+                        }}
+                      >
+                        <FaRobot
+                          size={50}
+                          style={{
+                            marginBottom: "16px",
+                            fontWeight: 400,
+                            lineHeight: "normal",
+                            fontStyle: "normal",
+                            color: "#141514",
+                          }}
+                        />
+                        <Typography
+                          sx={{
+                            fontFamily: "Inter",
+                            fontSize: "20px",
+                            fontWeight: 400,
+                            lineHeight: "normal",
+                            fontStyle: "normal",
+                            color: "#141514",
+                          }}
+                        >
+                          Hello! How can I help you?
+                        </Typography>
+                      </Box>
+                    )}
+                    {isLoading && (
+                      <Box
+                        sx={{
+                          display: "flex",
+                          mt: 2,
+                          flexDirection: "column",
+                          pb: 8,
+                        }}
+                      >
+                        <Skeleton
+                          variant="text"
+                          sx={{ fontSize: "1.5rem", width: "80%" }}
+                        />
+                        <Skeleton
+                          variant="text"
+                          sx={{ fontSize: "1.5rem", width: "60%" }}
+                        />
+                        <Skeleton
+                          variant="text"
+                          sx={{ fontSize: "1.5rem", width: "80%" }}
+                        />
+                      </Box>
+                    )}
+                  </Grid>
+
+                  {/* Input Field */}
+                  <Grid item>
+                    <Divider />
+                    <Box sx={{ display: "flex", gap: 2, p: 1, px: 2 }}>
+                      <TextField
+                        fullWidth
+                        multiline
+                        placeholder="Ask me..."
+                        value={userTextInput}
+                        onChange={(e) => setUserTextInput(e.target.value)}
+                        onKeyPress={handleKeyPress}
+                        variant="outlined"
+                        InputProps={{
+                          sx: {
+                            backdropFilter: "blur(10px)",
+                            backgroundColor: "rgba(255, 255, 255, 0.8)",
+                            borderRadius: "12px",
+                            padding: "10px 14px",
+                            transition: "all 0.3s ease",
+                            "&:hover": {
+                              backgroundColor: "rgba(255, 255, 255, 0.9)",
+                            },
+                            "& .MuiOutlinedInput-notchedOutline": {
+                              borderColor: "#ccc",
+                            },
+                            "&.Mui-focused .MuiOutlinedInput-notchedOutline": {
+                              borderColor: "#141514",
+                              borderWidth: "1px",
+                            },
+                            "& .MuiInputBase-inputMultiline": {
+                              maxHeight: "100px",
+                              overflowY: "auto",
+                            },
+                            "& textarea": {
+                              maxHeight: "100px",
+                              overflowY: "auto !important",
+                            },
+                          },
+                          endAdornment: (
+                            <Box
+                              sx={{ display: "flex", alignItems: "center" }}
+                            >
+                              <IconButton
+                                color="primary"
+                                onClick={() =>
+                                  handleUserInput(userTextInput.trim())
+                                }
+                                disabled={isLoading}
+                              >
+                                {isLoading ? (
+                                  <CircularProgress size={24} />
+                                ) : (
+                                  <FaArrowUp style={{ color: "#141514" }} />
+                                )}
+                              </IconButton>
+                              {userTextInput && isLoading ? (
+                                ""
+                              ) : (
+                                <VoiceToText
+                                  setUserTextInput={setUserTextInput}
+                                />
+                              )}
+                            </Box>
+                          ),
+                        }}
+                      />
+                    </Box>
+                  </Grid>
+                </>
+              )}
+            </Box>
+          </Box>
+        )}
+
+        {/* New Chat and History Section - Commented out
+{showList && (
+  <Grid item xs>
+    <Box
+      sx={{
+        p: 2,
+        borderColor: "grey.300",
+        display: "flex",
+        flexDirection: "column",
+        justifyContent: "center",
+        alignItems: "center",
+        width: "100%",
+        height: "100%",
+      }}
+    >
+      <Button
+        variant="outlined"
+        color="primary"
+        onClick={() => {
+          handleCreateSession();
+          setShowChat(true);
+          setShowList(false);
+        }}
+        sx={{
+          mt: 2,
+          display: "inline-flex",
+          padding: "12px 32px",
+          justifyContent: "center",
+          alignItems: "center",
+          gap: "8px",
+          textTransform: "none",
+          borderRadius: "8px",
+          background: "#141514",
+          color: "#FFF",
+          textAlign: "center",
+          fontFamily: "Aptos",
+          fontSize: "16px",
+          fontStyle: "normal",
+          fontWeight: "700",
+          lineHeight: "24px",
+          "&:hover": {
+            border: "1px solid #141514",
+            background: "#E5E5E5",
+            color: "#141514",
+          },
+        }}
+      >
+        Fresh Conversation
+      </Button>
+
+      {!showOldChat && !isMobile && (
+        <Button
+          variant="outlined"
+          color="primary"
+          onClick={handleOldChatsClick}
+          sx={{
+            mt: 2,
+            display: "inline-flex",
+            padding: "12px 28px",
+            justifyContent: "center",
+            alignItems: "center",
+            gap: "8px",
+            textTransform: "none",
+            borderRadius: "8px",
+            border: "1px solid #141514",
+            background: "#fff",
+            color: "#141514",
+            textAlign: "center",
+            fontFamily: "Aptos",
+            fontSize: "16px",
+            fontStyle: "normal",
+            fontWeight: "700",
+            lineHeight: "24px",
+            "&:hover": {
+              border: "1px solid #141514",
+              background: "#E5E5E5",
+              color: "#141514",
+            },
+          }}
+        >
+          Conversation History
+        </Button>
+      )}
+      {showOldChat &&
+        (oldChats.length > 0 ? (
+          <Box
+            sx={{
+              width: "100%",
+              height: "400px",
+              overflowY: "auto",
+              bgcolor: "grey.100",
+              borderRadius: 2,
+              p: 2,
+              boxShadow: "0px 4px 6px rgba(0, 0, 0, 0.1)",
+              display: "flex",
+              flexDirection: "column",
+              alignItems: "center",
+            }}
+          >
+            <List sx={{ width: "100%" }}>
+              {oldChats?.map((data, index) => (
+                <Accordion
+                  key={data?.id}
+                  sx={{
+                    mb: 1,
+                    borderRadius: 4,
+                    backdropFilter: "blur(10px)",
+                    backgroundColor: "rgba(255, 255, 255, 0.8)",
+                  }}
+                >
+                  <AccordionSummary
+                    expandIcon={<RiArrowDropDownLine />}
+                    sx={{
+                      color: "text.primary",
+                      p: 2,
+                      width: "100%",
+                      height: "100%",
+                    }}
+                    onClick={() =>
+                      loadSessionToChat(data?.session?.session_id)
+                    }
+                  >
+                    <Typography
+                      variant="subtitle1"
+                      gutterBottom
+                      sx={{ fontSize: "14px" }}
+                    >
+                      Session ID - {data?.session?.session_id}
+                      <br />
+                      {index + 1}. {data?.user_question}
+                    </Typography>
+                  </AccordionSummary>
+                  <AccordionDetails
+                    sx={{
+                      bgcolor: "grey.200",
+                      borderRadius: 1,
+                      p: 1,
+                      boxShadow: "0px 2px 4px rgba(0, 0, 0, 0.1)",
+                    }}
+                  >
+                    <Box
+                      sx={{
+                        minWidth: "100%",
+                        width: 1.5 * (dimensions.width / 2),
+                        fontSize: "0.85rem",
+                      }}
+                    >
+                      <TextWithMath text={data?.bot_response} />
+                    </Box>
+                  </AccordionDetails>
+                </Accordion>
+              ))}
+            </List>
+          </Box>
+        ) : (
+          <Typography>No conversation history available.</Typography>
+        ))}
+    </Box>
+  </Grid>
+)}
+*/}
+      </Grid>
+    </Box>
+  );
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+// "use client";
+// import React, { useState, useEffect, useRef } from "react";
+// import {
+//   getLectureAns,
+//   createSession,
+//   getNewLectureAns,
+//   getChatbotHistory,
+// } from "@/api/apiHelper";
+// import {
+//   Box,
+//   IconButton,
+//   TextField,
+//   Typography,
+//   Avatar,
+//   CircularProgress,
+//   Paper,
+//   Divider,
+//   InputAdornment,
+//   Grid,
+//   Skeleton,
+//   Tooltip,
+//   Button,
+//   List,
+//   ListItem,
+//   ListItemText,
+//   Accordion,
+//   AccordionSummary,
+//   AccordionDetails,
+// } from "@mui/material";
+// import { FaArrowUp, FaRobot } from "react-icons/fa6";
+// import { BsChevronDown } from "react-icons/bs";
+// import Logo from "@/commonComponents/Logo/Logo";
+// import { useThemeContext } from "@/hooks/ThemeContext";
+// import UserImage from "@/commonComponents/UserImage/UserImage";
+// import MathJax from "react-mathjax2";
+// import { FaMicrophone, FaStopCircle } from "react-icons/fa";
+// import { decodeToken } from "react-jwt";
+// import Cookies from "js-cookie";
+// import { usePathname } from "next/navigation";
+// import { RiArrowDropDownLine } from "react-icons/ri";
+// import TextWithMath from "@/commonComponents/TextWithMath/TextWithMath";
+// import AssignmentTextFormat from "@/commonComponents/TextWithMath/AssignmentTextFormat";
+
+// export default function Page({ suggestionInput, setIsOpenChatBot }) {
+//   const chatbotRef = useRef();
+//   const graphRef = useRef(null);
+//   const [userTextInput, setUserTextInput] = useState("");
+//   const [isLoading, setIsLoading] = useState(false);
+//   const [chatHistory, setChatHistory] = useState([]);
+//   const [showChat, setShowChat] = useState(false);
+//   const [showList, setShowList] = useState(true);
+//   const [sessionID, setSessionID] = useState(null);
+//   const [oldChats, setOldChats] = useState([]);
+//   const [showOldChat, setShowOldChat] = useState(false);
+
+//   const userDetails = decodeToken(Cookies.get("ACCESS_TOKEN"));
+//   const userName = userDetails?.username;
+//   const userID = userDetails?.user_id;
+//   const currentDate = new Date().toISOString();
+//   const pathname = usePathname(); // Retrieves the full pathname (e.g., "/teacher/lecture-listings/43")
+//   const lectureID = pathname?.split("/").pop(); // Extracts the last segment
+//   const sessionTitle = `${userName}${currentDate}`;
+
+//   const resizeRef = useRef(null);
+//   const [isResizing, setIsResizing] = useState(false);
+//   const [dimensions, setDimensions] = useState({ width: 380, height: 520 });
+
+//   const startResizing = (mouseDownEvent) => {
+//     setIsResizing(true);
+//     mouseDownEvent.preventDefault();
+//   };
+
+//   const stopResizing = () => {
+//     setIsResizing(false);
+//     window.removeEventListener("mousemove", onResize);
+//     window.removeEventListener("mouseup", stopResizing);
+//   };
+
+//   const onResize = (mouseMoveEvent) => {
+//     if (isResizing && chatbotRef.current) {
+//       const rect = chatbotRef.current.getBoundingClientRect();
+//       // Calculate new width and height based on mouse position relative to top-left
+//       const newWidth = rect.width + (rect.left - mouseMoveEvent.clientX);
+//       const newHeight = rect.height + (rect.top - mouseMoveEvent.clientY);
+
+//       setDimensions({
+//         width: Math.max(300, Math.min(newWidth, 1200)), // Set maxWidth as needed
+//         height: Math.max(300, Math.min(newHeight, 800)), // Set maxHeight as needed
+//       });
+//     }
+//   };
+
+//   useEffect(() => {
+//     if (isResizing) {
+//       window.addEventListener("mousemove", onResize);
+//       window.addEventListener("mouseup", stopResizing);
+//     }
+//     return () => {
+//       window.removeEventListener("mousemove", onResize);
+//       window.removeEventListener("mouseup", stopResizing);
+//     };
+//   }, [isResizing]);
+
+//   const handleCreateSession = async () => {
+//     try {
+//       const formData = new FormData();
+//       formData.append("session_title", sessionTitle);
+//       formData.append("user", userID);
+//       // formData.append("lecture", lectureID);
+
+//       const response = await createSession(formData);
+//       const { session_id } = response?.data?.data;
+//       setSessionID(session_id);
+//     } catch (error) {
+//       console.error("Error creating Session", error);
+//     }
+//   };
+
+//   // useEffect(() => {
+//   //   if (sessionID && suggestionInput) {
+//   //     handleUserInput(suggestionInput);
+//   //   }
+//   // }, [sessionID, suggestionInput]);
+
+//   // useEffect(() => {
+//   //   if (suggestionInput) {
+//   //     setShowChat(true);
+//   //     setShowList(false);
+//   //     handleCreateSession();
+//   //   }
+//   // }, [suggestionInput]);
+
+//   const handleKeyPress = (e) => {
+//     if (e.key === "Enter" && !e.shiftKey) {
+//       e.preventDefault();
+//       handleUserInput(userTextInput.trim());
+//     }
+//   };
+
+//   useEffect(() => {
+//     if (graphRef.current && isLoading) {
+//       document.body.style.overflowY = "scroll";
+//       document.body.style.position = "";
+
+//       // Scroll to the bottom of the element
+//       graphRef.current.scrollTo({
+//         top: graphRef.current.scrollHeight, // Scroll to the bottom
+//         behavior: "smooth",
+//       });
+//     }
+//   }, [isLoading]);
+
+//   const fetchOldChats = async () => {
+//     const response = await getChatbotHistory();
+//     const data = response?.data?.data || [];
+//     setOldChats(data);
+//   };
+
+//   useEffect(() => {
+//     fetchOldChats();
+//   }, []);
+
+//   const handleOldChatsClick = () => {
+//     setShowOldChat(true);
+//   };
+
+//   const handleUserInput = async (input) => {
+//     if (!input || !sessionID) return;
+//     setIsLoading(true);
+//     setChatHistory((prevChat) => [
+//       ...prevChat,
+//       { role: "user", content: input },
+//     ]);
+//     try {
+//       const formData = new FormData();
+//       formData.append("user_message", input);
+//       setUserTextInput("");
+//       const response = await getNewLectureAns(sessionID, formData);
+//       const data = response.data.response;
+//       const linkArry = response.data?.reference_link || [];
+//       setChatHistory((prevChat) => [
+//         ...prevChat,
+//         { role: "assistant", content: data, links: linkArry },
+//       ]);
+//     } catch (error) {
+//       console.error(error);
+//       const errorCode = error?.response?.data?.error_code;
+//       const errorMessage =
+//         error?.response?.data?.message ||
+//         "Sorry, something went wrong. Please try again.";
+
+//       let assistantMessage;
+
+//       if (errorCode === "UEDU_CUST_ERR_4033") {
+//         assistantMessage =
+//           "⚠️ You’ve reached the daily limit of 10 requests. Please try again after 24 hours.";
+//       } else {
+//         assistantMessage = `⚠️ ${errorMessage}`;
+//       }
+
+//       setChatHistory((prevChat) => [
+//         ...prevChat,
+//         { role: "assistant", content: assistantMessage },
+//       ]);
+//     }
+//     setIsLoading(false);
+//   };
+
+//   return (
+//     <Box
+//       sx={{
+//         bgcolor: "#fff",
+//         // minWidth: 300,
+//         // minHeight: 300,
+//         // position: "fixed",
+//         // bottom: 16,
+//         // right: 16,
+//         // borderRadius: 2,
+//         width: "100%",
+//         height: "100vh",
+//         // boxShadow:
+//         //   "rgba(50, 50, 93, 0.25) 0px 50px 100px -20px, rgba(0, 0, 0, 0.3) 0px 30px 60px -30px, rgba(10, 37, 64, 0.35) 0px -2px 6px 0px inset",
+//         display: "flex",
+//         flexDirection: "column",
+//         overflow: "hidden", // Ensure content doesn't overflow
+//       }}
+//       ref={chatbotRef}
+//       component={Paper}
+//       elevation={3}
+//     >
+//       {/* Resize Handle at Top-Left */}
+//       <div
+//         ref={resizeRef}
+//         style={{
+//           position: "absolute",
+//           width: "20px",
+//           height: "20px",
+//           top: 0, // Positioned at top-left
+//           left: 0,
+//           cursor: "nwse-resize",
+//           backgroundColor: "transparent",
+//           zIndex: 10000, // Ensure it's on top
+//         }}
+//         onMouseDown={startResizing}
+//       >
+//         {/* Visual Indicator for Resizing */}
+//         {/* <Box
+//           sx={{
+//             width: "100%",
+//             height: "100%",
+//             backgroundColor: "grey.500",
+//             opacity: 0.5,
+//             borderBottomRightRadius: "4px",
+//           }}
+//         /> */}
+//       </div>
+
+//       <Grid container direction="column" sx={{ height: "100%" }}>
+//         {/* Header */}
+//         <Grid item>
+//           <Box
+//             sx={{
+//               display: "flex",
+//               justifyContent: "space-between",
+//               alignItems: "center",
+//               borderBottom: 1,
+//               borderColor: "#000",
+//               backgroundColor: "#000",
+//               p: 2,
+//               flexShrink: 0, // Prevent shrinking during resize
+//             }}
+//           >
+//             <Logo color="black" />
+//             {/* <IconButton onClick={() => setIsOpenChatBot(false)}>
+//               <BsChevronDown fontSize="large" />
+//             </IconButton> */}
+//           </Box>
+//         </Grid>
+
+//         {/* New Chat and History Section */}
+//         {showList && (
+//           <Grid item xs>
+//             <Box
+//               sx={{
+//                 p: 2,
+//                 borderColor: "grey.300",
+//                 display: "flex",
+//                 flexDirection: "column",
+//                 justifyContent: "center",
+//                 alignItems: "center",
+//                 width: "100%",
+//                 height: "100%",
+//               }}
+//             >
+//               <Button
+//                 variant="outlined"
+//                 color="primary"
+//                 onClick={() => {
+//                   handleCreateSession();
+//                   setShowChat(true);
+//                   setShowList(false);
+//                 }}
+//                 sx={{
+//                   mt: 2,
+//                   display: "inline-flex",
+//                   padding: "12px 32px",
+//                   justifyContent: "center",
+//                   alignItems: "center",
+//                   gap: "8px",
+//                   textTransform: "none",
+//                   borderRadius: "8px",
+//                   background: "#141514",
+//                   color: "#FFF",
+//                   textAlign: "center",
+//                   fontFeatureSettings: "'liga' off, 'clig' off",
+//                   fontFamily: "Aptos",
+//                   fontSize: "16px",
+//                   fontStyle: "normal",
+//                   fontWeight: "700",
+//                   lineHeight: "24px",
+//                   "&:hover": {
+//                     border: "1px solid #141514",
+//                     background: "#E5E5E5",
+//                     color: "#141514",
+//                   },
+//                 }}
+//               >
+//                 Fresh Conversation
+//               </Button>
+
+//               {!showOldChat && (
+//                 <>
+//                   {/* <Typography marginBottom={2}>Or</Typography> */}
+//                   <Button
+//                     variant="outlined"
+//                     color="primary"
+//                     onClick={handleOldChatsClick}
+//                     sx={{
+//                       mt: 2,
+//                       display: "inline-flex",
+//                       padding: "12px 28px",
+//                       justifyContent: "center",
+//                       alignItems: "center",
+//                       gap: "8px",
+//                       textTransform: "none",
+//                       borderRadius: "8px",
+//                       border: "1px solid #141514",
+//                       background: "#fff",
+//                       color: "#141514",
+//                       textAlign: "center",
+//                       fontFeatureSettings: "'liga' off, 'clig' off",
+//                       fontFamily: "Aptos",
+//                       fontSize: "16px",
+//                       fontStyle: "normal",
+//                       fontWeight: "700",
+//                       lineHeight: "24px",
+//                       "&:hover": {
+//                         border: "1px solid #141514",
+//                         background: "#E5E5E5",
+//                         color: "#141514",
+//                       },
+//                     }}
+//                   >
+//                     Conversation History
+//                   </Button>
+//                 </>
+//               )}
+//               {showOldChat &&
+//                 (oldChats.length > 0 ? (
+//                   <Box
+//                     sx={{
+//                       width: "100%",
+//                       height: "400px",
+//                       overflowY: "auto", // Enable scrolling
+//                       bgcolor: "grey.100",
+//                       borderRadius: 2,
+//                       p: 2,
+//                       boxShadow: "0px 4px 6px rgba(0, 0, 0, 0.1)",
+//                       display: "flex",
+//                       flexDirection: "column",
+//                       alignItems: "center",
+//                     }}
+//                   >
+//                     <List sx={{ width: "100%" }}>
+//                       {oldChats?.map((data, index) => (
+//                         <Accordion
+//                           key={data?.id}
+//                           sx={{
+//                             mb: 1,
+//                             borderRadius: 4,
+//                             backdropFilter: "blur(10px)",
+//                             backgroundColor: "rgba(255, 255, 255, 0.8)",
+//                           }}
+//                         >
+//                           <AccordionSummary
+//                             expandIcon={<RiArrowDropDownLine />}
+//                             sx={{
+//                               color: "text.primary",
+//                               p: 2,
+//                               width: "100%",
+//                               height: "100%",
+//                             }}
+//                           >
+//                             <Typography
+//                               variant="subtitle1"
+//                               gutterBottom
+//                               sx={{ fontSize: "14px" }}
+//                             >
+//                               Session ID - {data?.session?.session_id}
+//                               <br />
+//                               {index + 1}. {data?.user_question}
+//                             </Typography>
+//                           </AccordionSummary>
+//                           <AccordionDetails
+//                             sx={{
+//                               bgcolor: "grey.200",
+//                               borderRadius: 1,
+//                               p: 1,
+//                               boxShadow: "0px 2px 4px rgba(0, 0, 0, 0.1)",
+//                             }}
+//                           >
+//                             <Box
+//                               sx={{
+//                                 minWidth: "100%",
+//                                 width: 1.5 * (dimensions.width / 2),
+//                                 fontSize: "0.85rem",
+//                               }}
+//                             >
+//                               <TextWithMath text={data?.bot_response} />
+//                             </Box>
+//                           </AccordionDetails>
+//                         </Accordion>
+//                       ))}
+//                     </List>
+//                   </Box>
+//                 ) : (
+//                   <Typography>No conversation history available.</Typography>
+//                 ))}
+//             </Box>
+//           </Grid>
+//         )}
+//         {showChat && (
+//           <Box sx={{ display: "flex", width: "100%", height: "80vh" }}>
+//             {/* SideBar ChatHistory */}
+//             <Box sx={{ width: "30%", height: "100%" }}>
+//               {oldChats.length > 0 ? (
+//                 <Box
+//                   sx={{
+//                     width: "100%",
+//                     height: "92%",
+//                     overflowY: "auto", // Enable scrolling
+//                     bgcolor: "grey.100",
+//                     p: 2,
+//                     boxShadow: "0px 4px 6px rgba(0, 0, 0, 0.1)",
+//                     display: "flex",
+//                     flexDirection: "column",
+//                     alignItems: "center",
+//                   }}
+//                 >
+//                   <Typography>Previous Queries</Typography>
+//                   <List sx={{ width: "100%" }}>
+//                     {oldChats?.map((data, index) => (
+//                       <Accordion
+//                         key={data?.id}
+//                         sx={{
+//                           mb: 1,
+//                           borderRadius: 4,
+//                           backdropFilter: "blur(10px)",
+//                           backgroundColor: "rgba(255, 255, 255, 0.8)",
+//                         }}
+//                       >
+//                         <AccordionSummary
+//                           expandIcon={<RiArrowDropDownLine />}
+//                           sx={{
+//                             color: "text.primary",
+//                             p: 2,
+//                             width: "100%",
+//                             height: "100%",
+//                           }}
+//                         >
+//                           <Typography
+//                             variant="subtitle1"
+//                             gutterBottom
+//                             sx={{ fontSize: "14px" }}
+//                           >
+//                             Session ID - {data?.session?.session_id}
+//                             <br />
+//                             {index + 1}. {data?.user_question}
+//                           </Typography>
+//                         </AccordionSummary>
+//                         <AccordionDetails
+//                           sx={{
+//                             bgcolor: "grey.200",
+//                             borderRadius: 1,
+//                             p: 1,
+//                             boxShadow: "0px 2px 4px rgba(0, 0, 0, 0.1)",
+//                           }}
+//                         >
+//                           <Box
+//                             sx={{
+//                               minWidth: 300,
+//                               width: 1.5 * (dimensions.width / 2),
+//                               fontSize: "0.85rem",
+//                             }}
+//                           >
+//                             <TextWithMath text={data?.bot_response} />
+//                           </Box>
+//                         </AccordionDetails>
+//                       </Accordion>
+//                     ))}
+//                   </List>
+//                 </Box>
+//               ) : (
+//                 <Typography>No conversation history available.</Typography>
+//               )}
+//             </Box>
+//             {/* Chatbot view */}
+//             <Box sx={{ width: "100%" }}>
+//               {showChat && (
+//                 <>
+//                   {/* Chat Area */}
+//                   <Grid
+//                     item
+//                     xs
+//                     style={{
+//                       overflowY: "auto",
+//                       padding: "16px",
+//                       width: chatHistory.length > 0 ? "99%" : "100%",
+//                       height: "80%",
+//                     }}
+//                     ref={graphRef}
+//                   >
+//                     {chatHistory.length > 0 ? (
+//                       chatHistory?.map((message, index) => (
+//                         <Box
+//                           key={index}
+//                           sx={{
+//                             display: "flex",
+//                             flexDirection:
+//                               message.role === "user" ? "row-reverse" : "row",
+//                             mb: 2,
+//                           }}
+//                         >
+//                           <Box
+//                             sx={{
+//                               maxWidth: "85%",
+//                               bgcolor:
+//                                 message.role === "user"
+//                                   ? "#fff"
+//                                   : "#fff",
+//                               color: "#141514",
+//                               borderRadius: 2,
+//                               border: "1px solid #141514",
+//                               p: 1,
+//                               mx: 1,
+//                               overflowX: "auto",
+//                             }}
+//                           >
+//                             <TextWithMath text={message.content} />
+
+//                             {message?.links &&
+//                               message?.links?.map((link, idx) => (
+//                                 <Typography variant="caption" key={idx}>
+//                                   <a
+//                                     href={link}
+//                                     target="_blank"
+//                                     rel="noopener noreferrer"
+//                                   >
+//                                     {link}
+//                                   </a>
+//                                 </Typography>
+//                               ))}
+//                           </Box>
+//                         </Box>
+//                       ))
+//                     ) : (
+//                       <Box
+//                         sx={{
+//                           display: "flex",
+//                           flexDirection: "column",
+//                           alignItems: "center",
+//                           justifyContent: "center",
+//                           height: "100%",
+//                           color: "text.secondary",
+//                         }}
+//                       >
+//                         <FaRobot size={50} style={{ marginBottom: "16px", fontWeight: 400, lineHeight: "normal", fontStyle: "normal", color: "#141514" }} />
+//                         <Typography sx={{ fontFamily: "Inter", fontSize: "20px", fontWeight: 400, lineHeight: "normal", fontStyle: "normal", color: "#141514" }}>Hello! How can I help you?</Typography>
+//                       </Box>
+//                     )}
+//                     {isLoading && (
+//                       <Box
+//                         sx={{
+//                           display: "flex",
+//                           mt: 2,
+//                           flexDirection: "column",
+//                           pb: 8,
+//                         }}
+//                       >
+//                         <Skeleton
+//                           variant="text"
+//                           sx={{ fontSize: "1.5rem", width: "80%" }}
+//                         />
+//                         <Skeleton
+//                           variant="text"
+//                           sx={{ fontSize: "1.5rem", width: "60%" }}
+//                         />
+//                         <Skeleton
+//                           variant="text"
+//                           sx={{ fontSize: "1.5rem", width: "80%" }}
+//                         />
+//                       </Box>
+//                     )}
+//                   </Grid>
+
+//                   {/* Input Field */}
+//                   <Grid item>
+//                     <Divider />
+//                     <Box sx={{ display: "flex", gap: 2, p: 1, px: 2 }}>
+//                       <TextField
+//                         fullWidth
+//                         multiline
+//                         placeholder="Ask me..."
+//                         value={userTextInput}
+//                         onChange={(e) => setUserTextInput(e.target.value)}
+//                         onKeyPress={handleKeyPress}
+//                         variant="outlined"
+//                         InputProps={{
+//                           sx: {
+//                             // Targeting the root container of TextField
+//                             backdropFilter: "blur(10px)",
+//                             backgroundColor: "rgba(255, 255, 255, 0.8)",
+//                             borderRadius: "12px",
+//                             padding: "10px 14px",
+//                             transition: "all 0.3s ease",
+//                             "&:hover": {
+//                               backgroundColor: "rgba(255, 255, 255, 0.9)",
+//                             },
+//                             "& .MuiOutlinedInput-notchedOutline": {
+//                               borderColor: "#ccc",
+//                             },
+//                             "&.Mui-focused .MuiOutlinedInput-notchedOutline": {
+//                               borderColor: "#141514",
+//                               borderWidth: "1px",
+//                             },
+//                             // Ensure the textarea inside TextField is scrollable
+//                             "& .MuiInputBase-inputMultiline": {
+//                               maxHeight: "100px", // Restrict height
+//                               overflowY: "auto", // Enable vertical scrolling
+//                             },
+//                             "& textarea": {
+//                               maxHeight: "100px", // Ensure the textarea respects height
+//                               overflowY: "auto !important", // Enable scroll
+//                             },
+//                           },
+//                           endAdornment: (
+//                             <Box sx={{ display: "flex", alignItems: "center" }}>
+//                               <IconButton
+//                                 color="primary"
+//                                 onClick={() =>
+//                                   handleUserInput(userTextInput.trim())
+//                                 }
+//                                 disabled={isLoading}
+//                               >
+//                                 {isLoading ? (
+//                                   <CircularProgress size={24} />
+//                                 ) : (
+//                                   <FaArrowUp style={{ color: "#141514" }} />
+//                                 )}
+//                               </IconButton>
+//                               {userTextInput && isLoading ? (
+//                                 ""
+//                               ) : (
+//                                 <VoiceToText
+//                                   setUserTextInput={setUserTextInput}
+//                                 />
+//                               )}
+//                             </Box>
+//                           ),
+//                         }}
+//                       />
+//                     </Box>
+//                   </Grid>
+//                 </>
+//               )}
+//             </Box>
+//           </Box>
+//         )}
+//       </Grid>
+//     </Box>
+//   );
+// }
+
+// export const VoiceToText = ({ setUserTextInput }) => {
+//   const [isRecording, setIsRecording] = useState(false);
+//   const [error, setError] = useState(null);
+//   const recognitionRef = useRef(null);
+
+//   useEffect(() => {
+//     if (typeof window !== "undefined") {
+//       const SpeechRecognition =
+//         window.SpeechRecognition || window.webkitSpeechRecognition;
+
+//       if (SpeechRecognition) {
+//         const recognition = new SpeechRecognition();
+//         recognition.continuous = false;
+//         recognition.interimResults = false;
+//         recognition.lang = "en-US";
+
+//         recognition.onresult = (event) => {
+//           const speechToText = Array?.from(event.results)
+//             ?.map((result) => result[0].transcript)
+//             ?.join("");
+//           setUserTextInput(speechToText);
+//           setIsRecording(false);
+//         };
+
+//         recognition.onerror = (event) => {
+//           setError("Error recognizing speech. Please try again.");
+//           setIsRecording(false);
+//         };
+
+//         recognitionRef.current = recognition;
+//       } else {
+//         setError("Speech Recognition API is not supported in this browser.");
+//       }
+//     }
+//   }, [setUserTextInput]);
+
+//   const startRecording = () => {
+//     if (recognitionRef.current) {
+//       setError(null);
+//       setIsRecording(true);
+//       recognitionRef.current.start();
+//     } else {
+//       setError("Speech Recognition API is not supported in this browser.");
+//     }
+//   };
+
+//   const stopRecording = () => {
+//     if (recognitionRef.current) {
+//       setIsRecording(false);
+//       recognitionRef.current.stop();
+//     }
+//   };
+
+//   return (
+//     <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
+//       <Tooltip
+//         title={isRecording ? "Stop Recording" : "Start Recording"}
+//         arrow
+//         placement="top"
+//       >
+//         <IconButton
+//           onClick={isRecording ? stopRecording : startRecording}
+//           color={isRecording ? "error" : "primary"}
+//           sx={{
+//             bgcolor: isRecording ? "error.main" : "#141514",
+//             color: "white",
+//             "&:hover": {
+//               bgcolor: isRecording ? "error.dark" : "#141514",
+//             },
+//           }}
+//         >
+//           {isRecording ? (
+//             <FaStopCircle size={16} />
+//           ) : (
+//             <FaMicrophone size={16} />
+//           )}
+//         </IconButton>
+//       </Tooltip>
+//       {error && (
+//         <Typography variant="caption" color="error" sx={{ ml: 1 }}>
+//           {error}
+//         </Typography>
+//       )}
+//     </Box>
+//   );
+// };

@@ -1,6 +1,5 @@
 import React, { useState, useEffect, useMemo } from "react";
 import { Box, Tabs, Tab, Typography } from "@mui/material";
-import { getLectureSummary, getLectureHighlights } from "@/api/apiHelper";
 import LectureNotes from "./LectureNotes";
 import LectureMCQ from "./LectureMCQ";
 import LectureQuestions from "./LectureQuestions";
@@ -21,12 +20,10 @@ const LectureDetails = ({
   isStudent = false,
   setMarksData,
   isAdmin = false,
-  isEdit=false
+  isEdit = false,
 }) => {
   const { isDarkMode } = useThemeContext();
   const [value, setValue] = useState(0);
-  const [loading, setLoading] = useState(true);
-  const [decisionId, setDecisionId] = useState(null);
   const [userDetails, setUserDetails] = useState(null);
 
   useEffect(() => {
@@ -42,6 +39,7 @@ const LectureDetails = ({
     setValue(newValue);
   };
 
+  /* ---------- memoized contents ---------- */
   const memoizedLectureNotes = useMemo(
     () => (
       <LectureNotes
@@ -53,12 +51,12 @@ const LectureDetails = ({
         isEdit={isEdit}
       />
     ),
-    [id, isDarkMode, marksData]
+    [id, isDarkMode, marksData, isStudent, setMarksData, isEdit]
   );
 
   const memoizedLectureMCQ = useMemo(
     () => <LectureMCQ id={id} isDarkMode={isDarkMode} isEdit={isEdit} />,
-    [id, isDarkMode]
+    [id, isDarkMode, isEdit]
   );
 
   const memoizedStudentMCQ = useMemo(
@@ -68,19 +66,16 @@ const LectureDetails = ({
 
   const memoizedStudentMOLAssignment = useMemo(
     () => (
-      <StudentMOLAssignment
-        id={id}
-        isDarkMode={isDarkMode}
-        class_ID={class_ID}
-      />
+      <StudentMOLAssignment id={id} isDarkMode={isDarkMode} class_ID={class_ID} />
     ),
     [id, isDarkMode, class_ID]
   );
 
   const memoizedLectureQuestions = useMemo(
     () => <LectureQuestions id={id} isDarkMode={isDarkMode} isEdit={isEdit} />,
-    [id, isDarkMode]
+    [id, isDarkMode, isEdit]
   );
+
   const memoizedLectureAssignment = useMemo(
     () => (
       <LectureAssignment
@@ -91,11 +86,12 @@ const LectureDetails = ({
         isAdmin={isAdmin}
       />
     ),
-    [id, isDarkMode, class_ID]
+    [id, isDarkMode, class_ID, isAdmin]
   );
+
   const memoizedLectureReferrence = useMemo(
     () => <LectureReferrence id={id} isDarkMode={isDarkMode} isEdit={isEdit} />,
-    [id, isDarkMode]
+    [id, isDarkMode, isEdit]
   );
 
   return (
@@ -105,18 +101,22 @@ const LectureDetails = ({
         borderRadius: "16px",
         background: "#fff",
         width: "100%",
+        maxHeight: { xs: "none", md: 680 }, // desktop pe hi max-height
+        overflowY: { xs: "visible", md: "auto" },
       }}
     >
+      {/* --------- Heading --------- */}
       <Typography
         sx={{
           color: "#3B3D3B",
           fontFamily: "Inter",
-          fontSize: { xs: "18px", md: "20px" },
+          fontSize: { xs: "16px", sm: "18px", md: "20px" },
           fontStyle: "normal",
           fontWeight: "700",
           lineHeight: "normal",
           padding: {
-            xs: "16px 16px 6px 16px",
+            xs: "14px 12px 4px 12px",
+            sm: "16px 16px 6px 16px",
             md: "21px 20px 6px 20px",
           },
         }}
@@ -125,7 +125,7 @@ const LectureDetails = ({
         <br />
         <span
           style={{
-            fontSize: "12px",
+            fontSize: "11px",
             fontFamily: "Inter, sans-serif",
             fontStyle: "italic",
             fontWeight: "400",
@@ -141,33 +141,40 @@ const LectureDetails = ({
         </span>
       </Typography>
 
+      {/* --------- Tabs --------- */}
       <Tabs
         value={value}
         onChange={handleChange}
-        aria-label="lecture overview tabs"
+        aria-label="lecture details tabs"
         indicatorColor="none"
         variant="scrollable"
         scrollButtons="auto"
         sx={{
           width: "100%",
+          minHeight: 0,
+          ".MuiTabs-scroller": {
+            overflowX: "auto !important",
+          },
           ".MuiTabs-flexContainer": {
             gap: { xs: 1, md: 2 },
+            padding: {
+              xs: "4px 8px 4px 12px",
+              md: "8px 20px 8px 20px",
+            },
             borderTopLeftRadius: "12px",
             borderTopRightRadius: "12px",
             display: "flex",
             alignItems: "center",
             borderBottom: "0.5px solid var(--Stroke-Color-1, #C1C1C1)",
-          },
-          ".MuiTabs-scroller": {
-            overflow: "auto !important",
+            flexWrap: { xs: "wrap", sm: "nowrap" }, // chhoti screen pe wrap allowed
           },
           ".MuiTab-root": {
             color: "#3B3D3B",
-            padding: { xs: "8px 12px", md: "10px 20px" },
+            padding: { xs: "6px 10px", md: "10px 20px" },
             minHeight: 0,
-            marginTop: "8px",
+            marginTop: { xs: "4px", md: "8px" },
             textAlign: "center",
-            fontSize: { xs: "14px", md: "16px" },
+            fontSize: { xs: "13px", md: "16px" },
             fontFamily: "Aptos",
             textTransform: "none",
             minWidth: { xs: "auto", md: "120px" },
@@ -193,22 +200,29 @@ const LectureDetails = ({
         <Tab label="Reference" />
       </Tabs>
 
-      {/* Tab content with responsive padding */}
+      {/* --------- Tab content --------- */}
       <Box
         sx={{
           width: "100%",
+          px: { xs: 1.5, sm: 2.5, md: 3 },
+          pt: { xs: 1.5, sm: 2 },
+          pb: { xs: 1.5, sm: 2.5 },
         }}
       >
         {value === 0 && memoizedLectureNotes}
+
         {value === 1 &&
           (userDetails?.role === "STUDENT"
             ? memoizedStudentMCQ
             : memoizedLectureMCQ)}
+
         {value === 2 && memoizedLectureQuestions}
+
         {value === 3 &&
           (userDetails?.role === "STUDENT"
             ? memoizedStudentMOLAssignment
             : memoizedLectureAssignment)}
+
         {value === 4 && memoizedLectureReferrence}
       </Box>
     </Box>

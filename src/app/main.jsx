@@ -1,3 +1,5 @@
+
+
 "use client";
 import { usePathname } from "next/navigation";
 import React, { useEffect, useState, createContext } from "react";
@@ -22,7 +24,6 @@ const Main = ({ children }) => {
     process.env.NEXT_PUBLIC_iSTRIALACCOUNT === "true" ? true : false;
   const s3FileName = process.env.NEXT_PUBLIC_FILE_NAME === "edu/" ? "edu/" : "";
 
-
   const pathname = usePathname();
   const [open, setOpen] = useState(true);
   const [openRecordingDrawer, setOpenRecordingDrawer] = useState(false);
@@ -36,15 +37,13 @@ const Main = ({ children }) => {
     if (window.innerWidth < 980) {
       setOpen(false);
     } else {
-      setOpen(true); // Optional: If you want to reopen the sidebar when the width is greater than 980
+      setOpen(true);
     }
   };
 
   useEffect(() => {
     handleResize();
-
     window.addEventListener("resize", handleResize);
-
     return () => {
       window.removeEventListener("resize", handleResize);
     };
@@ -85,14 +84,14 @@ const Main = ({ children }) => {
     <Suspense>
       <Toaster position="bottom-center" reverseOrder={false} />
       {pathname === "/login" ||
-      pathname === "/forgot-password" ||
-      pathname === "/registration" ||
-      pathname === "/signup" ||
-      pathname === "/vipsbot" ||
-      pathname === "/terms-and-conditions" ||
-      pathname === "/delete-account" ||
-      pathname === "/privacy-policy" ||
-      pathname === "/invite-accept" ? (
+        pathname === "/forgot-password" ||
+        pathname === "/registration" ||
+        pathname === "/signup" ||
+        pathname === "/vipsbot" ||
+        pathname === "/terms-and-conditions" ||
+        pathname === "/delete-account" ||
+        pathname === "/privacy-policy" ||
+        pathname === "/invite-accept" ? (
         <>{children}</>
       ) : (
         <ThemeProvider>
@@ -105,18 +104,72 @@ const Main = ({ children }) => {
               handelChatBotText,
               isTrialAccount,
               s3FileName,
+              toggleSidebar: () => setOpen(!open),
+              isSidebarOpen: open,
             }}
           >
             <Box
               sx={{
-                display: "grid",
-                gridTemplateColumns: open ? "240px 1fr" : "60px 1fr",
+                display: "flex",
                 minHeight: "100vh",
               }}
             >
-              <Box>
+              {/* Sidebar */}
+              <Box
+                sx={{
+                  flexShrink: 0,
+                  position: "sticky",
+                  top: 0,
+                  height: "100vh",
+                  overflowY: "auto",
+                }}
+              >
                 <Sidebar open={open} setOpen={setOpen} />
               </Box>
+
+              {/* Main Content Area */}
+              <Box
+                sx={{
+                  flex: 1,
+                  display: "flex",
+                  flexDirection: "column",
+                  minWidth: 0, // Important for responsive behavior
+                  minHeight: "100vh",
+                }}
+              >
+                {/* Header */}
+                <Box
+                  sx={{
+                    flexShrink: 0,
+                    position: "sticky",
+                    top: 0,
+                    zIndex: 10,
+                  }}
+                >
+                  {!pathname.includes("lecture-listings/") && (
+                    <GreetingCardNew />
+                  )}
+                </Box>
+
+                {/* Page Content */}
+                <Box
+                  sx={{
+                    flex: 1,
+                    display: "flex",
+                    flexDirection: "column",
+                    minHeight: 0, // Important for proper flex behavior
+                  }}
+                >
+                  {children}
+                </Box>
+
+                {/* Footer */}
+                {/* <Box sx={{ flexShrink: 0, mt: "auto" }}>
+                  <Footer />
+                </Box> */}
+              </Box>
+
+              {/* Modals and Overlays */}
               {openRecordingDrawer && (
                 <LectureRecorder
                   open={openRecordingDrawer}
@@ -132,21 +185,11 @@ const Main = ({ children }) => {
                   lecture={recordingData}
                 />
               )}
-              <Box sx={{ display: "flex", flexDirection: "column" }}>
-                <Box>
-                  {!pathname.includes("lecture-listings/") && (
-                    <GreetingCardNew />
-                  )}
-                </Box>
-                {children}
-                <Box sx={{ mt: "auto" }}>
-                  <Footer />
-                </Box>
-              </Box>
             </Box>
 
+            {/* Chat Bot - Only on lecture listings pages */}
             {pathname.includes("lecture-listings/") && (
-              <Box position="fixed" bottom={4} right={4}>
+              <Box position="fixed" bottom={16} right={16} zIndex={1000}>
                 <IconButton
                   disableRipple
                   onClick={() => {
@@ -156,13 +199,6 @@ const Main = ({ children }) => {
                   size="large"
                   color="primary"
                 >
-                  {/* <Image
-                    className="cursor-pointer"
-                    src="/chatbot.png"
-                    alt="chat bot"
-                    width={50}
-                    height={50}
-                  /> */}
                   <Button
                     disableRipple
                     variant="contained"
@@ -191,20 +227,20 @@ const Main = ({ children }) => {
                       <path
                         d="M8.68006 13.2201H10.4201V17.2701C10.4201 17.8701 11.1601 18.1501 11.5601 17.7001L15.8201 12.8601C16.1901 12.4401 15.8901 11.7801 15.3301 11.7801H13.5901V7.73008C13.5901 7.13008 12.8501 6.85008 12.4501 7.30008L8.19006 12.1401C7.82006 12.5601 8.12006 13.2201 8.68006 13.2201Z"
                         stroke="#FCFBFA"
-                        stroke-width="1.5"
-                        stroke-miterlimit="10"
-                        stroke-linecap="round"
-                        stroke-linejoin="round"
+                        strokeWidth="1.5"
+                        strokeMiterlimit="10"
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
                       />
                       <path
                         d="M11.9702 22.5C17.4931 22.5 21.9702 18.0228 21.9702 12.5C21.9702 6.97715 17.4931 2.5 11.9702 2.5C6.44737 2.5 1.97021 6.97715 1.97021 12.5C1.97021 18.0228 6.44737 22.5 11.9702 22.5Z"
                         stroke="#FCFBFA"
-                        stroke-width="1.5"
-                        stroke-miterlimit="10"
-                        stroke-linecap="round"
-                        stroke-linejoin="round"
+                        strokeWidth="1.5"
+                        strokeMiterlimit="10"
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
                       />
-                    </svg>{" "}
+                    </svg>
                     <span
                       style={{
                         color: "#FFF",

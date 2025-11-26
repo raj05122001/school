@@ -1,21 +1,25 @@
 "use client";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Grid, Button, Typography, Box, Tabs, Tab } from "@mui/material";
 import CalendarComponent from "@/components/teacher/dashboard/CalendarComponent/CalendarComponent";
 import CreatingLecture from "@/components/teacher/LectureCreate/CreatingLecture";
 import { useThemeContext } from "@/hooks/ThemeContext";
 import { RiCalendarScheduleLine } from "react-icons/ri";
 import { downloadExcelFile, uploadExcelFile } from "@/api/apiHelper";
-import { MdAdd, MdDownloadForOffline, MdUpload } from "react-icons/md";
+import { MdDownloadForOffline, MdUpload } from "react-icons/md";
 import CreateLectureSchedule from "@/components/LectureSchedule/CreateLectureSchedule";
 import LectureScheduleTable from "@/components/LectureSchedule/LectureScheduleTable";
-import DarkMode from "@/components/DarkMode/DarkMode";
+import { useSearchParams, usePathname, useRouter } from "next/navigation";
 
 const LectureManager = () => {
   const [openDialog, setOpenDialog] = useState(false);
-  const { isDarkMode, primaryColor } = useThemeContext();
+  const { isDarkMode } = useThemeContext();
   const [open, setOpen] = useState(false);
-  const [tabValue, setTabValue] = useState(0); // State for controlling tabs
+  const searchParams = useSearchParams();
+  const pathname = usePathname();
+  const router = useRouter();
+  const initialView = (searchParams.get("view") || "calendar").toLowerCase();
+  const [tabValue, setTabValue] = useState(initialView === "table" ? 1 : 0);
 
   const handleOpenDialog = () => {
     setOpenDialog(true);
@@ -43,62 +47,91 @@ const LectureManager = () => {
     }
   };
 
-  const handleTabChange = (event, newValue) => {
+  const handleTabChange = (_event, newValue) => {
     setTabValue(newValue);
+    const view = newValue === 1 ? "table" : "calendar";
+    const params = new URLSearchParams(searchParams.toString());
+    params.set("view", view);
+    router.replace(`${pathname}?${params.toString()}`);
   };
+
+  useEffect(() => {
+    const v = (searchParams.get("view") || "calendar").toLowerCase();
+    const next = v === "table" ? 1 : 0;
+    setTabValue((prev) => (prev === next ? prev : next));
+  }, [searchParams]);
 
   return (
     <Grid
       container
       direction="column"
-      justifyItems={"center"}
-      alignItems={"center"}
       spacing={3}
       height="100%"
-      padding={2}
+      padding={{ xs: 1.5, sm: 2, md: 3 }}
       marginTop={0.5}
       sx={{
-        // background: isDarkMode
-        //   ? "linear-gradient(177.9deg, rgb(58, 62, 88) 3.6%, rgb(119, 127, 148) 105.8%)"
-        //   : "linear-gradient(180.3deg, rgb(221, 221, 221) 5.5%, rgb(110, 136, 161) 90.2%);",
         background: "#F3F5F7",
-        // overflow: "hidden", // Add this line
       }}
     >
       {/* Heading and Buttons */}
-      <Grid item xs={12} style={{ width: "100%" }}>
-        <Grid container justifyContent="space-between" alignItems="center">
+      <Grid item xs={12} sx={{ width: "100%" }}>
+        <Grid
+          container
+          spacing={2}
+          alignItems={{ xs: "flex-start", sm: "center" }}
+          justifyContent="space-between"
+          direction={{ xs: "column", sm: "row" }} // ✅ mobile: column, desktop: row
+        >
+          {/* Left: Title */}
           <Grid item>
-            <Box display="flex" alignItems="center" justifyContent="center">
+            <Box
+              display="flex"
+              alignItems="center"
+              justifyContent="flex-start"
+              sx={{ mb: { xs: 1, sm: 0 } }}
+            >
               <RiCalendarScheduleLine
-                size={30}
+                size={28}
                 style={{
                   marginRight: 8,
-                  marginBottom: 8,
+                  marginBottom: 4,
                   color: "#448234",
                 }}
               />
               <Typography
-                sx={{ color: isDarkMode ? "white" : "black" }}
-                variant="h4"
+                sx={{
+                  color: isDarkMode ? "white" : "black",
+                  fontSize: { xs: "20px", sm: "24px", md: "28px" },
+                  fontWeight: 700,
+                }}
                 component="h1"
-                gutterBottom
+                gutterBottom={false}
               >
                 Lecture Schedule
               </Typography>
             </Box>
           </Grid>
-          <Grid item>
-            <Box display="flex" gap={2}>
-              {/* <DarkMode /> */}
+
+          {/* Right: Buttons */}
+          <Grid item sx={{ width: "100%" }}>
+            <Box
+              display="flex"
+              gap={{ xs: 1, sm: 2 }}
+              flexDirection="row"                     // ✅ mobile + desktop: same row
+              alignItems="center"
+              justifyContent={{ xs: "flex-start", sm: "flex-end" }}
+              flexWrap={{ xs: "nowrap", sm: "nowrap" }} // ✅ try to keep them in one row
+            >
+              {/* Download Button */}
               <Button
                 variant="contained"
                 color="secondary"
-                onClick={() => downloadExcel()}
+                onClick={downloadExcel}
                 sx={{
-                  mt: 2,
+                  mt: { xs: 1, sm: 2 },
+                  width: "auto",                        // ✅ no full-width, so row me aa jayenge
                   display: "inline-flex",
-                  padding: "12px 32px",
+                  padding: "10px 20px",
                   justifyContent: "center",
                   alignItems: "center",
                   gap: "8px",
@@ -109,10 +142,10 @@ const LectureManager = () => {
                   textAlign: "center",
                   fontFeatureSettings: "'liga' off, 'clig' off",
                   fontFamily: "Aptos",
-                  fontSize: "16px",
+                  fontSize: "14px",
                   fontStyle: "normal",
-                  fontWeight: "700",
-                  lineHeight: "24px",
+                  fontWeight: 700,
+                  lineHeight: "20px",
                   "&:hover": {
                     border: "1px solid #141514",
                     background: "#E5E5E5",
@@ -120,17 +153,20 @@ const LectureManager = () => {
                   },
                 }}
               >
-                <MdDownloadForOffline size={22} style={{ marginRight: 2 }} />{" "}
+                <MdDownloadForOffline size={20} style={{ marginRight: 2 }} />
                 Download Format
               </Button>
+
+              {/* Upload Button */}
               <Button
                 variant="contained"
                 color="secondary"
                 onClick={() => setOpen(true)}
                 sx={{
-                  mt: 2,
+                  mt: { xs: 1, sm: 2 },
+                  width: "auto",                        // ✅ same here
                   display: "inline-flex",
-                  padding: "12px 32px",
+                  padding: "10px 20px",
                   justifyContent: "center",
                   alignItems: "center",
                   gap: "8px",
@@ -141,10 +177,10 @@ const LectureManager = () => {
                   textAlign: "center",
                   fontFeatureSettings: "'liga' off, 'clig' off",
                   fontFamily: "Aptos",
-                  fontSize: "16px",
+                  fontSize: "14px",
                   fontStyle: "normal",
-                  fontWeight: "700",
-                  lineHeight: "24px",
+                  fontWeight: 700,
+                  lineHeight: "20px",
                   "&:hover": {
                     border: "1px solid #141514",
                     background: "#E5E5E5",
@@ -152,30 +188,35 @@ const LectureManager = () => {
                   },
                 }}
               >
-                <MdUpload size={22} style={{ marginRight: 2 }} />
+                <MdUpload size={20} style={{ marginRight: 2 }} />
                 Upload
               </Button>
+
               {open && <CreateLectureSchedule open={open} setOpen={setOpen} />}
             </Box>
           </Grid>
         </Grid>
+
         {/* Tabs for switching between views */}
         <Box
           sx={{
-            marginTop: 4,
+            mt: 4,
             display: "flex",
-            justifyContent: "flex-start",
+            justifyContent: { xs: "center", sm: "flex-start" },
           }}
         >
           <Tabs
             value={tabValue}
             onChange={handleTabChange}
+            variant="scrollable"
+            scrollButtons="auto"
             sx={{
+              width: "100%",
+              maxWidth: { xs: "100%", sm: "500px" },
               ".MuiTabs-flexContainer": {
                 gap: 2,
-
-                padding: "8px 496px 8px 20px",
-                // borderRadius: "12px",
+                px: { xs: 1.5, sm: 2, md: 3 }, // ✅ responsive padding
+                py: 1,
                 borderTopLeftRadius: "12px",
                 borderTopRightRadius: "12px",
                 display: "flex",
@@ -184,11 +225,11 @@ const LectureManager = () => {
               },
               ".MuiTab-root": {
                 color: "#3B3D3B",
-                padding: "10px 20px",
+                padding: "8px 16px",
                 minHeight: 0,
-                marginTop: "8px",
+                marginTop: "4px",
                 textAlign: "center",
-                fontSize: "16px",
+                fontSize: "14px",
                 fontFamily: "Aptos",
                 textTransform: "none",
                 "&:hover": {
@@ -211,12 +252,12 @@ const LectureManager = () => {
           </Tabs>
         </Box>
 
-        {/* Content based on selected tab */}
         <Grid marginTop={2} height={"100%"}>
           {tabValue === 0 && <CalendarComponent maxHeight={"100%"} />}
           {tabValue === 1 && <LectureScheduleTable />}
         </Grid>
       </Grid>
+
       <CreatingLecture open={openDialog} handleClose={handleCloseDialog} />
     </Grid>
   );

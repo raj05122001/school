@@ -22,7 +22,10 @@ const ClassProf = () => {
     try {
       const response = await getteacherClass();
       setClassOptions(response?.data?.data?.class_subject_list);
-      const findMCA=response?.data?.data?.class_subject_list?.find((val)=>val?.class_id===2 || val?.class_id===27)
+      const findMCA =
+        response?.data?.data?.class_subject_list?.find(
+          (val) => val?.class_id === 2 || val?.class_id === 27
+        );
       setSelectedOptions(findMCA);
     } catch (error) {
       console.error(error);
@@ -48,7 +51,7 @@ const ClassProf = () => {
     <Box
       sx={{
         display: "inline-flex",
-        padding: "32px 24px 24px 24px",
+        padding: { xs: "20px 16px 16px 16px", md: "32px 24px 24px 24px" }, // mobile ke liye thoda kam, desktop same
         flexDirection: "column",
         justifyContent: "flex-end",
         alignItems: "center",
@@ -56,19 +59,24 @@ const ClassProf = () => {
         borderRadius: "20px",
         background: "#FFF",
         width: "100%",
-        height:"100%"
+        height: "100%",
+        boxSizing: "border-box",
       }}
     >
+      {/* HEADER ROW */}
       <Box
         sx={{
           display: "flex",
-          alignItems: "center",
-          gap: "53px",
+          flexDirection: { xs: "column", md: "row" }, // mobile = column, desktop = row (old design)
+          alignItems: { xs: "flex-start", md: "center" },
+          gap: { xs: 2, md: "53px" }, // md par old value
           //   backgroundColor: "#F3F5F7",
           color: "#3B3D3B",
+          width: "100%",
+          justifyContent: "space-between",
         }}
       >
-        <Box display={"flex"} sx={{ gap: "6px" }}>
+        <Box display={"flex"} sx={{ gap: "6px", alignItems: "center" }}>
           <Box
             sx={{
               display: "flex",
@@ -144,6 +152,7 @@ const ClassProf = () => {
             Class Proficiency
           </Typography>
         </Box>
+
         <Box
           sx={{
             display: "flex",
@@ -151,6 +160,7 @@ const ClassProf = () => {
             alignItems: "center",
             background: "var(--BG-Color-1, #F3F5F7)",
             borderRadius: "10px",
+            width: { xs: "100%", md: "auto" }, // mobile me wrapper full width
           }}
         >
           <Autocomplete
@@ -165,11 +175,19 @@ const ClassProf = () => {
               );
               setSelectedOptions(selected || null); // Set selected option object
             }}
+            fullWidth
+            sx={{
+              width: { xs: "100%", md: 200 }, // ✅ mobile 100%, desktop 200px (old design)
+            }}
             renderInput={(params) => (
               <TextField
                 {...params}
                 placeholder="Select Class"
                 variant="outlined"
+                sx={{
+                  borderRadius: "10px",
+                  width: "100%", // ✅ TextField container full width
+                }}
                 InputProps={{
                   ...params.InputProps,
                   type: "search",
@@ -177,22 +195,21 @@ const ClassProf = () => {
                     backdropFilter: "blur(10px)",
                     backgroundColor: "rgba(255, 255, 255, 0.2)",
                     height: 45,
-                    width: 200,
+                    width: "100%", // ✅ input bhi full width
                     borderRadius: "10px",
                     "& .MuiOutlinedInput-notchedOutline": {
                       border: "1px solid #d3d3d3",
                     },
                   },
                 }}
-                sx={{
-                  //   boxShadow: currentStyles.boxShadow,
-                  borderRadius: "10px",
-                }}
               />
             )}
           />
         </Box>
+
       </Box>
+
+      {/* CARD 1 */}
       <Box
         sx={{
           display: "flex",
@@ -261,7 +278,7 @@ const ClassProf = () => {
             justifyContent: "center",
             alignItems: "center",
             flexDirection: "column",
-            width:"100%"
+            width: "100%",
           }}
         >
           <Typography
@@ -277,7 +294,13 @@ const ClassProf = () => {
           >
             Overall Class Participation
           </Typography>
-          <Box sx={{display:"flex", justifyContent:"space-between", width:"100%"}}>
+          <Box
+            sx={{
+              display: "flex",
+              justifyContent: "space-between",
+              width: "100%",
+            }}
+          >
             <Typography
               sx={{
                 alignSelf: "stretch",
@@ -293,43 +316,43 @@ const ClassProf = () => {
               {data?.over_all_class_score || 0}
             </Typography>
             <Box
-            sx={{
-              display: "inline-flex",
-              alignItems: "center",
-              justifyContent: "center",
-              padding: "4px",
-              gap: "5px",
-              borderRadius: "6px",
-              background: "#FFF",
-            }}
-          >
-            <Typography
               sx={{
-                color: "var(--Text-Color-1, #3B3D3B)",
-                fontFamily: "Inter, sans-serif",
-                fontSize: "12px",
-                fontStyle: "normal",
-                fontWeight: 400,
-                lineHeight: "150.4%",
-                textAlign: "center",
+                display: "inline-flex",
+                alignItems: "center",
+                justifyContent: "center",
+                padding: "4px",
+                gap: "5px",
+                borderRadius: "6px",
+                background: "#FFF",
               }}
             >
-              Avg. Grade
-            </Typography>
-            <Typography
-              sx={{
-                color: "var(--Text-Color-1, #3B3D3B)",
-                fontFamily: "Inter, sans-serif",
-                fontSize: "12px",
-                fontStyle: "normal",
-                fontWeight: 700,
-                lineHeight: "150.4%",
-                textAlign: "center",
-              }}
-            >
-              {data?.average_grade || 0}%
-            </Typography>
-          </Box>
+              <Typography
+                sx={{
+                  color: "var(--Text-Color-1, #3B3D3B)",
+                  fontFamily: "Inter, sans-serif",
+                  fontSize: "12px",
+                  fontStyle: "normal",
+                  fontWeight: 400,
+                  lineHeight: "150.4%",
+                  textAlign: "center",
+                }}
+              >
+                Avg. Grade
+              </Typography>
+              <Typography
+                sx={{
+                  color: "var(--Text-Color-1, #3B3D3B)",
+                  fontFamily: "Inter, sans-serif",
+                  fontSize: "12px",
+                  fontStyle: "normal",
+                  fontWeight: 700,
+                  lineHeight: "150.4%",
+                  textAlign: "center",
+                }}
+              >
+                {data?.average_grade || 0}%
+              </Typography>
+            </Box>
           </Box>
         </Box>
         <Box
@@ -339,10 +362,10 @@ const ClassProf = () => {
             justifyContent: "flex-end",
             height: "100%",
           }}
-        >
-          
-        </Box>
+        ></Box>
       </Box>
+
+      {/* CARD 2 */}
       <Box
         sx={{
           display: "flex",

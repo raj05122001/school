@@ -68,7 +68,7 @@ function registerSeekComponents(vjs) {
 const VideoPlayer = ({
   id,
   duration = 1e101,
-  setVideoTimeStamp = () => {},
+  setVideoTimeStamp = () => { },
   timeStamp = 0,
 }) => {
   const { s3FileName } = useContext(AppContextProvider);
@@ -205,34 +205,56 @@ const VideoPlayer = ({
   );
 
   return (
-    <Box sx={{ width: "100%", height: "100%" }}>
-      {isLoading ? (
-        <Box sx={{ position: "relative", width: "100%", height: "100%" }}>
-          <Skeleton variant="rectangular" width="100%" height="100%" sx={{ borderRadius: 8 }} />
-          <Box
-            sx={{
-              position: "absolute",
-              top: "50%",
-              left: "50%",
-              transform: "translate(-50%, -50%)",
-              zIndex: 10,
-            }}
-          >
-            <FaVideo size={100} color="#808080" />
+    <>
+      <Box sx={{ width: "100%", height: "100%", display: { xs: "none", sm: "block", md: "block", lg: "block" }, maxHeight: 500, height: 500 }}>
+        {isLoading ? (
+          <Box sx={{ position: "relative", width: "100%", height: "100%" }}>
+            <Skeleton variant="rectangular" width="100%" height="100%" sx={{ borderRadius: 8 }} />
+            <Box
+              sx={{
+                position: "absolute",
+                top: "50%",
+                left: "50%",
+                transform: "translate(-50%, -50%)",
+                zIndex: 10,
+              }}
+            >
+              <FaVideo size={100} color="#808080" />
+            </Box>
           </Box>
-        </Box>
-      ) : (
-        <Box sx={{ width: "100%", height: "90%" }}>
-          {videoUrl ? breakpointPlayer : null}
-        </Box>
-      )}
+        ) : (
+          <Box sx={{ width: "100%", height: "90%" }}>
+            {videoUrl ? breakpointPlayer : null}
+          </Box>
+        )}
 
-      {suggestionData?.length > 0 && (
-        <Box height="10%">
-          <Suggestion suggestionData={suggestionData} />
-        </Box>
-      )}
-    </Box>
+        {suggestionData?.length > 0 && (
+          <Box height="10%" >
+            <Suggestion suggestionData={suggestionData} />
+          </Box>
+        )}
+      </Box>
+
+      <Box
+        sx={{
+          width: "100%",
+          display: { xs: "flex", sm: "none", md: "none", lg: "none" },
+          justifyContent: "center",
+        }}
+      >
+        <video
+          src={videoUrl}
+          controls
+          style={{
+            width: "100%",     // parent ki full width lega
+            height: "auto",    // height automatically adjust
+            maxHeight: "80vh", // optional: screen ke 80% se zyada na ho
+            objectFit: "contain",
+          }}
+        />
+      </Box>
+
+    </>
   );
 };
 
@@ -291,11 +313,11 @@ export const BreakpointPlayer = ({
     // remove any lingering DOM duplicates (safety)
     Array.from(controlBar.el().querySelectorAll(".vjs-seek-back,.vjs-seek-forward"))
       .forEach(n => n.parentElement?.removeChild(n));
-    try { controlBar.removeChild("SeekBack10"); } catch {}
-    try { controlBar.removeChild("SeekForward10"); } catch {}
+    try { controlBar.removeChild("SeekBack10"); } catch { }
+    try { controlBar.removeChild("SeekForward10"); } catch { }
 
     const backBtn = controlBar.addChild("SeekBack10", {}, 2); // after PlayToggle
-    const fwdBtn  = controlBar.addChild("SeekForward10", {}, controlBar.children_.length - 1);
+    const fwdBtn = controlBar.addChild("SeekForward10", {}, controlBar.children_.length - 1);
 
     // markers + resume timestamp
     player.on("loadedmetadata", () => {

@@ -15,8 +15,8 @@ import EngagementSection from "./EngagementSection";
 const Page = () => {
   const [classOptions, setClassOptions] = useState([]);
   const [averageDuration, setAverageDuration] = useState({
-avg_duration:0,
-total_duration:0
+    avg_duration: 0,
+    total_duration: 0
   });
   const [selectedOptions, setSelectedOptions] = useState(null);
 
@@ -29,7 +29,7 @@ total_duration:0
       const response = await getteacherClass();
       setClassOptions(response?.data?.data?.class_subject_list);
       setSelectedOptions(response?.data?.data?.class_subject_list?.[0])
-      setAverageDuration({avg_duration:response?.data?.data?.avg_duration,total_duration:response?.data?.data?.total_duration});
+      setAverageDuration({ avg_duration: response?.data?.data?.avg_duration, total_duration: response?.data?.data?.total_duration });
     } catch (error) {
       console.error(error);
     }
@@ -63,31 +63,30 @@ total_duration:0
     <Box sx={{ flexGrow: 1, m: 2 }}>
       <Grid container direction="row" spacing={2} mt={2}>
         <Grid item xs={12} md={7}>
-      <HeroCard averageDuration={averageDuration}/>
-      </Grid>
-      <Grid item xs={12} md={5}>
-      <ClassProf />
-      </Grid>
+          <HeroCard averageDuration={averageDuration} />
+        </Grid>
+        <Grid item xs={12} md={5}>
+          <ClassProf />
+        </Grid>
       </Grid>
 
       {/* Overview and Calendar */}
       <Grid container direction="row" spacing={2} mt={2}>
         <Grid item xs={12} md={9}>
-          {overviewSection}
+            {overviewSection}
           {/* <Box mt={4}>{calendarComponent}</Box> */}
         </Grid>
         <Grid item xs={12} md={3}>
-            <Grid item xs={12}>
-              {overallClassPerformance}
-            </Grid>
+          <Grid item xs={12}>
+            {overallClassPerformance}
+          </Grid>
         </Grid>
       </Grid>
 
-      <Box sx={{marginY:"16px", width:"100%",}}>
+      <Box sx={{ marginY: "16px", width: "100%", }}>
         {studentAssignment}
       </Box>
 
-      {/* Lecture and Subject Analytics */}
       <Grid container spacing={2} mt={4}>
         <Grid item xs={12} md={6}>
           {/* {lectureAnalytics} */}
@@ -97,7 +96,7 @@ total_duration:0
           {subjectAnalytics}
         </Grid>
       </Grid>
-      <EngagementSection/>
+      <EngagementSection />
     </Box>
   );
 };

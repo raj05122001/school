@@ -140,7 +140,6 @@ const OverviewSection = () => {
           component={Paper}
           elevation={0}
           sx={{
-            maxHeight: 400,
             overflowY: "scroll",
             borderRadius: "10px",
             border: "none",
@@ -360,7 +359,7 @@ const OverviewSection = () => {
               component={Paper}
               elevation={0}
               sx={{
-                maxHeight: 300,
+                maxHeight: 400,
                 overflowY: "auto",
                 borderRadius: "10px",
                 border: "none",

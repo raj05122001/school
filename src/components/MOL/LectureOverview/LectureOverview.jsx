@@ -17,7 +17,7 @@ const LectureOverview = ({
   isEdit = false,
   marksData = {},
   isStudent = false,
-  setMarksData
+  setMarksData,
 }) => {
   const [value, setValue] = useState(0);
   const { isDarkMode } = useThemeContext();
@@ -35,36 +35,35 @@ const LectureOverview = ({
     fetchAudio();
   }, [lectureId]);
 
-const fetchAudio = async () => {
-  try {
-    // 1️⃣ get the paths
-    const response = await getLectureAudio(lectureId);
-    const { highlight_audio_path, summary_audio_path } = response.data;
+  const fetchAudio = async () => {
+    try {
+      // 1️⃣ get the paths
+      const response = await getLectureAudio(lectureId);
+      const { highlight_audio_path, summary_audio_path } = response.data;
 
-    // replace base path
-    const summaryUrl = summary_audio_path?.replace("/edutech", BASE_URL);
-    const highlightUrl = highlight_audio_path?.replace("/edutech", BASE_URL);
+      // replace base path
+      const summaryUrl = summary_audio_path?.replace("/edutech", BASE_URL);
+      const highlightUrl = highlight_audio_path?.replace("/edutech", BASE_URL);
 
-    // 2️⃣ fetch both as blobs in parallel
-    const [summaryRes, highlightRes] = await Promise.all([
-      axios.get(summaryUrl, { responseType: "blob" }),
-      axios.get(highlightUrl, { responseType: "blob" }),
-    ]);
+      // 2️⃣ fetch both as blobs in parallel
+      const [summaryRes, highlightRes] = await Promise.all([
+        axios.get(summaryUrl, { responseType: "blob" }),
+        axios.get(highlightUrl, { responseType: "blob" }),
+      ]);
 
-    // 3️⃣ create object URLs
-    const summaryBlobUrl = URL.createObjectURL(summaryRes.data);
-    const highlightBlobUrl = URL.createObjectURL(highlightRes.data);
+      // 3️⃣ create object URLs
+      const summaryBlobUrl = URL.createObjectURL(summaryRes.data);
+      const highlightBlobUrl = URL.createObjectURL(highlightRes.data);
 
-    // 4️⃣ set state
-    setAudioUrl({
-      summary: summaryBlobUrl,
-      highlight: highlightBlobUrl,
-    });
-  } catch (error) {
-    console.error("Error fetching audio blobs:", error);
-  }
-};
-
+      // 4️⃣ set state
+      setAudioUrl({
+        summary: summaryBlobUrl,
+        highlight: highlightBlobUrl,
+      });
+    } catch (error) {
+      console.error("Error fetching audio blobs:", error);
+    }
+  };
 
   const handleChange = (event, newValue) => {
     setValue(newValue);
@@ -81,7 +80,7 @@ const fetchAudio = async () => {
         setMarksData={setMarksData}
       />
     ),
-    [marksData, lectureId, isDarkMode]
+    [marksData, lectureId, isDarkMode, isEdit, isStudent, setMarksData]
   );
 
   const highlightsComponent = useMemo(
@@ -95,35 +94,39 @@ const fetchAudio = async () => {
         isEdit={isEdit}
       />
     ),
-    [marksData, lectureId, isDarkMode]
+    [marksData, lectureId, isDarkMode, isEdit, isStudent, setMarksData]
   );
 
   return (
     <Box
       sx={{
         alignSelf: "stretch",
-        borderRadius: "0px 0px 16px 16px",
-        background: "#fff",
         borderRadius: "16px",
-        maxHeight: 680,
+        background: "#fff",
+        maxHeight: { xs: "none", md: 680 }, // mobile pe height free, desktop pe 680
+        overflowY: { xs: "visible", md: "auto" }, // desktop pe scroll
       }}
     >
+      {/* Heading */}
       <Typography
         sx={{
           color: "#3B3D3B",
           fontFamily: "Inter",
-          fontSize: "20px",
+          fontSize: { xs: "16px", sm: "18px", md: "20px" },
           fontStyle: "normal",
           fontWeight: "700",
           lineHeight: "normal",
-          padding: "21px 0px 6px 20px",
+          padding: {
+            xs: "14px 12px 4px 12px",
+            sm: "18px 16px 6px 20px",
+          },
         }}
       >
         Lecture Overview
         <br />
         <span
           style={{
-            fontSize: "12px",
+            fontSize: "11px",
             fontFamily: "Inter, sans-serif",
             fontStyle: "italic",
             fontWeight: "400",
@@ -139,30 +142,38 @@ const fetchAudio = async () => {
         </span>
       </Typography>
 
+      {/* Tabs */}
       <Tabs
         value={value}
         onChange={handleChange}
         aria-label="lecture overview tabs"
         indicatorColor="none"
+        variant="scrollable"
+        scrollButtons="auto"
         sx={{
           ".MuiTabs-flexContainer": {
-            gap: 2,
-
-            padding: "8px 16px 8px 20px",
-            // borderRadius: "12px",
+            gap: { xs: 1, sm: 2 },
+            padding: {
+              xs: "4px 8px 4px 12px",
+              sm: "8px 16px 8px 20px",
+            },
             borderTopLeftRadius: "12px",
             borderTopRightRadius: "12px",
             display: "flex",
             alignItems: "center",
             borderBottom: "0.5px solid var(--Stroke-Color-1, #C1C1C1)",
+            flexWrap: { xs: "wrap", sm: "nowrap" }, // mobile pe tabs wrap ho sakte
           },
           ".MuiTab-root": {
             color: "#3B3D3B",
-            padding: "10px 20px",
+            padding: {
+              xs: "6px 12px",
+              sm: "10px 20px",
+            },
             minHeight: 0,
-            marginTop: "8px",
+            marginTop: { xs: "4px", sm: "8px" },
             textAlign: "center",
-            fontSize: "16px",
+            fontSize: { xs: "13px", sm: "15px", md: "16px" },
             fontFamily: "Aptos",
             textTransform: "none",
             "&:hover": {
@@ -184,10 +195,19 @@ const fetchAudio = async () => {
         <Tab label="Highlights" />
       </Tabs>
 
-      {/* Render tab content conditionally based on selected tab */}
-      {value === 0 && summaryComponent}
-      {value === 1 && highlightsComponent}
+      {/* Tab content */}
+      <Box
+        sx={{
+          px: { xs: 1.5, sm: 2.5 },
+          pt: { xs: 1.5, sm: 2 },
+          pb: { xs: 1, sm: 2 },
+        }}
+      >
+        {value === 0 && summaryComponent}
+        {value === 1 && highlightsComponent}
+      </Box>
 
+      {/* Audio players */}
       {audioUrl?.highlight && value === 1 && (
         <AudioFunction audioUrl={audioUrl?.highlight} title="Highlight Audio" />
       )}
@@ -205,12 +225,10 @@ export const AudioFunction = ({ audioUrl, title = "Summary Audio" }) => {
   return (
     <Box
       sx={{
-        // mb: 2,
-        p: 2,
+        p: { xs: 1.5, sm: 2 },
         backgroundColor: "#fff",
         borderBottomLeftRadius: "16px",
         borderBottomRightRadius: "16px",
-        // border: "1px solid #e9ecef",
         borderTop: "1px solid #e9ecef",
       }}
     >
@@ -227,7 +245,7 @@ export const AudioFunction = ({ audioUrl, title = "Summary Audio" }) => {
           variant="subtitle2"
           sx={{
             color: "#666",
-            fontSize: "14px",
+            fontSize: { xs: "13px", sm: "14px" },
             fontWeight: 500,
           }}
         >

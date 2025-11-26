@@ -1,95 +1,185 @@
 .calendar-container {
+  width: 100%;
+  margin: 0 auto;
+  padding: 20px;
+  box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.1);
+  background-color: #fff;
+  border-radius: 10px;
+}
+
+.calendar-wrapper {
+  width: 100%;
+  padding: 20px;
+  box-sizing: border-box;
+}
+
+.fc {
+  font-family: "Arial", sans-serif;
+}
+
+.fc-toolbar {
+  margin-bottom: 20px;
+}
+
+.fc-daygrid-event {
+  background-color: transparent;
+  color: black;
+  padding: 5px;
+  border-radius: 5px;
+  border-width: 2px;
+  border-color: #16aa54;
+  transition: all 0.3s ease;
+}
+
+.fc-daygrid-event:hover {
+  background-color: transparent;
+  transform: scale(1.05);
+}
+
+.calendar-wrapper .fc-scroller {
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+
+.calendar-wrapper .fc-scroller::-webkit-scrollbar {
+  display: none;
+}
+
+@media (max-width: 768px) {
+  .calendar-container {
     width: 100%;
-    margin: 0 auto;
-    padding: 20px;
-    box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.1);
-    background-color: #fff;
-    border-radius: 10px;
+    height: auto;
   }
-  
-  .fc {
-    font-family: 'Arial', sans-serif;
+
+  .calendar-wrapper {
+    padding: 8px 4px;
   }
-  
-  .fc-toolbar {
-    margin-bottom: 20px;
+
+  /* Toolbar: title on first line, buttons on second line */
+  .calendar-wrapper .fc-toolbar.fc-header-toolbar {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    /* line 1: title, line 2: buttons */
+    align-items: center;
+    gap: 6px;
   }
-  
-  .fc-daygrid-event {
-    background-color: transparent;
-    color: black;
-    padding: 5px;
-    border-radius: 5px;
-    border-width: 2px;
-    border-color: #16AA54;
-    transition: all 0.3s ease;
-  }
-  
-  .fc-daygrid-event:hover {
-    background-color: transparent;
-    transform: scale(1.05);
-  }
-  
-  @media (max-width: 768px) {
-    .calendar-container {
-      width: 100%;
-    }
-  
-    .fc-toolbar-title {
-      font-size: 18px;
-    }
-  
-    .fc-daygrid-event {
-      font-size: 12px;
-    }
-  }
-  .fc-button {
-    background-color: transparent !important;
-    color: #3B3D3B !important;
-    border-radius: 5px !important;
-    border: none !important;
-    font-weight: 400;
+
+  /* Month / year title centered */
+  .calendar-wrapper .fc-toolbar-title {
     font-size: 16px;
-    font-family: Aptos;
-  }
-  
-  .fc-button:last-child {
-    margin-right: 0; /* Removes margin from the last button in each group */
+    text-align: center;
+    width: 100%;
   }
 
-  .fc-button-group{
-    gap: 4px;
+  /* Left chunk (today date) hide */
+  .calendar-wrapper .fc-toolbar-chunk:first-child {
+    display: none;
   }
 
-  .fc-button-active{
-    background-color: #F3F5F7 !important;
-    border-radius: 8px !important;
-    padding: 4px 12px 4px 12px !important;
-    color: #3B3D3B !important;
+  /* Right chunk – prev | month | next in one row */
+  .calendar-wrapper .fc-toolbar-chunk:last-child {
+    width: 100%;
   }
 
-  .fc-prev-button{
-    background-color: black !important;
-    border-radius: 100% !important;
-    color: #fff !important;
+  .calendar-wrapper .fc-toolbar-chunk:last-child .fc-button-group {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    /* arrows at edges */
   }
 
-  .fc-next-button{
-    background-color: black !important;
-    border-radius: 100% !important;
-    color: #fff !important;
+  /* Month button perfectly center between arrows */
+  .calendar-wrapper .fc-dayGridMonth-button {
+    margin: 0 auto;
+    /* center in the group */
   }
 
-  .fc-todayGridDay-button{
-    background-color: black !important;
-    border-radius: 8px !important;
-    color: #fff !important;
+  /* Calendar body typography tweaks */
+  .calendar-wrapper .fc-daygrid-event {
+    font-size: 11px;
+    padding: 3px;
+    white-space: normal;
   }
 
-  .fc-todayDate-button{
-    color: #3B3D3B !important;
+  .calendar-wrapper .fc-daygrid-day-number {
+    font-size: 10px;
+  }
+
+  .calendar-wrapper .fc-daygrid-body {
+    font-size: 11px;
+  }
+
+  /* Hide today date custom button on mobile */
+  .calendar-wrapper .fc-todayDate-button {
+    display: none !important;
+  }
+
+  .fc-prev-button {
+    background-color: 'none' !important;
+
+  }
+  .calendar-wrapper .fc-prev-button,
+  .calendar-wrapper .fc-next-button 
+  {
     background-color: transparent !important;
-    font-family: Inter !important;
-    font-weight: 600 !important;
-    line-height: 20px !important;
+    color: #3b3d3b !important;
+    border-radius: 4px !important;
+    box-shadow: none !important;
   }
+}
+
+
+
+/* ---------- COMMON BUTTON STYLES ---------- */
+.fc-button {
+  background-color: transparent !important;
+  color: #3b3d3b !important;
+  border-radius: 5px !important;
+  border: none !important;
+  font-weight: 400;
+  font-size: 16px;
+  font-family: Aptos;
+}
+
+.fc-button:last-child {
+  margin-right: 0;
+}
+
+.fc-button-group {
+  gap: 4px;
+}
+
+.fc-button-active {
+  background-color: #f3f5f7 !important;
+  border-radius: 8px !important;
+  padding: 4px 12px !important;
+  color: #3b3d3b !important;
+}
+
+.fc-prev-button {
+  background-color: black !important;
+  border-radius: 100% !important;
+  color: #fff !important;
+}
+
+.fc-next-button {
+  background-color: black !important;
+  border-radius: 100% !important;
+  color: #fff !important;
+}
+
+.fc-todayGridDay-button {
+  background-color: black !important;
+  border-radius: 8px !important;
+  color: #fff !important;
+}
+
+.fc-todayDate-button {
+  color: #3b3d3b !important;
+  background-color: transparent !important;
+  font-family: Inter !important;
+  font-weight: 600 !important;
+  line-height: 20px !important;
+}

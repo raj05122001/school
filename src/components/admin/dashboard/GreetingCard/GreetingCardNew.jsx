@@ -1,17 +1,41 @@
-import { Badge, Box, Button, IconButton, Typography } from "@mui/material";
+
+"use client";
+
+import {
+  Box,
+  Button,
+  IconButton,
+  Typography,
+  useMediaQuery,
+  useTheme,
+} from "@mui/material";
 import React, { useState, useEffect, useContext } from "react";
 import { decodeToken } from "react-jwt";
 import Cookies from "js-cookie";
-import { GoBell } from "react-icons/go";
 import { IoPlayCircleOutline } from "react-icons/io5";
 import { FiUpload } from "react-icons/fi";
+import { HiOutlineMenu } from "react-icons/hi";
 import { useRouter } from "next/navigation";
 import { AppContextProvider } from "@/app/main";
 
-function GreetingCardNew() {
+function GreetingCardNew({ onMenuClick, isSidebarOpen }) {
   const [userDetails, setUserDetails] = useState(null);
   const router = useRouter();
-  const { handleCreateLecture } = useContext(AppContextProvider);
+
+  const contextValue = useContext(AppContextProvider);
+  const { 
+    handleCreateLecture, 
+    toggleSidebar,  // Context se receive karein
+    isSidebarOpen: contextSidebarOpen   // Alias name use karein
+  } = contextValue || {};
+
+  const theme = useTheme();
+  const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
+
+  // Use context values if props not provided
+  const handleMenuClick = onMenuClick || toggleSidebar;
+  const sidebarOpen = isSidebarOpen !== undefined ? isSidebarOpen : contextSidebarOpen;
+
   useEffect(() => {
     if (typeof window !== "undefined") {
       const token = Cookies.get("ACCESS_TOKEN");
@@ -21,183 +45,203 @@ function GreetingCardNew() {
 
   const userName = userDetails?.full_name?.split(" ")[0];
 
+  const handleCreateLectureSafe = () => {
+    if (handleCreateLecture) {
+      handleCreateLecture("", false);
+    } else {
+      router.push("/teacher/lecture-create");
+    }
+  };
+
   return (
     <Box
       sx={{
         display: "flex",
-        borderBottom: "1px solid var(--Stroke-Color-1, #C1C1C1)",
+        alignItems: "center",
+        justifyContent: "space-between",
+        borderBottom: "1px solid #C1C1C1",
         width: "100%",
-        height: "75px",
-        padding: "13px 6px",
-        justifyContent:'space-between'
+        minHeight: "75px",
+        padding: "13px 24px",
+        flexShrink: 0,
+        boxSizing: "border-box",
       }}
     >
-      <Typography
-        sx={{
-          height: "48px",
-          fontSize: "28px",
-          fontFamily: "Inter, sans-serif",
-          fontWeight: 700,
-          paddingLeft: "12px",
-          flexShrink: 0,
-        }}
-      >
-        Welcome Back {userName}
-      </Typography>
-      <Box
-        sx={{
-          display: "flex",
-          justifyContent: "space-between",
-          alignItems: "center",
-          paddingRight:"12px",
-          gap: "12px",
-        }}
-      >
-
-        {userDetails?.role === "ADMIN" && (
-          <Button
-            variant="contained"
-            onClick={() => router.push(`/admin/lecture-schedule/`)}
+      {/* LEFT SIDE - Title with Hamburger (mobile only) */}
+      <Box sx={{
+        display: "flex",
+        alignItems: "center",
+        gap: 2,
+        flex: 1,
+        minWidth: 0,
+      }}>
+        {/* Hamburger - Mobile Only */}
+        {isMobile && (
+          <IconButton
+            onClick={handleMenuClick}
             sx={{
-              display: "flex",
-              padding: "12px 16px",
-              justifyContent: "center",
-              alignItems: "center",
-              gap: "8px",
-              borderRadius: "8px",
-              backgroundColor: "#141514",
-              textTransform: "none",
+              width: 40,
+              height: 40,
+              borderRadius: "12px",
+              border: "1px solid #E0E0E0",
+              flexShrink: 0,
             }}
           >
-            <FiUpload style={{fontSize:"24px"}}/>
-            <Typography
-              sx={{
-                color: "#fff",
-                textAlign: "center",
-                fontFeatureSettings: "'liga' off, 'clig' off",
-                fontSize: "20px",
-                fontStyle: "normal",
-                fontWeight: 700,
-                fontFamily: "Inter, sans-serif",
-                lineHeight: "24px",
-              }}
-            >
-              Upload
-            </Typography>
-          </Button>
-          
-        )}  
-        {userDetails?.role === "TEACHER" && (
-          <Button
-            variant="contained"
-            onClick={() => handleCreateLecture("", false)}
-            sx={{
-              display: "flex",
-              padding: "12px 16px",
-              justifyContent: "center",
-              alignItems: "center",
-              gap: "8px",
-              borderRadius: "8px",
-              backgroundColor: "#141514",
-              textTransform: "none",
-              "&:hover": {
-                    border: "1px solid #141514",
-                    background: "#E5E5E5",
-                    color: "#141514",
-                  },
-            }}
-          >
-            <span
-              style={{
-                display: "flex",
-                justifyContent: "center",
-                alignItems: "center",
-                width: "24px",
-                height: "24px",
-              }}
-            >
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                width="24"
-                height="24"
-                viewBox="0 0 25 24"
-                fill="none"
-              >
-                <path
-                  d="M12.0625 22C17.5625 22 22.0625 17.5 22.0625 12C22.0625 6.5 17.5625 2 12.0625 2C6.5625 2 2.0625 6.5 2.0625 12C2.0625 17.5 6.5625 22 12.0625 22Z"
-                  stroke="currentColor"
-                  stroke-width="1.5"
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                />
-                <path
-                  d="M8.0625 12H16.0625"
-                  stroke="currentColor"
-                  stroke-width="1.5"
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                />
-                <path
-                  d="M12.0625 16V8"
-                  stroke="currentColor"
-                  stroke-width="1.5"
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                />
-              </svg>
-            </span>
-            <Typography
-              sx={{
-                color: "#fff",
-                textAlign: "center",
-                fontFeatureSettings: "'liga' off, 'clig' off",
-                fontSize: "20px",
-                fontStyle: "normal",
-                fontFamily: "Inter Tight, sans-serif",
-                fontWeight: 700,
-                lineHeight: "24px",
-                "&:hover": {
-                    color: "#141514",
-                  },
-              }}
-            >
-              Create
-            </Typography>
-          </Button>
-        )} 
-        {userDetails?.role==="STUDENT" && (
-          <Button
-            variant="contained"
-            onClick={()=>router.push(`/student/lecture-listings/`)}
-            sx={{
-              display: "flex",
-              padding: "12px 16px",
-              justifyContent: "center",
-              alignItems: "center",
-              gap: "8px",
-              borderRadius: "8px",
-              backgroundColor: "#141514",
-              textTransform: "none",
-            }}
-          >
-            <IoPlayCircleOutline style={{color:"#fff", fontSize:"24px"}}/>
-            <Typography
-              sx={{
-                color: "#fff",
-                textAlign: "center",
-                fontFeatureSettings: "'liga' off, 'clig' off",
-                fontSize: "20px",
-                fontStyle: "normal",
-                fontWeight: 700,
-                lineHeight: "24px",
-                fontFamily: "Inter, sans-serif",
-              }}
-            >
-              Watch
-            </Typography>
-          </Button>
+            <HiOutlineMenu size={22} />
+          </IconButton>
         )}
+
+        {/* Title */}
+        <Typography
+          sx={{
+            fontSize: { xs: "20px", md: "28px" },
+            fontFamily: "Inter, sans-serif",
+            fontWeight: 700,
+            color: "#000",
+            overflow: "hidden",
+            textOverflow: "ellipsis",
+            whiteSpace: "nowrap",
+            flex: 1,
+          }}
+        >
+          Welcome Back {userName}
+        </Typography>
       </Box>
+
+      {/* RIGHT SIDE - Action Buttons (Desktop Only) */}
+      {!isMobile && (
+        <Box sx={{
+          display: "flex",
+          alignItems: "center",
+          gap: "12px",
+          flexShrink: 0,
+        }}>
+          {userDetails?.role === "ADMIN" && (
+            <Button
+              variant="contained"
+              onClick={() => router.push(`/admin/lecture-schedule/`)}
+              sx={{
+                display: "flex",
+                padding: "12px 16px",
+                alignItems: "center",
+                gap: "8px",
+                borderRadius: "8px",
+                backgroundColor: "#141514",
+                textTransform: "none",
+                whiteSpace: "nowrap",
+                minWidth: "auto",
+              }}
+            >
+              <FiUpload style={{ fontSize: "24px" }} />
+              <Typography
+                sx={{
+                  color: "#fff",
+                  fontSize: "20px",
+                  fontWeight: 700,
+                  fontFamily: "Inter, sans-serif",
+                }}
+              >
+                Upload
+              </Typography>
+            </Button>
+          )}
+
+          {userDetails?.role === "TEACHER" && (
+            <Button
+              variant="contained"
+              onClick={handleCreateLectureSafe}
+              sx={{
+                display: "flex",
+                padding: "12px 16px",
+                alignItems: "center",
+                gap: "8px",
+                borderRadius: "8px",
+                backgroundColor: "#141514",
+                textTransform: "none",
+                whiteSpace: "nowrap",
+                minWidth: "auto",
+                "&:hover": {
+                  border: "1px solid #141514",
+                  background: "#E5E5E5",
+                  color: "#141514",
+                },
+              }}
+            >
+              <span style={{ display: "flex", alignItems: "center" }}>
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="24"
+                  height="24"
+                  viewBox="0 0 25 24"
+                  fill="none"
+                >
+                  <path
+                    d="M12.0625 22C17.5625 22 22.0625 17.5 22.0625 12C22.0625 6.5 17.5625 2 12.0625 2C6.5625 2 2.0625 6.5 2.0625 12C2.0625 17.5 6.5625 22 12.0625 22Z"
+                    stroke="currentColor"
+                    strokeWidth="1.5"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                  />
+                  <path
+                    d="M8.0625 12H16.0625"
+                    stroke="currentColor"
+                    strokeWidth="1.5"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                  />
+                  <path
+                    d="M12.0625 16V8"
+                    stroke="currentColor"
+                    strokeWidth="1.5"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                  />
+                </svg>
+              </span>
+              <Typography
+                sx={{
+                  color: "#fff",
+                  fontSize: "20px",
+                  fontWeight: 700,
+                  fontFamily: "Inter, sans-serif",
+                }}
+              >
+                Create
+              </Typography>
+            </Button>
+          )}
+
+          {userDetails?.role === "STUDENT" && (
+            <Button
+              variant="contained"
+              onClick={() => router.push(`/student/lecture-listings/`)}
+              sx={{
+                display: "flex",
+                padding: "12px 16px",
+                alignItems: "center",
+                gap: "8px",
+                borderRadius: "8px",
+                backgroundColor: "#141514",
+                textTransform: "none",
+                whiteSpace: "nowrap",
+                minWidth: "auto",
+              }}
+            >
+              <IoPlayCircleOutline style={{ color: "#fff", fontSize: "24px" }} />
+              <Typography
+                sx={{
+                  color: "#fff",
+                  fontSize: "20px",
+                  fontWeight: 700,
+                  fontFamily: "Inter, sans-serif",
+                }}
+              >
+                Watch
+              </Typography>
+            </Button>
+          )}
+        </Box>
+      )}
     </Box>
   );
 }

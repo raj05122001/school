@@ -267,7 +267,7 @@ export default function NewChatbot({ suggestionInput, setIsOpenChatBot }) {
               alignItems: "center",
               borderBottom: 1,
               borderColor: "#000",
-              backgroundColor:"#000",
+              backgroundColor: "#000",
               p: 2,
               flexShrink: 0, // Prevent shrinking during resize
             }}
@@ -338,28 +338,28 @@ export default function NewChatbot({ suggestionInput, setIsOpenChatBot }) {
                     onClick={handleOldChatsClick}
                     sx={{
                       mt: 2,
-                  display: "inline-flex",
-                  padding: "12px 28px",
-                  justifyContent: "center",
-                  alignItems: "center",
-                  gap: "8px",
-                  textTransform: "none",
-                  borderRadius: "8px",
-                  border:"1px solid #141514",
-                  background: "#fff",
-                  color: "#141514",
-                  textAlign: "center",
-                  fontFeatureSettings: "'liga' off, 'clig' off",
-                  fontFamily: "Aptos",
-                  fontSize: "16px",
-                  fontStyle: "normal",
-                  fontWeight: "700",
-                  lineHeight: "24px",
-                  "&:hover": {
-                    border: "1px solid #141514",
-                    background: "#E5E5E5",
-                    color: "#141514",
-                  },
+                      display: "inline-flex",
+                      padding: "12px 28px",
+                      justifyContent: "center",
+                      alignItems: "center",
+                      gap: "8px",
+                      textTransform: "none",
+                      borderRadius: "8px",
+                      border: "1px solid #141514",
+                      background: "#fff",
+                      color: "#141514",
+                      textAlign: "center",
+                      fontFeatureSettings: "'liga' off, 'clig' off",
+                      fontFamily: "Aptos",
+                      fontSize: "16px",
+                      fontStyle: "normal",
+                      fontWeight: "700",
+                      lineHeight: "24px",
+                      "&:hover": {
+                        border: "1px solid #141514",
+                        background: "#E5E5E5",
+                        color: "#141514",
+                      },
                     }}
                   >
                     Conversation History
@@ -452,7 +452,7 @@ export default function NewChatbot({ suggestionInput, setIsOpenChatBot }) {
                 padding: "16px",
                 width: chatHistory.length > 0 ? "99%" : "100%",
                 height: "100%",
-                backgroundColor:"#fff"
+                backgroundColor: "#fff"
               }}
               ref={graphRef}
             >
@@ -476,7 +476,7 @@ export default function NewChatbot({ suggestionInput, setIsOpenChatBot }) {
                             : "#fff",
                         color: "#141514",
                         borderRadius: 2,
-                        border:"1px solid #141514",
+                        border: "1px solid #141514",
                         p: 1,
                         mx: 1,
                         overflowX: "auto",
@@ -510,8 +510,8 @@ export default function NewChatbot({ suggestionInput, setIsOpenChatBot }) {
                     color: "text.secondary",
                   }}
                 >
-                  <FaRobot size={50} style={{ marginBottom: "16px", fontWeight:400, lineHeight:"normal", fontStyle:"normal", color:"#141514" }} />
-                  <Typography sx={{fontFamily:"Inter", fontSize:"20px", fontWeight:400, lineHeight:"normal", fontStyle:"normal", color:"#141514"}}>Hello! How can I help you?</Typography>
+                  <FaRobot size={50} style={{ marginBottom: "16px", fontWeight: 400, lineHeight: "normal", fontStyle: "normal", color: "#141514" }} />
+                  <Typography sx={{ fontFamily: "Inter", fontSize: "20px", fontWeight: 400, lineHeight: "normal", fontStyle: "normal", color: "#141514" }}>Hello! How can I help you?</Typography>
                 </Box>
               )}
               {isLoading && (
@@ -589,7 +589,7 @@ export default function NewChatbot({ suggestionInput, setIsOpenChatBot }) {
                           {isLoading ? (
                             <CircularProgress size={24} />
                           ) : (
-                            <FaArrowUp style={{color:"#141514"}}/>
+                            <FaArrowUp style={{ color: "#141514" }} />
                           )}
                         </IconButton>
                         {userTextInput && isLoading ? (
@@ -696,3 +696,84 @@ export const VoiceToText = ({ setUserTextInput }) => {
     </Box>
   );
 };
+
+
+
+
+
+
+
+
+
+{/* <Box sx={{ width: "30%", height: "100%" }}>
+              {oldChats.length > 0 ? (
+                <Box
+                  sx={{
+                    width: "100%",
+                    height: "92%",
+                    overflowY: "auto", // Enable scrolling
+                    bgcolor: "grey.100",
+                    p: 2,
+                    boxShadow: "0px 4px 6px rgba(0, 0, 0, 0.1)",
+                    display: "flex",
+                    flexDirection: "column",
+                    alignItems: "center",
+                  }}
+                >
+                  <Typography>Previous Queries</Typography>
+                  <List sx={{ width: "100%" }}>
+                    {oldChats?.map((data, index) => (
+                      <Accordion
+                        key={data?.id}
+                        sx={{
+                          mb: 1,
+                          borderRadius: 4,
+                          backdropFilter: "blur(10px)",
+                          backgroundColor: "rgba(255, 255, 255, 0.8)",
+                        }}
+                      >
+                        <AccordionSummary
+                          expandIcon={<RiArrowDropDownLine />}
+                          sx={{
+                            color: "text.primary",
+                            p: 2,
+                            width: "100%",
+                            height: "100%",
+                          }}
+                        >
+                          <Typography
+                            variant="subtitle1"
+                            gutterBottom
+                            sx={{ fontSize: "14px" }}
+                          >
+                            Session ID - {data?.session?.session_id}
+                            <br />
+                            {index + 1}. {data?.user_question}
+                          </Typography>
+                        </AccordionSummary>
+                        <AccordionDetails
+                          sx={{
+                            bgcolor: "grey.200",
+                            borderRadius: 1,
+                            p: 1,
+                            boxShadow: "0px 2px 4px rgba(0, 0, 0, 0.1)",
+                          }}
+                        >
+                          <Box
+                            sx={{
+                              minWidth: 300,
+                              width: 1.5 * (dimensions.width / 2),
+                              fontSize: "0.85rem",
+                            }}
+                          >
+                            <TextWithMath text={data?.bot_response} />
+                          </Box>
+                        </AccordionDetails>
+                      </Accordion>
+                    ))}
+                  </List>
+                </Box>
+              ) : (
+                <Typography>No conversation history available.</Typography>
+              )}
+            </Box> */}
