@@ -59,16 +59,17 @@ const ListingCard = ({ data, onClick }) => {
     setIsHovered(false);
     videoRef?.current?.pause();
   };
-
   return (
     <Box
-      p={2}
       sx={{
-        width: { xs: "90%", sm: "100%" }, // ✅ mobile 90%, system (sm+) 100%
+        p: { xs: 1.5, sm: 2 },    // padding rakhna ho to responsive
+        width: "100%",            // ✅ hamesha full width
         height: "100%",
+        boxSizing: "border-box",
       }}
       onClick={() => onClick(data?.id)}
     >
+
       <Card
         // className="blur_effect_card"
         sx={{

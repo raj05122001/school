@@ -289,7 +289,7 @@ const StudentFilters = ({
           px: 2,
           gap: 1,
           width: "100%",
-          maxWidth: "80vw",
+            maxWidth: "100%",
           flexWrap: "nowrap",
           "&::-webkit-scrollbar": { display: "none" },
           scrollbarWidth: "none",

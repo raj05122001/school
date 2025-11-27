@@ -21,6 +21,8 @@ import { AppContextProvider } from "@/app/main";
 function GreetingCardNew({ onMenuClick, isSidebarOpen }) {
   const [userDetails, setUserDetails] = useState(null);
   const router = useRouter();
+const theme = useTheme();
+const isSmallScreen = useMediaQuery(theme.breakpoints.down("md")); // < 900px
 
   const contextValue = useContext(AppContextProvider);
   const { 
@@ -29,8 +31,7 @@ function GreetingCardNew({ onMenuClick, isSidebarOpen }) {
     isSidebarOpen: contextSidebarOpen   // Alias name use karein
   } = contextValue || {};
 
-  const theme = useTheme();
-  const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
+
 
   // Use context values if props not provided
   const handleMenuClick = onMenuClick || toggleSidebar;
@@ -76,7 +77,7 @@ function GreetingCardNew({ onMenuClick, isSidebarOpen }) {
         minWidth: 0,
       }}>
         {/* Hamburger - Mobile Only */}
-        {isMobile && (
+        {isSmallScreen  && (
           <IconButton
             onClick={handleMenuClick}
             sx={{
@@ -109,7 +110,7 @@ function GreetingCardNew({ onMenuClick, isSidebarOpen }) {
       </Box>
 
       {/* RIGHT SIDE - Action Buttons (Desktop Only) */}
-      {!isMobile && (
+      {!isSmallScreen  && (
         <Box sx={{
           display: "flex",
           alignItems: "center",
