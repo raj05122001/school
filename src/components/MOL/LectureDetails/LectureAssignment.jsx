@@ -35,6 +35,7 @@ import { BASE_URL_MEET } from "@/constants/apiconfig";
 import { IoIosArrowDown, IoIosArrowUp, IoIosClose, IoIosDocument } from "react-icons/io";
 import AssignmentTextFormat from "@/commonComponents/TextWithMath/AssignmentTextFormat";
 import Chip from "@mui/material/Chip";
+import toast from "react-hot-toast";
 
 
 const userDetails = decodeToken(Cookies.get("ACCESS_TOKEN"));
@@ -54,6 +55,7 @@ const LectureAssignment = ({
     assignment_text: "",
     assignment_mark: 0,
   });
+  const [assessmentKeywordsRule, setAssessmentKeywordsRule]=useState("")
   const [file, setFile] = useState(null); // New state for file
   const [isEditData, setIsEditData] = useState(false);
   const [editedText, setEditedText] = useState("");
@@ -62,6 +64,7 @@ const LectureAssignment = ({
   const [openAccordian, setOpenAccordian] = useState(false);
   const [activeAccordion, setActiveAccordion] = React.useState(null);
   const [isApproach, setIsApproach] = useState(false)
+  const [isHaveMultiQuestion, setIsHaveMultiQuestion] = useState(false)
 
   const lectureID = id;
 
@@ -191,8 +194,9 @@ const LectureAssignment = ({
       lecture_class: class_ID,
       is_assigned: 1,
       approach: isApproach,
+      have_multi_question: isHaveMultiQuestion,
+      assessment_keywords_rule: assessmentKeywordsRule,
     };
-
 
     if (!newAssignment?.assignment_mark) {
       setNumberError("Assignment marks is required.")
@@ -201,6 +205,10 @@ const LectureAssignment = ({
       setNumberError("")
     }
 
+    if(isHaveMultiQuestion && !assessmentKeywordsRule){
+      toast.error("Assessment keywords rule is required.")
+      return;
+    }
 
     if (file) {
       formData.assignment_attachment = file;
@@ -217,6 +225,7 @@ const LectureAssignment = ({
         fetchAssignments();
         setOpenDialog(false);
         setIsApproach(false)
+        setIsHaveMultiQuestion(false)
       } else {
         setError("Failed to create assignment.");
       }
@@ -777,6 +786,32 @@ const LectureAssignment = ({
                   })
                 }
               />
+              {isHaveMultiQuestion && 
+              <TextField
+                autoFocus
+                margin="dense"
+                label="Assessment Keywords Rule"
+                type="text"
+                fullWidth
+                variant="outlined"
+                multiline
+                rows={5}
+                InputLabelProps={{
+                  style: { color: isDarkMode ? "#d7e4fc" : "" },
+                }}
+                InputProps={{
+                  sx: {
+                    backdropFilter: "blur(10px)",
+                    backgroundColor: "rgba(255, 255, 255, 0.5)",
+                    "& .MuiOutlinedInput-notchedOutline": {},
+                  },
+                }}
+                value={assessmentKeywordsRule}
+                onChange={(e) =>
+                  setAssessmentKeywordsRule(e.target.value)
+                }
+              />
+              }
               <Box display="flex" justifyContent="flex-end" mt={2}>
                 <Button
                   variant="outlined"
@@ -892,6 +927,24 @@ const LectureAssignment = ({
                       />
                     }
                     label="Would you like to include the approach?"
+                    sx={{ ml: 1 }}
+                  />
+                </FormControl>
+                <FormControl>
+                  <FormControlLabel
+                    control={
+                      <Checkbox
+                        sx={{ color: 'black' }}
+                        checked={isHaveMultiQuestion}
+                        onChange={(e) =>{
+                          setIsHaveMultiQuestion(e.target.checked)
+                          if(e.target.checked===false){
+                            setAssessmentKeywordsRule("")
+                          }
+                        }}
+                      />
+                    }
+                    label="Have multiple question?"
                     sx={{ ml: 1 }}
                   />
                 </FormControl>
