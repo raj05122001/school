@@ -13,7 +13,7 @@ import HeroSectionStudent from "@/components/student/dashboard/HeroSectionStuden
 const Page = () => {
   // const greetingCard = useMemo(() => <GreetingCard />, []);
   const profileCard = useMemo(() => <HeroSectionStudent />, []);
-  const watchTimeChart = useMemo(()=><WatchTimeChart />, []);
+  const watchTimeChart = useMemo(() => <WatchTimeChart />, []);
   const recentLectures = useMemo(() => <RecentLectures />, []);
   const myRank = useMemo(() => <MyRank />, []);
   const myAssignmentAnalytics = useMemo(() => <MyAssignmentAnalytics />, []);

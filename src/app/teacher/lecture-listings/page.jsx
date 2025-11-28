@@ -184,76 +184,29 @@ const Page = () => {
         searchQuery={searchQuery}
         month={month}
         lectureType={lectureType}
+        localSearchInput={localSearchInput}
+        onSearchChange={handleSearchChange}
+        isDarkMode={isDarkMode}
+        primaryColor={primaryColor}
       />
     ),
-    [classValue, subject, searchQuery, month, lectureType]
+    [
+      classValue,
+      subject,
+      searchQuery,
+      month,
+      lectureType,
+      localSearchInput,
+      isDarkMode,
+      primaryColor,
+    ]
   );
 
   return (
     <Box sx={{ width: "100%", height: "100%" }}>
       {filters}
 
-      {/* <Box
-        sx={{
-          px: 2,
-          pb: 2,
-          pt: 1,
-          display: "flex",
-          flexDirection: { xs: "column", sm: "row" },
-          alignItems: { xs: "flex-start", sm: "center" },
-          justifyContent: "flex-end",
-          gap: 2,
-        }}
-      >
-        <Box
-          sx={{
-            width: { xs: "90%", sm: "320px", md: "420px" },
-          }}
-        >
-          <TextField
-            value={localSearchInput}
-            onChange={handleSearchChange}
-            placeholder="Search lectures..."
-            size="small"
-            fullWidth
-            InputProps={{
-              startAdornment: (
-                <InputAdornment position="start">
-                  <FaSearch
-                    size={14}
-                    style={{
-                      opacity: 0.7,
-                    }}
-                  />
-                </InputAdornment>
-              ),
-            }}
-            sx={{
-              "& .MuiOutlinedInput-root": {
-                borderRadius: "999px",
-                paddingRight: "8px",
-                backgroundColor: isDarkMode ? "#020617" : "#f9fafb",
-                boxShadow: isDarkMode
-                  ? "0 10px 30px rgba(0,0,0,0.45)"
-                  : "0 10px 30px rgba(15,23,42,0.10)",
-                "& fieldset": {
-                  borderColor: isDarkMode ? "#334155" : "#e5e7eb",
-                },
-                "&:hover fieldset": {
-                  borderColor: primaryColor || "#2563eb",
-                },
-                "&.Mui-focused fieldset": {
-                  borderColor: primaryColor || "#2563eb",
-                  boxShadow: `0 0 0 1px ${primaryColor || "#2563eb"}`,
-                },
-              },
-              "& .MuiInputBase-input": {
-                fontSize: 14,
-              },
-            }}
-          />
-        </Box>
-      </Box> */}
+  
       <Grid container spacing={2}>
         {isLoading ? (
           Array.from({ length: 16 }, (_, ind) => (

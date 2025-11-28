@@ -50,7 +50,6 @@ const Page = () => {
   const encodeURI = (value) => {
     return encodeURIComponent(value);
   };
-
   const fetchData = async () => {
     setIsLoading(true);
     try {
