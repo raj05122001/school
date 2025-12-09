@@ -12,6 +12,8 @@ import {
   DialogTitle,
   DialogContent,
   IconButton,
+  Chip,
+  Divider
 } from "@mui/material";
 import React, { useEffect, useState } from "react";
 import { FaAngleDown } from "react-icons/fa";
@@ -28,6 +30,9 @@ import {
 import { getStudentAssignmentComment } from "@/api/apiHelper";
 import MarkDownFormater from "@/components/formater/MarkDownFormater";
 import { IoClose } from "react-icons/io5";
+
+// ViewModel.jsx
+import { BsCheckCircle, BsLightbulb, BsInfoCircle } from "react-icons/bs";
 
 const ColorLinearProgress = styled(LinearProgress)(({ theme, value }) => {
   let color = "#FF0000"; // Default: Red for low scores
@@ -501,9 +506,37 @@ const AIFeedback = ({ assignment, answered_by, totalMarks, apiResult }) => {
 export default AIFeedback;
 
 const ViewModel = ({ result, assignment, jsonData, setOpenModel }) => {
+  const score = result?.data?.score ?? 0;
+  const totalMarks = assignment?.assignment_mark ?? 0;
+  const rawComment = result?.data?.comment;
+
+  // -------- try to parse JSON feedback --------
+  let parsedFeedback = null;
+  if (rawComment) {
+    try {
+      const maybeObj =
+        typeof rawComment === "string" ? JSON.parse(rawComment) : rawComment;
+
+      if (maybeObj && typeof maybeObj === "object") {
+        parsedFeedback = {
+          overall: maybeObj.overall_feedback,
+          points: Array.isArray(maybeObj.feedback_points)
+            ? maybeObj.feedback_points
+            : [],
+          improvements: Array.isArray(maybeObj.improvement_points)
+            ? maybeObj.improvement_points
+            : [],
+        };
+      }
+    } catch (e) {
+      // not JSON → ignore, we'll show raw markdown below
+      parsedFeedback = null;
+    }
+  }
+
   return (
     <Box sx={{ mt: 1 }}>
-      {/* Header row: Marks + Close button */}
+      {/* Header row: Marks + Close button (agar chahiye toh yaha icon add kar sakte ho) */}
       <Box
         sx={{
           display: "flex",
@@ -514,35 +547,150 @@ const ViewModel = ({ result, assignment, jsonData, setOpenModel }) => {
       >
         <Typography
           sx={{
+            display: "flex",
+            alignItems: "center",
             color: "#3D3D3D",
-            fontFeatureSettings: "'liga' off, 'clig' off",
             fontFamily: "Aptos",
             fontSize: "16px",
-            fontStyle: "normal",
             fontWeight: 600,
             lineHeight: "19px",
             mb: "2px",
           }}
         >
-          <GrScorecard style={{ marginRight: "4px" }} />
-          <strong>Marks Scored:</strong>
-          <span style={{ fontSize: "20px", marginLeft: "4px" }}>
-            {result?.data?.score}/{assignment.assignment_mark}
+          <GrScorecard style={{ marginRight: 6 }} />
+          Marks Scored:
+          <span
+            style={{
+              fontSize: "20px",
+              marginLeft: 6,
+              fontWeight: 700,
+            }}
+          >
+            {score}/{totalMarks}
           </span>
         </Typography>
       </Box>
 
-      {result?.data?.score !== undefined && assignment.assignment_mark && (
+      {totalMarks > 0 && (
         <ColorLinearProgress
           variant="determinate"
-          sx={{ height: "6px", mt: 1 }}
-          value={(result?.data?.score / assignment.assignment_mark) * 100}
+          sx={{ height: "6px", mt: 1, borderRadius: 999 }}
+          value={(score / totalMarks) * 100}
         />
       )}
 
-      <Box sx={{ mt: 2 }}>
-        <MarkDownFormater data={result?.data?.comment} />
+      {/* Feedback section */}
+      <Box
+        sx={{
+          mt: 3,
+          p: 2,
+          borderRadius: 2,
+          bgcolor: "#F9FAFB",
+          border: "1px solid #E5E7EB",
+        }}
+      >
+        {parsedFeedback ? (
+          <>
+            {/* Overall feedback */}
+            {parsedFeedback.overall && (
+              <Box sx={{ mb: 2 }}>
+                <Chip
+                  icon={<BsInfoCircle size={16} />}
+                  label="Overall Feedback"
+                  size="small"
+                  sx={{
+                    mb: 1,
+                    bgcolor: "#EEF2FF",
+                    color: "#1E1B4B",
+                    fontWeight: 600,
+                  }}
+                />
+                <Typography
+                  sx={{
+                    fontSize: 14,
+                    color: "#111827",
+                    lineHeight: 1.6,
+                  }}
+                >
+                  {parsedFeedback.overall}
+                </Typography>
+              </Box>
+            )}
+
+            <Divider sx={{ my: 1.5 }} />
+
+            {/* Positive points */}
+            {parsedFeedback.points?.length > 0 && (
+              <Box sx={{ mb: 2 }}>
+                <Chip
+                  icon={<BsCheckCircle size={16} />}
+                  label="What you did well"
+                  size="small"
+                  sx={{
+                    mb: 1,
+                    bgcolor: "#ECFDF5",
+                    color: "#065F46",
+                    fontWeight: 600,
+                  }}
+                />
+                <Box component="ul" sx={{ pl: 3, m: 0 }}>
+                  {parsedFeedback.points.map((p, idx) => (
+                    <Typography
+                      key={idx}
+                      component="li"
+                      sx={{
+                        fontSize: 14,
+                        color: "#111827",
+                        lineHeight: 1.5,
+                        mb: 0.5,
+                      }}
+                    >
+                      {p}
+                    </Typography>
+                  ))}
+                </Box>
+              </Box>
+            )}
+
+            {/* Improvement points */}
+            {parsedFeedback.improvements?.length > 0 && (
+              <Box>
+                <Chip
+                  icon={<BsLightbulb size={16} />}
+                  label="How to improve"
+                  size="small"
+                  sx={{
+                    mb: 1,
+                    bgcolor: "#FEF3C7",
+                    color: "#92400E",
+                    fontWeight: 600,
+                  }}
+                />
+                <Box component="ul" sx={{ pl: 3, m: 0 }}>
+                  {parsedFeedback.improvements.map((p, idx) => (
+                    <Typography
+                      key={idx}
+                      component="li"
+                      sx={{
+                        fontSize: 14,
+                        color: "#111827",
+                        lineHeight: 1.5,
+                        mb: 0.5,
+                      }}
+                    >
+                      {p}
+                    </Typography>
+                  ))}
+                </Box>
+              </Box>
+            )}
+          </>
+        ) : (
+          // Fallback: comment JSON nahi hai to markdown jaisa hai vaisa dikhao
+          <MarkDownFormater data={rawComment} />
+        )}
       </Box>
     </Box>
   );
 };
+
