@@ -10,11 +10,11 @@ import {
   DialogActions,
   IconButton,
   Typography,
-  LinearProgress,
+  // LinearProgress, // abhi use nahi ho raha
 } from "@mui/material";
 import { FiUpload, FiX, FiFile } from "react-icons/fi";
-import axios from "axios";
 import { createInstantLecture } from "@/api/apiHelper";
+
 const formatFileSize = (bytes) => {
   if (!bytes && bytes !== 0) return "";
   if (bytes < 1024) return `${bytes} B`;
@@ -22,11 +22,7 @@ const formatFileSize = (bytes) => {
   return `${(bytes / (1024 * 1024)).toFixed(1)} MB`;
 };
 
-function VideoUploadModal({
-  open,
-  onClose,
-  onSuccess,
-}) {
+function VideoUploadModal({ open, onClose, onSuccess }) {
   const [file, setFile] = useState(null);
   const [uploadProgress, setUploadProgress] = useState(0); // 0–100
   const [isUploading, setIsUploading] = useState(false);
@@ -52,26 +48,38 @@ function VideoUploadModal({
 
     setIsUploading(true);
     setError("");
+    setUploadProgress(10);
+
+    const start = Date.now();
+    const MIN_DURATION = 2000;
 
     try {
       const videoFileName = file.name;
 
       await createInstantLecture(videoFileName);
 
+      const elapsed = Date.now() - start;
+      if (elapsed < MIN_DURATION) {
+        await new Promise((res) => setTimeout(res, MIN_DURATION - elapsed));
+      }
+
+      setUploadProgress(100);
+
       if (onSuccess) onSuccess({ video_file_name: videoFileName });
 
-      setIsUploading(false);
-      setFile(null);
-      setUploadProgress(100);
-      onClose?.();
+      setTimeout(() => {
+        setIsUploading(false);
+        setFile(null);
+        setUploadProgress(0);
+        onClose?.();
+      }, 300);
     } catch (err) {
       console.error(err);
       setIsUploading(false);
+      setUploadProgress(0);
       setError("Upload failed. Please try again.");
     }
   };
-
-
 
   const handleClose = () => {
     if (isUploading) return;
@@ -81,7 +89,6 @@ function VideoUploadModal({
     onClose?.();
   };
 
-  // ---- custom circle progress values ----
   const radius = 16;
   const circumference = 2 * Math.PI * radius;
   const safeProgress = Math.min(Math.max(uploadProgress, 0), 100);
@@ -97,8 +104,8 @@ function VideoUploadModal({
         sx: {
           borderRadius: "16px",
           padding: "8px 8px 16px",
-          background: "linear-gradient(135deg, #0F172A, #111827)",
-          color: "#E5E7EB",
+          backgroundColor: "#FFFFFF",
+          color: "#141514",
         },
       }}
     >
@@ -115,6 +122,7 @@ function VideoUploadModal({
             fontSize: "18px",
             fontWeight: 700,
             fontFamily: "Inter, sans-serif",
+            color: "#141514",
           }}
         >
           Upload Lecture Video
@@ -122,7 +130,7 @@ function VideoUploadModal({
         <IconButton
           onClick={handleClose}
           disabled={isUploading}
-          sx={{ color: "#9CA3AF" }}
+          sx={{ color: "#6B7280" }}
         >
           <FiX />
         </IconButton>
@@ -133,15 +141,14 @@ function VideoUploadModal({
           pt: 1,
         }}
       >
-        {/* Upload Area */}
         <Box
           sx={{
             borderRadius: "12px",
-            border: "1px dashed rgba(156,163,175,0.7)",
+            border: "1px dashed rgba(16,185,129,0.5)",
             padding: "20px",
             textAlign: "center",
             background:
-              "radial-gradient(circle at top, rgba(59,130,246,0.08), transparent 60%)",
+              "radial-gradient(circle at top, rgba(18,221,0,0.06), rgba(255,255,255,1) 70%)",
           }}
         >
           <Box
@@ -154,10 +161,10 @@ function VideoUploadModal({
               justifyContent: "center",
               margin: "0 auto 12px",
               background:
-                "linear-gradient(135deg, rgba(96,165,250,0.2), rgba(14,165,233,0.1))",
+                "linear-gradient(135deg, rgba(18,221,0,0.25), rgba(34,197,94,0.1))",
             }}
           >
-            <FiUpload size={28} />
+            <FiUpload size={28} color="#16AA54" />
           </Box>
 
           <Typography
@@ -165,6 +172,7 @@ function VideoUploadModal({
               fontSize: "16px",
               fontWeight: 600,
               mb: 0.5,
+              color: "#111827",
             }}
           >
             Select a video to upload
@@ -172,7 +180,7 @@ function VideoUploadModal({
           <Typography
             sx={{
               fontSize: "13px",
-              color: "#9CA3AF",
+              color: "#6B7280",
               mb: 2,
             }}
           >
@@ -197,11 +205,11 @@ function VideoUploadModal({
               textTransform: "none",
               px: 3,
               py: 1,
-              borderColor: "rgba(156,163,175,0.7)",
-              color: "#E5E7EB",
+              borderColor: "#16AA54",
+              color: "#16AA54",
               "&:hover": {
-                borderColor: "#60A5FA",
-                background: "rgba(37,99,235,0.08)",
+                borderColor: "#16AA54",
+                background: "rgba(22,163,74,0.08)",
               },
             }}
           >
@@ -209,15 +217,13 @@ function VideoUploadModal({
           </Button>
         </Box>
 
-        {/* Selected File Info */}
         {file && (
           <Box
             sx={{
               mt: 2,
               borderRadius: "12px",
-              border: "1px solid rgba(55,65,81,0.9)",
-              background:
-                "linear-gradient(135deg, rgba(31,41,55,0.9), rgba(17,24,39,0.95))",
+              border: "1px solid rgba(209,213,219,0.9)",
+              background: "#F9FAFB",
               p: 1.5,
               display: "flex",
               alignItems: "center",
@@ -229,14 +235,14 @@ function VideoUploadModal({
                 width: 40,
                 height: 40,
                 borderRadius: "12px",
-                background: "rgba(55,65,81,0.9)",
+                background: "#E5F9E7",
                 display: "flex",
                 alignItems: "center",
                 justifyContent: "center",
                 flexShrink: 0,
               }}
             >
-              <FiFile />
+              <FiFile color="#16A34A" />
             </Box>
 
             <Box sx={{ flex: 1, minWidth: 0 }}>
@@ -247,6 +253,7 @@ function VideoUploadModal({
                   whiteSpace: "nowrap",
                   overflow: "hidden",
                   textOverflow: "ellipsis",
+                  color: "#111827",
                 }}
                 title={file.name}
               >
@@ -255,14 +262,13 @@ function VideoUploadModal({
               <Typography
                 sx={{
                   fontSize: "12px",
-                  color: "#9CA3AF",
+                  color: "#6B7280",
                 }}
               >
                 {formatFileSize(file.size)}
               </Typography>
             </Box>
 
-            {/* RIGHT-SIDE CIRCLE PROGRESS (SVG based) */}
             {safeProgress > 0 && (
               <Box
                 sx={{
@@ -279,21 +285,19 @@ function VideoUploadModal({
                   viewBox="0 0 40 40"
                   style={{ transform: "rotate(-90deg)" }}
                 >
-                  {/* background track */}
                   <circle
                     cx="20"
                     cy="20"
                     r={radius}
-                    stroke="rgba(75,85,99,0.7)"
+                    stroke="rgba(209,213,219,0.9)"
                     strokeWidth="3"
                     fill="none"
                   />
-                  {/* progress arc */}
                   <circle
                     cx="20"
                     cy="20"
                     r={radius}
-                    stroke={safeProgress === 100 ? "#22C55E" : "#60A5FA"}
+                    stroke="#16AA54"
                     strokeWidth="3"
                     fill="none"
                     strokeDasharray={circumference}
@@ -315,7 +319,7 @@ function VideoUploadModal({
                     sx={{
                       fontSize: "8px",
                       fontWeight: 600,
-                      color: "#E5E7EB",
+                      color: "#111827",
                     }}
                   >
                     {safeProgress}%
@@ -326,40 +330,13 @@ function VideoUploadModal({
           </Box>
         )}
 
-        {/* Bottom bar progress */}
-        {/* {isUploading && (
-          <Box sx={{ mt: 2 }}>
-            <LinearProgress
-              variant="determinate"
-              value={safeProgress}
-              sx={{
-                height: 6,
-                borderRadius: 999,
-                backgroundColor: "#111827",
-                "& .MuiLinearProgress-bar": {
-                  borderRadius: 999,
-                },
-              }}
-            />
-            <Typography
-              sx={{
-                fontSize: "12px",
-                color: "#9CA3AF",
-                mt: 0.5,
-              }}
-            >
-              Uploading… please don’t close this window.
-            </Typography>
-          </Box>
-        )} */}
-
         {/* Error Text */}
         {error && (
           <Typography
             sx={{
               mt: 1.5,
               fontSize: "12px",
-              color: "#FCA5A5",
+              color: "#DC2626",
             }}
           >
             {error}
@@ -380,7 +357,7 @@ function VideoUploadModal({
           disabled={isUploading}
           sx={{
             textTransform: "none",
-            color: "#9CA3AF",
+            color: "#6B7280",
           }}
         >
           Cancel
@@ -393,11 +370,26 @@ function VideoUploadModal({
             textTransform: "none",
             borderRadius: "999px",
             px: 3,
-            background: "linear-gradient(135deg, #2563EB, #1D4ED8)",
+
+            color: "#FFFFFF",
+            background: "linear-gradient(135deg, #12DD00, #16A34A)",
+
+            "&:hover": {
+              color: "#FFFFFF",
+              background: "linear-gradient(135deg, #16A34A, #15803D)",
+            },
+
+            "&.Mui-disabled": {
+              color: "#FFFFFF",
+              background: "linear-gradient(135deg, #16A34A, #15803D)",
+              opacity: 0.7,
+            },
           }}
         >
           {isUploading ? "Uploading..." : "Upload Video"}
         </Button>
+
+
       </DialogActions>
     </Dialog>
   );
