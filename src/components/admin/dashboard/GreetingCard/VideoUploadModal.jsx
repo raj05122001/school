@@ -10,7 +10,6 @@ import {
   DialogActions,
   IconButton,
   Typography,
-  // LinearProgress, // abhi use nahi ho raha
 } from "@mui/material";
 import { FiUpload, FiX, FiFile } from "react-icons/fi";
 import { createInstantLecture } from "@/api/apiHelper";
@@ -32,8 +31,11 @@ function VideoUploadModal({ open, onClose, onSuccess }) {
     const selected = e.target.files?.[0];
     if (!selected) return;
 
-    if (!selected.type.startsWith("video/")) {
-      setError("Please select a valid video file.");
+    const isVideo = selected.type.startsWith("video/");
+    const isPdf = selected.type === "application/pdf";
+
+    if (!isVideo && !isPdf) {
+      setError("Please select a video or PDF file.");
       setFile(null);
       return;
     }
@@ -54,9 +56,9 @@ function VideoUploadModal({ open, onClose, onSuccess }) {
     const MIN_DURATION = 2000;
 
     try {
-      const videoFileName = file.name;
+      const fileName = file.name;
 
-      await createInstantLecture(videoFileName);
+      await createInstantLecture(fileName);
 
       const elapsed = Date.now() - start;
       if (elapsed < MIN_DURATION) {
@@ -65,7 +67,7 @@ function VideoUploadModal({ open, onClose, onSuccess }) {
 
       setUploadProgress(100);
 
-      if (onSuccess) onSuccess({ video_file_name: videoFileName });
+      if (onSuccess) onSuccess({ video_file_name: fileName });
 
       setTimeout(() => {
         setIsUploading(false);
@@ -125,7 +127,7 @@ function VideoUploadModal({ open, onClose, onSuccess }) {
             color: "#141514",
           }}
         >
-          Upload Lecture Video
+          Upload Lecture File
         </Typography>
         <IconButton
           onClick={handleClose}
@@ -175,7 +177,7 @@ function VideoUploadModal({ open, onClose, onSuccess }) {
               color: "#111827",
             }}
           >
-            Select a video to upload
+            Select a file to upload
           </Typography>
           <Typography
             sx={{
@@ -184,13 +186,13 @@ function VideoUploadModal({ open, onClose, onSuccess }) {
               mb: 2,
             }}
           >
-            MP4 / MKV preferred. File size limit applies.
+            Video (MP4 / MKV) or PDF file accepted.
           </Typography>
 
           <input
             id="video-upload-input"
             type="file"
-            accept="video/*"
+            accept="video/*,application/pdf"
             style={{ display: "none" }}
             onChange={handleFileChange}
             disabled={isUploading}
@@ -213,7 +215,7 @@ function VideoUploadModal({ open, onClose, onSuccess }) {
               },
             }}
           >
-            Choose Video
+            Choose File
           </Button>
         </Box>
 
@@ -330,7 +332,6 @@ function VideoUploadModal({ open, onClose, onSuccess }) {
           </Box>
         )}
 
-        {/* Error Text */}
         {error && (
           <Typography
             sx={{
@@ -370,15 +371,12 @@ function VideoUploadModal({ open, onClose, onSuccess }) {
             textTransform: "none",
             borderRadius: "999px",
             px: 3,
-
             color: "#FFFFFF",
             background: "linear-gradient(135deg, #12DD00, #16A34A)",
-
             "&:hover": {
               color: "#FFFFFF",
               background: "linear-gradient(135deg, #16A34A, #15803D)",
             },
-
             "&.Mui-disabled": {
               color: "#FFFFFF",
               background: "linear-gradient(135deg, #16A34A, #15803D)",
@@ -386,10 +384,8 @@ function VideoUploadModal({ open, onClose, onSuccess }) {
             },
           }}
         >
-          {isUploading ? "Uploading..." : "Upload Video"}
+          {isUploading ? "Uploading..." : "Upload File"}
         </Button>
-
-
       </DialogActions>
     </Dialog>
   );
