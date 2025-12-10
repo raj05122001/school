@@ -174,10 +174,8 @@ export default class apiServices {
   ) => {
     return await this.axiosInstance
       .get(
-        `/api/v1/dashboard/teacher/lectures/?status=${status}&type=${type}&search=${search}&page=${page}&size=${size}${
-          getMyLectures ? `&date=${getMyLectures}` : ""
-        }${subjectList ? `&subject=${subjectList}` : ""}${
-          classList ? `&class=${classList}` : ""
+        `/api/v1/dashboard/teacher/lectures/?status=${status}&type=${type}&search=${search}&page=${page}&size=${size}${getMyLectures ? `&date=${getMyLectures}` : ""
+        }${subjectList ? `&subject=${subjectList}` : ""}${classList ? `&class=${classList}` : ""
         }`
       )
       .then((Response) => Response)
@@ -217,12 +215,9 @@ export default class apiServices {
   ) => {
     return await this.axiosInstance
       .get(
-        `/api/v1/teacher/lectures/?search=${
-          search ? search : ""
-        }&page=${page}&size=${pageSize}&date=${date ? date : ""}&type=${
-          type ? type : ""
-        }${subjectList ? `&subject=${subjectList}` : ""}${
-          classList ? `&class=${classList}` : ""
+        `/api/v1/teacher/lectures/?search=${search ? search : ""
+        }&page=${page}&size=${pageSize}&date=${date ? date : ""}&type=${type ? type : ""
+        }${subjectList ? `&subject=${subjectList}` : ""}${classList ? `&class=${classList}` : ""
         }`
       )
       .then((Response) => Response)
@@ -379,8 +374,7 @@ export default class apiServices {
   public getCountByCategory = async (class_ids = "", teacher_id) => {
     return await this.axiosInstance
       .get(
-        `/api/v1/dashboard/count_by_category/?class_ids=${class_ids}${
-          teacher_id !== 0 ? `&teacher_id=${teacher_id}` : ""
+        `/api/v1/dashboard/count_by_category/?class_ids=${class_ids}${teacher_id !== 0 ? `&teacher_id=${teacher_id}` : ""
         }`
       )
       .then((Response) => Response)
@@ -394,8 +388,7 @@ export default class apiServices {
   ) => {
     return await this.axiosInstance
       .get(
-        `/api/v1/dashboard/get_by_category/?class_ids=${class_ids}&grade=${grade}${
-          teacher_id !== 0 ? `&teacher_id=${teacher_id}` : ""
+        `/api/v1/dashboard/get_by_category/?class_ids=${class_ids}&grade=${grade}${teacher_id !== 0 ? `&teacher_id=${teacher_id}` : ""
         }`
       )
       .then((Response) => Response)
@@ -412,8 +405,7 @@ export default class apiServices {
   public getClassAssignment = async (class_ids, isTeacher = false) => {
     return await this.axiosInstance
       .get(
-        `/api/v1/dashboard/assignment-class-details/${class_ids}/${
-          isTeacher ? "?teacher=True" : ""
+        `/api/v1/dashboard/assignment-class-details/${class_ids}/${isTeacher ? "?teacher=True" : ""
         }`
       )
       .then((Response) => Response)
@@ -428,8 +420,7 @@ export default class apiServices {
   ) => {
     return await this.axiosInstance
       .get(
-        `/api/v1/dashboard/assignment-student-details/${class_ids}/?page=${page}&size=${pageSize}${
-          isTeacher ? "&teacher=True" : ""
+        `/api/v1/dashboard/assignment-student-details/${class_ids}/?page=${page}&size=${pageSize}${isTeacher ? "&teacher=True" : ""
         }`
       )
       .then((Response) => Response)
@@ -533,11 +524,11 @@ export default class apiServices {
       .catch((error) => {
         const errorMessage =
           error?.data?.message || "Failed to create assignment";
-          // Generic error toast for other errors
-          toast.error(errorMessage, {
-            id: toastInstance,
-            duration: Constants.toastTimer,
-          });
+        // Generic error toast for other errors
+        toast.error(errorMessage, {
+          id: toastInstance,
+          duration: Constants.toastTimer,
+        });
 
         console.error(error);
         throw error;
@@ -561,10 +552,8 @@ export default class apiServices {
   ) => {
     return await this.axiosInstance
       .get(
-        `/api/v1/student/lectures/?search=${
-          search ? search : ""
-        }&page=${page}&size=${pageSize}&date=${date ? date : ""}&type=${
-          type ? type : ""
+        `/api/v1/student/lectures/?search=${search ? search : ""
+        }&page=${page}&size=${pageSize}&date=${date ? date : ""}&type=${type ? type : ""
         }${subjectList ? `&subject=${subjectList}` : ""}`
       )
       .then((Response) => Response)
@@ -583,12 +572,9 @@ export default class apiServices {
   ) => {
     return await this.axiosInstance
       .get(
-        `/api/v1/dashboard/all_lectures/?${
-          search ? `&search=${search}` : ""
-        }&type=${type}${status ? `&status=${status}` : ""}${
-          page ? `&page=${page}` : ""
-        }${size ? `&size=${size}` : ""}${getDate ? `&date=${getDate}` : ""}${
-          subjectList ? `&subject=${subjectList}` : ""
+        `/api/v1/dashboard/all_lectures/?${search ? `&search=${search}` : ""
+        }&type=${type}${status ? `&status=${status}` : ""}${page ? `&page=${page}` : ""
+        }${size ? `&size=${size}` : ""}${getDate ? `&date=${getDate}` : ""}${subjectList ? `&subject=${subjectList}` : ""
         }${classList ? `&class=${classList}` : ""}`
       )
       .then((Response) => Response)
@@ -651,8 +637,7 @@ export default class apiServices {
   public getFeedback = async (lectureId, student_id) => {
     return await this.axiosInstance
       .get(
-        `/api/v1/lecture_feedback/${lectureId}/${
-          student_id ? `?student_id=${student_id}` : ""
+        `/api/v1/lecture_feedback/${lectureId}/${student_id ? `?student_id=${student_id}` : ""
         }`
       )
       .then((Response) => Response.data)
@@ -1043,7 +1028,7 @@ export default class apiServices {
     return await this.axiosInstance
       .post(`/api/v1/chatbot/user_message/${sessionID}/`, data)
       .then((Response) => Response.data)
-      // .catch((error) => console.error(error));
+    // .catch((error) => console.error(error));
   };
 
   public deleteUpcomingLecture = (lectureId) => {
@@ -1142,7 +1127,7 @@ export default class apiServices {
     return await this.axiosInstance
       .post(`api/v1/get_presigned_url/`, data)
       .then((Response) => Response.data)
-      // .catch((error) => console.error(error));
+    // .catch((error) => console.error(error));
   };
 
   public deleteS3File = (s3_key) => {
@@ -1161,12 +1146,12 @@ export default class apiServices {
       })
   };
 
-public resetPassword = async (email,data) => {
+  public resetPassword = async (email, data) => {
     return await this.authAxiosInstance
       .post(`/api/v1/account/users/forgot_password/?email=${email}`, data)
       .then((Response) => Response.data)
-      // .catch((error) => console.error(error));
-};
+    // .catch((error) => console.error(error));
+  };
 
   public changeProfilePassword = async (userID, formData) => {
     return await this.axiosInstance
@@ -1232,6 +1217,20 @@ public resetPassword = async (email,data) => {
     return await this.axiosInstance
       .patch(`/api/v1/edit/resources/${resourcesId}/`, formData)
       .then((Response) => Response?.data)
+  };
+
+
+
+  public createInstantLecture = async (video_file_name) => {
+    return await this.axiosInstance
+      .post("/api/v1/instant_lecture/", {"video_file_name": video_file_name})
+      .then((response) => {
+        return response.data;
+      })
+      .catch((error) => {
+        console.error("Instant lecture error:", error);
+        throw error;
+      });
   };
 
 }
