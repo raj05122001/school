@@ -184,7 +184,7 @@ function VideoUploadModal({ open, onClose, onSuccess }) {
               mb: 2,
             }}
           >
-            MP4 / MKV preferred. Max size as per your backend limit.
+            MP4 / MKV preferred. 
           </Typography>
 
           <input
