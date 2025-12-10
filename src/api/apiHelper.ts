@@ -704,3 +704,7 @@ export const updateResources = async (resourcesId, formData) => {
 };
 
 
+export const createInstantLecture = async (videoFileName) => {
+  const apiInstance = new apiServices(axiosAPIInstance);
+  return await apiInstance.createInstantLecture(videoFileName);
+};

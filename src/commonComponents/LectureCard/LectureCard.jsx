@@ -28,6 +28,7 @@ import {
   FaGraduationCap,
   FaEdit,
   FaCloudUploadAlt,
+   
 } from "react-icons/fa";
 import { useThemeContext } from "@/hooks/ThemeContext";
 import { AppContextProvider } from "@/app/main";
@@ -40,6 +41,9 @@ import { uploadS3Video } from "@/api/apiHelper";
 import { IoIosCloseCircle } from "react-icons/io";
 import toast from "react-hot-toast";
 import CalendarIconCustom from "../CalendarIconCustom/CalendarIconCustom";
+import { BsUpload } from "react-icons/bs";
+
+import VideoUploadModal from "@/components/admin/dashboard/GreetingCard/VideoUploadModal";
 
 const day = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
 
@@ -56,6 +60,7 @@ const LectureCard = ({ lecture, getAllLecture = () => {} }) => {
   } = useContext(AppContextProvider);
 
   const [anchorElUser, setAnchorElUser] = useState(null);
+  const [isVideoModalOpen, setIsVideoModalOpen] = useState(false);
 
   const handleOpenUserMenu = (event) => {
     setAnchorElUser(event?.currentTarget);
@@ -255,22 +260,24 @@ const LectureCard = ({ lecture, getAllLecture = () => {} }) => {
                 top: "20px",
                 right: "8px",
                 display: "flex",
-                gap: 2,
+                gap: 1, // 🔹 gap kam kar diya
                 alignItems: "center",
               }}
             >
               <Box sx={{ flexGrow: 0 }}>
                 <Tooltip title="Record Or Upload">
                   <IconButton
-                    onClick={() => handleOpenUserMenu()}
-                    sx={{}}
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      handleOpenUserMenu(e);
+                    }}
                   >
                     <FaCloudUploadAlt
                       style={{
                         color: "#4bb344",
                         cursor: "pointer",
                       }}
-                      size={24}
+                      size={22}
                     />
                   </IconButton>
                 </Tooltip>
@@ -318,10 +325,11 @@ const LectureCard = ({ lecture, getAllLecture = () => {} }) => {
                 </Menu>
               </Box>
 
+              {/* Edit Lecture */}
               <Tooltip title="Edit Lecture">
                 <IconButton
                   onClick={(e) => {
-                    e.stopPropagation(); // Stop the click from bubbling up to the parent
+                    e.stopPropagation();
                     handleCreateLecture(lecture, true);
                   }}
                   sx={{ p: 0 }}
@@ -335,15 +343,45 @@ const LectureCard = ({ lecture, getAllLecture = () => {} }) => {
                   />
                 </IconButton>
               </Tooltip>
+
+              <Tooltip title="instant lecture">
+                <IconButton
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    setIsVideoModalOpen(true);
+                  }}
+                  sx={{ p: 0 }}
+                >
+                  <BsUpload 
+                    style={{
+                      color: "#4bb344",
+                      cursor: "pointer",
+                    }}
+                    size={20}
+                  />
+                </IconButton>
+              </Tooltip>
             </Box>
           )}
         </TableCell>
       </TableRow>
+
+      {/* PDF / docs upload modal (existing) */}
       <BasicModal
         open={open}
         setOpen={setOpen}
         id={lecture?.id}
         getAllLecture={getAllLecture}
+      />
+
+      {/* Instant Lecture Video Modal */}
+      <VideoUploadModal
+        open={isVideoModalOpen}
+        onClose={() => setIsVideoModalOpen(false)}
+        onSuccess={(data) => {
+          console.log("Instant lecture created:", data, "for lecture", lecture?.id);
+          setIsVideoModalOpen(false);
+        }}
       />
     </>
   );
@@ -393,11 +431,11 @@ export function BasicModal({ open, setOpen, id, getAllLecture = () => {} }) {
       setError("No file selected. Please choose a Files to upload.");
       return;
     }
-     if (files.length>5) {
+    if (files.length > 5) {
       setError("You can upload a maximum of 5 files.");
       return;
     }
-    
+
     setIsLoading(true);
     try {
       setLoading(true);
