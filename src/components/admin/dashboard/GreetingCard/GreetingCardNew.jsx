@@ -16,12 +16,9 @@ import { FiUpload } from "react-icons/fi";
 import { HiOutlineMenu } from "react-icons/hi";
 import { useRouter } from "next/navigation";
 import { AppContextProvider } from "@/app/main";
-import VideoUploadModal from "./VideoUploadModal";
 
 function GreetingCardNew({ onMenuClick, isSidebarOpen }) {
   const [userDetails, setUserDetails] = useState(null);
-  const [isUploadOpen, setIsUploadOpen] = useState(false);
-
   const router = useRouter();
   const theme = useTheme();
   const isSmallScreen = useMediaQuery(theme.breakpoints.down("md"));
@@ -283,14 +280,6 @@ function GreetingCardNew({ onMenuClick, isSidebarOpen }) {
           </Box>
         )}
       </Box>
-
-      <VideoUploadModal
-        open={isUploadOpen}
-        onClose={() => setIsUploadOpen(false)}
-        onSuccess={(data) => {
-          console.log("Video uploaded:", data);
-        }}
-      />
     </>
   );
 }

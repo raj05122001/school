@@ -118,6 +118,8 @@ const LectureCard = ({ lecture, getAllLecture = () => {} }) => {
 
   const userDetails = decodeToken(Cookies.get("ACCESS_TOKEN"));
 
+  console.log("userDetails : ",userDetails)
+
   const handleRoute = (id) => {
     router.push(`/student/lecture-listings/${id}`);
   };
@@ -344,7 +346,7 @@ const LectureCard = ({ lecture, getAllLecture = () => {} }) => {
                 </IconButton>
               </Tooltip>
 
-              <Tooltip title="instant lecture">
+            {(userDetails?.user_id===18 || userDetails?.user_id===255) &&  <Tooltip title="instant lecture">
                 <IconButton
                   onClick={(e) => {
                     e.stopPropagation();
@@ -360,7 +362,7 @@ const LectureCard = ({ lecture, getAllLecture = () => {} }) => {
                     size={20}
                   />
                 </IconButton>
-              </Tooltip>
+              </Tooltip>}
             </Box>
           )}
         </TableCell>
