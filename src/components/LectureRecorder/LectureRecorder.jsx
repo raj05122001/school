@@ -27,7 +27,7 @@ import { AppContextProvider } from "@/app/main";
 import usePresignedUrl from "@/hooks/usePresignedUrl";
 import usefileUploader from "@/hooks/usefileUploader";
 
-const LectureRecorder = ({ open, closeDrawer, recordingData }) => {
+const LectureRecorder = ({ open, closeDrawer, recordingData, initialVideoFile }) => {
   const {isTrialAccount}=useContext(AppContextProvider)
   const videoRef = useRef(null);
   const currentTimeLocal = new Date().toLocaleTimeString("en-GB", {
@@ -79,6 +79,16 @@ const LectureRecorder = ({ open, closeDrawer, recordingData }) => {
     submit: false,
     stopRecording: false,
   }); 
+
+  useEffect(() => {
+    if (open && initialVideoFile) {
+      // ✅ Drop se aayi video ko upload-mode me set karo
+      setVideoAttachment([initialVideoFile]);
+      setSelectedOption("other"); // upload path use hoga
+      setStartRecordingBtn(false);
+    }
+  }, [open, initialVideoFile]);
+
 
   const getVideoSources = async () => {
     if (window.navigator && window.navigator.mediaDevices) {

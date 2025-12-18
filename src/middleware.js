@@ -1,6 +1,5 @@
 import { NextResponse } from "next/server";
-import { isExpired } from "react-jwt";
-import { decodeToken } from "react-jwt";
+import { isExpired, decodeToken } from "react-jwt";
 
 export async function middleware(req) {
   const { pathname, searchParams } = req.nextUrl;
@@ -9,12 +8,12 @@ export async function middleware(req) {
   const userDetails = decodeToken(token?.value);
   const host = req.headers.get("host");
 
-  // Set origin dynamically based on the host (use care-insight domain in production)
   if (host.includes("vidya.ultimeet.io")) {
     origin = "https://vidya.ultimeet.io";
   }
 
   try {
+    // ---------- NOT LOGGED IN ----------
     if (!token || !token?.value || isExpired(token?.value)) {
       if (
         pathname.includes("/registration") ||
@@ -23,17 +22,22 @@ export async function middleware(req) {
         pathname.includes("/terms-and-conditions") ||
         pathname.includes("/delete-account") ||
         pathname.includes("/privacy-policy") ||
-        pathname.includes("/signup") 
+        pathname.includes("/signup")
       ) {
         return NextResponse.next();
       }
+
       const redirectTo = encodeURIComponent(
         `${pathname}?${searchParams.toString()}`
       );
+
       return NextResponse.redirect(
         new URL(`/login?redirectTo=${redirectTo}`, origin)
       );
-    } else if (
+    }
+
+    // ---------- LOGGED IN AND GOING TO /, /login, etc ----------
+    else if (
       pathname === "/" ||
       pathname.includes("/registration") ||
       pathname.includes("/forgot-password") ||
@@ -52,6 +56,8 @@ export async function middleware(req) {
         return NextResponse.redirect(new URL("/admin/dashboard", origin));
       }
     }
+
+    // ---------- BLOCK AUTH PAGES FOR LOGGED-IN USERS ----------
     if (
       pathname.includes("/registration") ||
       pathname.includes("/forgot-password") ||
@@ -59,6 +65,21 @@ export async function middleware(req) {
     ) {
       return NextResponse.redirect(new URL("/", origin));
     }
+
+    // ---------- NEW PART: STUDENT/TEACHER PATH AUTO-FIX ----------
+    if (userDetails?.role === "TEACHER" && pathname.startsWith("/student")) {
+      const url = req.nextUrl.clone();
+      url.pathname = pathname.replace(/^\/student/, "/teacher");
+      return NextResponse.redirect(url);
+    }
+
+    if (userDetails?.role === "STUDENT" && pathname.startsWith("/teacher")) {
+      const url = req.nextUrl.clone();
+      url.pathname = pathname.replace(/^\/teacher/, "/student");
+      return NextResponse.redirect(url);
+    }
+
+    // ---------- DEFAULT ----------
     return NextResponse.next();
   } catch (error) {
     console.error("An error occurred:", error);
@@ -71,4 +92,3 @@ export const config = {
     "/((?!api|_next/static|_next/image|favicon.ico|.*\\.svg|.*\\.png|.*\\.jpg|.*\\.jpeg|.*\\.gif|.*\\.webp|.*\\.bmp|.*\\.ico|.*\\.tiff).*)",
   ],
 };
-

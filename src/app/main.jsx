@@ -32,6 +32,7 @@ const Main = ({ children }) => {
   const [isEditLecture, setIsEditLecture] = useState(false);
   const [isOpenChatBot, setIsOpenChatBot] = useState(false);
   const [userInput, setUserInput] = useState("");
+  const [droppedVideoFile, setDroppedVideoFile] = useState(null);
 
   const handleResize = () => {
     if (window.innerWidth < 980) {
@@ -51,6 +52,7 @@ const Main = ({ children }) => {
 
   const closeDrawer = () => {
     setOpenRecordingDrawer(false);
+    setDroppedVideoFile(null); // ✅ reset
   };
 
   const handleCloseCreateLecture = () => {
@@ -70,8 +72,9 @@ const Main = ({ children }) => {
     }
   };
 
-  const handleLectureRecord = (value) => {
+  const handleLectureRecord = (value, file = null) => {
     setRecordingData(value);
+    setDroppedVideoFile(file); // ✅ store dropped video file
     setOpenRecordingDrawer(true);
   };
 
@@ -175,6 +178,7 @@ const Main = ({ children }) => {
                   open={openRecordingDrawer}
                   closeDrawer={closeDrawer}
                   recordingData={recordingData}
+                  initialVideoFile={droppedVideoFile}
                 />
               )}
               {openCreateLecture && (

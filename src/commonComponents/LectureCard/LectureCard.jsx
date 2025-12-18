@@ -1,5 +1,5 @@
 "use client";
-import React, { useState, useContext, useRef } from "react";
+import React, { useState, useContext, useRef, useEffect } from "react";
 import {
   Box,
   Paper,
@@ -58,9 +58,49 @@ const LectureCard = ({ lecture, getAllLecture = () => {} }) => {
     handleCreateLecture,
     handleLectureRecord,
   } = useContext(AppContextProvider);
+  const [droppedFiles, setDroppedFiles] = useState([]);
+  const [isDragging, setIsDragging] = useState(false);
 
   const [anchorElUser, setAnchorElUser] = useState(null);
   const [isVideoModalOpen, setIsVideoModalOpen] = useState(false);
+
+  const isVideoFile = (file) => {
+    if (!file) return false;
+    if (file.type && file.type.startsWith("video/")) return true;
+    const name = (file.name || "").toLowerCase();
+    return [".mp4", ".webm", ".mov", ".mkv", ".avi", ".m4v"].some((ext) => name.endsWith(ext));
+  };
+
+  const handleDropFiles = (e) => {
+    e.preventDefault();
+    e.stopPropagation();
+    setIsDragging(false);
+
+    const filesArr = Array.from(e.dataTransfer?.files || []);
+    if (!filesArr.length) return;
+
+    const video = filesArr.find(isVideoFile);
+
+    if (video) {
+      // 🎥 Video drop
+      setDroppedFiles([video]);
+
+      // small delay so user SEE preview, then open recorder
+      setTimeout(() => {
+        handleLectureRecord(lecture, video);
+        setDroppedFiles([]);
+      }, 700);
+
+      return;
+    }
+
+    // 📄 Non-video files
+    setDroppedFiles(filesArr.slice(0, 5));
+
+    setTimeout(() => {
+      setOpen(true); // BasicModal
+    }, 500);
+  };
 
   const handleOpenUserMenu = (event) => {
     setAnchorElUser(event?.currentTarget);
@@ -130,8 +170,30 @@ const LectureCard = ({ lecture, getAllLecture = () => {} }) => {
         hover
         sx={{
           cursor: "pointer",
+          position: "relative",
           backgroundColor: isDarkMode ? "#1e1e1e" : "#fff",
+          transition: "all 0.2s ease",
+
+          ...(isDragging && {
+            outline: "2px dashed #4bb344",
+            outlineOffset: "4px",
+            backgroundColor: isDarkMode ? "#263a2a" : "#f0fff3",
+          }),
         }}
+        onDragEnter={(e) => {
+          e.preventDefault();
+          setIsDragging(true);
+        }}
+        onDragOver={(e) => {
+          e.preventDefault();
+          e.dataTransfer.dropEffect = "copy";
+          setIsDragging(true);
+        }}
+        onDragLeave={(e) => {
+          e.preventDefault();
+          setIsDragging(false);
+        }}
+        onDrop={handleDropFiles}
         onClick={
           userDetails?.role !== "STUDENT"
             ? (event) => handleOpenUserMenu(event)
@@ -374,6 +436,7 @@ const LectureCard = ({ lecture, getAllLecture = () => {} }) => {
         setOpen={setOpen}
         id={lecture?.id}
         getAllLecture={getAllLecture}
+        initialFiles={droppedFiles} 
       />
 
       {/* Instant Lecture Video Modal */}
@@ -391,13 +454,19 @@ const LectureCard = ({ lecture, getAllLecture = () => {} }) => {
 
 export default LectureCard;
 
-export function BasicModal({ open, setOpen, id, getAllLecture = () => {} }) {
+export function BasicModal({ open, setOpen, id, getAllLecture = () => {}, initialFiles = [] }) {
   const { isTrialAccount } = useContext(AppContextProvider);
   const inputVideoRef = useRef(null);
   const [files, setFiles] = useState([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
   const [isLoading, setIsLoading] = useState(false);
+
+  useEffect(() => {
+    if (open && initialFiles?.length) {
+      setFiles(initialFiles.slice(0, 5)); // BasicModal limit 5
+    }
+  }, [open, initialFiles]);
 
   const handleClose = (event) => {
     event.stopPropagation();
