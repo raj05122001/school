@@ -4,22 +4,9 @@ import { Box, Paper } from "@mui/material";
 import { getMindMap } from "@/api/apiHelper";
 
 /* ---------------------- helpers: build tree (NEW API SHAPE) ---------------------- */
-/**
- * NEW API has:
- * teacher_mind_map: {
- *   "Covered Topics": { "Associative Learning": ["Definition", ...], ... },
- *   "Missing Topics": { ... }
- * }
- *
- * We convert:
- * - object -> children by keys
- * - array -> children nodes by items
- * - string -> leaf
- */
 function toNode(title, value) {
   const id = crypto?.randomUUID?.() || String(Math.random());
 
-  // array -> child nodes
   if (Array.isArray(value)) {
     return {
       id,
@@ -29,7 +16,6 @@ function toNode(title, value) {
     };
   }
 
-  // object -> child nodes from entries
   if (value && typeof value === "object") {
     return {
       id,
@@ -39,12 +25,10 @@ function toNode(title, value) {
     };
   }
 
-  // leaf
   return { id, title, percentage: null, children: [] };
 }
 
 function buildTree(obj, rootTitle = "Mind Map") {
-  // obj is an object of topics
   return toNode(rootTitle, obj || {});
 }
 
@@ -150,17 +134,186 @@ function IconBtn({ label, onClick, title }) {
   );
 }
 
+/* ---------------------- PREMIUM LOADING UI ---------------------- */
+function ShimmerBlock({ w = "100%", h = 14, r = 8 }) {
+  return (
+    <Box
+      sx={{
+        width: w,
+        height: h,
+        borderRadius: r,
+        background:
+          "linear-gradient(90deg, rgba(0,0,0,0.06) 0%, rgba(0,0,0,0.12) 45%, rgba(0,0,0,0.06) 90%)",
+        backgroundSize: "220% 100%",
+        animation: "mm_shimmer 1.2s ease-in-out infinite",
+      }}
+    />
+  );
+}
+
+function ShimmerChip() {
+  return <ShimmerBlock w={64} h={30} r={999} />;
+}
+
+function MindMapLoading({ isFullscreen }) {
+  return (
+    <Paper
+      elevation={0}
+      sx={{
+        borderRadius: 3,
+        border: "1px solid rgba(0,0,0,0.08)",
+        bgcolor: "rgba(255,255,255,0.92)",
+        overflow: "hidden",
+        display: "flex",
+        flexDirection: "column",
+        height: isFullscreen ? "100vh" : "calc(100vh - 220px)",
+        minHeight: "90vh",
+        mb: 10,
+        position: "relative",
+      }}
+    >
+      <style jsx global>{`
+        @keyframes mm_shimmer {
+          0% {
+            background-position: 100% 0;
+          }
+          100% {
+            background-position: -120% 0;
+          }
+        }
+        @keyframes mm_spin {
+          to {
+            transform: rotate(360deg);
+          }
+        }
+      `}</style>
+
+      {/* Top bar skeleton */}
+      <Box
+        sx={{
+          px: 2,
+          py: 1.4,
+          borderBottom: "1px solid rgba(0,0,0,0.06)",
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "space-between",
+          gap: 2,
+          flexWrap: "wrap",
+        }}
+      >
+        <Box sx={{ minWidth: 240 }}>
+          <ShimmerBlock w={140} h={16} r={7} />
+          <Box sx={{ mt: 0.7 }}>
+            <ShimmerBlock w={260} h={12} r={7} />
+          </Box>
+        </Box>
+
+        <Box sx={{ display: "inline-flex", gap: 1, alignItems: "center", flexWrap: "wrap" }}>
+          <ShimmerBlock w={42} h={36} r={10} />
+          <ShimmerBlock w={64} h={36} r={10} />
+          <ShimmerBlock w={42} h={36} r={10} />
+          <ShimmerBlock w={120} h={36} r={10} />
+        </Box>
+      </Box>
+
+      {/* Category chips skeleton */}
+      <Box
+        sx={{
+          px: 2,
+          py: 1.1,
+          borderBottom: "1px solid rgba(0,0,0,0.06)",
+          display: "flex",
+          gap: 1,
+          flexWrap: "wrap",
+          alignItems: "center",
+        }}
+      >
+        {Array.from({ length: 4 }).map((_, i) => (
+          <ShimmerChip key={i} />
+        ))}
+      </Box>
+
+      {/* Topic chips skeleton */}
+      <Box
+        sx={{
+          px: 2,
+          py: 1.1,
+          borderBottom: "1px solid rgba(0,0,0,0.06)",
+          display: "flex",
+          gap: 1,
+          flexWrap: "wrap",
+          alignItems: "center",
+        }}
+      >
+        {Array.from({ length: 7 }).map((_, i) => (
+          <ShimmerChip key={i} />
+        ))}
+      </Box>
+
+      {/* Canvas skeleton */}
+      <Box
+        sx={{
+          flex: "1 1 auto",
+          minHeight: 380,
+          position: "relative",
+          bgcolor: "#fff",
+          overflow: "hidden",
+        }}
+      >
+        {/* Fake node blocks */}
+        <Box sx={{ position: "absolute", inset: 0, p: 2 }}>
+          <Box sx={{ display: "flex", justifyContent: "center", gap: 2, mt: 8, flexWrap: "wrap" }}>
+            <ShimmerBlock w={240} h={52} r={14} />
+            <ShimmerBlock w={240} h={52} r={14} />
+            <ShimmerBlock w={240} h={52} r={14} />
+          </Box>
+          <Box sx={{ display: "flex", justifyContent: "center", gap: 2, mt: 5, flexWrap: "wrap" }}>
+            <ShimmerBlock w={240} h={52} r={14} />
+            <ShimmerBlock w={240} h={52} r={14} />
+          </Box>
+          <Box sx={{ display: "flex", justifyContent: "center", gap: 2, mt: 5, flexWrap: "wrap" }}>
+            <ShimmerBlock w={240} h={52} r={14} />
+            <ShimmerBlock w={240} h={52} r={14} />
+            <ShimmerBlock w={240} h={52} r={14} />
+          </Box>
+        </Box>
+
+        {/* Center loader */}
+        <Box sx={{ position: "absolute", inset: 0, display: "grid", placeItems: "center" }}>
+          <Box
+            sx={{
+              px: 2.2,
+              py: 1.3,
+              borderRadius: 2,
+              border: "1px solid rgba(0,0,0,0.08)",
+              bgcolor: "rgba(255,255,255,0.78)",
+              backdropFilter: "blur(8px)",
+              display: "flex",
+              alignItems: "center",
+              gap: 1.2,
+            }}
+          >
+            <Box
+              sx={{
+                width: 18,
+                height: 18,
+                borderRadius: "50%",
+                border: "2px solid rgba(99,102,241,0.25)",
+                borderTopColor: "rgba(99,102,241,1)",
+                animation: "mm_spin 0.85s linear infinite",
+              }}
+            />
+            <Box sx={{ fontSize: 13, fontWeight: 900, color: "#111827" }}>
+              Loading mind map…
+            </Box>
+          </Box>
+        </Box>
+      </Box>
+    </Paper>
+  );
+}
+
 /* ---------------------- normalize NEW API ---------------------- */
-/**
- * Returns:
- * {
- *   chapter,
- *   categories: {
- *     "Covered Topics": { ... },
- *     "Missing Topics": { ... }
- *   }
- * }
- */
 function normalizeMindMapApi(res) {
   const mm = res?.data?.mind_map || res?.mind_map || null;
   if (!mm) return null;
@@ -168,7 +321,6 @@ function normalizeMindMapApi(res) {
   const chapter = mm?.chapter || "Mind Map";
   const tmm = mm?.teacher_mind_map || {};
 
-  // Ensure object
   const categories =
     tmm && typeof tmm === "object" ? tmm : { "Covered Topics": {}, "Missing Topics": {} };
 
@@ -180,10 +332,7 @@ export default function TeacherMindMaps({ lectureId }) {
   const [data, setData] = useState(null);
   const [err, setErr] = useState("");
 
-  // ✅ Category: "Covered Topics" | "Missing Topics"
   const [selectedCategory, setSelectedCategory] = useState(null);
-
-  // ✅ Topic inside category: "ALL" | "Associative Learning" ...
   const [selectedTopic, setSelectedTopic] = useState("ALL");
 
   const containerRef = useRef(null);
@@ -202,6 +351,8 @@ export default function TeacherMindMaps({ lectureId }) {
     panX: 0,
     panY: 0,
   });
+
+  const [loading, setLoading] = useState(true);
 
   /* Fullscreen */
   const toggleFullscreen = async () => {
@@ -252,7 +403,9 @@ export default function TeacherMindMaps({ lectureId }) {
     let alive = true;
     (async () => {
       try {
+        setLoading(true);
         setErr("");
+
         const res = await getMindMap(lectureId);
         const norm = normalizeMindMapApi(res);
         if (!norm) throw new Error("Mind map not found in API response.");
@@ -269,6 +422,8 @@ export default function TeacherMindMaps({ lectureId }) {
         setUserScale(1);
       } catch (e) {
         if (alive) setErr(e?.message || "Failed to load mind map");
+      } finally {
+        if (alive) setLoading(false);
       }
     })();
 
@@ -289,7 +444,6 @@ export default function TeacherMindMaps({ lectureId }) {
     return ["ALL", ...Object.keys(obj)];
   }, [pickedCategoryObj]);
 
-  // reset topic on category change
   useEffect(() => {
     setSelectedTopic("ALL");
     setUserScale(1);
@@ -303,15 +457,11 @@ export default function TeacherMindMaps({ lectureId }) {
 
     let renderObj = categoryObj;
 
-    // if topic selected -> render only that topic
     if (selectedTopic !== "ALL") {
       const t = categoryObj?.[selectedTopic];
-      if (t !== undefined) {
-        renderObj = { [selectedTopic]: t };
-      }
+      if (t !== undefined) renderObj = { [selectedTopic]: t };
     }
 
-    // root title show chapter + category
     const rootTitle =
       selectedTopic === "ALL"
         ? `${chapter} • ${selectedCategory}`
@@ -394,12 +544,9 @@ export default function TeacherMindMaps({ lectureId }) {
     );
   }
 
-  if (!view) {
-    return (
-      <Box sx={{ p: 2 }}>
-        <Paper sx={{ p: 2 }}>Loading…</Paper>
-      </Box>
-    );
+  // ✅ premium loading
+  if (loading || !view) {
+    return <MindMapLoading isFullscreen={isFullscreen} />;
   }
 
   const { nodes, edges, nodeById, width, height } = view;
@@ -475,7 +622,7 @@ export default function TeacherMindMaps({ lectureId }) {
         </Box>
       </Box>
 
-      {/* Category Filters (Covered Topics / Missing Topics) */}
+      {/* Category Filters */}
       <Box
         sx={{
           px: 2,
@@ -492,7 +639,7 @@ export default function TeacherMindMaps({ lectureId }) {
         ))}
       </Box>
 
-      {/* Topic Filters (ALL + topics inside category) */}
+      {/* Topic Filters */}
       <Box
         sx={{
           px: 2,
@@ -535,7 +682,6 @@ export default function TeacherMindMaps({ lectureId }) {
           onMove(t.clientX, t.clientY);
         }}
       >
-        {/* World */}
         <Box
           sx={{
             position: "absolute",
@@ -547,7 +693,6 @@ export default function TeacherMindMaps({ lectureId }) {
             height,
           }}
         >
-          {/* Edges */}
           <svg width={width} height={height} style={{ position: "absolute", inset: 0, pointerEvents: "none" }}>
             {edges.map((e) => {
               const a = nodeById.get(e.from);
@@ -568,7 +713,6 @@ export default function TeacherMindMaps({ lectureId }) {
             })}
           </svg>
 
-          {/* Nodes */}
           {nodes.map((n) => {
             const c = depthColors(n.depth);
             return (
