@@ -708,3 +708,8 @@ export const createInstantLecture = async (videoFileName) => {
   const apiInstance = new apiServices(axiosAPIInstance);
   return await apiInstance.createInstantLecture(videoFileName);
 };
+
+export const getMindMap = async (lecture_id) => {
+  const apiInstance = new apiServices(axiosAPIInstance);
+  return await apiInstance.getMindMap(lecture_id);
+};

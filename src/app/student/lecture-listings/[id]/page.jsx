@@ -17,6 +17,7 @@ import PersonalisedRecommendations from "@/components/student/MOL/PersonalisedRe
 import AudioPlayer from "@/components/AudioPlayer/AudioPlayer";
 import LectureAttachments from "@/components/MOL/LectureAttachment/LectureAttachment";
 import LectureDescription from "@/commonComponents/LectureDescription/LectureDescription";
+import StudentMindMaps from "@/components/mind_maps/StudentMindMaps";
 
 const LecturePage = ({ params }) => {
   const { id } = params;
@@ -189,6 +190,7 @@ const LecturePage = ({ params }) => {
           </Box>
         </Grid>
       </Grid>
+      <StudentMindMaps lectureId={id}/>
     </Box>
   );
 };

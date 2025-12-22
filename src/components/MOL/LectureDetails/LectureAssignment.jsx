@@ -63,8 +63,8 @@ const LectureAssignment = ({
   const hasFetchedData = useRef(false); // Prevent multiple fetch calls
   const [openAccordian, setOpenAccordian] = useState(false);
   const [activeAccordion, setActiveAccordion] = React.useState(null);
-  const [isApproach, setIsApproach] = useState(false)
-  const [isHaveMultiQuestion, setIsHaveMultiQuestion] = useState(false)
+  const [isApproach, setIsApproach] = useState(true)
+  const [isHaveMultiQuestion, setIsHaveMultiQuestion] = useState(true)
 
   const lectureID = id;
 
@@ -917,7 +917,7 @@ const LectureAssignment = ({
               }}
             >
               <Box>
-                <FormControl>
+                {/* <FormControl>
                   <FormControlLabel
                     control={
                       <Checkbox
@@ -947,7 +947,7 @@ const LectureAssignment = ({
                     label="Have multiple question?"
                     sx={{ ml: 1 }}
                   />
-                </FormControl>
+                </FormControl> */}
 
               </Box>
 

@@ -1233,4 +1233,10 @@ export default class apiServices {
       });
   };
 
+  public getMindMap = async (lecture_id) => {
+    return await this.axiosInstance
+      .get(`/api/v1/get_mind_map/?lecture_id=${lecture_id}`)
+      .then((Response) => Response.data)
+      .catch((error) => console.error(error));
+  };
 }

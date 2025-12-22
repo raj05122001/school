@@ -70,7 +70,7 @@ const PersonalisedRecommendations = ({ id, marksData }) => {
     }
   };
 
-  const isSummary = section === "SUMMARY" || section === "HIGHLIGHTS";
+  const isSummary = section === "SUMMARY" || section === "HIGHLIGHTS" || section === "NOTES";
 
   return (
     <Container
@@ -139,7 +139,7 @@ const PersonalisedRecommendations = ({ id, marksData }) => {
                 id={id}
                 section={section}
                 selectedApproach={selectedApproach}
-                isApiCall={true}
+                isApiCall={false}
                 isSummary={isSummary}
               />
               <Typography
@@ -192,7 +192,7 @@ const PersonalisedRecommendations = ({ id, marksData }) => {
       </Box>
 
       <Box sx={{ maxHeight: 400, overflowY: "auto" }}>
-        {topics.length > 0 ? (
+        {/* {topics.length > 0 ? (
           topics?.map((topic, index) => (
             <TopicAccordion
               key={index}
@@ -205,7 +205,7 @@ const PersonalisedRecommendations = ({ id, marksData }) => {
           ))
         ) : (
           <Typography>No topics available.</Typography>
-        )}
+        )} */}
       </Box>
     </Container>
   );
@@ -221,6 +221,9 @@ const TopicAccordion = ({
   isApiCall = false,
   isSummary = false,
 }) => {
+  console.log("topic :: ",topic)
+  console.log("section :: ",section)
+  console.log("selectedApproach :: ",selectedApproach)
   const { isDarkMode, primaryColor, secondaryColor } = useThemeContext();
   const [data, setData] = useState({});
   const [loading, setLoading] = useState(false);

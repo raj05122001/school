@@ -25,6 +25,7 @@ import LectureAttachments from "@/components/MOL/LectureAttachment/LectureAttach
 import AudioPlayer from "@/components/AudioPlayer/AudioPlayer";
 import { toast } from "react-hot-toast";
 import LectureDescription from "@/commonComponents/LectureDescription/LectureDescription";
+import TeacherMindMaps from "@/components/mind_maps/TeacherMindMaps";
 
 const LecturePage = ({ params }) => {
   const { id } = params;
@@ -200,8 +201,8 @@ const LecturePage = ({ params }) => {
             </Box>
           ))}
         </Grid>
-
       </Grid>
+      <TeacherMindMaps lectureId={id}/>
     </Box>
   );
 };

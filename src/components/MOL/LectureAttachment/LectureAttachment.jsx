@@ -107,6 +107,7 @@ const LectureAttachments = ({ lectureId, isDarkMode }) => {
         backgroundColor:"#fff",
         p: 3,
         mt: { xs:0, lg:2 },
+        minHeight:400,
       }}
     >
       <Box
@@ -181,11 +182,15 @@ const LectureAttachments = ({ lectureId, isDarkMode }) => {
           </Box>
         ))
       ) : (
-        <Typography
-          sx={{ mt: 2, pt: 2, borderTop: "1px solid", borderColor: "grey.300" }}
-        >
-          No attachments found
-        </Typography>
+        <Box sx={{width:"100%", display:"flex", justifyContent:"center", alignItems:"center", height:"100%", borderTop: "1px solid", borderColor: "grey.300",  mt: 2, pt: 2 }}>
+          <Box>
+            <Typography
+            sx={{textAlign:"center", height:"100%"}}
+          >
+            No attachments found
+          </Typography>
+          </Box>
+        </Box>
       )}
       <Dialog open={deleteId > 0} onClose={() => setDeleteId(0)}>
         <DialogTitle>
