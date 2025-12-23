@@ -128,9 +128,7 @@ function EnhancedLoadingState({ isFullscreen }) {
                 height: 80,
                 margin: "0 auto 24px",
                 borderRadius: "50%",
-                background: `linear-gradient(135deg, ${theme.palette.primary.main} 0%, ${
-                  theme.palette.secondary?.main || theme.palette.primary.dark
-                } 100%)`,
+                background: "linear-gradient(238deg, #16AA54 -15.62%, #094422 82.04%)",
                 display: "flex",
                 alignItems: "center",
                 justifyContent: "center",
