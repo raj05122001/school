@@ -721,7 +721,7 @@ const HEADER_B =
                     Ready to Explore Literature
                   </Typography>
                   <Typography variant="body2" color="text.secondary">
-                    Enter a topic, select content type, and click "Generate" to create your interactive mind map
+                    Enter a topic, select content type, and click &quot;Generate&quot; to create your interactive mind map
                   </Typography>
                 </Box>
               </Fade>
