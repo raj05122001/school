@@ -531,7 +531,7 @@ export default function StudentMindMaps({ lectureId }) {
         flexDirection: "column",
         height: isFullscreen ? "100vh" : "calc(100vh - 220px)",
         minHeight: 620,
-        mb: 10,
+        mb: 3,
       }}
     >
       {/* Top bar */}
