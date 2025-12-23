@@ -713,3 +713,8 @@ export const getMindMap = async (lecture_id) => {
   const apiInstance = new apiServices(axiosAPIInstance);
   return await apiInstance.getMindMap(lecture_id);
 };
+
+export const getLiteratureMindMap = async (lecture_id, topics) => {
+  const apiInstance = new apiServices(axiosAPIInstance);
+  return await apiInstance.getLiteratureMindMap(lecture_id, topics);
+};

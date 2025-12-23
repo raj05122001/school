@@ -1235,8 +1235,21 @@ export default class apiServices {
 
   public getMindMap = async (lecture_id) => {
     return await this.axiosInstance
-      .get(`/api/v1/get_mind_map/?lecture_id=${lecture_id}`)
+      .get(`api/v1/literature_mind_map/?lecture_id=624&topics=My%20Best%20Friend`)
       .then((Response) => Response.data)
       .catch((error) => console.error(error));
   };
+
+  public getLiteratureMindMap = async (lecture_id, topics) => {
+    return await this.axiosInstance
+      .post(`api/v1/literature_mind_map/?lecture_id=${lecture_id}&topics=${topics}`)
+      .then((response) => {
+        return response.data;
+      })
+      .catch((error) => {
+        console.error("Instant lecture error:", error);
+        throw error;
+      });
+  };
+  
 }
