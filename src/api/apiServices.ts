@@ -1240,9 +1240,9 @@ export default class apiServices {
       .catch((error) => console.error(error));
   };
 
-  public getLiteratureMindMap = async (lecture_id, topics) => {
+  public getLiteratureMindMap = async (formaData) => {
     return await this.axiosInstance
-      .post(`api/v1/literature_mind_map/?lecture_id=${lecture_id}&topics=${topics}`)
+      .post(`/api/v1/literature_mind_map/`,formaData)
       .then((response) => {
         return response.data;
       })

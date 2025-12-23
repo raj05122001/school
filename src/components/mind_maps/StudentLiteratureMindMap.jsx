@@ -1,6 +1,6 @@
 "use client";
 import React, { useEffect, useMemo, useRef, useState } from "react";
-import { Box, Paper, TextField } from "@mui/material";
+import { Box, Paper, TextField, MenuItem } from "@mui/material";
 import { getLiteratureMindMap } from "@/api/apiHelper";
 
 /* ---------------- tiny utils ---------------- */
@@ -32,7 +32,7 @@ function ChipButton({ label, active, onClick }) {
         whiteSpace: "nowrap",
       }}
     >
-      {label}
+      {label?.replace("_"," ")?.toUpperCase()}
     </Box>
   );
 }
@@ -111,7 +111,7 @@ function Badge({ children }) {
   );
 }
 
-/* ---------------- Loading UI (NO style jsx) ---------------- */
+/* ---------------- Loading UI ---------------- */
 function SkeletonLine({ w = "100%", h = 12, r = 8 }) {
   return (
     <Box
@@ -177,14 +177,7 @@ function LoadingState({ isFullscreen }) {
       </Box>
 
       <Box sx={{ flex: "1 1 auto", position: "relative", bgcolor: "#fff" }}>
-        <Box
-          sx={{
-            position: "absolute",
-            inset: 0,
-            display: "grid",
-            placeItems: "center",
-          }}
-        >
+        <Box sx={{ position: "absolute", inset: 0, display: "grid", placeItems: "center" }}>
           <Box
             sx={{
               px: 2.2,
@@ -218,25 +211,9 @@ function LoadingState({ isFullscreen }) {
   );
 }
 
-/* ---------------------- Build tree (Literature API) ----------------------
-Node shape in API:
-{
-  "Subtopics": { ... },
-  "Examples": [ ... ]
-}
-We want:
-- each topic -> node
-- its subtopics -> children
-- examples -> show in node (chips)
--------------------------------------------------------------------------- */
+/* ---------------------- Build tree (Literature API) ---------------------- */
 function toNodeFromLiterature(title, value, depth = 0) {
-  const node = {
-    id: uid(),
-    title: String(title),
-    depth,
-    examples: [],
-    children: [],
-  };
+  const node = { id: uid(), title: String(title), depth, examples: [], children: [] };
 
   if (!value || typeof value !== "object") return node;
 
@@ -250,14 +227,12 @@ function toNodeFromLiterature(title, value, depth = 0) {
 }
 
 function buildLiteratureTree(mindMapObj, rootTitle = "Mind Map") {
-  // mindMapObj: { "My Best Friend": {Subtopics...} }
   const root = { id: uid(), title: rootTitle, depth: 0, examples: [], children: [] };
   const entries = Object.entries(mindMapObj || {});
   root.children = entries.map(([k, v]) => toNodeFromLiterature(k, v, 1));
   return root;
 }
 
-/* ---------------------- Layout (same as before) ---------------------- */
 function computeLayout(root, opts) {
   const { nodeW = 240, nodeH = 54, gapX = 180, gapY = 10, pad = 24 } = opts || {};
 
@@ -302,17 +277,13 @@ function computeLayout(root, opts) {
   return { nodes, edges, nodeById, width, height };
 }
 
-/* ---------------------- Normalize API ---------------------- */
 function normalizeLiteratureApi(res) {
-  // sometimes axios returns res.data, sometimes already data
   const payload = res?.data || res;
   const mm = payload?.data?.mind_map || payload?.mind_map || null;
   if (!mm || typeof mm !== "object") return null;
 
-  // categories: category_A, category_B...
   const categories = Object.entries(mm).reduce((acc, [k, v]) => {
-    const map = v?.mind_map || {};
-    acc[k] = map;
+    acc[k] = v?.mind_map || {};
     return acc;
   }, {});
   return { categories };
@@ -321,6 +292,7 @@ function normalizeLiteratureApi(res) {
 /* ---------------------- Component ---------------------- */
 export default function StudentLiteratureMindMap({ lectureId }) {
   const [topic, setTopic] = useState("");
+  const [contentType, setContentType] = useState("fictional_story"); // ✅ NEW
   const [data, setData] = useState(null);
   const [selectedCat, setSelectedCat] = useState(null);
   const [err, setErr] = useState("");
@@ -335,13 +307,7 @@ export default function StudentLiteratureMindMap({ lectureId }) {
   const [userScale, setUserScale] = useState(1);
   const [pan, setPan] = useState({ x: 0, y: 0 });
 
-  const dragRef = useRef({
-    dragging: false,
-    startX: 0,
-    startY: 0,
-    panX: 0,
-    panY: 0,
-  });
+  const dragRef = useRef({ dragging: false, startX: 0, startY: 0, panX: 0, panY: 0 });
 
   /* Fullscreen */
   const toggleFullscreen = async () => {
@@ -398,8 +364,13 @@ export default function StudentLiteratureMindMap({ lectureId }) {
       setLoading(true);
       setErr("");
 
-      // ✅ aapka API helper signature: (lectureId, topics)
-      const res = await getLiteratureMindMap(lectureId, topic.trim());
+      const formData = {
+        lecture_id: lectureId,
+        topics: topic.trim(),
+        content_type: contentType, // ✅ dropdown value
+      };
+
+      const res = await getLiteratureMindMap(formData);
 
       const norm = normalizeLiteratureApi(res);
       if (!norm) throw new Error("Mind map not found in API response.");
@@ -417,12 +388,10 @@ export default function StudentLiteratureMindMap({ lectureId }) {
     }
   };
 
-  // enter press submit
   const onKeyDown = (e) => {
     if (e.key === "Enter") fetchLiteratureMindMap();
   };
 
-  // view
   const view = useMemo(() => {
     if (!data || !selectedCat) return null;
     const mindMapObj = data.categories?.[selectedCat] || {};
@@ -430,7 +399,6 @@ export default function StudentLiteratureMindMap({ lectureId }) {
     return computeLayout(tree, { nodeW: 250, nodeH: 58, gapX: 190, gapY: 10, pad: 24 });
   }, [data, selectedCat]);
 
-  /* Auto-fit */
   const fitScale = useMemo(() => {
     if (!view || !fitSize.w || !fitSize.h) return 1;
     const SAFE = 44;
@@ -443,18 +411,13 @@ export default function StudentLiteratureMindMap({ lectureId }) {
 
   const finalScale = useMemo(() => Math.max(0.18, Math.min(3, fitScale * userScale)), [fitScale, userScale]);
 
-  /* Center */
   useEffect(() => {
     if (!view || !fitSize.w || !fitSize.h) return;
     const scaledW = view.width * finalScale;
     const scaledH = view.height * finalScale;
-    setPan({
-      x: (fitSize.w - scaledW) / 2,
-      y: (fitSize.h - scaledH) / 2,
-    });
+    setPan({ x: (fitSize.w - scaledW) / 2, y: (fitSize.h - scaledH) / 2 });
   }, [view?.width, view?.height, fitSize.w, fitSize.h, finalScale]);
 
-  /* Drag to pan */
   const onDown = (clientX, clientY) => {
     dragRef.current.dragging = true;
     dragRef.current.startX = clientX;
@@ -496,9 +459,7 @@ export default function StudentLiteratureMindMap({ lectureId }) {
     );
   }
 
-  if (loading) {
-    return <LoadingState isFullscreen={isFullscreen} />;
-  }
+  if (loading) return <LoadingState isFullscreen={isFullscreen} />;
 
   return (
     <Paper
@@ -533,15 +494,14 @@ export default function StudentLiteratureMindMap({ lectureId }) {
             Literature Mind Map
           </Box>
           <Box sx={{ fontSize: 12.5, color: "#6b7280" }}>
-            Topic type karo • Fetch dabao • Drag to pan • Zoom controls
-          </Box>
+        Select topic and content type • Click fetch • Drag to pan • Use zoom controls
+        </Box>
         </Box>
 
         <Box sx={{ display: "inline-flex", gap: 1, alignItems: "center", flexWrap: "wrap" }}>
           <IconBtn label="−" title="Zoom out" disabled={!view} onClick={() => setUserScale((s) => Math.max(0.6, +(s / 1.15).toFixed(4)))} />
           <IconBtn label="100%" title="Reset zoom" disabled={!view} onClick={() => setUserScale(1)} />
           <IconBtn label="+" title="Zoom in" disabled={!view} onClick={() => setUserScale((s) => Math.min(2.5, +(s * 1.15).toFixed(4)))} />
-
           <Box
             onClick={toggleFullscreen}
             sx={{
@@ -562,7 +522,7 @@ export default function StudentLiteratureMindMap({ lectureId }) {
         </Box>
       </Box>
 
-      {/* Topic input row */}
+      {/* Topic input row + dropdown */}
       <Box
         sx={{
           px: 2,
@@ -578,7 +538,7 @@ export default function StudentLiteratureMindMap({ lectureId }) {
           value={topic}
           onChange={(e) => setTopic(e.target.value)}
           onKeyDown={onKeyDown}
-          placeholder="Enter topic… e.g., My Best Friend"
+          placeholder="Enter topic… e.g., Climate Change, A Brave Soldier"
           size="small"
           sx={{
             minWidth: 260,
@@ -587,10 +547,27 @@ export default function StudentLiteratureMindMap({ lectureId }) {
           }}
         />
 
+        {/* ✅ NEW: content_type dropdown */}
+        <TextField
+          select
+          value={contentType}
+          onChange={(e) => setContentType(e.target.value)}
+          size="small"
+          sx={{
+            minWidth: 210,
+            "& .MuiOutlinedInput-root": { borderRadius: 2.2, bgcolor: "#fff" },
+          }}
+        >
+          <MenuItem value="essay">Essay</MenuItem>
+          <MenuItem value="fictional_character">Fictional Character</MenuItem>
+          <MenuItem value="fictional_story">Fictional Story</MenuItem>
+        </TextField>
+
         <PrimaryBtn label="Fetch Mind Map" onClick={fetchLiteratureMindMap} disabled={!topic.trim() || !lectureId} />
 
         <Box sx={{ display: "inline-flex", gap: 1, alignItems: "center", flexWrap: "wrap" }}>
           <Badge>Lecture: {lectureId || "—"}</Badge>
+          <Badge>Type: {contentType}</Badge>
           <Badge>Topic: {topic?.trim() ? topic.trim() : "—"}</Badge>
         </Box>
       </Box>
@@ -642,7 +619,7 @@ export default function StudentLiteratureMindMap({ lectureId }) {
       >
         {!view ? (
           <Box sx={{ position: "absolute", inset: 0, display: "grid", placeItems: "center", color: "#6b7280" }}>
-            Type a topic & click “Fetch Mind Map”
+            Type a topic, select content type & click “Fetch Mind Map”
           </Box>
         ) : (
           <MindMapCanvas view={view} pan={pan} finalScale={finalScale} />
@@ -668,7 +645,6 @@ function MindMapCanvas({ view, pan, finalScale }) {
         height,
       }}
     >
-      {/* edges */}
       <svg width={width} height={height} style={{ position: "absolute", inset: 0, pointerEvents: "none" }}>
         {edges.map((e) => {
           const a = nodeById.get(e.from);
@@ -687,11 +663,10 @@ function MindMapCanvas({ view, pan, finalScale }) {
         })}
       </svg>
 
-      {/* nodes */}
       {nodes.map((n) => {
         const c = depthColors(n.depth);
         const ex = Array.isArray(n.examples) ? n.examples : [];
-        const showEx = ex.filter(Boolean).slice(0, 4); // max 4 chips
+        const showEx = ex.filter(Boolean).slice(0, 4);
 
         return (
           <Box key={n.id} sx={{ position: "absolute", left: n.x, top: n.y, width: n.w, height: n.h }}>
