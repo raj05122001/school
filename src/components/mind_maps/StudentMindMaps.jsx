@@ -9,19 +9,29 @@ function toNode(title, obj) {
     id: crypto?.randomUUID?.() || String(Math.random()),
     title,
     percentage: typeof obj?.percentage === "number" ? obj.percentage : null,
-    children: Object.entries(obj?.subtopics || {}).map(([k, v]) => toNode(k, v)),
+    children: Object.entries(obj?.subtopics || {}).map(([k, v]) =>
+      toNode(k, v)
+    ),
   };
 }
 
 function buildTree(mind_map_obj) {
-  const roots = Object.entries(mind_map_obj || {}).map(([k, v]) => toNode(k, v));
+  const roots = Object.entries(mind_map_obj || {}).map(([k, v]) =>
+    toNode(k, v)
+  );
   if (roots.length === 1) return roots[0];
   return { id: "root", title: "Mind Map", percentage: null, children: roots };
 }
 
 /* ---------------------- helpers: layout ---------------------- */
 function computeLayout(root, opts) {
-  const { nodeW = 200, nodeH = 42, gapX = 160, gapY = 8, pad = 24 } = opts || {};
+  const {
+    nodeW = 200,
+    nodeH = 42,
+    gapX = 160,
+    gapY = 8,
+    pad = 24,
+  } = opts || {};
 
   const leaves = [];
   function collectLeaves(n) {
@@ -200,7 +210,14 @@ function LoadingState({ isFullscreen }) {
           </Box>
         </Box>
 
-        <Box sx={{ display: "inline-flex", gap: 1, alignItems: "center", flexWrap: "wrap" }}>
+        <Box
+          sx={{
+            display: "inline-flex",
+            gap: 1,
+            alignItems: "center",
+            flexWrap: "wrap",
+          }}
+        >
           <SkeletonLine w={42} h={36} r={10} />
           <SkeletonLine w={64} h={36} r={10} />
           <SkeletonLine w={42} h={36} r={10} />
@@ -237,18 +254,42 @@ function LoadingState({ isFullscreen }) {
       >
         {/* fake nodes */}
         <Box sx={{ position: "absolute", inset: 0, p: 2 }}>
-          <Box sx={{ display: "flex", gap: 2, mt: 7, justifyContent: "center", flexWrap: "wrap" }}>
+          <Box
+            sx={{
+              display: "flex",
+              gap: 2,
+              mt: 7,
+              justifyContent: "center",
+              flexWrap: "wrap",
+            }}
+          >
             <SkeletonLine w={220} h={48} r={12} />
             <SkeletonLine w={220} h={48} r={12} />
             <SkeletonLine w={220} h={48} r={12} />
           </Box>
 
-          <Box sx={{ display: "flex", gap: 2, mt: 5, justifyContent: "center", flexWrap: "wrap" }}>
+          <Box
+            sx={{
+              display: "flex",
+              gap: 2,
+              mt: 5,
+              justifyContent: "center",
+              flexWrap: "wrap",
+            }}
+          >
             <SkeletonLine w={220} h={48} r={12} />
             <SkeletonLine w={220} h={48} r={12} />
           </Box>
 
-          <Box sx={{ display: "flex", gap: 2, mt: 5, justifyContent: "center", flexWrap: "wrap" }}>
+          <Box
+            sx={{
+              display: "flex",
+              gap: 2,
+              mt: 5,
+              justifyContent: "center",
+              flexWrap: "wrap",
+            }}
+          >
             <SkeletonLine w={220} h={48} r={12} />
             <SkeletonLine w={220} h={48} r={12} />
             <SkeletonLine w={220} h={48} r={12} />
@@ -298,7 +339,6 @@ function LoadingState({ isFullscreen }) {
   );
 }
 
-
 /* ---------------------- normalize API ---------------------- */
 function normalizeMindMapApi(res) {
   const mm = res?.data?.mind_map || null;
@@ -306,7 +346,10 @@ function normalizeMindMapApi(res) {
 
   const mind_maps = { ...(mm?.all_mind_maps || {}) };
   if (mm?.student_mind_map?.mind_map) {
-    mind_maps["MY"] = { recommended: true, mind_map: mm.student_mind_map.mind_map };
+    mind_maps["MY"] = {
+      recommended: true,
+      mind_map: mm.student_mind_map.mind_map,
+    };
   }
 
   return { student_category: mm?.student_category || null, mind_maps };
@@ -419,7 +462,10 @@ export default function StudentMindMaps({ lectureId }) {
     };
   }, [lectureId]);
 
-  const categoryKeys = useMemo(() => Object.keys(data?.mind_maps || {}), [data]);
+  const categoryKeys = useMemo(
+    () => Object.keys(data?.mind_maps || {}),
+    [data]
+  );
 
   const picked = useMemo(() => {
     if (!data || !selectedCategory) return null;
@@ -435,7 +481,13 @@ export default function StudentMindMaps({ lectureId }) {
     if (!picked) return null;
     const mm = picked.mind_map || {};
     const tree = buildTree(mm);
-    return computeLayout(tree, { nodeW: 200, nodeH: 42, gapX: 160, gapY: 8, pad: 24 });
+    return computeLayout(tree, {
+      nodeW: 200,
+      nodeH: 42,
+      gapX: 160,
+      gapY: 8,
+      pad: 24,
+    });
   }, [picked]);
 
   /* Auto-fit (shrink only) */
@@ -548,7 +600,14 @@ export default function StudentMindMaps({ lectureId }) {
         }}
       >
         <Box>
-          <Box sx={{ fontSize: 16, fontWeight: 900, color: "#111827", lineHeight: 1.1 }}>
+          <Box
+            sx={{
+              fontSize: 16,
+              fontWeight: 900,
+              color: "#111827",
+              lineHeight: 1.1,
+            }}
+          >
             Mind Map
           </Box>
           <Box sx={{ fontSize: 12.5, color: "#6b7280" }}>
@@ -556,10 +615,33 @@ export default function StudentMindMaps({ lectureId }) {
           </Box>
         </Box>
 
-        <Box sx={{ display: "inline-flex", gap: 1, alignItems: "center", flexWrap: "wrap" }}>
-          <IconBtn label="−" title="Zoom out" onClick={() => setUserScale((s) => Math.max(0.6, +(s / 1.15).toFixed(4)))} />
-          <IconBtn label="100%" title="Reset zoom" onClick={() => setUserScale(1)} />
-          <IconBtn label="+" title="Zoom in" onClick={() => setUserScale((s) => Math.min(2.5, +(s * 1.15).toFixed(4)))} />
+        <Box
+          sx={{
+            display: "inline-flex",
+            gap: 1,
+            alignItems: "center",
+            flexWrap: "wrap",
+          }}
+        >
+          <IconBtn
+            label="−"
+            title="Zoom out"
+            onClick={() =>
+              setUserScale((s) => Math.max(0.6, +(s / 1.15).toFixed(4)))
+            }
+          />
+          <IconBtn
+            label="100%"
+            title="Reset zoom"
+            onClick={() => setUserScale(1)}
+          />
+          <IconBtn
+            label="+"
+            title="Zoom in"
+            onClick={() =>
+              setUserScale((s) => Math.min(2.5, +(s * 1.15).toFixed(4)))
+            }
+          />
 
           <Box
             onClick={toggleFullscreen}
@@ -593,8 +675,13 @@ export default function StudentMindMaps({ lectureId }) {
           alignItems: "center",
         }}
       >
-        {categoryKeys.map((c) => (
-          <ChipButton key={c} label={c} active={c === selectedCategory} onClick={() => setSelectedCategory(c)} />
+        {(categoryKeys ? [...categoryKeys].reverse() : []).map((c) => (
+          <ChipButton
+            key={c}
+            label={c}
+            active={c === selectedCategory}
+            onClick={() => setSelectedCategory(c)}
+          />
         ))}
       </Box>
 
@@ -636,7 +723,11 @@ export default function StudentMindMaps({ lectureId }) {
             height,
           }}
         >
-          <svg width={width} height={height} style={{ position: "absolute", inset: 0, pointerEvents: "none" }}>
+          <svg
+            width={width}
+            height={height}
+            style={{ position: "absolute", inset: 0, pointerEvents: "none" }}
+          >
             {edges.map((e) => {
               const a = nodeById.get(e.from);
               const b = nodeById.get(e.to);
@@ -650,14 +741,31 @@ export default function StudentMindMaps({ lectureId }) {
               const mx = (x1 + x2) / 2;
               const d = `M ${x1} ${y1} C ${mx} ${y1}, ${mx} ${y2}, ${x2} ${y2}`;
 
-              return <path key={`${e.from}-${e.to}`} d={d} fill="none" stroke="rgba(99,102,241,0.35)" strokeWidth="2" />;
+              return (
+                <path
+                  key={`${e.from}-${e.to}`}
+                  d={d}
+                  fill="none"
+                  stroke="rgba(99,102,241,0.35)"
+                  strokeWidth="2"
+                />
+              );
             })}
           </svg>
 
           {nodes.map((n) => {
             const c = depthColors(n.depth);
             return (
-              <Box key={n.id} sx={{ position: "absolute", left: n.x, top: n.y, width: n.w, height: n.h }}>
+              <Box
+                key={n.id}
+                sx={{
+                  position: "absolute",
+                  left: n.x,
+                  top: n.y,
+                  width: n.w,
+                  height: n.h,
+                }}
+              >
                 <Paper
                   elevation={0}
                   sx={{
@@ -698,7 +806,10 @@ export default function StudentMindMaps({ lectureId }) {
                       width: 10,
                       height: 10,
                       borderRadius: 999,
-                      bgcolor: n.depth === 0 ? "rgba(255,255,255,0.85)" : "rgba(99,102,241,0.45)",
+                      bgcolor:
+                        n.depth === 0
+                          ? "rgba(255,255,255,0.85)"
+                          : "rgba(99,102,241,0.45)",
                     }}
                   />
                 </Paper>

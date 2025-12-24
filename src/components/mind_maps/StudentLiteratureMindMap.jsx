@@ -20,7 +20,13 @@ import { useTheme, alpha } from "@mui/material/styles";
 import { getLiteratureMindMap } from "@/api/apiHelper";
 
 /* ---------------- React Icons (NO @mui/icons-material) ---------------- */
-import { FiZoomIn, FiZoomOut, FiMaximize, FiMinimize, FiSearch } from "react-icons/fi";
+import {
+  FiZoomIn,
+  FiZoomOut,
+  FiMaximize,
+  FiMinimize,
+  FiSearch,
+} from "react-icons/fi";
 import { MdCenterFocusStrong } from "react-icons/md";
 import { HiSparkles } from "react-icons/hi2";
 import { FaBrain, FaUser, FaBookOpen, FaPenNib } from "react-icons/fa";
@@ -28,8 +34,9 @@ import { FaBrain, FaUser, FaBookOpen, FaPenNib } from "react-icons/fa";
 /* ---------------- Utility ---------------- */
 const uid = () => crypto?.randomUUID?.() || String(Math.random());
 
-/* ---------------- Screenshot-like MindMap Colors ---------------- */
+/* ---------------- MindMap Colors ---------------- */
 function depthColors(depth) {
+  // keep your screenshot-like node colors
   if (depth === 0) return { bg: "#6D5EF6", fg: "#fff", border: "#6D5EF6" };
   if (depth === 1) return { bg: "#E9EEFF", fg: "#111827", border: "#B8C6FF" };
   if (depth === 2) return { bg: "#E7FAF3", fg: "#0F172A", border: "#9AE6C7" };
@@ -51,9 +58,12 @@ function AnimatedChip({ label, active, onClick, icon }) {
           transform: active ? "scale(1.05)" : "scale(1)",
           bgcolor: active ? "success.main" : "transparent",
           color: active ? "#fff" : "text.primary",
-          borderColor: active ? "primary.main" : "rgba(15,23,42,0.18)",
+          borderColor: active ? "success.main" : "rgba(15,23,42,0.18)",
           boxShadow: active ? "0 6px 18px rgba(0,0,0,0.10)" : "none",
-          "&:hover": { transform: "scale(1.07)", boxShadow: "0 8px 22px rgba(0,0,0,0.12)" },
+          "&:hover": {
+            transform: "scale(1.07)",
+            boxShadow: "0 8px 22px rgba(0,0,0,0.12)",
+          },
         }}
       />
     </Zoom>
@@ -69,12 +79,14 @@ function FloatingActionButton({ icon, onClick, title, disabled, active }) {
           disabled={disabled}
           sx={{
             bgcolor: "#D7FCE0",
-            color: "black",
-            border: `1px solid ${"rgba(255,255,255,0.25)"}`,
-            boxShadow: active ? "0 8px 20px rgba(0,0,0,0.18)" : "0 6px 16px rgba(0,0,0,0.12)",
+            color: "#0F172A",
+            border: `1px solid ${alpha("#174321", 0.18)}`,
+            boxShadow: active
+              ? "0 8px 20px rgba(0,0,0,0.18)"
+              : "0 6px 16px rgba(0,0,0,0.12)",
             transition: "all 0.25s ease",
             "&:hover": {
-              bgcolor: "rgba(255,255,255,0.95)",
+              bgcolor: alpha("#D7FCE0", 0.95),
               transform: "translateY(-2px)",
               boxShadow: "0 10px 26px rgba(0,0,0,0.18)",
             },
@@ -88,91 +100,42 @@ function FloatingActionButton({ icon, onClick, title, disabled, active }) {
   );
 }
 
-function EnhancedLoadingState({ isFullscreen }) {
-  const theme = useTheme();
-  return (
-    <Paper
-      elevation={0}
-      sx={{
-        borderRadius: 3,
-        background: "linear-gradient(145deg, #f3f4f6 0%, #ffffff 100%)",
-        overflow: "hidden",
-        display: "flex",
-        flexDirection: "column",
-        height: isFullscreen ? "100vh" : "calc(100vh - 220px)",
-        minHeight: 620,
-        mb: 3,
-        position: "relative",
-      }}
-    >
-      <LinearProgress
-        sx={{
-          position: "absolute",
-          top: 0,
-          left: 0,
-          right: 0,
-          height: 3,
-          "& .MuiLinearProgress-bar": {
-            background: `linear-gradient(90deg, ${theme.palette.primary.main} 0%, ${
-              theme.palette.secondary?.main || theme.palette.primary.dark
-            } 100%)`,
-          },
-        }}
-      />
-      <Box sx={{ flex: 1, display: "grid", placeItems: "center" }}>
-        <Fade in={true}>
-          <Box sx={{ textAlign: "center" }}>
-            <Box
-              sx={{
-                width: 80,
-                height: 80,
-                margin: "0 auto 24px",
-                borderRadius: "50%",
-                background: "linear-gradient(238deg, #16AA54 -15.62%, #094422 82.04%)",
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "center",
-                animation: "pulse 2s infinite",
-                "@keyframes pulse": {
-                  "0%, 100%": { transform: "scale(1)", opacity: 1 },
-                  "50%": { transform: "scale(1.08)", opacity: 0.85 },
-                },
-              }}
-            >
-              <FaBrain size={40} color="#fff" />
-            </Box>
-            <Typography variant="h6" fontWeight={800} gutterBottom>
-              Generating Mind Map
-            </Typography>
-            <Typography variant="body2" color="text.secondary">
-              Analyzing literature and building connections...
-            </Typography>
-          </Box>
-        </Fade>
-      </Box>
-    </Paper>
-  );
-}
-
-/* ---------------- Build Tree (UPDATED for your API shape) ----------------
+/* ---------------- Build Tree (for your API shape) ----------------
 API:
 data.mind_map.category_X.mind_map = { topic: "...", nodes: { ... } }
 each node: { Subtopics: {...}, Examples: [...] }
 -------------------------------------------------------------------------- */
 function toNodeFromLiterature(title, value, depth = 0) {
-  const node = { id: uid(), title: String(title), depth, examples: [], children: [] };
+  const node = {
+    id: uid(),
+    title: String(title),
+    depth,
+    examples: [],
+    children: [],
+  };
   if (!value || typeof value !== "object") return node;
 
   const ex = Array.isArray(value?.Examples) ? value.Examples : [];
   node.examples = ex.map((x) => String(x));
 
-  const subs = value?.Subtopics && typeof value.Subtopics === "object" ? value.Subtopics : {};
-  node.children = Object.entries(subs).map(([k, v]) => toNodeFromLiterature(k, v, depth + 1));
+  const subs =
+    value?.Subtopics && typeof value.Subtopics === "object"
+      ? value.Subtopics
+      : {};
+  node.children = Object.entries(subs).map(([k, v]) =>
+    toNodeFromLiterature(k, v, depth + 1)
+  );
   return node;
 }
 
 function buildLiteratureTree(nodesObj, rootTitle = "Mind Map") {
-  const root = { id: uid(), title: rootTitle, depth: 0, examples: [], children: [] };
+  const root = {
+    id: uid(),
+    title: rootTitle,
+    depth: 0,
+    examples: [],
+    children: [],
+  };
   const entries = Object.entries(nodesObj || {});
   root.children = entries.map(([k, v]) => toNodeFromLiterature(k, v, 1));
   return root;
@@ -180,7 +143,13 @@ function buildLiteratureTree(nodesObj, rootTitle = "Mind Map") {
 
 /* ---------------- Layout ---------------- */
 function computeLayout(root, opts) {
-  const { nodeW = 280, nodeH = 70, gapX = 200, gapY = 20, pad = 40 } = opts || {};
+  const {
+    nodeW = 280,
+    nodeH = 70,
+    gapX = 200,
+    gapY = 20,
+    pad = 40,
+  } = opts || {};
   const leaves = [];
 
   function collectLeaves(n) {
@@ -239,7 +208,7 @@ function normalizeLiteratureApi(res) {
     const mm = catVal?.mind_map || {};
     acc[catKey] = {
       topic: String(mm?.topic || ""),
-      nodes: (mm?.nodes && typeof mm.nodes === "object") ? mm.nodes : {},
+      nodes: mm?.nodes && typeof mm.nodes === "object" ? mm.nodes : {},
     };
     return acc;
   }, {});
@@ -250,13 +219,6 @@ function normalizeLiteratureApi(res) {
 /* ---------------- Main Component ---------------- */
 export default function StudentLiteratureMindMap({ lectureId }) {
   const theme = useTheme();
-
-  // header from theme (no blue)
-  const HEADER_A = theme.palette.success?.main || theme.palette.primary.main;
-const HEADER_B =
-  theme.palette.success?.dark ||
-  theme.palette.primary.dark ||
-  theme.palette.success?.main;
 
   const [topic, setTopic] = useState("");
   const [contentType, setContentType] = useState("fictional_story");
@@ -276,7 +238,13 @@ const HEADER_B =
 
   const [userScale, setUserScale] = useState(1);
   const [pan, setPan] = useState({ x: 0, y: 0 });
-  const dragRef = useRef({ dragging: false, startX: 0, startY: 0, panX: 0, panY: 0 });
+  const dragRef = useRef({
+    dragging: false,
+    startX: 0,
+    startY: 0,
+    panX: 0,
+    panY: 0,
+  });
 
   const getContentIcon = () => {
     const style = { fontSize: 16, marginRight: 6, display: "inline-flex" };
@@ -328,7 +296,10 @@ const HEADER_B =
     };
   }, []);
 
-  const categoryKeys = useMemo(() => Object.keys(data?.categories || {}), [data]);
+  const categoryKeys = useMemo(
+    () => Object.keys(data?.categories || {}),
+    [data]
+  );
 
   const fetchLiteratureMindMap = async () => {
     if (!lectureId) return;
@@ -370,18 +341,19 @@ const HEADER_B =
     if (e.key === "Enter") fetchLiteratureMindMap();
   };
 
-  /* --------- View (UPDATED) ----------
-     For selected category:
-       cat.topic -> root title
-       cat.nodes -> tree children
-  ------------------------------------ */
   const view = useMemo(() => {
     if (!data || !selectedCat) return null;
     const cat = data.categories?.[selectedCat] || {};
     const rootTitle = cat?.topic ? String(cat.topic) : selectedCat;
     const nodesObj = cat?.nodes || {};
     const tree = buildLiteratureTree(nodesObj, rootTitle);
-    return computeLayout(tree, { nodeW: 250, nodeH: 58, gapX: 190, gapY: 10, pad: 24 });
+    return computeLayout(tree, {
+      nodeW: 250,
+      nodeH: 58,
+      gapX: 190,
+      gapY: 10,
+      pad: 24,
+    });
   }, [data, selectedCat]);
 
   const fitScale = useMemo(() => {
@@ -394,7 +366,10 @@ const HEADER_B =
     return Math.max(0.18, Math.min(sx, sy, 1));
   }, [view, fitSize]);
 
-  const finalScale = useMemo(() => Math.max(0.18, Math.min(3, fitScale * userScale)), [fitScale, userScale]);
+  const finalScale = useMemo(
+    () => Math.max(0.18, Math.min(3, fitScale * userScale)),
+    [fitScale, userScale]
+  );
 
   useEffect(() => {
     if (!view || !fitSize.w || !fitSize.h) return;
@@ -442,8 +417,6 @@ const HEADER_B =
     setPan({ x: (fitSize.w - scaledW) / 2, y: (fitSize.h - scaledH) / 2 });
   };
 
-  if (loading) return <EnhancedLoadingState isFullscreen={isFullscreen} />;
-
   return (
     <>
       <Snackbar
@@ -463,7 +436,11 @@ const HEADER_B =
         onClose={() => setErr("")}
         anchorOrigin={{ vertical: "top", horizontal: "center" }}
       >
-        <Alert severity="error" onClose={() => setErr("")} sx={{ boxShadow: 3 }}>
+        <Alert
+          severity="error"
+          onClose={() => setErr("")}
+          sx={{ boxShadow: 3 }}
+        >
           {err}
         </Alert>
       </Snackbar>
@@ -488,8 +465,8 @@ const HEADER_B =
           sx={{
             px: 3,
             py: 2,
-            background:"white",
-            borderBottom: `1px solid ${alpha("#fff", 0.14)}`,
+            background: "#fff",
+            borderBottom: `1px solid ${alpha("#0f172a", 0.06)}`,
             display: "flex",
             alignItems: "center",
             justifyContent: "space-between",
@@ -503,19 +480,25 @@ const HEADER_B =
                 width: 48,
                 height: 48,
                 borderRadius: 2,
-                bgcolor: alpha("#D7FCE0", 0.18),
+                bgcolor: alpha("#D7FCE0", 0.65),
                 display: "grid",
                 placeItems: "center",
-                border: `1px solid ${alpha("#174321", 0.20)}`,
+                border: `1px solid ${alpha("#174321", 0.22)}`,
               }}
             >
               <FaBrain size={28} color="#174321" />
             </Box>
             <Box>
-              <Typography variant="h6" sx={{ fontWeight: 900, color: "black", lineHeight: 1 }}>
+              <Typography
+                variant="h6"
+                sx={{ fontWeight: 900, color: "#0F172A", lineHeight: 1 }}
+              >
                 Literature Mind Map
               </Typography>
-              <Typography variant="caption" sx={{ color: "black" }}>
+              <Typography
+                variant="caption"
+                sx={{ color: alpha("#0F172A", 0.68) }}
+              >
                 Visualize your literary concepts interactively
               </Typography>
             </Box>
@@ -526,7 +509,9 @@ const HEADER_B =
               icon={<FiZoomOut size={18} />}
               title="Zoom Out"
               disabled={!view}
-              onClick={() => setUserScale((s) => Math.max(0.5, +(s / 1.2).toFixed(4)))}
+              onClick={() =>
+                setUserScale((s) => Math.max(0.5, +(s / 1.2).toFixed(4)))
+              }
             />
             <FloatingActionButton
               icon={<MdCenterFocusStrong size={18} />}
@@ -538,11 +523,26 @@ const HEADER_B =
               icon={<FiZoomIn size={18} />}
               title="Zoom In"
               disabled={!view}
-              onClick={() => setUserScale((s) => Math.min(3, +(s * 1.2).toFixed(4)))}
+              onClick={() =>
+                setUserScale((s) => Math.min(3, +(s * 1.2).toFixed(4)))
+              }
             />
-            <Box sx={{ width: 1, height: 32, bgcolor: alpha("#fff", 0.22), mx: 1 }} />
+            <Box
+              sx={{
+                width: 1,
+                height: 32,
+                bgcolor: alpha("#0f172a", 0.1),
+                mx: 1,
+              }}
+            />
             <FloatingActionButton
-              icon={isFullscreen ? <FiMinimize size={18} /> : <FiMaximize size={18} />}
+              icon={
+                isFullscreen ? (
+                  <FiMinimize size={18} />
+                ) : (
+                  <FiMaximize size={18} />
+                )
+              }
               title={isFullscreen ? "Exit Fullscreen" : "Fullscreen"}
               onClick={toggleFullscreen}
               active={isFullscreen}
@@ -554,12 +554,19 @@ const HEADER_B =
         <Box
           sx={{
             px: 3,
-            py: 2.5,
+            py: 2,
             background: "linear-gradient(180deg, #f8f9fa 0%, #ffffff 100%)",
             borderBottom: "1px solid rgba(0,0,0,0.06)",
           }}
         >
-          <Box sx={{ display: "flex", gap: 2, alignItems: "flex-start", flexWrap: "wrap" }}>
+          <Box
+            sx={{
+              display: "flex",
+              gap: 2,
+              alignItems: "flex-start",
+              flexWrap: "wrap",
+            }}
+          >
             <TextField
               value={topic}
               onChange={(e) => setTopic(e.target.value)}
@@ -582,7 +589,7 @@ const HEADER_B =
                   boxShadow: "0 2px 8px rgba(0,0,0,0.04)",
                   "&:hover": { boxShadow: "0 4px 12px rgba(0,0,0,0.08)" },
                   "&.Mui-focused": {
-                    boxShadow: `0 8px 20px ${alpha(theme.palette.primary.main, 0.18)}`,
+                    boxShadow: `0 8px 20px ${alpha("#16AA54", 0.18)}`,
                   },
                 },
               }}
@@ -602,7 +609,7 @@ const HEADER_B =
                 "& .MuiOutlinedInput-root": {
                   bgcolor: "#fff",
                   boxShadow: "0 2px 8px rgba(0,0,0,0.04)",
-                  "& .MuiSelect-icon": { color: "primary.main" },
+                  "& .MuiSelect-icon": { color: "#16AA54" },
                 },
               }}
             >
@@ -623,32 +630,36 @@ const HEADER_B =
               </MenuItem>
             </TextField>
 
-            <Tooltip title={!lectureId ? "Lecture ID required" : "Generate mind map"}>
+            <Tooltip
+              title={!lectureId ? "Lecture ID required" : "Generate mind map"}
+            >
               <span>
                 <IconButton
                   onClick={fetchLiteratureMindMap}
-                  disabled={!topic.trim() || !lectureId}
+                  disabled={!topic.trim() || !lectureId || loading}
                   sx={{
                     background:
-                        "linear-gradient(238deg, #16AA54 -15.62%, #094422 82.04%)",
+                      "linear-gradient(238deg, #16AA54 -15.62%, #094422 82.04%)",
                     color: "#fff",
                     px: 3,
-                    py: .9,
+                    py: 0.9,
                     borderRadius: 2,
-                    boxShadow: `0 10px 22px ${alpha(theme.palette.primary.main, 0.25)}`,
+                    boxShadow: `0 10px 22px ${alpha("#094422", 0.25)}`,
                     "&:hover": {
-                      bgcolor: "primary.dark",
                       transform: "translateY(-2px)",
-                      boxShadow: `0 14px 28px ${alpha(theme.palette.primary.main, 0.30)}`,
+                      boxShadow: `0 14px 28px ${alpha("#094422", 0.3)}`,
                     },
-                    "&.Mui-disabled": { background: "grey" },
+                    "&.Mui-disabled": {
+                      background: alpha("#0f172a", 0.22),
+                      color: "#fff",
+                    },
                   }}
                 >
                   <span style={{ marginRight: 8, display: "inline-flex" }}>
                     <HiSparkles size={18} />
                   </span>
                   <Typography variant="button" fontWeight={800}>
-                    Generate
+                    {loading ? "Generating..." : "Generate"}
                   </Typography>
                 </IconButton>
               </span>
@@ -671,27 +682,50 @@ const HEADER_B =
               flexWrap: "wrap",
             }}
           >
-            <Box sx={{ display: "flex", gap: 1.5, flexWrap: "wrap", alignItems: "center" }}>
-              <Typography variant="subtitle2" fontWeight={800} color="text.secondary">
+            <Box
+              sx={{
+                display: "flex",
+                gap: 1.5,
+                flexWrap: "wrap",
+                alignItems: "center",
+              }}
+            >
+              <Typography
+                variant="subtitle2"
+                fontWeight={800}
+                color="text.secondary"
+              >
                 Categories:
               </Typography>
-              {categoryKeys.map((c) => (
-                <AnimatedChip key={c} label={c} active={c === selectedCat} onClick={() => setSelectedCat(c)} />
+              {(categoryKeys ? [...categoryKeys].reverse() : []).map((c) => (
+                <AnimatedChip
+                  key={c}
+                  label={c}
+                  active={c === selectedCat}
+                  onClick={() => setSelectedCat(c)}
+                />
               ))}
             </Box>
           </Box>
         )}
 
-        {/* Canvas */}
+        {/* Canvas (✅ loader overlay inside canvas — header/filters stay visible) */}
         <Box
           ref={fitRef}
           sx={{
             flex: "1 1 auto",
             minHeight: 480,
             position: "relative",
-            background: "radial-gradient(circle at 50% 50%, #F7F8FB 0%, #EEF1F6 100%)",
+            background: `radial-gradient(circle at 50% 50%, ${alpha(
+              "#16AA54",
+              0.06
+            )} 0%, #EEF1F6 100%)`,
             overflow: "hidden",
-            cursor: dragRef.current.dragging ? "grabbing" : view ? "grab" : "default",
+            cursor: dragRef.current.dragging
+              ? "grabbing"
+              : view
+              ? "grab"
+              : "default",
             touchAction: "none",
           }}
           onMouseDown={(e) => view && onDown(e.clientX, e.clientY)}
@@ -709,17 +743,37 @@ const HEADER_B =
           }}
         >
           {!view ? (
-            <Box sx={{ position: "absolute", inset: 0, display: "grid", placeItems: "center" }}>
+            <Box
+              sx={{
+                position: "absolute",
+                inset: 0,
+                display: "grid",
+                placeItems: "center",
+              }}
+            >
               <Fade in={true}>
                 <Box sx={{ textAlign: "center", maxWidth: 420, px: 3 }}>
-                  <Box sx={{ mb: 2, color: "text.disabled", display: "grid", placeItems: "center" }}>
+                  <Box
+                    sx={{
+                      mb: 2,
+                      color: "text.disabled",
+                      display: "grid",
+                      placeItems: "center",
+                    }}
+                  >
                     <FaBrain size={64} />
                   </Box>
-                  <Typography variant="h6" gutterBottom color="text.secondary" fontWeight={800}>
+                  <Typography
+                    variant="h6"
+                    gutterBottom
+                    color="text.secondary"
+                    fontWeight={800}
+                  >
                     Ready to Explore Literature
                   </Typography>
                   <Typography variant="body2" color="text.secondary">
-                    Enter a topic, select content type, and click &quot;Generate&quot; to create your interactive mind map
+                    Enter a topic, select content type, and click
+                    &quot;Generate&quot; to create your interactive mind map
                   </Typography>
                 </Box>
               </Fade>
@@ -727,6 +781,108 @@ const HEADER_B =
           ) : (
             <MindMapCanvas view={view} pan={pan} finalScale={finalScale} />
           )}
+
+          {/* ✅ Premium Loader Overlay */}
+          <Fade in={loading} unmountOnExit>
+            <Box
+              sx={{
+                position: "absolute",
+                inset: 0,
+                zIndex: 20,
+                display: "grid",
+                placeItems: "center",
+                background: alpha("#ffffff", 0.72),
+                backdropFilter: "blur(6px)",
+                WebkitBackdropFilter: "blur(6px)",
+              }}
+            >
+              <Paper
+                elevation={0}
+                sx={{
+                  px: 3,
+                  py: 2.5,
+                  borderRadius: 3,
+                  minWidth: { xs: "86%", sm: 420 },
+                  maxWidth: 520,
+                  border: `1px solid ${alpha("#16AA54", 0.22)}`,
+                  boxShadow: "0 18px 50px rgba(0,0,0,0.14)",
+                  background: `linear-gradient(180deg, ${alpha(
+                    "#16AA54",
+                    0.08
+                  )} 0%, #ffffff 70%)`,
+                }}
+              >
+                <Box sx={{ display: "flex", alignItems: "center", gap: 1.5 }}>
+                  <Box
+                    sx={{
+                      width: 46,
+                      height: 46,
+                      borderRadius: "50%",
+                      background:
+                        "linear-gradient(238deg, #16AA54 -15.62%, #094422 82.04%)",
+                      display: "grid",
+                      placeItems: "center",
+                      position: "relative",
+                      overflow: "hidden",
+                    }}
+                  >
+                    <Box
+                      sx={{
+                        position: "absolute",
+                        inset: -10,
+                        borderRadius: "50%",
+                        border: `2px solid ${alpha("#fff", 0.35)}`,
+                        animation: "mmPulse 1.4s ease-in-out infinite",
+                        "@keyframes mmPulse": {
+                          "0%": { transform: "scale(0.7)", opacity: 0.0 },
+                          "25%": { opacity: 0.6 },
+                          "100%": { transform: "scale(1.25)", opacity: 0.0 },
+                        },
+                      }}
+                    />
+                    <FaBrain size={20} color="#fff" />
+                  </Box>
+
+                  <Box sx={{ flex: 1 }}>
+                    <Typography
+                      sx={{ fontWeight: 900, fontSize: 16, color: "#0F172A" }}
+                    >
+                      Generating Mind Map
+                    </Typography>
+                    <Typography
+                      sx={{
+                        fontSize: 13,
+                        color: alpha("#0F172A", 0.68),
+                        mt: 0.25,
+                      }}
+                    >
+                      Analyzing literature and building connections...
+                    </Typography>
+                  </Box>
+                </Box>
+
+                <LinearProgress
+                  sx={{
+                    mt: 2,
+                    height: 8,
+                    borderRadius: 999,
+                    bgcolor: alpha("#16AA54", 0.1),
+                    "& .MuiLinearProgress-bar": {
+                      borderRadius: 999,
+                      background:
+                        "linear-gradient(238deg, #16AA54 -15.62%, #094422 82.04%)",
+                    },
+                  }}
+                />
+
+                <Typography
+                  sx={{ mt: 1.2, fontSize: 12, color: alpha("#0F172A", 0.55) }}
+                >
+                  Tip: You can keep browsing categories after it loads.
+                </Typography>
+              </Paper>
+            </Box>
+          </Fade>
         </Box>
       </Paper>
     </>
@@ -735,12 +891,10 @@ const HEADER_B =
 
 /* ---------------------- Canvas renderer ---------------------- */
 function MindMapCanvas({ view, pan, finalScale }) {
-  const theme = useTheme();
   const { nodes, edges, nodeById, width, height } = view;
 
-  // edge color close to screenshot (soft purple)
-  const EDGE = alpha("#5C52FF", 0.30);
-  // (or if you want theme-based: alpha(theme.palette.primary.main, 0.28))
+  // green theme edge
+  const EDGE = alpha("#16AA54", 0.28);
 
   return (
     <Box
@@ -754,7 +908,11 @@ function MindMapCanvas({ view, pan, finalScale }) {
         height,
       }}
     >
-      <svg width={width} height={height} style={{ position: "absolute", inset: 0, pointerEvents: "none" }}>
+      <svg
+        width={width}
+        height={height}
+        style={{ position: "absolute", inset: 0, pointerEvents: "none" }}
+      >
         {edges.map((e) => {
           const a = nodeById.get(e.from);
           const b = nodeById.get(e.to);
@@ -787,7 +945,16 @@ function MindMapCanvas({ view, pan, finalScale }) {
         const showEx = ex.filter(Boolean).slice(0, 4);
 
         return (
-          <Box key={n.id} sx={{ position: "absolute", left: n.x, top: n.y, width: n.w, height: n.h }}>
+          <Box
+            key={n.id}
+            sx={{
+              position: "absolute",
+              left: n.x,
+              top: n.y,
+              width: n.w,
+              height: n.h,
+            }}
+          >
             <Paper
               elevation={0}
               sx={{
@@ -818,7 +985,9 @@ function MindMapCanvas({ view, pan, finalScale }) {
               </Box>
 
               {showEx.length > 0 && (
-                <Box sx={{ display: "flex", flexWrap: "wrap", gap: 0.6, mt: 0.25 }}>
+                <Box
+                  sx={{ display: "flex", flexWrap: "wrap", gap: 0.6, mt: 0.25 }}
+                >
                   {showEx.map((t, idx) => (
                     <Box
                       key={idx}
@@ -829,7 +998,10 @@ function MindMapCanvas({ view, pan, finalScale }) {
                         borderRadius: 999,
                         fontSize: 11,
                         fontWeight: 800,
-                        bgcolor: n.depth === 0 ? "rgba(255,255,255,0.22)" : "rgba(17,24,39,0.06)",
+                        bgcolor:
+                          n.depth === 0
+                            ? "rgba(255,255,255,0.22)"
+                            : "rgba(17,24,39,0.06)",
                         border: "1px solid rgba(0,0,0,0.10)",
                         color: c.fg,
                         maxWidth: 210,

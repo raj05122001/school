@@ -634,7 +634,7 @@ export default function TeacherMindMaps({ lectureId }) {
           alignItems: "center",
         }}
       >
-        {categoryKeys.map((c) => (
+        {(categoryKeys ? [...categoryKeys].reverse() : []).map((c) => (
           <ChipButton key={c} label={c} active={c === selectedCategory} onClick={() => setSelectedCategory(c)} />
         ))}
       </Box>
