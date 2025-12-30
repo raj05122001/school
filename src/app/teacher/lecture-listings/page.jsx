@@ -115,18 +115,28 @@ const Page = () => {
     setLocalSearchInput(e.target.value);
   };
 
+  const prevSearchRef = React.useRef(localSearchInput);
+
   useEffect(() => {
     const handler = setTimeout(() => {
+      const next = (localSearchInput || "").trim();
+      const prev = (prevSearchRef.current || "").trim();
+
+      // ✅ agar search text same hai, kuch bhi mat karo
+      if (next === prev) return;
+
+      prevSearchRef.current = next;
+
       const newSearchParams = new URLSearchParams(searchParams.toString());
 
-      if (localSearchInput && localSearchInput.trim()) {
-        newSearchParams.set("globalSearch", localSearchInput.trim());
-        // newSearchParams.set("activePage", "1");
+      if (next) {
+        newSearchParams.set("globalSearch", next);
       } else {
         newSearchParams.delete("globalSearch");
-        // newSearchParams.set("activePage", "1");
       }
 
+      // ✅ page reset only when search changes
+      newSearchParams.set("activePage", "1");
 
       router.push(`${pathname}?${newSearchParams.toString()}`);
     }, 500);
