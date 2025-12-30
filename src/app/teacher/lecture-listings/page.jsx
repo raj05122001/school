@@ -121,11 +121,12 @@ const Page = () => {
 
       if (localSearchInput && localSearchInput.trim()) {
         newSearchParams.set("globalSearch", localSearchInput.trim());
+        // newSearchParams.set("activePage", "1");
       } else {
         newSearchParams.delete("globalSearch");
+        // newSearchParams.set("activePage", "1");
       }
 
-      newSearchParams.set("activePage", "1");
 
       router.push(`${pathname}?${newSearchParams.toString()}`);
     }, 500);
