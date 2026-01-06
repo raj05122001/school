@@ -191,8 +191,9 @@ const LecturePage = ({ params }) => {
           </Box>
         </Grid>
       </Grid>
-      <StudentMindMaps lectureId={id}/>
-      <StudentLiteratureMindMap lectureId={id}/>
+
+     {id===805 && <StudentMindMaps lectureId={id}/>}
+      {id===805 &&<StudentLiteratureMindMap lectureId={id}/>}
     </Box>
   );
 };
