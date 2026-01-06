@@ -141,7 +141,7 @@ export const sidebarLinks = {
       show: "STUDENT",
     },
     {
-      text: "Ai Buddy",
+      text: "AI Buddy",
       href: "/chat-bot",
       icon: <FaRobot size={22} />,
       show: ["TEACHER", "STUDENT", "ADMIN"],
@@ -490,7 +490,7 @@ const Sidebar = ({ open, setOpen }) => {
                     </Typography>
                   )}
 
-                  <Typography
+                  {/* <Typography
                     variant="body1"
                     sx={{
                       color: "#404145",
@@ -499,7 +499,7 @@ const Sidebar = ({ open, setOpen }) => {
                     }}
                   >
                     CCST
-                  </Typography>
+                  </Typography> */}
                 </Box>
               </Box>
               <Box>
@@ -568,7 +568,7 @@ const Sidebar = ({ open, setOpen }) => {
                       >
                         {userDetails?.full_name}
                       </Typography>
-                      <Typography
+                      {/* <Typography
                         variant="body1"
                         sx={{
                           color: "#404145",
@@ -577,7 +577,7 @@ const Sidebar = ({ open, setOpen }) => {
                         }}
                       >
                         CCST
-                      </Typography>
+                      </Typography> */}
                     </Box>
                   </Box>
                   {userDetails?.role !== "ADMIN" ? (
@@ -922,7 +922,7 @@ export default Sidebar;
 //       show: "STUDENT",
 //     },
 //     {
-//       text: "Ai Buddy",
+//       text: "AI Buddy",
 //       href: "/chat-bot",
 //       icon: <FaRobot size={22} />,
 //       show: ["TEACHER", "STUDENT", "ADMIN"],

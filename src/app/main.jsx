@@ -255,7 +255,7 @@ const Main = ({ children }) => {
                         lineHeight: "28px",
                       }}
                     >
-                      Ai Buddy
+                      AI Buddy
                     </span>
                   </Button>
                 </IconButton>
