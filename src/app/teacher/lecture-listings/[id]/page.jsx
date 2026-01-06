@@ -202,7 +202,7 @@ const LecturePage = ({ params }) => {
           ))}
         </Grid>
       </Grid>
-      {Number(id)===805 && <TeacherMindMaps lectureId={id}/>}
+        <TeacherMindMaps lectureId={id}/>
     </Box>
   );
 };
