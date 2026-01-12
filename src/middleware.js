@@ -4,13 +4,39 @@ import { isExpired, decodeToken } from "react-jwt";
 export async function middleware(req) {
   const { pathname, searchParams } = req.nextUrl;
   let origin = req.nextUrl.origin;
-  const token = req.cookies.get("REFRESH_TOKEN");
-  const userDetails = decodeToken(token?.value);
-  const host = req.headers.get("host");
 
+  const host = req.headers.get("host") || "";
   if (host.includes("vidya.ultimeet.io")) {
     origin = "https://vidya.ultimeet.io";
   }
+
+  // ✅ NEW: if ?token=xxxx present → skip all checks + save cookie + allow page
+  const urlToken = searchParams.get("token");
+  if (urlToken && urlToken.trim() && urlToken !== "" && urlToken !== null) {
+    console.log("call this function :: ",urlToken)
+    const res = NextResponse.next();
+
+    // ✅ Save access token
+    res.cookies.set("ACCESS_TOKEN", urlToken, {
+      path: "/",
+      httpOnly: true,
+      sameSite: "lax",
+      secure: true,
+    });
+
+    // ✅ RECOMMENDED: also set refresh token because your middleware uses REFRESH_TOKEN
+    res.cookies.set("REFRESH_TOKEN", urlToken, {
+      path: "/",
+      httpOnly: true,
+      sameSite: "lax",
+      secure: true,
+    });
+
+    return res;
+  }
+
+  const token = req.cookies.get("REFRESH_TOKEN");
+  const userDetails = decodeToken(token?.value);
 
   try {
     // ---------- NOT LOGGED IN ----------
@@ -66,7 +92,7 @@ export async function middleware(req) {
       return NextResponse.redirect(new URL("/", origin));
     }
 
-    // ---------- NEW PART: STUDENT/TEACHER PATH AUTO-FIX ----------
+    // ---------- STUDENT/TEACHER PATH AUTO-FIX ----------
     if (userDetails?.role === "TEACHER" && pathname.startsWith("/student")) {
       const url = req.nextUrl.clone();
       url.pathname = pathname.replace(/^\/student/, "/teacher");

@@ -5,7 +5,7 @@ import Cookies from "js-cookie";
 import { GoBell } from "react-icons/go";
 import { IoPlayCircleOutline } from "react-icons/io5";
 import { FiUpload } from "react-icons/fi";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { AppContextProvider } from "@/app/main";
 import { RiDeleteBin5Fill } from "react-icons/ri";
 import { MdPublishedWithChanges, MdUnpublished, MdExpandMore, MdExpandLess } from "react-icons/md";
@@ -17,6 +17,8 @@ function HeaderMOL({
   loading,
   handleReleased = () => { },
 }) {
+  const searchParams = useSearchParams()
+  const web_access_token = searchParams.get("token") || ""
   const [dialogOpen, setDialogOpen] = useState(false)
   const [userDetails, setUserDetails] = useState(null);
   const [mobileOpen, setMobileOpen] = useState(false); // State for mobile accordion
@@ -55,7 +57,9 @@ function HeaderMOL({
   const userName = userDetails?.full_name?.split(" ")[0];
 
   return (
-    <Box
+     <>
+     {!web_access_token &&
+<Box
       sx={{
         display: "flex",
         flexDirection: { xs: "column", sm: "row" },
@@ -253,7 +257,8 @@ function HeaderMOL({
           </Button>
         )}
       </Box>
-    </Box>
+    </Box>}
+    </>
   );
 }
 

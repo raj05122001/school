@@ -16,16 +16,21 @@ import { BsChatSquareText } from "react-icons/bs";
 import Image from "next/image";
 import NewChatbot from "@/components/ChatBot/NewChatbot";
 import GreetingCardNew from "@/components/admin/dashboard/GreetingCard/GreetingCardNew";
+import { useSearchParams } from "next/navigation";
+import Cookies from "js-cookie";
 
 export const AppContextProvider = createContext({});
 
 const Main = ({ children }) => {
+  const searchParams = useSearchParams()
+  const web_access_token = searchParams.get("token") || ""
   const isTrialAccount =
     process.env.NEXT_PUBLIC_iSTRIALACCOUNT === "true" ? true : false;
   const s3FileName = process.env.NEXT_PUBLIC_FILE_NAME === "edu/" ? "edu/" : "";
 
   const pathname = usePathname();
   const [open, setOpen] = useState(true);
+  // ACCESS_TOKEN
   const [openRecordingDrawer, setOpenRecordingDrawer] = useState(false);
   const [recordingData, setRecordingData] = useState({});
   const [openCreateLecture, setOpenCreateLecture] = useState(false);
@@ -33,6 +38,12 @@ const Main = ({ children }) => {
   const [isOpenChatBot, setIsOpenChatBot] = useState(false);
   const [userInput, setUserInput] = useState("");
   const [droppedVideoFile, setDroppedVideoFile] = useState(null);
+
+  useEffect(()=>{
+    if(web_access_token){
+      Cookies.set("ACCESS_TOKEN", web_access_token, { expires: 30 })
+    }
+  },[web_access_token])
 
   const handleResize = () => {
     if (window.innerWidth < 980) {
@@ -118,7 +129,7 @@ const Main = ({ children }) => {
               }}
             >
               {/* Sidebar */}
-              <Box
+            {!web_access_token &&  <Box
                 sx={{
                   flexShrink: 0,
                   position: "sticky",
@@ -128,7 +139,7 @@ const Main = ({ children }) => {
                 }}
               >
                 <Sidebar open={open} setOpen={setOpen} />
-              </Box>
+              </Box>}
 
               {/* Main Content Area */}
               <Box
