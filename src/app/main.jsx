@@ -1,10 +1,7 @@
-
-
 "use client";
 import { usePathname } from "next/navigation";
-import React, { useEffect, useState, createContext } from "react";
+import React, { useEffect, useState, createContext, Suspense } from "react";
 import { Toaster } from "react-hot-toast";
-import { Suspense } from "react";
 import Footer from "@/components/Footer/Footer";
 import Sidebar from "@/components/Sidebar/Sidebar";
 import { Box, Button, IconButton } from "@mui/material";
@@ -16,21 +13,24 @@ import { BsChatSquareText } from "react-icons/bs";
 import Image from "next/image";
 import NewChatbot from "@/components/ChatBot/NewChatbot";
 import GreetingCardNew from "@/components/admin/dashboard/GreetingCard/GreetingCardNew";
-import { useSearchParams } from "next/navigation";
 import Cookies from "js-cookie";
 
 export const AppContextProvider = createContext({});
 
+const fallback = <div />;
+
 const Main = ({ children }) => {
-  const searchParams = useSearchParams()
-  const web_access_token = searchParams.get("token") || ""
   const isTrialAccount =
     process.env.NEXT_PUBLIC_iSTRIALACCOUNT === "true" ? true : false;
+
   const s3FileName = process.env.NEXT_PUBLIC_FILE_NAME === "edu/" ? "edu/" : "";
 
   const pathname = usePathname();
   const [open, setOpen] = useState(true);
-  // ACCESS_TOKEN
+
+  // ✅ web token state (because we read it on client after mount)
+  const [webAccessToken, setWebAccessToken] = useState("");
+
   const [openRecordingDrawer, setOpenRecordingDrawer] = useState(false);
   const [recordingData, setRecordingData] = useState({});
   const [openCreateLecture, setOpenCreateLecture] = useState(false);
@@ -39,11 +39,16 @@ const Main = ({ children }) => {
   const [userInput, setUserInput] = useState("");
   const [droppedVideoFile, setDroppedVideoFile] = useState(null);
 
-  useEffect(()=>{
-    if(web_access_token){
-      Cookies.set("ACCESS_TOKEN", web_access_token, { expires: 30 })
+  // ✅ FIX: remove useSearchParams() (pre-render/export error)
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+
+    const token = new URLSearchParams(window.location.search).get("token") || "";
+    if (token) {
+      Cookies.set("ACCESS_TOKEN", token, { expires: 30 });
     }
-  },[web_access_token])
+    setWebAccessToken(token);
+  }, []);
 
   const handleResize = () => {
     if (window.innerWidth < 980) {
@@ -95,17 +100,17 @@ const Main = ({ children }) => {
   };
 
   return (
-    <Suspense>
+    <Suspense fallback={fallback}>
       <Toaster position="bottom-center" reverseOrder={false} />
       {pathname === "/login" ||
-        pathname === "/forgot-password" ||
-        pathname === "/registration" ||
-        pathname === "/signup" ||
-        pathname === "/vipsbot" ||
-        pathname === "/terms-and-conditions" ||
-        pathname === "/delete-account" ||
-        pathname === "/privacy-policy" ||
-        pathname === "/invite-accept" ? (
+      pathname === "/forgot-password" ||
+      pathname === "/registration" ||
+      pathname === "/signup" ||
+      pathname === "/vipsbot" ||
+      pathname === "/terms-and-conditions" ||
+      pathname === "/delete-account" ||
+      pathname === "/privacy-policy" ||
+      pathname === "/invite-accept" ? (
         <>{children}</>
       ) : (
         <ThemeProvider>
@@ -129,17 +134,19 @@ const Main = ({ children }) => {
               }}
             >
               {/* Sidebar */}
-            {!web_access_token &&  <Box
-                sx={{
-                  flexShrink: 0,
-                  position: "sticky",
-                  top: 0,
-                  height: "100vh",
-                  overflowY: "auto",
-                }}
-              >
-                <Sidebar open={open} setOpen={setOpen} />
-              </Box>}
+              {!webAccessToken && (
+                <Box
+                  sx={{
+                    flexShrink: 0,
+                    position: "sticky",
+                    top: 0,
+                    height: "100vh",
+                    overflowY: "auto",
+                  }}
+                >
+                  <Sidebar open={open} setOpen={setOpen} />
+                </Box>
+              )}
 
               {/* Main Content Area */}
               <Box
