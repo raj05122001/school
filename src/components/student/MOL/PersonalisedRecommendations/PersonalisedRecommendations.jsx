@@ -62,6 +62,7 @@ const PersonalisedRecommendations = ({ id, marksData }) => {
       const jsonData = Array.isArray(data?.topic_list)
         ? data.topic_list
         : JSON.parse(data?.topic_list || "[]");
+
       setTopics(jsonData);
       setSelectedTopic(data?.prevoius_selected_topic || "");
       setSelectedApproach(data?.previous_selected_approach || "");
@@ -192,7 +193,7 @@ const PersonalisedRecommendations = ({ id, marksData }) => {
       </Box>
 
       <Box sx={{ maxHeight: 400, overflowY: "auto" }}>
-        {/* {topics.length > 0 ? (
+        {topics.length > 0 ? (
           topics?.map((topic, index) => (
             <TopicAccordion
               key={index}
@@ -205,7 +206,7 @@ const PersonalisedRecommendations = ({ id, marksData }) => {
           ))
         ) : (
           <Typography>No topics available.</Typography>
-        )} */}
+        )}
       </Box>
     </Container>
   );
