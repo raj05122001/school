@@ -411,13 +411,13 @@ const LectureNotes = ({
                     >
                       More Insights
                     </Button>
-                     <IconButton
+                    {isEdit &&  <IconButton
                           onClick={() => handleEdit(note?.id)}
                           sx={{ color: "#36454F" }}
                           title="Edit Note"
                         >
                           <MdEdit />
-                        </IconButton>
+                        </IconButton>}
                     </Box>
                   ) : (
                     <Box display="flex" alignItems="center">
